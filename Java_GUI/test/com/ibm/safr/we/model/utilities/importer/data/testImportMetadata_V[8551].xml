@@ -1,0 +1,337 @@
+<?xml version='1.0'?>
+<!--
+Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<safrxml>
+    <Generation>
+        <Record>
+            <XMLVERSION>3</XMLVERSION>
+            <TYPE>View</TYPE>
+            <PROGRAM>Version 4.17 development</PROGRAM>
+            <FILENAME>testImportMetadata_V[8551].xml</FILENAME>
+            <CREATEDTIMESTAMP>2017-08-18 08:58:24</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN</CREATEDUSERID>
+        </Record>
+    </Generation>
+    <View>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <VIEWID>8551</VIEWID>
+            <NAME>testImportMetadata_V</NAME>
+            <EFFDATE>2012-10-17 12:09:13</EFFDATE>
+            <VIEWSTATUSCD>ACTVE</VIEWSTATUSCD>
+            <VIEWTYPECD>DETL </VIEWTYPECD>
+            <EXTRACTFILEPARTNBR>0</EXTRACTFILEPARTNBR>
+            <OUTPUTMEDIACD>FILE </OUTPUTMEDIACD>
+            <OUTPUTLRID>0</OUTPUTLRID>
+            <LFPFASSOCID>0</LFPFASSOCID>
+            <PAGESIZE>66</PAGESIZE>
+            <LINESIZE>250</LINESIZE>
+            <ZEROSUPPRESSIND>0</ZEROSUPPRESSIND>
+            <EXTRACTMAXRECCNT>0</EXTRACTMAXRECCNT>
+            <EXTRACTSUMMARYIND>0</EXTRACTSUMMARYIND>
+            <EXTRACTSUMMARYBUF>0</EXTRACTSUMMARYBUF>
+            <OUTPUTMAXRECCNT>0</OUTPUTMAXRECCNT>
+            <CONTROLRECID>1</CONTROLRECID>
+            <WRITEEXITID>0</WRITEEXITID>
+            <WRITEEXITSTARTUP></WRITEEXITSTARTUP>
+            <FORMATEXITID>0</FORMATEXITID>
+            <FORMATEXITSTARTUP></FORMATEXITSTARTUP>
+            <FILEFLDDELIMCD></FILEFLDDELIMCD>
+            <FILESTRDELIMCD></FILESTRDELIMCD>
+            <FORMATFILTLOGIC><![CDATA[]]></FORMATFILTLOGIC>
+            <COMMENTS>testImportMetadata View</COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-16 11:23:58</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2017-08-17 17:58:04</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+            <COMPILER>PM ..</COMPILER>
+            <LASTACTTIMESTAMP>2017-08-17 17:58:04</LASTACTTIMESTAMP>
+            <LASTACTUSERID>ADMIN   </LASTACTUSERID>
+        </Record>
+    </View>
+    <View-Column>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <VIEWCOLUMNID>199909</VIEWCOLUMNID>
+            <VIEWID>8551</VIEWID>
+            <COLUMNNUMBER>1</COLUMNNUMBER>
+            <FLDFMTCD>ALNUM</FLDFMTCD>
+            <SIGNEDIND>0</SIGNEDIND>
+            <STARTPOSITION>1</STARTPOSITION>
+            <MAXLEN>5</MAXLEN>
+            <ORDINALPOSITION>1</ORDINALPOSITION>
+            <DECIMALCNT>0</DECIMALCNT>
+            <ROUNDING>0</ROUNDING>
+            <FLDCONTENTCD></FLDCONTENTCD>
+            <JUSTIFYCD></JUSTIFYCD>
+            <DEFAULTVAL></DEFAULTVAL>
+            <VISIBLE>1</VISIBLE>
+            <SUBTOTALTYPECD></SUBTOTALTYPECD>
+            <SPACESBEFORECOLUMN>0</SPACESBEFORECOLUMN>
+            <EXTRACTAREACD>SORTK</EXTRACTAREACD>
+            <EXTRAREAPOSITION>1</EXTRAREAPOSITION>
+            <SUBTLABEL></SUBTLABEL>
+            <RPTMASK></RPTMASK>
+            <HDRJUSTIFYCD></HDRJUSTIFYCD>
+            <HDRLINE1>test1</HDRLINE1>
+            <HDRLINE2></HDRLINE2>
+            <HDRLINE3></HDRLINE3>
+            <FORMATCALCLOGIC><![CDATA[]]></FORMATCALCLOGIC>
+            <CREATEDTIMESTAMP>2012-10-16 11:23:58</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2017-08-17 17:58:05</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </View-Column>
+    <View-Source>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <VIEWSOURCEID>13454</VIEWSOURCEID>
+            <VIEWID>8551</VIEWID>
+            <SRCSEQNBR>1</SRCSEQNBR>
+            <INLRLFASSOCID>2837</INLRLFASSOCID>
+            <EXTRACTFILTLOGIC><![CDATA[]]></EXTRACTFILTLOGIC>
+            <OUTLFPFASSOCID>0</OUTLFPFASSOCID>
+            <WRITEEXITID>0</WRITEEXITID>
+            <WRITEEXITPARM></WRITEEXITPARM>
+            <EXTRACTOUTPUTIND>1</EXTRACTOUTPUTIND>
+            <EXTRACTOUTPUTLOGIC><![CDATA[]]></EXTRACTOUTPUTLOGIC>            
+            <CREATEDTIMESTAMP>2012-10-16 11:23:58</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2017-08-17 17:58:04</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </View-Source>
+    <View-Column-Source>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <VIEWCOLUMNSOURCEID>361806</VIEWCOLUMNSOURCEID>
+            <VIEWCOLUMNID>199909</VIEWCOLUMNID>
+            <VIEWSOURCEID>13454</VIEWSOURCEID>
+            <VIEWID>8551</VIEWID>
+            <SOURCETYPEID>3</SOURCETYPEID>
+            <CONSTVAL></CONSTVAL>
+            <LOOKUPID>0</LOOKUPID>
+            <LRFIELDID>71468</LRFIELDID>
+            <EFFDATEVALUE></EFFDATEVALUE>
+            <EFFDATETYPE></EFFDATETYPE>
+            <EFFDATELRFIELDID>0</EFFDATELRFIELDID>
+            <SORTTITLELOOKUPID>0</SORTTITLELOOKUPID>
+            <SORTTITLELRFIELDID>0</SORTTITLELRFIELDID>
+            <EXTRACTCALCLOGIC><![CDATA[COLUMN = {test1}]]></EXTRACTCALCLOGIC>
+            <CREATEDTIMESTAMP>2012-10-16 11:23:58</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2017-08-17 17:58:06</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </View-Column-Source>
+    <View-SortKey>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <VIEWSORTKEYID>35206</VIEWSORTKEYID>
+            <VIEWID>8551</VIEWID>
+            <VIEWCOLUMNID>199909</VIEWCOLUMNID>
+            <KEYSEQNBR>1</KEYSEQNBR>
+            <SORTSEQCD>ASCND</SORTSEQCD>
+            <SORTBRKIND>1</SORTBRKIND>
+            <PAGEBRKIND>0</PAGEBRKIND>
+            <SORTKEYDISPLAYCD></SORTKEYDISPLAYCD>
+            <SORTKEYLABEL></SORTKEYLABEL>
+            <SKFLDFMTCD>ALNUM</SKFLDFMTCD>
+            <SKSIGNED>0</SKSIGNED>
+            <SKSTARTPOS>1</SKSTARTPOS>
+            <SKFLDLEN>5</SKFLDLEN>
+            <SKDECIMALCNT>0</SKDECIMALCNT>
+            <SKFLDCONTENTCD></SKFLDCONTENTCD>
+            <SORTTITLELRFIELDID>0</SORTTITLELRFIELDID>
+            <SORTTITLELENGTH>0</SORTTITLELENGTH>
+            <CREATEDTIMESTAMP>2012-10-16 11:24:14</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2017-08-17 17:58:06</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </View-SortKey>
+    <LogicalRecord>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LOGRECID>1360</LOGRECID>
+            <NAME>testImportMetadata_LR</NAME>
+            <LRINDEXID>2939</LRINDEXID>
+            <LRTYPECD>FILE </LRTYPECD>
+            <LRSTATUSCD>ACTVE</LRSTATUSCD>
+            <LOOKUPEXITID>0</LOOKUPEXITID>
+            <LOOKUPEXITSTARTUP></LOOKUPEXITSTARTUP>
+            <COMMENTS>testImportMetadata Logical Record</COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-16 11:14:05</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 14:42:09</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+            <LASTACTTIMESTAMP></LASTACTTIMESTAMP>
+            <LASTACTUSERID></LASTACTUSERID>
+        </Record>
+    </LogicalRecord>
+    <LRField>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LRFIELDID>71468</LRFIELDID>
+            <LOGRECID>1360</LOGRECID>
+            <NAME>test1</NAME>
+            <DBMSCOLNAME>test1</DBMSCOLNAME>
+            <FIXEDSTARTPOS>1</FIXEDSTARTPOS>
+            <ORDINALPOS>1</ORDINALPOS>
+            <ORDINALOFFSET>0</ORDINALOFFSET>
+            <REDEFINE>0</REDEFINE>
+            <COMMENTS></COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-16 11:14:05</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 11:14:13</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LRField>
+    <LR-Field-Attribute>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LRFIELDID>71468</LRFIELDID>
+            <FLDFMTCD>ALNUM</FLDFMTCD>
+            <SIGNEDIND>0</SIGNEDIND>
+            <MAXLEN>5</MAXLEN>
+            <DECIMALCNT>0</DECIMALCNT>
+            <ROUNDING>0</ROUNDING>
+            <FLDCONTENTCD></FLDCONTENTCD>
+            <JUSTIFYCD></JUSTIFYCD>
+            <HDRJUSTIFYCD></HDRJUSTIFYCD>
+            <HDRLINE1></HDRLINE1>
+            <HDRLINE2></HDRLINE2>
+            <HDRLINE3></HDRLINE3>
+            <SUBTLABEL></SUBTLABEL>
+            <SORTKEYLABEL></SORTKEYLABEL>
+            <INPUTMASK></INPUTMASK>
+            <CREATEDTIMESTAMP>2012-10-16 11:14:05</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 11:14:13</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LR-Field-Attribute>
+    <LR-Index>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LRINDEXID>2939</LRINDEXID>
+            <LOGRECID>1360</LOGRECID>
+            <EFFDATESTARTFLDID>0</EFFDATESTARTFLDID>
+            <EFFDATEENDFLDID>0</EFFDATEENDFLDID>
+            <CREATEDTIMESTAMP>2012-10-16 11:18:07</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 14:42:09</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LR-Index>
+    <LR-IndexField>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LRINDEXFLDID>24224</LRINDEXFLDID>
+            <LRINDEXID>2939</LRINDEXID>
+            <FLDSEQNBR>1</FLDSEQNBR>
+            <LRFIELDID>71468</LRFIELDID>
+            <CREATEDTIMESTAMP>2012-10-16 14:42:09</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 14:42:09</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LR-IndexField>
+    <LR-LF-Association>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LRLFASSOCID>2837</LRLFASSOCID>
+            <LOGFILEID>1357</LOGFILEID>
+            <LOGRECID>1360</LOGRECID>
+            <CREATEDTIMESTAMP>2012-10-16 11:14:05</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 11:14:05</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LR-LF-Association>
+    <LogicalFile>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LOGFILEID>1357</LOGFILEID>
+            <NAME>testImportMetadata_LF</NAME>
+            <COMMENTS>testImportMetadata Logical File</COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-16 10:58:01</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 10:58:01</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LogicalFile>
+    <LF-PF-Association>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LFPFASSOCID>14622</LFPFASSOCID>
+            <PHYFILEID>8416</PHYFILEID>
+            <PARTSEQNBR>1</PARTSEQNBR>
+            <LOGFILEID>1357</LOGFILEID>
+            <CREATEDTIMESTAMP>2012-10-16 10:58:01</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-16 10:58:01</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LF-PF-Association>
+    <PhysicalFile>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <PHYFILEID>8416</PHYFILEID>
+            <NAME>testImportMetadata_PF</NAME>
+            <FILETYPECD>DISK </FILETYPECD>
+            <DISKFILETYPECD></DISKFILETYPECD>
+            <ACCESSMETHODCD>SEQIN</ACCESSMETHODCD>
+            <READEXITID>0</READEXITID>
+            <READEXITSTARTUP></READEXITSTARTUP>
+            <DDNAMEINPUT>        </DDNAMEINPUT>
+            <DSN></DSN>
+            <MINRECLEN>0</MINRECLEN>
+            <MAXRECLEN>0</MAXRECLEN>
+            <DDNAMEOUTPUT>        </DDNAMEOUTPUT>
+            <RECFM></RECFM>
+            <LRECL>0</LRECL>
+            <DBMSSUBSYS></DBMSSUBSYS>
+            <DBMSSQL><![CDATA[]]></DBMSSQL>
+            <DBMSTABLE></DBMSTABLE>
+            <DBMSROWFMTCD></DBMSROWFMTCD>
+            <DBMSINCLNULLSIND>0</DBMSINCLNULLSIND>
+            <COMMENTS>testImportMetadata Physical File</COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-15 14:48:36</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-15 14:48:36</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </PhysicalFile>
+    <ControlRecord>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <CONTROLRECID>1</CONTROLRECID>
+            <NAME>Default_Install</NAME>
+            <FIRSTMONTH>1</FIRSTMONTH>
+            <LOWVALUE>1</LOWVALUE>
+            <HIGHVALUE>12</HIGHVALUE>
+            <COMMENTS>Created automatically during initialization</COMMENTS>
+            <CREATEDTIMESTAMP>2012-10-15 14:44:01</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-10-15 14:44:01</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </ControlRecord>
+</safrxml>

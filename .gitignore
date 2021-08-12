@@ -1,0 +1,9 @@
+Java_GUI/lib/antlr4-runtime-4.5.jar
+Java_GUI/lib/postgresql-42.2.16.jar
+Java_GUI/lib/postgresql-42.2.18.jar
+Java_GUI/lib/sycadas.jar
+product/libs/antlr4-runtime-4.5.jar
+product/libs/postgresql-42.2.16.jar
+product/libs/postgresql-42.2.18.jar
+product/libs/sycadas.jar
+Java_GUI/.classpath

@@ -1,0 +1,122 @@
+<?xml version='1.0'?>
+<!--
+Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<safrxml>
+    <Generation>
+        <Record>
+            <XMLVERSION>3</XMLVERSION>
+            <TYPE>LogicalFile</TYPE>
+            <PROGRAM>Version 4.17 development</PROGRAM>
+            <FILENAME>SimpleLF[1].xml</FILENAME>
+            <CREATEDTIMESTAMP>2017-08-15 14:35:20</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN</CREATEDUSERID>
+        </Record>
+    </Generation>
+    <LogicalFile>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LOGFILEID>1</LOGFILEID>
+            <NAME>SimpleLF</NAME>
+            <COMMENTS></COMMENTS>
+            <CREATEDTIMESTAMP>2012-02-02 20:15:03</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2013-05-02 14:49:05</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LogicalFile>
+    <LF-PF-Association>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LFPFASSOCID>1</LFPFASSOCID>
+            <PHYFILEID>1</PHYFILEID>
+            <PARTSEQNBR>1</PARTSEQNBR>
+            <LOGFILEID>1</LOGFILEID>
+            <CREATEDTIMESTAMP>2012-02-02 20:15:04</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-02-02 20:15:04</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <LFPFASSOCID>16123</LFPFASSOCID>
+            <PHYFILEID>20</PHYFILEID>
+            <PARTSEQNBR>2</PARTSEQNBR>
+            <LOGFILEID>1</LOGFILEID>
+            <CREATEDTIMESTAMP>2013-05-02 14:49:05</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2013-05-02 14:49:05</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </LF-PF-Association>
+    <PhysicalFile>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <PHYFILEID>1</PHYFILEID>
+            <NAME>SimplePF</NAME>
+            <FILETYPECD>DISK </FILETYPECD>
+            <DISKFILETYPECD></DISKFILETYPECD>
+            <ACCESSMETHODCD>SEQIN</ACCESSMETHODCD>
+            <READEXITID>0</READEXITID>
+            <READEXITSTARTUP></READEXITSTARTUP>
+            <DDNAMEINPUT>SIMPLE  </DDNAMEINPUT>
+            <DSN></DSN>
+            <MINRECLEN>0</MINRECLEN>
+            <MAXRECLEN>0</MAXRECLEN>
+            <DDNAMEOUTPUT>        </DDNAMEOUTPUT>
+            <RECFM></RECFM>
+            <LRECL>0</LRECL>
+            <DBMSSUBSYS></DBMSSUBSYS>
+            <DBMSSQL><![CDATA[]]></DBMSSQL>
+            <DBMSTABLE></DBMSTABLE>
+            <DBMSROWFMTCD></DBMSROWFMTCD>
+            <DBMSINCLNULLSIND>0</DBMSINCLNULLSIND>            
+            <COMMENTS></COMMENTS>
+            <CREATEDTIMESTAMP>2012-02-02 20:14:45</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2012-02-02 20:14:45</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+        <Record>
+            <ENVIRONID>101</ENVIRONID>
+            <PHYFILEID>20</PHYFILEID>
+            <NAME>SimplePFLU</NAME>
+            <FILETYPECD>DISK </FILETYPECD>
+            <DISKFILETYPECD></DISKFILETYPECD>
+            <ACCESSMETHODCD>SEQIN</ACCESSMETHODCD>
+            <READEXITID>0</READEXITID>
+            <READEXITSTARTUP></READEXITSTARTUP>
+            <DDNAMEINPUT>SIMPLU  </DDNAMEINPUT>
+            <DSN></DSN>
+            <MINRECLEN>0</MINRECLEN>
+            <MAXRECLEN>0</MAXRECLEN>
+            <DDNAMEOUTPUT>        </DDNAMEOUTPUT>
+            <RECFM></RECFM>
+            <LRECL>0</LRECL>
+            <DBMSSUBSYS></DBMSSUBSYS>
+            <DBMSSQL><![CDATA[]]></DBMSSQL>
+            <DBMSTABLE></DBMSTABLE>
+            <DBMSROWFMTCD></DBMSROWFMTCD>
+            <DBMSINCLNULLSIND>0</DBMSINCLNULLSIND>            
+            <COMMENTS></COMMENTS>
+            <CREATEDTIMESTAMP>2013-04-23 00:01:55</CREATEDTIMESTAMP>
+            <CREATEDUSERID>ADMIN   </CREATEDUSERID>
+            <LASTMODTIMESTAMP>2013-04-23 00:01:55</LASTMODTIMESTAMP>
+            <LASTMODUSERID>ADMIN   </LASTMODUSERID>
+        </Record>
+    </PhysicalFile>
+</safrxml>
