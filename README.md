@@ -14,12 +14,8 @@ The original code was developed via...
 
 [An install of **Eclipse Luna IDE for Java Developers 32-bit**](https://www.eclipse.org/downloads/packages/release/luna/sr2)
 
-<<<<<<< HEAD
 Any JDK Java 8 will do and any subsequent Eclipse will also suffice. Although we have seen some SWT issues with the latest release.
 The code is not limited to 32 bit.
-=======
-Any Java 8 will do and any Eclipse will also suffice. Although we have seen some SWT issues with the latest release.
->>>>>>> 193daf06c3442ce83e5c66a615e5f8e9ad804acc
 
 Clone the GenevaERS-WorkBench repository from github somewhere on your machine. We Cloned it under *youruser*  
 directory in Windows.     
