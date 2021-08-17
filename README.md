@@ -4,6 +4,8 @@ To build
 
 ## Hardware and software requirements on Windows systems  
 
+The original code was developed via... 
+
 [An install of **AdoptOpenJDK Java 8 for 32-bit**](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=openj9)
 
 [An install of **Gradle v6.6.1**](https://gradle.org/releases/)
@@ -11,6 +13,8 @@ To build
 [An install of the latest **PostgreSQL**](https://www.postgresql.org/download/)
 
 [An install of **Eclipse Luna IDE for Java Developers 32-bit**](https://www.eclipse.org/downloads/packages/release/luna/sr2)
+
+Any Java 8 will do and any Eclipse will also suffice. Although we have seen some SWT issues with the latest release.
 
 Clone the GenevaERS-WorkBench repository from github somewhere on your machine. We Cloned it under *youruser*  
 directory in Windows.     
