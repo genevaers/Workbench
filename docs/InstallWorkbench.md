@@ -6,7 +6,7 @@ nav_order: 3
 
 # Install the GenevaERS Workbench
 
-(Place instructdions here.)
+(Place wb install instructdions here.)
 
 -----
 

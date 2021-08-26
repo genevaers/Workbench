@@ -16,5 +16,4 @@ To see how the demo reports are configured, do the following:
 
 ## Next Topics
 
-
 Full Workbench documentation (link not yet available).

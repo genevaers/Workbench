@@ -5,7 +5,7 @@ nav_order: 5
 ---
 # What the Workbench does
 
-## How to configure GenevaERS to do things
+## Configure GenevaERS to do things
 
 The Workbench is how you tell GenevaERS what needs to be done.
 

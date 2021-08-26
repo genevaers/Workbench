@@ -34,7 +34,7 @@ A paid version is even faster using special features.
 
 ## Next Topic
 
- [Install the Workbench](InstallWorkbench.md)
+[Install the Workbench](InstallWorkbench.md)
 
 [Videos about GenevaERS](VideosGenevaERS.md)
 

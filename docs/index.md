@@ -6,10 +6,13 @@ nav_order: 1
 
 # Home - GenevaERS Workbench documentation
 
-## Demo topics
+## Workbench topics
 
- [Install the Workbench](InstallWorkbench.md)
+[Install the Workbench](InstallWorkbench.md)
 
+[What the Workbench does](WhatWBDoes.md)
+
+[SeeDemoConfigInWorkbench](DemoWBConfig.md)
 
 ## Background info
 
