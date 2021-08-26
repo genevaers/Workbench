@@ -7,9 +7,9 @@ nav_order: 7
 
 ## How to access the Demo views in the Workbench
 
-Not downloaded and run the GenevaERS Demo?  See [here](https://genevaers.github.io/demo/)
+Not downloaded and run the GenevaERS Demo?  See [GenevaERS Demo](https://genevaers.github.io/demo/)
 
-To see how the demo reports are configured, do the following:
+To see how the **demo reports are configured in the Workbench**, do the following:
 
 (Place instructions here.)
 

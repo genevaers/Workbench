@@ -33,6 +33,8 @@ For full documentation of how to use the Workbench, see (link not yet available)
 
 [Install the Workbench](InstallWorkbench.md)
 
- [Demo views](DemoViews.md)
+[Demo views](DemoViews.md)
 
-Full Workbench documentation (link not yet available).
+[Data Generator](DataGenerator.md)
+
+**Full Workbench documentation** (link not available yet).
