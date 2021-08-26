@@ -28,7 +28,7 @@ end
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
-gem “webrick”
+gem "webrick"
 gem "terminal-table", "~> 1.4"
 gem "jekyll-sass-converter", "~> 1.5.2"
 gem "mercenary", "~> 0.3.3"

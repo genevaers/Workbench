@@ -14,15 +14,15 @@ Like most things in IT, it is a matter of:
 2.  Define processing
 3.  Define outputs
 
-A collection of the three points above is called a "view".  Running GenevaERS is a matter of preparing views in the Workbench and then running the views in the Performance Engine. 
+A collection of the three points above is called a "**view**".  A view shows what your requested processing for GenevaERS.
 
-The Performance Engine is the part of GenevaERS that actually produces the results.  When you downloaded the demo you downloaded a working copy of the Performance Enginel;
+Running GenevaERS is a matter of preparing views in the Workbench and then running the views in the Performance Engine. 
 
-Once you have installed the Workbench, you need to learn all the possibilities for the a view which is all about the three points above.
+The Performance Engine is the part of GenevaERS that actually produces the results.  When you downloaded the demo you downloaded a working copy of the Performance Engine.
 
-One way to start is to look at the Workbench configuration for the GenevaERS demo.
+Once you have installed the Workbench, you need to learn how to use it.  
 
-See topic [SeeDemoConfigInWorkbench](DemoWBConfig.md)
+One way to learn is to look at the views for the GenevaERS demo - see [Demo views](DemoViews.md).
 
 For full documentation of how to use the Workbench, see (link not yet available). 
 
@@ -33,6 +33,6 @@ For full documentation of how to use the Workbench, see (link not yet available)
 
 [Install the Workbench](InstallWorkbench.md)
 
-[SeeDemoConfigInWorkbench](DemoWBConfig.md)
+ [Demo views](DemoViews.md)
 
 Full Workbench documentation (link not yet available).

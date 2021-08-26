@@ -12,7 +12,7 @@ nav_order: 1
 
 [What the Workbench does](WhatWBDoes.md)
 
-[SeeDemoConfigInWorkbench](DemoWBConfig.md)
+[Demo views](DemoViews.md)
 
 ## Background info
 
