@@ -21,7 +21,7 @@ end
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.
 platforms :mingw, :x64_mingw, :mswin, :jruby do
-  gem "tzinfo", "~> 1.0.1"
+  gem "tzinfo", "~> 1.0.0"
   gem "tzinfo-data"
 end
 
@@ -29,7 +29,3 @@ end
 gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
 gem "webrick"
-gem "terminal-table", "~> 1.4"
-gem "jekyll-sass-converter", "~> 1.5.2"
-gem "mercenary", "~> 0.3.3"
-gem "i18n", "~> 0.7"

@@ -220,13 +220,9 @@ PLATFORMS
 
 DEPENDENCIES
   github-pages (~> 217)
-  i18n (~> 0.7)
   jekyll-feed (~> 0.12)
-  jekyll-sass-converter (~> 1.5.2)
   just-the-docs
-  mercenary (~> 0.3.3)
-  terminal-table (~> 1.4)
-  tzinfo (~> 1.0.1)
+  tzinfo (~> 1.0.0)
   tzinfo-data
   wdm (~> 0.1.1)
   webrick
