@@ -1,11 +1,11 @@
 ---
 layout: page
-title: Demo config in Workbench
+title: Demo views
 nav_order: 7
 ---
-# Demo configuration in the Workbench
+# Demo views
 
-## How to access the Demo config for the Workbench
+## How to access the Demo views in the Workbench
 
 To see how the demo reports are configured, do the following:
 
