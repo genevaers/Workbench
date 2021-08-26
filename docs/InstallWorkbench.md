@@ -14,3 +14,9 @@ nav_order: 3
 
 [What the Workbench does](WhatWBDoes.md)
 
+[Demo views](DemoViews.md)
+
+[Data Generator](DataGenerator.md)
+
+**Full Workbench documentation** (link not available yet).
+

@@ -14,6 +14,10 @@ nav_order: 1
 
 [Demo views](DemoViews.md)
 
+[Data Generator](DataGenerator.md)
+
+**Full Workbench documentation** (link not available yet).
+
 ## Background info
 
 [What is GenevaERS?](WhatIsGenevaERS.md)
