@@ -1,9 +1,9 @@
 ---
 layout: page
-title: What the Workbench does
+title: What the Workbench does (intro)
 nav_order: 5
 ---
-# What the Workbench does
+# What the Workbench does (introduction)
 
 ## Configure GenevaERS to do things
 
@@ -24,7 +24,8 @@ Once you have installed the Workbench, you need to learn how to use it.
 
 One way to learn is to look at the views for the GenevaERS demo - see [Demo views](DemoViews.md).
 
-For full documentation of how to use the Workbench, see (link not yet available). 
+After learning from the demo views, see **Full Workbench documentation** (link not available yet).
+
 
 
 -----
