@@ -6,7 +6,7 @@ permalink: /about/
 
 # About this website
 
-This is a website about the demo for GenevaERS.
+This is a website about the Workbench for GenevaERS.
 
 
 This is a draft version that is being updated.
