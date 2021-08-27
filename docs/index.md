@@ -18,6 +18,8 @@ nav_order: 1
 
 **Full Workbench documentation** (link not available yet).
 
+[Link to Workbench repo in GitHub](https://github.com/genevaers/wb)
+
 ## Background info
 
 [What is GenevaERS?](WhatIsGenevaERS.md)

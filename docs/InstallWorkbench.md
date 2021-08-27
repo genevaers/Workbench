@@ -20,3 +20,5 @@ nav_order: 3
 
 **Full Workbench documentation** (link not available yet).
 
+[Link to Workbench repo in GitHub](https://github.com/genevaers/wb)
+

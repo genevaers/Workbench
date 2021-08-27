@@ -1,6 +1,6 @@
 ---
 layout: page
-title: What the Workbench does (intro)
+title: What the Workbench does
 nav_order: 5
 ---
 # What the Workbench does (introduction)
@@ -39,3 +39,5 @@ After learning from the demo views, see **Full Workbench documentation** (link n
 [Data Generator](DataGenerator.md)
 
 **Full Workbench documentation** (link not available yet).
+
+[Link to Workbench repo in GitHub](https://github.com/genevaers/wb)
