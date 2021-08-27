@@ -1,6 +1,6 @@
 ---
 layout: home
-title: Home
+title: Home (Workbench doco)
 nav_order: 1
 ---
 
