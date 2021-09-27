@@ -56,6 +56,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -1061,26 +1062,29 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 	
 	public void closeActivationLog() {
-		ActivationLogViewNew logView = (ActivationLogViewNew)getSite().getPage().findView(ActivationLogViewNew.ID);
-		if (logView != null && logView.isViewEditor()) {
-			if (viewActivationMessageExistsNew()) {
-				expandsNew = logView.getExpands();
-			}
-			else {
-				expandsNew = null;
-			}
-			getSite().getPage().hideView(logView);
-		}		
-        ActivationLogViewOld logView2 = (ActivationLogViewOld)getSite().getPage().findView(ActivationLogViewOld.ID);
-        if (logView2 != null && logView2.isViewEditor()) {
-            if (viewActivationMessageExistsOld()) {
-                expandsOld = logView2.getExpands();
-            }
-            else {
-                expandsOld = null;
-            }
-            getSite().getPage().hideView(logView2);                        
-        }
+		IWorkbenchPage page = getSite().getPage();
+		if(page != null) {
+		ActivationLogViewNew logView = (ActivationLogViewNew)page.findView(ActivationLogViewNew.ID);
+			if (logView != null && logView.isViewEditor()) {
+				if (viewActivationMessageExistsNew()) {
+					expandsNew = logView.getExpands();
+				}
+				else {
+					expandsNew = null;
+				}
+				getSite().getPage().hideView(logView);
+			}		
+	        ActivationLogViewOld logView2 = (ActivationLogViewOld)getSite().getPage().findView(ActivationLogViewOld.ID);
+	        if (logView2 != null && logView2.isViewEditor()) {
+	            if (viewActivationMessageExistsOld()) {
+	                expandsOld = logView2.getExpands();
+	            }
+	            else {
+	                expandsOld = null;
+	            }
+	            getSite().getPage().hideView(logView2);                        
+	        }
+		}
 	}
 	
 	public boolean viewActivationMessageExistsNew() {
