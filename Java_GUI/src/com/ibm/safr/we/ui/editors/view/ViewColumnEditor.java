@@ -75,6 +75,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -2335,10 +2336,13 @@ public class ViewColumnEditor {
         }
         if (sortView == false) {
             // close the sort key title view too
-            IViewPart viewPartTitle = mediator.getSite().getPage().findView(SortKeyTitleView.ID);
-            if (viewPartTitle != null) {
-	            mediator.getSite().getPage().hideView(viewPartTitle);
-            }
+        	IWorkbenchPage page = mediator.getSite().getPage();
+        	if(page != null) {
+	            IViewPart viewPartTitle = page.findView(SortKeyTitleView.ID);
+	            if (viewPartTitle != null) {
+		            mediator.getSite().getPage().hideView(viewPartTitle);
+	            }
+        	}
         }
         
         fromViewType = viewType;
