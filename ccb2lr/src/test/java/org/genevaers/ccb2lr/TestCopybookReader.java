@@ -45,7 +45,7 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/OneLine.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("ONE_LINE", ccb2lr.getName());
+		assertEquals("ONE_LINE", ccb2lr.getRecordModel().getName());
 		assertFalse(ccb2lr.hasErrors());
 	}
 
@@ -55,8 +55,8 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simple.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getName());
-		assertEquals(7, ccb2lr.getFields().size());
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
+		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
 	}
 
 }

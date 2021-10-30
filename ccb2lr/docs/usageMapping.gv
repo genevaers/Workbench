@@ -1,0 +1,12 @@
+digraph Copybook2LR_Flow {
+    rankdir=LR;
+    
+    DISPLAY -> Zoned
+    COMP-3 -> Packed
+    COMP-4 -> Binary picture -> size
+    COMP-5 -> Binary at binary field size 1/2/4
+    BINARY -> Binary
+    PACKED -> Packed
+
+
+}

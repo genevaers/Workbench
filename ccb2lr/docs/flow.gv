@@ -1,0 +1,18 @@
+digraph Copybook2LR_Flow {
+    rankdir=LR;
+    
+    copybook[shape=file color=green style=filled]
+    RecordModel[shape=file color=lightblue style=filled]
+    LRGenerator[shape=file color=lightblue style=filled]
+    HTML_Doc[shape=file color=gold style=filled]
+    DSECT[shape=file  color=lightblue style=filled]
+    Parser[color=pink style=filled]
+    LR[shape=egg color=green style=filled]
+
+    copybook -> Parser
+    Parser -> RecordModel
+    RecordModel -> LRGenerator
+    LRGenerator -> HTML_Doc
+    LRGenerator -> LR
+    LRGenerator -> DSECT
+}

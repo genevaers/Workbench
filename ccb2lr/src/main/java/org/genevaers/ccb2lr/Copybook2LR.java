@@ -67,12 +67,7 @@ public class Copybook2LR {
         return errorListener.getErrors().size() > 0;
     }
 
-    public String getName() {
-        return ccbListener.getName();
+    public RecordModel getRecordModel() {
+        return ccbListener.getRecordModel();
     }
-
-    public List<CobolField> getFields() {
-        return ccbListener.getFields();
-    }
-
 }

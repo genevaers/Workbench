@@ -28,12 +28,15 @@ import java.util.Set;
 
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
+import org.genevaers.ccb2lr.grammar.CobolCopybookParser.Alpha_xContext;
 
 public class CopybookListener extends CobolCopybookBaseListener {
 
 	private List<String> errors = new ArrayList<>();
 	private String name;
-	private List<CobolField> fields = new ArrayList<>();
+	private String section;
+	private RecordModel recordModel;
+	private CobolField currentCopybookField;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -47,21 +50,42 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	public void enterGroup(CobolCopybookParser.GroupContext ctx) { 
 		//Want to get the identifier name
 		name = ctx.identifier().getText();
-		
+		section = ctx.section().getText();
+		if(recordModel == null  && section.equals("01")) {
+			recordModel = new RecordModel();
+			recordModel.setName(name);
+		} else {
+			//error condition - there should be only one 01 line
+		}
+
 	}
 
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
-		CobolField cbf = new CobolField();
-		cbf.setName(ctx.identifier().getText());
-		fields.add(cbf);
+		section = ctx.section().getText();
+		name = ctx.identifier().getText();
 	}
 
-
-	public String getName() {
-		return name;
+	@Override public void exitAlpha_x(CobolCopybookParser.Alpha_xContext ctx) { 
+		//But a COMP usage may make it a different type
+		//So use exit?
+		currentCopybookField = new AlphanumericField();
+		currentCopybookField.setName(name);
+		currentCopybookField.setSection(section);
+		currentCopybookField.setPicType("alpha_x");
+		currentCopybookField.setPicCode(ctx.getText());
+		recordModel.addField(currentCopybookField);
 	}
 
-	public List<CobolField> getFields() {
-		return fields;
+	@Override public void exitSign_precision_9(CobolCopybookParser.Sign_precision_9Context ctx) { 
+		currentCopybookField = new ZonedField();
+		currentCopybookField.setName(name);
+		currentCopybookField.setSection(section);
+		currentCopybookField.setPicType("signed_precision_9");
+		currentCopybookField.setPicCode(ctx.getText());
+		recordModel.addField(currentCopybookField);
+	}
+
+	public RecordModel getRecordModel() {
+		return recordModel;
 	}
 }
