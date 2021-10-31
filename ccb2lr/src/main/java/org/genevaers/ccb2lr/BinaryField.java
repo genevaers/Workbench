@@ -6,5 +6,11 @@ public class BinaryField extends CobolField {
     public FieldType getType() {
         return FieldType.BINARY;
     }
+
+    @Override
+    public int getLength() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
     
 }

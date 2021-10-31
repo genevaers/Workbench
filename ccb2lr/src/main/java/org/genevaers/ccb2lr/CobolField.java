@@ -12,7 +12,7 @@ public abstract class CobolField {
                             //Or should we model it as a field has fields?
     private String name;
     private String picType;
-    private String picCode;
+    protected String picCode;
     private List<CobolField> children = new ArrayList<>();
 
     public enum FieldType {
@@ -57,5 +57,16 @@ public abstract class CobolField {
     }
 
     abstract public FieldType getType();
+
+    abstract public int getLength();
+
+    protected int getParenLength(int parenStart) {
+        int len;
+        int parenEnd = picCode.indexOf(')', 0);
+        String lenStr = picCode.substring(parenStart+1, parenEnd);
+        len = Integer.parseInt(lenStr);
+        return len;
+    }
+
     
 }

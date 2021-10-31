@@ -30,4 +30,14 @@ public class RecordModel {
     public Iterator<CobolField> getFieldIterator() {
         return fields.iterator();
     }
+
+    public int getLength() {
+        int length = 0;
+        Iterator<CobolField> fit = fields.iterator();
+        while(fit.hasNext()) {
+            CobolField cbf = fit.next();
+            length += cbf.getLength();
+        }
+        return length;
+    }
 }

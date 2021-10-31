@@ -61,7 +61,7 @@ public class TestCopybookReader {
 	}
 
 	@Test
-	public void testCCB2LRSimplePackedBinat() throws IOException {
+	public void testCCB2LRSimplePackedBinary() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
 		ccb2lr.processCopybook(testPath);
@@ -82,6 +82,17 @@ public class TestCopybookReader {
 		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
 		assertTrue(packedFound);
 		assertTrue(binaryFound);
+	}
+
+	@Test
+	public void testCCB2LRSimpleLength() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/simple.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
+		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+		assertEquals(77, ccb2lr.getRecordModel().getLength());
 	}
 
 }
