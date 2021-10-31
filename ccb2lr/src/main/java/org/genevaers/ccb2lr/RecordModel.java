@@ -1,6 +1,8 @@
 package org.genevaers.ccb2lr;
 
+import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class RecordModel {
@@ -23,5 +25,9 @@ public class RecordModel {
 
     public void addField(CobolField f) {
         fields.add(f);
+    }
+
+    public Iterator<CobolField> getFieldIterator() {
+        return fields.iterator();
     }
 }

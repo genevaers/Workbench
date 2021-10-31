@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CobolField {
+public abstract class CobolField {
     private String section; //for group levels they must increase for deeper levels
                             //We can assume that any copybook we're given is correct.
                             //Not our job to compile the copybook really
@@ -14,6 +14,13 @@ public class CobolField {
     private String picType;
     private String picCode;
     private List<CobolField> children = new ArrayList<>();
+
+    public enum FieldType {
+        ALPHA,
+        ZONED,
+        PACKED,
+        BINARY
+    }
 
     public String getSection() {
         return section;
@@ -48,5 +55,7 @@ public class CobolField {
     public Iterator<CobolField> getChildIterator() {
         return children.iterator();
     }
+
+    abstract public FieldType getType();
     
 }

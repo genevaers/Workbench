@@ -36,6 +36,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.genevaers.ccb2lr.Copybook2LR;
+import org.genevaers.ccb2lr.CobolField.FieldType;
 
 public class TestCopybookReader {
 
@@ -57,6 +58,30 @@ public class TestCopybookReader {
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
 		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+	}
+
+	@Test
+	public void testCCB2LRSimplePackedBinat() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
+		Iterator<CobolField> fit = ccb2lr.getRecordModel().getFieldIterator();
+		boolean packedFound = false;
+		boolean binaryFound = false;
+		while(fit.hasNext()) {
+			CobolField cb = fit.next();
+			if(cb.getType() == FieldType.PACKED) {
+				packedFound = true;
+			}
+			if(cb.getType() == FieldType.BINARY) {
+				binaryFound = true;
+			}
+		}
+		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+		assertTrue(packedFound);
+		assertTrue(binaryFound);
 	}
 
 }
