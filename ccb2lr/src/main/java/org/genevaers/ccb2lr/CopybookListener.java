@@ -63,8 +63,12 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	}
 
+	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
+		usage = null;
+	}
+
 	@Override public void exitPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
-		//alternative is to gather info and put it together when we exit
+			//alternative is to gather info and put it together when we exit
 		//that would be much better
 		CobolField cb = makeField();
 		currentCopybookField.setName(name);

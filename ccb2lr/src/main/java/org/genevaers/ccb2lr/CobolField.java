@@ -68,5 +68,16 @@ public abstract class CobolField {
         return len;
     }
 
+    protected int getPicLength() {
+        int len;
+        int parenStart = picCode.indexOf('(', 0);
+        if(parenStart != -1) {
+            len = getParenLength(parenStart);
+        } else {
+            len = picCode.length();
+        }
+        return len;
+    }
+
     
 }

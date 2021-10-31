@@ -9,8 +9,8 @@ public class PackedField extends CobolField{
 
     @Override
     public int getLength() {
-        // TODO Auto-generated method stub
-        return 0;
+        int len = getPicLength();
+        return (len+1)/2;
     }
     
 }

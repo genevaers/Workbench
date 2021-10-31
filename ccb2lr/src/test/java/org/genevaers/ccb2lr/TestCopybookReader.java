@@ -95,4 +95,15 @@ public class TestCopybookReader {
 		assertEquals(77, ccb2lr.getRecordModel().getLength());
 	}
 
+	@Test
+	public void testCCB2LRSimplePackedBinaryLength() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
+		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+		assertEquals(75, ccb2lr.getRecordModel().getLength());
+	}
+
 }
