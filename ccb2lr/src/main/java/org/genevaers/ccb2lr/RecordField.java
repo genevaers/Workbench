@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class RecordModel {
+public class RecordField extends CobolField{
     
 	private String name;
 	private LinkedHashMap<String, CobolField> fields = new LinkedHashMap<>();
@@ -42,5 +42,25 @@ public class RecordModel {
 
     public CobolField getField(String name) {
         return fields.get(name);
+    }
+
+    @Override
+    public FieldType getType() {
+        return FieldType.RECORD;
+    }
+
+    public Object getNumberOfFields() {
+        int num = 0;
+        Iterator<CobolField> fit = fields.values().iterator();
+        while(fit.hasNext()) {
+            CobolField cbf = fit.next();
+            if(cbf.getType() == FieldType.GROUP) {
+                num++; //one for the group itself
+                num += ((GroupField)cbf).getNumberOfFields();
+            } else {
+                num++;
+            }
+        }
+        return num;
     }
 }

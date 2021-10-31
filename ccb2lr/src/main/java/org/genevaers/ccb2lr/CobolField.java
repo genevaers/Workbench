@@ -13,13 +13,13 @@ public abstract class CobolField {
     private String name;
     private String picType;
     protected String picCode;
-    private List<CobolField> children = new ArrayList<>();
 
     public enum FieldType {
         ALPHA,
         ZONED,
         PACKED,
-        BINARY
+        BINARY, 
+        GROUP, RECORD
     }
 
     public String getSection() {
@@ -47,13 +47,6 @@ public abstract class CobolField {
     }
     public void setPicCode(String picCode) {
         this.picCode = picCode;
-    }
-    public void addChildField(CobolField f) {
-        children.add(f);
-    }
-
-    public Iterator<CobolField> getChildIterator() {
-        return children.iterator();
     }
 
     abstract public FieldType getType();

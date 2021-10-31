@@ -67,7 +67,7 @@ public class Copybook2LR {
         return errorListener.getErrors().size() > 0;
     }
 
-    public RecordModel getRecordModel() {
-        return ccbListener.getRecordModel();
+    public RecordField getRecordField() {
+        return ccbListener.getRecordField();
     }
 }

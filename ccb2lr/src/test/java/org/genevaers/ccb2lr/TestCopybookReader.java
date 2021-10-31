@@ -46,7 +46,7 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/OneLine.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("ONE_LINE", ccb2lr.getRecordModel().getName());
+		assertEquals("ONE_LINE", ccb2lr.getRecordField().getName());
 		assertFalse(ccb2lr.hasErrors());
 	}
 
@@ -56,8 +56,8 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simple.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
-		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		assertEquals(7, ccb2lr.getRecordField().getFields().size());
 	}
 
 	@Test
@@ -66,8 +66,8 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
-		Iterator<CobolField> fit = ccb2lr.getRecordModel().getFieldIterator();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		Iterator<CobolField> fit = ccb2lr.getRecordField().getFieldIterator();
 		boolean packedFound = false;
 		boolean binaryFound = false;
 		while(fit.hasNext()) {
@@ -79,7 +79,7 @@ public class TestCopybookReader {
 				binaryFound = true;
 			}
 		}
-		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
+		assertEquals(7, ccb2lr.getRecordField().getFields().size());
 		assertTrue(packedFound);
 		assertTrue(binaryFound);
 	}
@@ -90,9 +90,9 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simple.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
-		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
-		assertEquals(77, ccb2lr.getRecordModel().getLength());
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(77, ccb2lr.getRecordField().getLength());
 	}
 
 	@Test
@@ -101,9 +101,9 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
-		assertEquals(7, ccb2lr.getRecordModel().getFields().size());
-		assertEquals(75, ccb2lr.getRecordModel().getLength());
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(75, ccb2lr.getRecordField().getLength());
 	}
 
 	@Test
@@ -112,12 +112,27 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/simpleSigned.cb");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
-		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
-		assertEquals(8, ccb2lr.getRecordModel().getFields().size());
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		assertEquals(8, ccb2lr.getRecordField().getFields().size());
 		//maybe we should store the fields in a map then we can get them by name
-		assertTrue(ccb2lr.getRecordModel().getField("AMOUNT").isSigned());
-		assertFalse(ccb2lr.getRecordModel().getField("UNSIGN").isSigned());
-		assertEquals(82, ccb2lr.getRecordModel().getLength());
+		assertTrue(ccb2lr.getRecordField().getField("AMOUNT").isSigned());
+		assertFalse(ccb2lr.getRecordField().getField("UNSIGN").isSigned());
+		assertEquals(82, ccb2lr.getRecordField().getLength());
+	}
+
+	@Test
+	public void testCCB2LRGroup() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/group.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
+		assertEquals(8, ccb2lr.getRecordField().getNumberOfFields());
+		GroupField group = (GroupField) ccb2lr.getRecordField().getField("CUSTOMER-NAME");
+		assertEquals(FieldType.GROUP,  group.getType());
+		assertEquals(FieldType.ALPHA,  group.getField("LAST-NAME").getType());
+
+		assertEquals(77, ccb2lr.getRecordField().getLength());
 	}
 
 }

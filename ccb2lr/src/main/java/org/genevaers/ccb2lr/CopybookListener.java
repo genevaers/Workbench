@@ -35,7 +35,9 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private List<String> errors = new ArrayList<>();
 	private String name;
 	private String section;
-	private RecordModel recordModel;
+	private GroupField group;
+	private String currentSection;
+	private RecordField recordField;
 	private CobolField currentCopybookField;
 	private String usage;
 	private String picType;
@@ -54,13 +56,22 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		//Want to get the identifier name
 		name = ctx.identifier().getText();
 		section = ctx.section().getText();
-		if(recordModel == null  && section.equals("01")) {
-			recordModel = new RecordModel();
-			recordModel.setName(name);
+		if(recordField == null  && section.equals("01")) {
+			recordField = new RecordField();
+			recordField.setName(name);
 		} else {
-			//error condition - there should be only one 01 line
+			//This must be a group
+			//is a group the same as a field?
+				group = new GroupField();
+				group.setName(name);
+				group.setSection(section);
+				recordField.addField(group);
 		}
 
+	}
+
+	@Override 
+	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
 	}
 
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
@@ -75,7 +86,16 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		currentCopybookField.setSection(section);
 		currentCopybookField.setPicType(picType);
 		currentCopybookField.setPicCode(picCode);
-		recordModel.addField(currentCopybookField);
+		if(group != null) {
+			if( section.equals(group.getSection()) ) {
+				group = null;
+				recordField.addField(currentCopybookField);
+			} else {
+				group.addField(currentCopybookField);
+			}
+		} else {
+			recordField.addField(currentCopybookField);
+		}
 	}
 
 
@@ -104,8 +124,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		picCode = ctx.getText();
 	}
 
-	public RecordModel getRecordModel() {
-		return recordModel;
+	public RecordField getRecordField() {
+		return recordField;
 	}
 
 	private CobolField makeField() {
