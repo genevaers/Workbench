@@ -2,11 +2,13 @@ digraph Copybook2LR_Flow {
     rankdir=LR;
     
     DISPLAY -> Zoned
-    COMP-3 -> Packed
-    COMP-4 -> Binary picture -> size
-    COMP-5 -> Binary at binary field size 1/2/4
+    "COMP-3" -> Packed
+    "COMP-4" -> Binary //picture -> size
+    "COMP-5" -> Binary //at binary field size 1/2/4
     BINARY -> Binary
     PACKED -> Packed
 
+// see https://www.ibm.com/docs/en/i/7.4?topic=division-data-divisiondata-description-entry
+// and http://www.3480-3590-data-conversion.com/article-reading-cobol-layouts-1.html
 
 }

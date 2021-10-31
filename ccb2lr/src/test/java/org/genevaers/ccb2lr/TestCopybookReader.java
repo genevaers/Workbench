@@ -106,4 +106,18 @@ public class TestCopybookReader {
 		assertEquals(75, ccb2lr.getRecordModel().getLength());
 	}
 
+	@Test
+	public void testCCB2LRSimpleSigned() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/simpleSigned.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordModel().getName());
+		assertEquals(8, ccb2lr.getRecordModel().getFields().size());
+		//maybe we should store the fields in a map then we can get them by name
+		assertTrue(ccb2lr.getRecordModel().getField("AMOUNT").isSigned());
+		assertFalse(ccb2lr.getRecordModel().getField("UNSIGN").isSigned());
+		assertEquals(82, ccb2lr.getRecordModel().getLength());
+	}
+
 }

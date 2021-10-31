@@ -79,5 +79,9 @@ public abstract class CobolField {
         return len;
     }
 
+    public boolean isSigned() {
+        return picCode.charAt(0) == 'S';
+    }
+
     
 }
