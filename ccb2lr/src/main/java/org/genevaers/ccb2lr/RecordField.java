@@ -4,19 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class RecordField extends CobolField{
+public class RecordField extends CobolField implements ParentField { 
     
-	private String name;
 	private LinkedHashMap<String, CobolField> fields = new LinkedHashMap<>();
-
-
-	public String getName() {
-		return name;
-	}
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
 	public Collection<CobolField> getFields() {
 		return fields.values();
@@ -31,6 +21,7 @@ public class RecordField extends CobolField{
     }
 
     public int getLength() {
+        //This could now be done by getting postiion of the last field and adding its length
         int length = 0;
         Iterator<CobolField> fit = fields.values().iterator();
         while(fit.hasNext()) {
@@ -63,4 +54,14 @@ public class RecordField extends CobolField{
         }
         return num;
     }
+
+    public void resolvePositions() {
+        int pos = 1;
+        Iterator<CobolField> fit = fields.values().iterator();
+        while(fit.hasNext()) {
+            CobolField cbf = fit.next();
+            pos = cbf.resolvePosition(pos);
+        }
+    }
+
 }

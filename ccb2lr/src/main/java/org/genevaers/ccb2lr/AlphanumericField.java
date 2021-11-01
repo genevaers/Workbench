@@ -11,5 +11,5 @@ public class AlphanumericField extends CobolField {
     public int getLength() {
         return getPicLength();
     }
-    
+
 }

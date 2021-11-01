@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class CobolField {
-    private String section; //for group levels they must increase for deeper levels
+    private int section; //for group levels they must increase for deeper levels
                             //We can assume that any copybook we're given is correct.
                             //Not our job to compile the copybook really
                             //But we could check for ascending levels
@@ -13,6 +13,8 @@ public abstract class CobolField {
     private String name;
     private String picType;
     protected String picCode;
+    protected int position = 0;
+    private ParentField parent;
 
     public enum FieldType {
         ALPHA,
@@ -22,12 +24,16 @@ public abstract class CobolField {
         GROUP, RECORD
     }
 
-    public String getSection() {
+    public int getSection() {
         return section;
     }
 
     public void setSection(String section) {
-        this.section = section;
+        this.section = Integer.parseInt(section);
+    }
+
+    public void setSection(int s) {
+        section = s;
     }
 
     public String getName() {
@@ -76,5 +82,21 @@ public abstract class CobolField {
         return picCode.charAt(0) == 'S';
     }
 
-    
+    public int getPosition() {
+        return position;
+    }
+
+    public int resolvePosition(int pos) {
+        position = pos;
+        return pos + getLength();
+    }
+
+    public void setParent(ParentField parent) {
+        this.parent = parent;
+    }
+
+    public ParentField getParent() {
+        return parent;
+    }
+
 }

@@ -135,4 +135,67 @@ public class TestCopybookReader {
 		assertEquals(77, ccb2lr.getRecordField().getLength());
 	}
 
+	@Test
+	public void testCCB2LRSimpleReslovePositions() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/simple.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		RecordField rf = ccb2lr.getRecordField();
+		rf.resolvePositions();
+		int positions [] = {1,16,24,44,61,63,68};
+		checkFieldPositions(rf, positions);
+		assertEquals(77, ccb2lr.getRecordField().getLength());
+	}
+
+	@Test
+	public void testCCB2LRGoupReslovePositions() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/group.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		RecordField rf = ccb2lr.getRecordField();
+		rf.resolvePositions();
+		int positions [] = {1,1,16,24,44,61,63,68};
+		checkFieldPositions(rf, positions);
+		assertEquals(77, ccb2lr.getRecordField().getLength());
+	}
+
+	@Test
+	public void testCCB2LRGoupInGroupReslovePositions() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupInGroup.cb");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		RecordField rf = ccb2lr.getRecordField();
+		rf.resolvePositions();
+		int positions [] = {1,31,31,31,46,54,54,69,77,77,87,102,110,125,140,142};
+		checkFieldPositions(rf, positions);
+		assertEquals(146, ccb2lr.getRecordField().getLength());
+	}
+
+	private void checkFieldPositions(RecordField rf, int[] positions) {
+		Iterator<CobolField> fit = rf.getFieldIterator();
+		int ndx = 0;
+		while(fit.hasNext()) {
+			CobolField f = fit.next();
+			assertEquals(positions[ndx++], f.getPosition());
+			if(f.getType() == FieldType.GROUP) {
+				ndx = recurseGroup(f, ndx, positions);
+			}
+		}
+	}
+
+	private int recurseGroup(CobolField f, int ndx, int[] positions) {
+			Iterator<CobolField> git = ((GroupField) f).getChildIterator();
+			while(git.hasNext()) {
+				CobolField gf = git.next();
+				assertEquals(positions[ndx++], gf.getPosition());
+				if(gf.getType() == FieldType.GROUP) {
+					ndx =recurseGroup(gf, ndx, positions);
+				}	
+			}
+			return ndx;
+	}
+
 }

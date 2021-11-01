@@ -19,22 +19,16 @@ package org.genevaers.ccb2lr;
 
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
-import org.genevaers.ccb2lr.grammar.CobolCopybookParser.Alpha_xContext;
 
 public class CopybookListener extends CobolCopybookBaseListener {
 
 	private List<String> errors = new ArrayList<>();
 	private String name;
-	private String section;
+	private int section;
 	private GroupField group;
 	private String currentSection;
 	private RecordField recordField;
@@ -55,17 +49,27 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	public void enterGroup(CobolCopybookParser.GroupContext ctx) { 
 		//Want to get the identifier name
 		name = ctx.identifier().getText();
-		section = ctx.section().getText();
-		if(recordField == null  && section.equals("01")) {
+		section = Integer.parseInt(ctx.section().getText());
+		if(section == 1) {
+			//could cross check that this is the only 01 but we assume copybook
+			//has already been compiled
 			recordField = new RecordField();
 			recordField.setName(name);
 		} else {
 			//This must be a group
-			//is a group the same as a field?
-				group = new GroupField();
-				group.setName(name);
-				group.setSection(section);
-				recordField.addField(group);
+			ParentField parent;
+			if(group == null) {
+				parent = recordField;
+			} else if( group.getSection() == section) {
+				parent = group.getParent();
+			} else {
+				parent = group;
+			}
+			group = new GroupField();
+			group.setName(name);
+			group.setSection(section);
+			group.setParent(parent);
+			parent.addField(group);
 		}
 
 	}
@@ -87,11 +91,21 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		currentCopybookField.setPicType(picType);
 		currentCopybookField.setPicCode(picCode);
 		if(group != null) {
-			if( section.equals(group.getSection()) ) {
+			if( section == group.getSection() ) {
 				group = null;
 				recordField.addField(currentCopybookField);
 			} else {
-				group.addField(currentCopybookField);
+				if(section > group.getSection()) {
+					group.addField(currentCopybookField);
+				} else {
+					ParentField parent = group.getParent();
+					int grpSec = parent.getSection();
+					while(section <= grpSec) {
+						parent = parent.getParent();
+						grpSec = parent.getSection();
+					}
+					parent.addField(currentCopybookField);
+				}
 			}
 		} else {
 			recordField.addField(currentCopybookField);
@@ -104,7 +118,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	}
 
 	@Override public void enterSection(CobolCopybookParser.SectionContext ctx) { 
-		section = ctx.getText();	
+		section = Integer.parseInt(ctx.getText());	
 	}
 
 	@Override public void enterUsage(CobolCopybookParser.UsageContext ctx) { 

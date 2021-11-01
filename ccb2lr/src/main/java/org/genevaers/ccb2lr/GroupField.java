@@ -1,9 +1,10 @@
 package org.genevaers.ccb2lr;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public class GroupField extends CobolField{
+public class GroupField extends CobolField implements ParentField {
 
 	private LinkedHashMap<String, CobolField> fields = new LinkedHashMap<>();
 
@@ -51,5 +52,25 @@ public class GroupField extends CobolField{
         return num;
     }
 
+    @Override
+    public int resolvePosition(int pos) {
+        position = pos;
+        Iterator<CobolField> fit = fields.values().iterator();
+        while(fit.hasNext()) {
+            CobolField cbf = fit.next();
+            pos = cbf.resolvePosition(pos);
+        }
+        return pos;
+    }
+
+    @Override
+    public Collection<CobolField> getFields() {
+        return fields.values();
+    }
+
+    @Override
+    public Iterator<CobolField> getFieldIterator() {
+        return fields.values().iterator();
+    }
     
 }
