@@ -26,6 +26,12 @@ public class GroupField extends CobolField implements ParentField {
         return length;
     }
 
+    @Override
+    public boolean isSigned() {
+        return false;
+    }
+
+
     public void addField(CobolField f) {
         fields.put(f.getName(), f);
     }
