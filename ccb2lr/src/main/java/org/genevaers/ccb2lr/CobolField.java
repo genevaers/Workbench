@@ -17,11 +17,21 @@ public abstract class CobolField {
     private ParentField parent;
 
     public enum FieldType {
-        ALPHA,
-        ZONED,
-        PACKED,
-        BINARY, 
-        GROUP, RECORD
+        ALPHA("Alphanumeric"),
+        ZONED("Zoned Decimal"),
+        PACKED("Packed Decimal"),
+        BINARY("Binary"), 
+        GROUP("Alphanumeric"), 
+        RECORD("Record");
+
+        private String dataType;
+        private FieldType(String dt) {
+            dataType = dt;
+        }
+
+        public String getDataType() {
+            return dataType;
+        }
     }
 
     public int getSection() {

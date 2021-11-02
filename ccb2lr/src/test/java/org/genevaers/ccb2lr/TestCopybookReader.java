@@ -16,27 +16,17 @@ package org.genevaers.ccb2lr;
  * specific language governing permissions and limitations
  * under the License.
  */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-
-import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import org.junit.Test;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.genevaers.ccb2lr.Copybook2LR;
 import org.genevaers.ccb2lr.CobolField.FieldType;
+import org.junit.Test;
 
 public class TestCopybookReader {
 
