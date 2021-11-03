@@ -76,7 +76,7 @@ public class Copybook2LR {
         }
     }
 
-    private void addRecordFieldToYamlTree() {
+    public void addRecordFieldToYamlTree() {
         yamlMapper = new ObjectMapper(new YAMLFactory());
         record = yamlMapper.createObjectNode();
         RecordField recField = ccbListener.getRecordField();
@@ -84,10 +84,13 @@ public class Copybook2LR {
         addRecordFieldToRoot(recField, record);
     }
 
+    public ObjectNode getRecord() {
+        return record;
+    }
 
 	private void addRecordFieldToRoot(RecordField rf, ObjectNode record) {
 		Iterator<CobolField> fit = rf.getFieldIterator();
-        record.put("recordName", rf.getName());
+        record.put("recordName", rf.getName().replace('-','_'));
         ArrayNode fieldsArray = record.putArray("fields");
 		while(fit.hasNext()) {
 			CobolField f = fit.next();
@@ -100,7 +103,7 @@ public class Copybook2LR {
 
 	private void addFieldToFieldsArray(CobolField f, ArrayNode fieldsArray) {
         ObjectNode fieldObj = yamlMapper.createObjectNode();
-        fieldObj.put("name", f.getName());
+        fieldObj.put("name", f.getName().replace('-','_'));
         fieldObj.put("datatype", f.getType().getDataType());
         fieldObj.put("position", f.getPosition());
         fieldObj.put("length", f.getLength());

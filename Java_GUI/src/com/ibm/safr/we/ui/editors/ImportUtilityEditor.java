@@ -95,6 +95,7 @@ import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.base.SAFRPersistentObject;
 import com.ibm.safr.we.model.query.EnvironmentQueryBean;
 import com.ibm.safr.we.model.query.SAFRQuery;
+import com.ibm.safr.we.model.utilities.importer.CopybookImporter;
 import com.ibm.safr.we.model.utilities.importer.ImportFile;
 import com.ibm.safr.we.model.utilities.importer.ImportUtility;
 import com.ibm.safr.we.preferences.SAFRPreferences;
@@ -744,6 +745,8 @@ public class ImportUtilityEditor extends SAFREditorPart {
 							.getCheckedElements();
 
 					// !!DO THE IMPORT!!
+					CopybookImporter cbi = new CopybookImporter();
+					cbi.importCopybook("test/resources/simplecb.yaml");
 
 					List<ImportFile> selectedFiles = new ArrayList<ImportFile>();
 					for (Object item : checkedElements) {

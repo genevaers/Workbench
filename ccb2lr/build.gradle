@@ -35,8 +35,8 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     
     antlr "org.antlr:antlr4:4.5" // use ANTLR version 4
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.0'
     implementation 'org.freemarker:freemarker:2.3.31'
     implementation 'com.google.flogger:google-extensions:0.5.1'
     implementation 'com.google.flogger:flogger-system-backend:0.5.1'
@@ -48,10 +48,17 @@ generateGrammarSource {
   arguments << "-package" << "org.genevaers.ccb2lr.grammar" 
 }
 
-
+task copyLibs(type: Copy) {
+    dependsOn tasks.build
+        from configurations.runtimeClasspath {
+            include 'jackson*'
+        }
+        into "../Java_GUI/lib"
+}
 task buildAndCopyccb2lr(type: Copy) {
-    println "Copy the ccb2lr jar"
-    from "$buildDir/libs"
-    into "../Java_GUI/lib"
+    dependsOn tasks.copyLibs
+        println "Copy the ccb2lr jar"
+        from "$buildDir/libs"
+        into "../Java_GUI/lib"
 }
 

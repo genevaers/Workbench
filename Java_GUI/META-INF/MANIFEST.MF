@@ -30,7 +30,12 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: lib/postgresql-42.2.16.jar,
  .,
  lib/sycadas.jar,
- lib/antlr4-runtime-4.5.jar
+ lib/antlr4-runtime-4.5.jar,
+ lib/ccb2lr.jar,
+ lib/jackson-annotations-2.11.3.jar,
+ lib/jackson-core-2.11.3.jar,
+ lib/jackson-databind-2.11.3.jar,
+ lib/jackson-dataformat-yaml-2.11.3.jar
 Export-Package: com.ibm.safr.we,
  com.ibm.safr.we.constants;uses:="com.ibm.safr.we.security",
  com.ibm.safr.we.data;uses:="com.ibm.safr.we.data.dao",
@@ -481,3 +486,4 @@ Export-Package: com.ibm.safr.we,
    org.xml.sax,
    javax.xml.parsers,
    javax.xml.transform"
+Import-Package: com.fasterxml.jackson.databind.node

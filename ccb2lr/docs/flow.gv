@@ -5,6 +5,7 @@ digraph Copybook2LR_Flow {
     RecordModel[shape=file color=lightblue style=filled]
     LRGenerator[shape=file color=lightblue style=filled]
     HTML_Doc[shape=file color=gold style=filled]
+    YAML[shape=file color=gold style=filled]
     DSECT[shape=file  color=lightblue style=filled]
     Parser[color=pink style=filled]
     LR[shape=egg color=green style=filled]
@@ -15,4 +16,5 @@ digraph Copybook2LR_Flow {
     LRGenerator -> HTML_Doc
     LRGenerator -> LR
     LRGenerator -> DSECT
+    LRGenerator -> YAML
 }
