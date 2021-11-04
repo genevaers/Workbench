@@ -17,20 +17,26 @@ public abstract class CobolField {
     private ParentField parent;
 
     public enum FieldType {
-        ALPHA("Alphanumeric"),
-        ZONED("Zoned Decimal"),
-        PACKED("Packed Decimal"),
-        BINARY("Binary"), 
-        GROUP("Alphanumeric"), 
-        RECORD("Record");
+        ALPHA("Alphanumeric", "ALNUM"),
+        ZONED("Zoned Decimal", "NUMER"),
+        PACKED("Packed Decimal", "PACKD"),
+        BINARY("Binary", "BINRY"), 
+        GROUP("Alphanumeric", "ALNUM"), 
+        RECORD("Record", "NONE");
 
         private String dataType;
-        private FieldType(String dt) {
+        private String code;
+        private FieldType(String dt, String c) {
             dataType = dt;
+            code = c;
         }
 
         public String getDataType() {
             return dataType;
+        }
+
+        public String getCode() {
+            return code;
         }
     }
 
