@@ -16,13 +16,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.ibm.safr.we.data.transfer.LRFieldTransfer;
 import com.ibm.safr.we.data.transfer.LogicalRecordTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
-import com.ibm.safr.we.model.SAFRApplication;
 
 public class CopybookImporter {
 
 	//limit the number transfer objects for the moment
 	protected Map<Integer, SAFRTransfer> records = new HashMap<Integer, SAFRTransfer>();
 	protected Map<Integer, SAFRTransfer> fieldTxfrs = new HashMap<Integer, SAFRTransfer>();
+	private int lrID = 2300; //Need to manage this properly - init with max id + 1
+	private int fieldID = 2300; //Need to manage this properly - init with max id + 1
 	
 	private static int ENVID = 1;
 
@@ -51,6 +52,7 @@ public class CopybookImporter {
 		// TODO Auto-generated method stub
 		String rec = yamlRecord.get("recordName").asText();
 		LogicalRecordTransfer lrt = makeLRTransfer(rec);
+		records.put(lrt.getId(), lrt);
 		ArrayNode flds = (ArrayNode) yamlRecord.get("fields");
 		createFieldTransferObjects(flds);
 		
@@ -58,36 +60,21 @@ public class CopybookImporter {
 
 	private void createFieldTransferObjects(ArrayNode flds) {
 		for(int i=0; i<flds.size(); i++) {
-			LRFieldTransfer fx = makeFieldTransfer(flds.get(i));
-			addFieldAttrTransfer(flds.get(i), fx);
-			fieldTxfrs.put(fx.getId(), fx);
+			LRFieldTransfer txfr = makeFieldTransfer(flds.get(i));
+			fieldTxfrs.put(txfr.getId(), txfr);
 		}
 	}
 
-	private void addFieldAttrTransfer(JsonNode fieldNode, LRFieldTransfer trans) {
-		trans.setDataType(fieldNode.get("datatype").asText());
-		trans.setSigned(fieldNode.get("signed").asBoolean());
-		trans.setLength(fieldNode.get("length").asInt());
-		//Should make this one real
-		trans.setDecimalPlaces(0);
-		trans.setScalingFactor(0);
-		trans.setDateTimeFormat("None");
-		trans.setHeaderAlignment("None");
-		trans.setColumnHeading1("");
-		trans.setColumnHeading2("");
-		trans.setColumnHeading3("");
-        trans.setSubtotalLabel("");
-		trans.setSortKeyLabel("");
-		trans.setNumericMask("");
-	}
-
 	private LRFieldTransfer makeFieldTransfer(JsonNode fieldNode) {
-		//Two parts - did we merge them? No is the answer
+		//Two parts - field and attr
 		LRFieldTransfer trans = new LRFieldTransfer();
 
 		trans.setEnvironmentId(ENVID);
-        trans.setId(SAFRApplication.getSAFRFactory().getNextLRFieldId());
-		trans.setLrId(99);
+
+		//Need to manage the ids
+		fieldID  = fieldID+1;
+        trans.setId(fieldID);
+		trans.setLrId(lrID);
 		trans.setName(fieldNode.get("name").asText());
 		trans.setDbmsColName("");
 		trans.setFixedStartPos(fieldNode.get("position").asInt());
@@ -98,7 +85,7 @@ public class CopybookImporter {
 		trans.setCreateTime(new Date());
 		trans.setCreateBy("CCB2LR");
 		trans.setModifyTime(new Date());
-		trans.setModifyBy("CCBLR");
+		trans.setModifyBy("");
 
 		// set these default values for index.
 		// Index parsers will set these values later.
@@ -115,7 +102,7 @@ public class CopybookImporter {
 		//Need to get the target env id - hard code for moment
 		trans.setEnvironmentId(ENVID);
 		//We need to get the next LR id - again hard code 
-		trans.setId(99);
+		trans.setId(lrID);
 		trans.setName(rec);
 
 		trans.setLrTypeCode("FILE");

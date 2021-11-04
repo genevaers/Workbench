@@ -104,7 +104,7 @@ public class TestDataLayerHelper {
         		file = DAOFactoryHolder.class.getResource(PROP_FILE).openStream();
         	}
             DAOFactoryHolder.initWithPropertiesFile(file);
-            UserSessionParameters userSessionParams;
+            UserSessionParameters userSessionParams = null;
         	if(postgres) {
         		userSessionParams= ((PGDAOFactory) DAOFactoryHolder
                         .getDAOFactory()).getSAFRLogin();
@@ -147,7 +147,7 @@ public class TestDataLayerHelper {
                     .openStream();
         	}
 			DAOFactoryHolder.initWithPropertiesFile(file);
-			UserSessionParameters userSessionParams;
+			UserSessionParameters userSessionParams = null;
         	if(postgres) {
         		userSessionParams = ((PGDAOFactory) DAOFactoryHolder.getDAOFactory()).getSAFRLogin();
         	}

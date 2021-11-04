@@ -746,7 +746,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 					// !!DO THE IMPORT!!
 					CopybookImporter cbi = new CopybookImporter();
-					cbi.importCopybook("test/resources/simplecb.yaml");
+					cbi.importCopybook("C:\\Users\\hammy\\git\\wb\\Java_GUI\\test\\resources\\simple.cb");
 
 					List<ImportFile> selectedFiles = new ArrayList<ImportFile>();
 					for (Object item : checkedElements) {
