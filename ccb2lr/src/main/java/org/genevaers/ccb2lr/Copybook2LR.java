@@ -105,6 +105,7 @@ public class Copybook2LR {
         ObjectNode fieldObj = yamlMapper.createObjectNode();
         fieldObj.put("name", f.getName().replace('-','_'));
         fieldObj.put("datatype", f.getType().getDataType());
+        fieldObj.put("datatypeCode", f.getType().getCode());
         fieldObj.put("position", f.getPosition());
         fieldObj.put("length", f.getLength());
         fieldObj.put("signed", f.isSigned());

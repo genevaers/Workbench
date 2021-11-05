@@ -1,5 +1,6 @@
 package com.ibm.safr.we.model.utilities.importer;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,12 +41,13 @@ public class CopybookImporter extends LogicalRecordImporter {
 	protected Map<Integer, SAFRTransfer> fieldTxfrs = new HashMap<Integer, SAFRTransfer>();
 	private int lrID = 2300; //Need to manage this properly - init with max id + 1
 	private int fieldID = 2300; //Need to manage this properly - init with max id + 1
-	private String filename;
+	private ImportFile cbFile;;
 	
-	private static int ENVID = 1;
+	private int environementId;
 
-	public void importCopybook(String name) throws SAFRException, XPathExpressionException {
-		filename = name;
+	public void importCopybook(ImportFile file, Integer envid) throws SAFRException, XPathExpressionException {
+		cbFile = file;
+		environementId = envid;
 		doImport();
 	}
 
@@ -72,7 +74,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 		//Two parts - field and attr
 		LRFieldTransfer trans = new LRFieldTransfer();
 
-		trans.setEnvironmentId(ENVID);
+		trans.setEnvironmentId(environementId);
 
 		//Need to manage the ids
 		fieldID  = fieldID+1;
@@ -111,7 +113,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 		LogicalRecordTransfer trans = new LogicalRecordTransfer();
 
 		//Need to get the target env id - hard code for moment
-		trans.setEnvironmentId(ENVID);
+		trans.setEnvironmentId(environementId);
 		//We need to get the next LR id - again hard code 
 		trans.setId(lrID);
 		trans.setName(rec);
@@ -137,9 +139,8 @@ public class CopybookImporter extends LogicalRecordImporter {
 	protected void doImport() throws SAFRException, XPathExpressionException {
 		clearMaps();
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get(filename);
 		try {
-			ccb2lr.processCopybook(testPath);
+			ccb2lr.processCopybook(cbFile.getFile().toPath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

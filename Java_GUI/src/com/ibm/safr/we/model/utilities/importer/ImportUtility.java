@@ -185,15 +185,19 @@ public class ImportUtility extends SAFRObject {
 	public void importMetadata() throws SAFRException {
 
 		showParams();
-		validate();
-		try {
-			initXMLFactories();
-		} catch (ParserConfigurationException e1) {
-			// xml parser runtime problem so cannot continue
-			e1.printStackTrace();
-			throw new SAFRFatalException(
-					"An XML parser system error occurred. Cannot continue with import. ",
-					e1);
+		if(componentType == ComponentType.CobolCopyBook) {
+			//We can do some copybook validaton here later
+		} else {
+			validate();
+			try {
+				initXMLFactories();
+			} catch (ParserConfigurationException e1) {
+				// xml parser runtime problem so cannot continue
+				e1.printStackTrace();
+				throw new SAFRFatalException(
+						"An XML parser system error occurred. Cannot continue with import. ",
+						e1);
+			}
 		}
 		
 		// Clear previous results for the files to be imported
@@ -230,75 +234,89 @@ public class ImportUtility extends SAFRObject {
 		}
 		for (ImportFile file : files) {
 			currentFile = file;
-			try {
-				// Parse the XML
-			    if (file.getStream() == null) {
-	                document = builder.parse(file.getFile());			        
-			    }
-			    else {
-                    document = builder.parse(file.getStream());                   			        
-			    }
-				importer.doImportMetadata();
-				file.setResult(ActivityResult.PASS);
-			} catch (IOException e) {
-				// xml parser error
-				String msg = e.getMessage()
-						+ ". "
-						+ (e.getCause() != null ? e.getCause().getMessage()
-								: "");
-				file.setResult(ActivityResult.FAIL);
-				file.setErrorMsg(msg);
-			} catch (SAXException e) {
-				// xml parser error
-				String msg = e.getMessage()
-						+ ". "
-						+ (e.getCause() != null ? e.getCause().getMessage()
-								: "");
-				file.setResult(ActivityResult.FAIL);
-				file.setErrorMsg(msg);
-			} catch (SAFRValidationException e) {
-				// anticipated data error
-				SAFRValidationType tokenType = null, excType = null;
-				if (e.getSafrValidationToken() != null) {
-					tokenType = e.getSafrValidationToken()
-							.getValidationFailureType();
+			if(componentType == ComponentType.CobolCopyBook) {
+				CopybookImporter cbi = new CopybookImporter();
+				try {
+					cbi.importCopybook(file, targetEnvironment.getId());
+				} catch (SAFRException | XPathExpressionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				excType = e.getSafrValidationType();
-				if (excType == SAFRValidationType.DEPENDENCY_LF_ASSOCIATION_ERROR
-						|| excType == SAFRValidationType.DEPENDENCY_LR_FIELDS_ERROR
-						|| excType == SAFRValidationType.DEPENDENCY_PF_ASSOCIATION_WARNING
-						|| tokenType == SAFRValidationType.DEPENDENCY_LF_ASSOCIATION_ERROR
-						|| tokenType == SAFRValidationType.DEPENDENCY_LR_FIELDS_ERROR) {
-					// it's a dependency error
-					file.setException(e);
-					file.setErrorMsg("Dependency error."); // default msg
-				} else {
-					// it's a general validation ERROR
-					file.setErrorMsg(e.getMessageString());
-				}
-				file.setResult(ActivityResult.FAIL);
-			} catch (SAFRCancelException e) {
-				// file import cancelled
-				file.setErrorMsg("Import cancelled." + SAFRUtilities.LINEBREAK + e.getMessage());
-				file.setResult(ActivityResult.FAIL);
-			} catch (SAFRException e) {
-			    logger.log(Level.SEVERE, "Error importing " + file.getName() , e);
-				// unexpected system error
-				file.setErrorMsg(e.getMessage());
-				file.setResult(ActivityResult.SYSTEMERROR);
-				String msg = "Importing stopped at file "
-					+ file.getName() + " because:" + SAFRUtilities.LINEBREAK + e.getMessage();
-				throw new SAFRException(msg, e);
-			} catch (XPathExpressionException e) {
-				// only occurs on xpath syntax error (programming error)
-				throw new SAFRFatalException(
-						"An XPath system error occurred. Cannot continue with import. ",
-						e);
+			} else {
+				parseAndImportXML(importer, file);
 			}
 		} // end for loop, import next file
 		
 		// Log any errors reported during import
 		logErrors();
+	}
+
+	private void parseAndImportXML(ComponentImporter importer, ImportFile file) {
+		try {
+			// Parse the XML
+		    if (file.getStream() == null) {
+		        document = builder.parse(file.getFile());			        
+		    }
+		    else {
+		        document = builder.parse(file.getStream());                   			        
+		    }
+			importer.doImportMetadata();
+			file.setResult(ActivityResult.PASS);
+		} catch (IOException e) {
+			// xml parser error
+			String msg = e.getMessage()
+					+ ". "
+					+ (e.getCause() != null ? e.getCause().getMessage()
+							: "");
+			file.setResult(ActivityResult.FAIL);
+			file.setErrorMsg(msg);
+		} catch (SAXException e) {
+			// xml parser error
+			String msg = e.getMessage()
+					+ ". "
+					+ (e.getCause() != null ? e.getCause().getMessage()
+							: "");
+			file.setResult(ActivityResult.FAIL);
+			file.setErrorMsg(msg);
+		} catch (SAFRValidationException e) {
+			// anticipated data error
+			SAFRValidationType tokenType = null, excType = null;
+			if (e.getSafrValidationToken() != null) {
+				tokenType = e.getSafrValidationToken()
+						.getValidationFailureType();
+			}
+			excType = e.getSafrValidationType();
+			if (excType == SAFRValidationType.DEPENDENCY_LF_ASSOCIATION_ERROR
+					|| excType == SAFRValidationType.DEPENDENCY_LR_FIELDS_ERROR
+					|| excType == SAFRValidationType.DEPENDENCY_PF_ASSOCIATION_WARNING
+					|| tokenType == SAFRValidationType.DEPENDENCY_LF_ASSOCIATION_ERROR
+					|| tokenType == SAFRValidationType.DEPENDENCY_LR_FIELDS_ERROR) {
+				// it's a dependency error
+				file.setException(e);
+				file.setErrorMsg("Dependency error."); // default msg
+			} else {
+				// it's a general validation ERROR
+				file.setErrorMsg(e.getMessageString());
+			}
+			file.setResult(ActivityResult.FAIL);
+		} catch (SAFRCancelException e) {
+			// file import cancelled
+			file.setErrorMsg("Import cancelled." + SAFRUtilities.LINEBREAK + e.getMessage());
+			file.setResult(ActivityResult.FAIL);
+		} catch (SAFRException e) {
+		    logger.log(Level.SEVERE, "Error importing " + file.getName() , e);
+			// unexpected system error
+			file.setErrorMsg(e.getMessage());
+			file.setResult(ActivityResult.SYSTEMERROR);
+			String msg = "Importing stopped at file "
+				+ file.getName() + " because:" + SAFRUtilities.LINEBREAK + e.getMessage();
+			throw new SAFRException(msg, e);
+		} catch (XPathExpressionException e) {
+			// only occurs on xpath syntax error (programming error)
+			throw new SAFRFatalException(
+					"An XPath system error occurred. Cannot continue with import. ",
+					e);
+		}
 	}
 	
 	private void logErrors() {
@@ -359,8 +377,10 @@ public class ImportUtility extends SAFRObject {
 
 	
 	private void validate() throws SAFRValidationException {
+		
 		HashSet<String> timestamps = new HashSet<>();
 		SAFRValidationException safrValidationException = new SAFRValidationException();
+
 		if (this.targetEnvironment == null) {
 			safrValidationException.setErrorMessage(
 					Property.TARGET_ENVIRONMENT,
@@ -458,6 +478,7 @@ public class ImportUtility extends SAFRObject {
 						"These file(s) do not exist:" + fileNames + ".");
 			}
 		}
+		
 
 		if (!safrValidationException.getErrorMessages().isEmpty()) {
 			safrValidationException.setSafrValidationType(SAFRValidationType.ERROR);

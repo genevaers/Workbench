@@ -17,14 +17,25 @@ package com.ibm.safr.we.constants;
  * under the License.
  */
 
-
 public enum ComponentType {
-	User("User"), Group("Group"), Environment("Environment"), ControlRecord("Control Record"), 
-	UserExitRoutine("User-Exit Routine"), ReadUserExitRoutine("Read User Exit Routine"), 
-	LookupUserExitRoutine("Lookup User Exit Routine"), WriteUserExitRoutine("Write User Exit Routine"), 
-	FormatUserExitRoutine("Format User Exit Routine"), PhysicalFile("Physical File"), 
-	LogicalFile("Logical File"), LogicalRecord("Logical Record"), LogicalRecordField("LR Field"), 
-	LookupPath("Lookup Path"), View("View"), ViewFolder("View Folder"), AllComponents("All Components");
+	User("User"), 
+	Group("Group"), 
+	Environment("Environment"), 
+	ControlRecord("Control Record"),
+	UserExitRoutine("User-Exit Routine"), 
+	ReadUserExitRoutine("Read User Exit Routine"),
+	LookupUserExitRoutine("Lookup User Exit Routine"), 
+	WriteUserExitRoutine("Write User Exit Routine"),
+	FormatUserExitRoutine("Format User Exit Routine"), 
+	PhysicalFile("Physical File"), 
+	LogicalFile("Logical File"),
+	LogicalRecord("Logical Record"), 
+	LogicalRecordField("LR Field"), 
+	LookupPath("Lookup Path"), 
+	View("View"),
+	ViewFolder("View Folder"), 
+	AllComponents("All Components"),
+	CobolCopyBook("Cobol Copybook");
 
 	private String label;
 
