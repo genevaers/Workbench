@@ -155,6 +155,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 		ObjectNode yamlRecord = ccb2lr.getRecord();
 		addTransferObjectsToRecords(yamlRecord);
         generateOrdPos();
+        generateRedefine();
 
 		
 		List<LogicalRecord> lrs = createLogicalRecords();
