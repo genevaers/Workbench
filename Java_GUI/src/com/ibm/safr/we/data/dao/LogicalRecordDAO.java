@@ -507,5 +507,8 @@ public interface LogicalRecordDAO {
 	 * @return
 	 */
     LogicalRecordQueryBean queryLogicalRecord(Integer lRID, Integer environmentId);
+    
+    Integer getNextKey();
+
 	
 }

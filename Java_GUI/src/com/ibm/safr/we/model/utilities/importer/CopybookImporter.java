@@ -23,6 +23,7 @@ import com.ibm.safr.we.data.transfer.LogicalRecordTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.model.LogicalRecord;
+import com.ibm.safr.we.model.SAFRApplication;
 
 public class CopybookImporter extends LogicalRecordImporter {
 
@@ -76,9 +77,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 
 		trans.setEnvironmentId(environementId);
 
-		//Need to manage the ids
-		fieldID  = fieldID+1;
-        trans.setId(fieldID);
+        trans.setId(SAFRApplication.getSAFRFactory().getNextLRFieldId());
 		trans.setLrId(lrID);
 		trans.setName(fieldNode.get("name").asText());
 		trans.setDbmsColName("");
@@ -112,9 +111,8 @@ public class CopybookImporter extends LogicalRecordImporter {
 	private LogicalRecordTransfer makeLRTransfer(String rec) {
 		LogicalRecordTransfer trans = new LogicalRecordTransfer();
 
-		//Need to get the target env id - hard code for moment
 		trans.setEnvironmentId(environementId);
-		//We need to get the next LR id - again hard code 
+		lrID = SAFRApplication.getSAFRFactory().getNextLRId();
 		trans.setId(lrID);
 		trans.setName(rec);
 
