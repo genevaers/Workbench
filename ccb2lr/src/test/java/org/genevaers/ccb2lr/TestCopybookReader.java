@@ -33,7 +33,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LR() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/OneLine.cb");
+		Path testPath = Paths.get("src/test/resources/OneLine.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("ONE_LINE", ccb2lr.getRecordField().getName());
@@ -43,7 +43,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimple() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simple.cb");
+		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -53,7 +53,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimplePackedBinary() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
+		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -77,7 +77,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimpleLength() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simple.cb");
+		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -88,7 +88,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimplePackedBinaryLength() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cb");
+		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -99,7 +99,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimpleSigned() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simpleSigned.cb");
+		Path testPath = Paths.get("src/test/resources/simpleSigned.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -113,7 +113,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRGroup() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/group.cb");
+		Path testPath = Paths.get("src/test/resources/group.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
@@ -128,7 +128,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRSimpleReslovePositions() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/simple.cb");
+		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		RecordField rf = ccb2lr.getRecordField();
@@ -141,7 +141,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRGoupReslovePositions() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/group.cb");
+		Path testPath = Paths.get("src/test/resources/group.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		RecordField rf = ccb2lr.getRecordField();
@@ -154,7 +154,7 @@ public class TestCopybookReader {
 	@Test
 	public void testCCB2LRGoupInGroupReslovePositions() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/groupInGroup.cb");
+		Path testPath = Paths.get("src/test/resources/groupInGroup.cpy");
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		RecordField rf = ccb2lr.getRecordField();
