@@ -237,9 +237,9 @@ public class ImportUtility extends SAFRObject {
 			if(componentType == ComponentType.CobolCopyBook) {
 				CopybookImporter cbi = new CopybookImporter(this);
 				try {
-					cbi.importCopybook(file, targetEnvironment.getId());
-				} catch (SAFRException | XPathExpressionException e) {
-					// TODO Auto-generated catch block
+				cbi.importCopybook(file, targetEnvironment.getId());
+				} catch (XPathExpressionException e) {
+					// This should not occur via a copybook import
 					e.printStackTrace();
 				}
 			} else {

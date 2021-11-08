@@ -134,7 +134,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 	}
 
 	@Override
-	protected void doImport() throws SAFRException, XPathExpressionException {
+	protected void doImport() throws SAFRException {
 		clearMaps();
 		Copybook2LR ccb2lr = new Copybook2LR();
 		try {
