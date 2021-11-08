@@ -21,6 +21,7 @@ package org.genevaers.ccb2lr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.genevaers.ccb2lr.CobolField.FieldType;
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 
@@ -35,6 +36,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private String usage;
 	private String picType;
 	private String picCode;
+	private boolean occursClause = false;
+	private int times = 1;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -69,11 +72,19 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			group.setSection(section);
 			group.setParent(parent);
 			parent.addField(group);
+			occursClause = false;
 		}
 
 	}
 
-	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
+	@Override 
+	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
+		if(group != null && occursClause) {
+			group.setTimes(times);
+		}
+	}
+
+		@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
 		usage = null;
 	}
 
@@ -133,6 +144,15 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		picCode = ctx.getText();
 	}
 
+	@Override 
+	public void exitOccurs(CobolCopybookParser.OccursContext ctx) { 
+		int numChildren = ctx.getChildCount();
+		if(numChildren == 3) { //simple OCCURS x TIMES
+			occursClause = true;
+			times = Integer.parseInt(ctx.getChild(1).getText());
+		}
+	}
+
 
 	public RecordField getRecordField() {
 		return recordField;
@@ -142,19 +162,19 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		//Depends on usage and pic code type
 		if(usage == null) {
 			if(picType.equals("alpha_x")) {
-				currentCopybookField = new AlphanumericField();
+				currentCopybookField = CobolFieldFactory.makeField(FieldType.ALPHA);
 			} else if(picType.equals("signed_precision_9")) {
-				currentCopybookField = new ZonedField();
+				currentCopybookField = CobolFieldFactory.makeField(FieldType.ZONED);
 			}
 		} else {
 			switch(usage.toLowerCase()) {
 				case "comp-3":
-				currentCopybookField = new PackedField();
+				currentCopybookField = CobolFieldFactory.makeField(FieldType.PACKED);
 				break;
 				case "comp":
 				case "comp-4":
 				case "comp-5":
-				currentCopybookField = new BinaryField();
+				currentCopybookField = CobolFieldFactory.makeField(FieldType.BINARY);
 				break;
 				default: 
 			}
