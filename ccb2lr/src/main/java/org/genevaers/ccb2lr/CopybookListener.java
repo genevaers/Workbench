@@ -30,7 +30,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private String name;
 	private int section;
 	private GroupField group;
-	private String currentSection;
 	private RecordField recordField;
 	private CobolField currentCopybookField;
 	private String usage;
@@ -74,10 +73,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	}
 
-	@Override 
-	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
-	}
-
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
 		usage = null;
 	}
@@ -85,7 +80,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	@Override public void exitPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
 			//alternative is to gather info and put it together when we exit
 		//that would be much better
-		CobolField cb = makeField();
+		makeField();
 		currentCopybookField.setName(name);
 		currentCopybookField.setSection(section);
 		currentCopybookField.setPicType(picType);
@@ -138,6 +133,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		picCode = ctx.getText();
 	}
 
+
 	public RecordField getRecordField() {
 		return recordField;
 	}
@@ -155,10 +151,12 @@ public class CopybookListener extends CobolCopybookBaseListener {
 				case "comp-3":
 				currentCopybookField = new PackedField();
 				break;
+				case "comp":
 				case "comp-4":
 				case "comp-5":
 				currentCopybookField = new BinaryField();
 				break;
+				default: 
 			}
 		}
 		return null;

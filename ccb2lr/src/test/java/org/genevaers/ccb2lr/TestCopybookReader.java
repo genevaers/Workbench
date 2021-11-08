@@ -164,6 +164,15 @@ public class TestCopybookReader {
 		assertEquals(146, ccb2lr.getRecordField().getLength());
 	}
 
+	@Test
+	public void testCCB2LRRubbishErrors() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/rubbish.cpy");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		assertTrue(ccb2lr.hasErrors());
+	}
+
 	private void checkFieldPositions(RecordField rf, int[] positions) {
 		Iterator<CobolField> fit = rf.getFieldIterator();
 		int ndx = 0;

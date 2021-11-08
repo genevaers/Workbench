@@ -39,7 +39,7 @@ public class ParseErrorListener extends BaseErrorListener {
     {
         List<String> stack = ((Parser)recognizer).getRuleInvocationStack();
         Collections.reverse(stack);
-        String err = line + ":" + charPositionInLine + " " + msg;
+        String err = line + ":" + charPositionInLine + " see " + e.getOffendingToken().getText();
         errors.add(err);
     }
     

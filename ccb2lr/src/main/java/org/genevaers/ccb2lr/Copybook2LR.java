@@ -2,11 +2,11 @@ package org.genevaers.ccb2lr;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Iterator;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -27,11 +27,7 @@ public class Copybook2LR {
 	private ParseErrorListener errorListener;
     private CopybookListener ccbListener;
     private ObjectMapper yamlMapper;
-    private ObjectNode record;
-
-    public void readFileFrom(Path fp) {
-
-    }
+    private ObjectNode copyRecord;
 
 	public void processCopybook(Path fp) throws IOException {
         InputStream is = new FileInputStream(fp.toFile());
@@ -55,7 +51,11 @@ public class Copybook2LR {
 
 
     public boolean hasErrors() {
-        return errorListener.getErrors().size() > 0;
+        return !errorListener.getErrors().isEmpty();
+    }
+
+    public List<String> getErrors() {
+        return errorListener.getErrors();
     }
 
     public RecordField getRecordField() {
@@ -69,7 +69,7 @@ public class Copybook2LR {
 
     private void writeYaml(String filename) {
         try {
-            yamlMapper.writeValue(new File(filename), record);
+            yamlMapper.writeValue(new File(filename), copyRecord);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -78,14 +78,14 @@ public class Copybook2LR {
 
     public void addRecordFieldToYamlTree() {
         yamlMapper = new ObjectMapper(new YAMLFactory());
-        record = yamlMapper.createObjectNode();
+        copyRecord = yamlMapper.createObjectNode();
         RecordField recField = ccbListener.getRecordField();
         recField.resolvePositions();
-        addRecordFieldToRoot(recField, record);
+        addRecordFieldToRoot(recField, copyRecord);
     }
 
     public ObjectNode getRecord() {
-        return record;
+        return copyRecord;
     }
 
 	private void addRecordFieldToRoot(RecordField rf, ObjectNode record) {

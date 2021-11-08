@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +24,9 @@ import com.ibm.safr.we.data.transfer.LRFieldTransfer;
 import com.ibm.safr.we.data.transfer.LogicalRecordTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRException;
+import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.model.LogicalRecord;
+import com.ibm.safr.we.model.LogicalRecord.Property;
 import com.ibm.safr.we.model.SAFRApplication;
 
 public class CopybookImporter extends LogicalRecordImporter {
@@ -144,25 +148,35 @@ public class CopybookImporter extends LogicalRecordImporter {
 			e.printStackTrace();
 		}
 		ccb2lr.generateData();
-		RecordField rf = ccb2lr.getRecordField();
-		rf.resolvePositions();
-		
-		//Make the YAML object as if we were going to write it
-		ccb2lr.addRecordFieldToYamlTree();
-		//now that we have record make some transfer objects
-		ObjectNode yamlRecord = ccb2lr.getRecord();
-		addTransferObjectsToRecords(yamlRecord);
-        generateOrdPos();
-        generateRedefine();
-
-		
-		List<LogicalRecord> lrs = createLogicalRecords();
-		for (LogicalRecord lr : lrs) {
-			if(lr.getPersistence() != SAFRPersistence.OLD ) {
-				lr.isForImport();
-				lr.store();
+		if(ccb2lr.hasErrors()) {
+			SAFRValidationException sve = new SAFRValidationException();
+			String err = "Copybook parsing error(s) \n";
+			Iterator<String> ei = ccb2lr.getErrors().iterator();
+			while(ei.hasNext()) {
+				err += ei.next() +"\n"; 
+			}
+			sve.setErrorMessage(Property.LR_NAME, err);
+			throw sve;
+		} else {
+			RecordField rf = ccb2lr.getRecordField();
+			rf.resolvePositions();
+			
+			//Make the YAML object as if we were going to write it
+			ccb2lr.addRecordFieldToYamlTree();
+			//now that we have record make some transfer objects
+			ObjectNode yamlRecord = ccb2lr.getRecord();
+			addTransferObjectsToRecords(yamlRecord);
+	        generateOrdPos();
+	        generateRedefine();
+	
+			
+			List<LogicalRecord> lrs = createLogicalRecords();
+			for (LogicalRecord lr : lrs) {
+				if(lr.getPersistence() != SAFRPersistence.OLD ) {
+					lr.isForImport();
+					lr.store();
+				}
 			}
 		}
-		
 	}
 }
