@@ -38,6 +38,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private String picCode;
 	private boolean occursClause = false;
 	private int times = 1;
+	private ParentField parent;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -59,7 +60,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			recordField.setName(name);
 		} else {
 			//This must be a group
-			ParentField parent;
 			if(group == null) {
 				parent = recordField;
 			} else if( group.getSection() == section) {
@@ -71,7 +71,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			group.setName(name);
 			group.setSection(section);
 			group.setParent(parent);
-			parent.addField(group);
 			occursClause = false;
 		}
 
@@ -84,7 +83,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		}
 	}
 
-		@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
+	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
 		usage = null;
 	}
 
@@ -98,7 +97,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		currentCopybookField.setPicCode(picCode);
 		if(group != null) {
 			if( section == group.getSection() ) {
-				group = null;
+				closeOffGroup();
+				group = null; //end of group
 				recordField.addField(currentCopybookField);
 			} else {
 				if(section > group.getSection()) {
@@ -118,6 +118,19 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		}
 	}
 
+
+	private void closeOffGroup() {
+		int times = ((GroupField)group).getTimes();
+		if(times > 1) {
+			//add copies of the group
+			for(int t=1; t<=times; t++) {
+				GroupField newGroup = CobolFieldFactory.copyGroupWith(group, t);
+				parent.addField(newGroup);
+			}
+		} else {
+			parent.addField(group);
+		}
+	}
 
 	@Override public void enterIdentifier(CobolCopybookParser.IdentifierContext ctx) { 
 		name = ctx.getText();

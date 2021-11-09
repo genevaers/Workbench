@@ -87,6 +87,10 @@ public class GroupField extends CobolField implements ParentField {
     public void setTimes(int t) {
         times = t;
     }
+
+    public int getTimes() {
+        return times;
+    }
     
     private void expandFields() {
         LinkedHashMap<String, CobolField> origFields = deepCopy(fields);
