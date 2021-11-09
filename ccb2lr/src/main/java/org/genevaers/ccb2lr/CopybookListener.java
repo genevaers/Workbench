@@ -65,7 +65,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			} else if( group.getSection() == section) {
 				parent = group.getParent();
 			} else {
-				parent = group;
+				parent = group; //group in group
 			}
 			group = new GroupField();
 			group.setName(name);
@@ -78,8 +78,12 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	@Override 
 	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
-		if(group != null && occursClause) {
-			group.setTimes(times);
+		if(group != null) {
+			if(occursClause) {
+				group.setTimes(times);
+			} else {
+				parent.addField(group); //not an occurs group so we can add now
+			}
 		}
 	}
 
