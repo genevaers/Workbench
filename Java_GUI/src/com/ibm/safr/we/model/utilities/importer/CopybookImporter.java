@@ -159,7 +159,6 @@ public class CopybookImporter extends LogicalRecordImporter {
 			throw sve;
 		} else {
 			RecordField rf = ccb2lr.getRecordField();
-			rf.resolvePositions();
 			
 			//Make the YAML object as if we were going to write it
 			ccb2lr.addRecordFieldToYamlTree();

@@ -209,6 +209,18 @@ public class TestCopybookReader {
 		assertEquals(192, ccb2lr.getRecordField().getLength());
 	}
 
+	@Test
+	public void testCCB2LRGroupInGroupOccurs() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupInGroupOccurs.cpy");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		RecordField rf = ccb2lr.getRecordField();
+		rf.resolvePositions();
+		assertFalse(ccb2lr.hasErrors());
+		assertEquals(192, ccb2lr.getRecordField().getLength());
+	}
+
 	private void checkFieldPositions(RecordField rf, int[] positions) {
 		Iterator<CobolField> fit = rf.getFieldIterator();
 		int ndx = 0;

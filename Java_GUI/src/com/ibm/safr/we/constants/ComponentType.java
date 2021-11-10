@@ -35,7 +35,7 @@ public enum ComponentType {
 	View("View"),
 	ViewFolder("View Folder"), 
 	AllComponents("All Components"),
-	CobolCopyBook("Cobol Copybook");
+	CobolCopyBook("COBOL Copybook");
 
 	private String label;
 
