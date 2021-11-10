@@ -73,7 +73,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			group.setParent(parent);
 			occursClause = false;
 		}
-
 	}
 
 	@Override 
@@ -167,6 +166,13 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		if(numChildren == 3) { //simple OCCURS x TIMES
 			occursClause = true;
 			times = Integer.parseInt(ctx.getChild(1).getText());
+		}
+	}
+
+	@Override 
+	public void exitGoal(CobolCopybookParser.GoalContext ctx) { 
+		if(group != null && occursClause) {
+			closeOffGroup();
 		}
 	}
 
