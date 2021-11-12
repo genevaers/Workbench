@@ -15,4 +15,6 @@ public interface ParentField {
 
     public ParentField getParent();
 
+    public void removeField(String name);
+
 }

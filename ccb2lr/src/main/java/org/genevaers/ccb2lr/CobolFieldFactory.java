@@ -9,7 +9,7 @@ public class CobolFieldFactory {
     private CobolFieldFactory() {
     }
 
-    public static CobolField makeField(FieldType type) {
+    private static CobolField makeField(FieldType type) {
         switch (type) {
         case ALPHA:
             return new AlphanumericField();
@@ -19,10 +19,10 @@ public class CobolFieldFactory {
             return new PackedField();
         case BINARY:
             return new BinaryField();
+        case OCCURSGROUP:
+            return new OccursGroup();
         case GROUP:
             return new GroupField();
-        case RECORD:
-            return new RecordField();
         default:
             return null;
         }
@@ -47,8 +47,7 @@ public class CobolFieldFactory {
             case GROUP:
                 trg = new GroupField();
                 break;
-            case RECORD:
-                trg = new RecordField();
+            default:
                 break;
             }
             if (trg != null) {
@@ -63,7 +62,7 @@ public class CobolFieldFactory {
         trg.setPicCode(src.getPicCode());
         trg.setPicType(src.getPicType());
         trg.setSection(src.getSection());
-        trg.setParent(src.getParent());
+        //trg.setParent(src.getParent());
     }
 
     public static GroupField copyGroupWith(GroupField group, int t) {
@@ -71,7 +70,7 @@ public class CobolFieldFactory {
         String newGroupName = group.getName() + String.format("-%02d", t);
         newGroup.setName(newGroupName);
         Iterator<CobolField> oi = group.getFieldIterator();
-        while(oi.hasNext()) {
+        while (oi.hasNext()) {
             CobolField of = oi.next();
             String newName = of.getName() + String.format("-%02d", t);
             CobolField newField = CobolFieldFactory.makeNamedFieldFrom(of);
@@ -79,5 +78,39 @@ public class CobolFieldFactory {
             newGroup.addField(newField);
         }
         return newGroup;
+    }
+
+    public static GroupField makeNewGroup(int times) {
+        if(times > 1) {
+			OccursGroup of = (OccursGroup) CobolFieldFactory.makeField(FieldType.OCCURSGROUP);
+			if(of != null) {
+                of.setTimes(times);
+            }
+			return of;
+		} else {
+			return (GroupField) CobolFieldFactory.makeField(FieldType.GROUP);
+		}
+}
+
+    public static CobolField makeField(String usage, String picType) {
+    		//Depends on usage and pic code type
+		if(usage == null) {
+			if(picType.equals("alpha_x")) {
+				return makeField(FieldType.ALPHA);
+			} else if(picType.equals("signed_precision_9")) {
+				return makeField(FieldType.ZONED);
+			}
+		} else {
+			switch(usage.toLowerCase()) {
+				case "comp-3":
+				return makeField(FieldType.PACKED);
+				case "comp":
+				case "comp-4":
+				case "comp-5":
+				return makeField(FieldType.BINARY);
+				default: 
+			}
+		}
+		return null;
     }
 }

@@ -31,7 +31,6 @@ public class Copybook2LR {
 
 	public void processCopybook(Path fp) throws IOException {
         InputStream is = new FileInputStream(fp.toFile());
-        @SuppressWarnings("deprecation")
 		ANTLRInputStream input = new ANTLRInputStream(is);
 
         CopybookLexer lexer = new CopybookLexer(input);
@@ -58,8 +57,8 @@ public class Copybook2LR {
         return errorListener.getErrors();
     }
 
-    public RecordField getRecordField() {
-        return ccbListener.getRecordField();
+    public GroupField getRecordField() {
+        return ccbListener.getFieldTree().get(1).get(0);
     }
 
     public void writeYAMLTo(String filename) {
@@ -79,7 +78,7 @@ public class Copybook2LR {
     public void addRecordFieldToYamlTree() {
         yamlMapper = new ObjectMapper(new YAMLFactory());
         copyRecord = yamlMapper.createObjectNode();
-        RecordField recField = ccbListener.getRecordField();
+        GroupField recField = getRecordField();
         recField.resolvePositions();
         addRecordFieldToRoot(recField, copyRecord);
     }
@@ -88,7 +87,7 @@ public class Copybook2LR {
         return copyRecord;
     }
 
-	private void addRecordFieldToRoot(RecordField rf, ObjectNode record) {
+	private void addRecordFieldToRoot(GroupField rf, ObjectNode record) {
 		Iterator<CobolField> fit = rf.getFieldIterator();
         record.put("recordName", rf.getName().replace('-','_'));
         ArrayNode fieldsArray = record.putArray("fields");

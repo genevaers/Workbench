@@ -1,9 +1,5 @@
 package org.genevaers.ccb2lr;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public abstract class CobolField {
     private int section; //for group levels they must increase for deeper levels
                             //We can assume that any copybook we're given is correct.
@@ -14,15 +10,14 @@ public abstract class CobolField {
     private String picType;
     protected String picCode;
     protected int position = 0;
-    private ParentField parent;
 
     public enum FieldType {
         ALPHA("Alphanumeric", "ALNUM"),
         ZONED("Zoned Decimal", "NUMER"),
         PACKED("Packed Decimal", "PACKD"),
         BINARY("Binary", "BINRY"), 
-        GROUP("Alphanumeric", "ALNUM"), 
-        RECORD("Record", "NONE");
+        OCCURSGROUP("Alphanumeric", "ALNUM"), 
+        GROUP("Alphanumeric", "ALNUM");
 
         private String dataType;
         private String code;
@@ -107,12 +102,5 @@ public abstract class CobolField {
         return pos + getLength();
     }
 
-    public void setParent(ParentField parent) {
-        this.parent = parent;
-    }
-
-    public ParentField getParent() {
-        return parent;
-    }
 
 }
