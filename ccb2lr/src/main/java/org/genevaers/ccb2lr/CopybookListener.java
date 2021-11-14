@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.genevaers.ccb2lr.CobolField.FieldType;
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser.GroupContext;
@@ -33,8 +32,9 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private List<String> errors = new ArrayList<>();
 	private String name;
 	private int section;
-	private TreeMap<Integer, List<GroupField>> sections = new TreeMap<>();
-	private GroupField group;
+	private GroupField currentGroup;
+	private GroupField recordGroup;
+	private CobolField currentField;
 	//private List<OccursGroup> occursList;
 	//private RecordField recordField;
 	//private CobolField currentCopybookField;
@@ -42,7 +42,6 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private String picType;
 	private String picCode;
 	private int times = 1;
-	private GroupField root;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -59,8 +58,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		GroupField newGroup = CobolFieldFactory.makeNewGroup(times);
 
 		section = Integer.parseInt(ctx.section().getText());
-		List<GroupField> groups = sections.computeIfAbsent(section, s -> makeNewGroupList(times));
-		groups.add(newGroup);
+//		List<GroupField> groups = sections.computeIfAbsent(section, s -> makeNewGroupList(times));
+//		groups.add(newGroup);
 //		group = fieldTree.computeIfAbsent(section, s -> CobolFieldFactory.makeNewGroup(times));
 		newGroup.setName(name);
 		newGroup.setSection(section);
@@ -68,25 +67,40 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		// if(grp != null) {
 		// 	group = grp.getParent();
 		// }
-		if(root != null) {
-			if(root.getSection() == section) {
-				// the  parent is going to be the new root
-				root = groups.get(0).getParent();
-				newGroup.setParent(root);
-				root.addField(newGroup);
-			} else {
-				newGroup.setParent(root);
-				root.addField(newGroup);
-				root = newGroup;
-			}
+		if(section == 1) {//There will be only one of these
+			recordGroup = newGroup;
+			currentGroup = recordGroup;
 		} else {
-			newGroup.setParent(root);
-			root = newGroup;
+			if(section > currentGroup.getSection()) {
+				currentGroup.addChild(newGroup);
+				currentGroup.addField(newGroup);
+				newGroup.setParent(currentGroup);
+			} else if (section == currentGroup.getSection()) {
+				currentGroup.setNextSibling(newGroup);
+				newGroup.setPreviousSibling(currentGroup);
+				newGroup.setParent(currentGroup.getParent());
+			} else {
+				//find matching section
+				GroupField prevSibling = findMatchingSection(section);
+				prevSibling.setNextSibling(newGroup);
+				newGroup.setPreviousSibling(prevSibling);
+			}
+			currentGroup = newGroup;
 		}
 		if(times > 1) { 
 			((OccursGroup)newGroup).setTimes(times);
 			times = 1;
 		}
+	}
+
+	private GroupField findMatchingSection(int s) {
+		//section < than currentGroup
+		CobolField parentGroup = currentGroup.getParent();
+		while (parentGroup != null && s <=  currentGroup.getSection()) {
+			currentGroup = (GroupField) parentGroup;
+			parentGroup = parentGroup.getParent();
+		}
+		return currentGroup;
 	}
 
 	private List<GroupField> makeNewGroupList(int times) {
@@ -114,12 +128,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		cbf.setPicType(picType);
 		cbf.setPicCode(picCode);
 
-		List<GroupField> groups = sections.get(section);
-		if(groups != null) {
-			GroupField grp = groups.get(groups.size()-1);
-			root = grp.getParent();
-		}
-		root.addField(cbf);
+		currentGroup = findMatchingSection(section);
+		currentGroup.addChild(cbf);
 		// grp.addField(currentCopybookField);
 
 		// if(group != null) {
@@ -186,8 +196,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		}
 	}
 
-	public SortedMap<Integer, List<GroupField>> getFieldTree() {
-		return sections;
+	public GroupField getRecordGroup() {
+		return recordGroup;
 	}
 
 }

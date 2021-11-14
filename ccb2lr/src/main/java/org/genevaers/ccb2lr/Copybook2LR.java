@@ -16,7 +16,6 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.genevaers.ccb2lr.CobolField.FieldType;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser.GoalContext;
 import org.genevaers.ccb2lr.grammar.CopybookLexer;
@@ -58,7 +57,7 @@ public class Copybook2LR {
     }
 
     public GroupField getRecordField() {
-        return ccbListener.getFieldTree().get(1).get(0);
+        return ccbListener.getRecordGroup();
     }
 
     public void writeYAMLTo(String filename) {
@@ -88,16 +87,16 @@ public class Copybook2LR {
     }
 
 	private void addRecordFieldToRoot(GroupField rf, ObjectNode record) {
-		Iterator<CobolField> fit = rf.getFieldIterator();
-        record.put("recordName", rf.getName().replace('-','_'));
-        ArrayNode fieldsArray = record.putArray("fields");
-		while(fit.hasNext()) {
-			CobolField f = fit.next();
-            addFieldToFieldsArray(f, fieldsArray);
-			if(f.getType() == FieldType.GROUP) {
-				recurseGroup(f, fieldsArray);
-			}
-		}
+		// Iterator<CobolField> fit = rf.getFieldIterator();
+        // record.put("recordName", rf.getName().replace('-','_'));
+        // ArrayNode fieldsArray = record.putArray("fields");
+		// while(fit.hasNext()) {
+		// 	CobolField f = fit.next();
+        //     addFieldToFieldsArray(f, fieldsArray);
+		// 	if(f.getType() == FieldType.GROUP) {
+		// 		recurseGroup(f, fieldsArray);
+		// 	}
+		// }
 	}
 
 	private void addFieldToFieldsArray(CobolField f, ArrayNode fieldsArray) {

@@ -1,39 +1,20 @@
 package org.genevaers.ccb2lr;
 
 public abstract class CobolField {
+
+    protected CobolField parent;
+    protected CobolField firstChild;
+    protected CobolField previousSibling;
+    protected CobolField nextSibling;
     private int section; //for group levels they must increase for deeper levels
                             //We can assume that any copybook we're given is correct.
                             //Not our job to compile the copybook really
                             //But we could check for ascending levels
                             //Or should we model it as a field has fields?
-    private String name;
+    protected String name;
     private String picType;
     protected String picCode;
     protected int position = 0;
-
-    public enum FieldType {
-        ALPHA("Alphanumeric", "ALNUM"),
-        ZONED("Zoned Decimal", "NUMER"),
-        PACKED("Packed Decimal", "PACKD"),
-        BINARY("Binary", "BINRY"), 
-        OCCURSGROUP("Alphanumeric", "ALNUM"), 
-        GROUP("Alphanumeric", "ALNUM");
-
-        private String dataType;
-        private String code;
-        private FieldType(String dt, String c) {
-            dataType = dt;
-            code = c;
-        }
-
-        public String getDataType() {
-            return dataType;
-        }
-
-        public String getCode() {
-            return code;
-        }
-    }
 
     public int getSection() {
         return section;
@@ -97,10 +78,101 @@ public abstract class CobolField {
         return position;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
     public int resolvePosition(int pos) {
-        position = pos;
+        position = pos;  
         return pos + getLength();
     }
 
+    public void setParent(CobolField parent) {
+        this.parent = parent;
+    }
+
+    public void addChild(CobolField child) {
+        if(firstChild == null) {
+            firstChild = child;
+        } else {
+            CobolField childSib = firstChild;
+            CobolField nextSib = childSib.getNextSibling();
+            while(nextSib != null) {
+                childSib = nextSib;
+                nextSib = childSib.getNextSibling();
+            }
+            childSib.setNextSibling(child);
+        }
+        child.parent = this;
+    }
+
+    public void setPreviousSibling(CobolField previousSibling) {
+        this.previousSibling = previousSibling;
+    }
+
+    public void setNextSibling(CobolField nextSibling) {
+        this.nextSibling = nextSibling;
+    }
+
+    public CobolField getParent() {
+        return parent;
+    }
+
+    public CobolField getFirstChild() {
+        return firstChild;
+    }
+
+    public CobolField getNextSibling() {
+        return nextSibling;
+    }
+
+    public CobolField getPreviousSibling() {
+        return previousSibling;
+    }
+
+    /**
+     *  Number of fields before expanding occurs groups
+     */
+    public int getNumberOfCobolFields() {
+        int num = 0;
+        if(firstChild != null) {
+            num += firstChild.getNumberOfCobolFields();
+        }
+        CobolField sib = nextSibling;
+        while(sib != null) {
+            num += nextSibling.getNumberOfCobolFields();
+            num++;
+        }
+
+
+
+        // Iterator<CobolField> fit = fieldsByName.values().iterator();
+        // while(fit.hasNext()) {
+        //     CobolField cbf = fit.next();
+        //     if(cbf.getType() == FieldType.GROUP) {
+        //         num += ((GroupField)cbf).getNumberOfFields();
+        //     }
+        //     num++;
+        // }
+        return num;
+    }
+
+    public CobolField next() {
+        if(firstChild != null) {
+            return firstChild;
+        } else {
+            if (nextSibling == null) {
+                CobolField s = parent.getNextSibling();
+                CobolField p = parent.getParent();
+                while(s == null && p != null) {
+                    s = p.getNextSibling();
+                    p = parent.getParent();
+                }
+                return s;
+            } else {
+                return nextSibling;
+            }
+        }
+    }
 
 }

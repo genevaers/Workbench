@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
-import org.genevaers.ccb2lr.CobolField.FieldType;
 import org.junit.Test;
 
 public class TestCopybookReader {
@@ -47,7 +46,7 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 	}
 
 	@Test
@@ -69,7 +68,7 @@ public class TestCopybookReader {
 				binaryFound = true;
 			}
 		}
-		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertTrue(packedFound);
 		assertTrue(binaryFound);
 	}
@@ -81,7 +80,7 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertEquals(77, ccb2lr.getRecordField().getLength());
 	}
 
@@ -92,7 +91,7 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		assertEquals(7, ccb2lr.getRecordField().getFields().size());
+		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertEquals(75, ccb2lr.getRecordField().getLength());
 	}
 
@@ -103,7 +102,7 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		assertEquals(8, ccb2lr.getRecordField().getFields().size());
+		assertEquals(8, ccb2lr.getRecordField().getNumberOfCobolFields());
 		//maybe we should store the fields in a map then we can get them by name
 		assertTrue(ccb2lr.getRecordField().getField("AMOUNT").isSigned());
 		assertFalse(ccb2lr.getRecordField().getField("UNSIGN").isSigned());
@@ -117,7 +116,7 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		assertEquals(8, ccb2lr.getRecordField().getNumberOfFields());
+		assertEquals(8, ccb2lr.getRecordField().getNumberOfCobolFields());
 		GroupField group = (GroupField) ccb2lr.getRecordField().getField("CUSTOMER-NAME");
 		assertEquals(FieldType.GROUP,  group.getType());
 		assertEquals(FieldType.ALPHA,  group.getField("LAST-NAME").getType());
@@ -222,27 +221,13 @@ public class TestCopybookReader {
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {
-		Iterator<CobolField> fit = rf.getFieldIterator();
+		CobolField f = rf.getFirstChild();
 		int ndx = 0;
-		while(fit.hasNext()) {
-			CobolField f = fit.next();
+		while(f != null) {
 			assertEquals(positions[ndx++], f.getPosition());
-			if(f.getType() == FieldType.GROUP) {
-				ndx = recurseGroup(f, ndx, positions);
-			}
+			f = f.next();
 		}
-	}
-
-	private int recurseGroup(CobolField f, int ndx, int[] positions) {
-			Iterator<CobolField> git = ((GroupField) f).getChildIterator();
-			while(git.hasNext()) {
-				CobolField gf = git.next();
-				assertEquals(positions[ndx++], gf.getPosition());
-				if(gf.getType() == FieldType.GROUP) {
-					ndx =recurseGroup(gf, ndx, positions);
-				}	
-			}
-			return ndx;
+		assertEquals(positions.length, ndx);
 	}
 
 }
