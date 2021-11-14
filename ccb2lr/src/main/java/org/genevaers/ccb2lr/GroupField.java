@@ -45,7 +45,16 @@ public class GroupField extends CobolField {
     }
     
     public CobolField getField(String name) {
-        return fieldsByName.get(name);
+        CobolField n = next();
+        boolean notfound = true;
+        while(notfound && n != null) {
+            if(n.getName().equals(name)) {
+                notfound = false;
+            } else {
+                n = n.next();
+            }
+        }
+        return n;
     }
 
     public Iterator<CobolField> getChildIterator() {

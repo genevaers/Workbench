@@ -95,10 +95,12 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	private GroupField findMatchingSection(int s) {
 		//section < than currentGroup
-		CobolField parentGroup = currentGroup.getParent();
-		while (parentGroup != null && s <=  currentGroup.getSection()) {
-			currentGroup = (GroupField) parentGroup;
-			parentGroup = parentGroup.getParent();
+		while (s <=  currentGroup.getSection()) {
+			CobolField n = currentGroup.next();
+			if(n.getType() == FieldType.GROUP || n.getType() == FieldType.OCCURSGROUP) {
+				currentGroup = (GroupField) n;
+			}
+			n = n.next();
 		}
 		return currentGroup;
 	}

@@ -56,17 +56,18 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
-		Iterator<CobolField> fit = ccb2lr.getRecordField().getFieldIterator();
+		GroupField rf = ccb2lr.getRecordField();
 		boolean packedFound = false;
 		boolean binaryFound = false;
-		while(fit.hasNext()) {
-			CobolField cb = fit.next();
-			if(cb.getType() == FieldType.PACKED) {
+		CobolField n = rf.next();
+		while(n != null) {
+			if(n.getType() == FieldType.PACKED) {
 				packedFound = true;
 			}
-			if(cb.getType() == FieldType.BINARY) {
+			if(n.getType() == FieldType.BINARY) {
 				binaryFound = true;
 			}
+			n = n.next();
 		}
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertTrue(packedFound);

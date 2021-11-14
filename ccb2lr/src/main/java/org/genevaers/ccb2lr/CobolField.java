@@ -135,14 +135,19 @@ public abstract class CobolField {
      */
     public int getNumberOfCobolFields() {
         int num = 0;
-        if(firstChild != null) {
-            num += firstChild.getNumberOfCobolFields();
-        }
-        CobolField sib = nextSibling;
-        while(sib != null) {
-            num += nextSibling.getNumberOfCobolFields();
+        CobolField n = next();
+        while(n != null) {
             num++;
+            n = n.next();
         }
+        // if(firstChild != null) {
+        //     num += firstChild.getNumberOfCobolFields();
+        // }
+        // CobolField sib = nextSibling;
+        // while(sib != null) {
+        //     num += nextSibling.getNumberOfCobolFields();
+        //     num++;
+        // }
 
 
 
@@ -166,7 +171,7 @@ public abstract class CobolField {
                 CobolField p = parent.getParent();
                 while(s == null && p != null) {
                     s = p.getNextSibling();
-                    p = parent.getParent();
+                    p = p.getParent();
                 }
                 return s;
             } else {
