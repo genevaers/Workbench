@@ -122,4 +122,8 @@ public class Copybook2LR {
             }
         }
     }
+
+    public CobolCollection getCobolCollection() {
+        return ccbListener.getCollection();
+    }
 }

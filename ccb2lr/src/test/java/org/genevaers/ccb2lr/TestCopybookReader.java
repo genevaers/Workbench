@@ -182,6 +182,7 @@ public class TestCopybookReader {
 		GroupField rf = ccb2lr.getRecordField();
 		rf.resolvePositions();
 		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("expandedccb.gv"));
 		assertEquals(192, ccb2lr.getRecordField().getLength());
 	}
 
