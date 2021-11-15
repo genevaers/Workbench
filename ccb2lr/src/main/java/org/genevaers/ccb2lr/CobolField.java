@@ -96,10 +96,8 @@ public abstract class CobolField {
             firstChild = child;
         } else {
             CobolField childSib = firstChild;
-            CobolField nextSib = childSib.getNextSibling();
-            while(nextSib != null) {
-                childSib = nextSib;
-                nextSib = childSib.getNextSibling();
+            while(childSib.getNextSibling() != null) {
+                childSib = childSib.getNextSibling();
             }
             childSib.setNextSibling(child);
         }
@@ -167,17 +165,27 @@ public abstract class CobolField {
             return firstChild;
         } else {
             if (nextSibling == null) {
-                CobolField s = parent.getNextSibling();
-                CobolField p = parent.getParent();
-                while(s == null && p != null) {
-                    s = p.getNextSibling();
-                    p = p.getParent();
+                if(parent != null) {
+                    CobolField s = parent.getNextSibling();
+                    CobolField p = parent.getParent();
+                    while(s == null && p != null) {
+                        s = p.getNextSibling();
+                        p = p.getParent();
+                    }
+                    return s;
+                } else {
+                    return null;
                 }
-                return s;
-            } else {
+             } else {
                 return nextSibling;
             }
         }
+    }
+
+    public void addSibling(CobolField newField) {
+        nextSibling = newField;
+        newField.previousSibling = this;
+        newField.parent = this.parent;
     }
 
 }

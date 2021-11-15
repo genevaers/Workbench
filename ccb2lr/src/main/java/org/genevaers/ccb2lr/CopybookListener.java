@@ -20,24 +20,16 @@ package org.genevaers.ccb2lr;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
-import org.genevaers.ccb2lr.grammar.CobolCopybookParser.GroupContext;
 
 public class CopybookListener extends CobolCopybookBaseListener {
 
+	private CobolCollection collection = new CobolCollection();
 	private List<String> errors = new ArrayList<>();
-	private String name;
 	private int section;
-	private GroupField currentGroup;
-	private GroupField recordGroup;
-	private CobolField currentField;
-	//private List<OccursGroup> occursList;
-	//private RecordField recordField;
-	//private CobolField currentCopybookField;
+	private String name;
 	private String usage;
 	private String picType;
 	private String picCode;
@@ -53,68 +45,19 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	@Override 
 	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
-		//Want to get the identifier name
 		name = ctx.identifier().getText();	
-		GroupField newGroup = CobolFieldFactory.makeNewGroup(times);
-
 		section = Integer.parseInt(ctx.section().getText());
-//		List<GroupField> groups = sections.computeIfAbsent(section, s -> makeNewGroupList(times));
-//		groups.add(newGroup);
-//		group = fieldTree.computeIfAbsent(section, s -> CobolFieldFactory.makeNewGroup(times));
+
+		GroupField newGroup = CobolFieldFactory.makeNewGroup(times);
 		newGroup.setName(name);
 		newGroup.setSection(section);
-		//GroupField grp = fieldTree.get(section);
-		// if(grp != null) {
-		// 	group = grp.getParent();
-		// }
-		if(section == 1) {//There will be only one of these
-			recordGroup = newGroup;
-			currentGroup = recordGroup;
-		} else {
-			if(section > currentGroup.getSection()) {
-				currentGroup.addChild(newGroup);
-				currentGroup.addField(newGroup);
-				newGroup.setParent(currentGroup);
-			} else if (section == currentGroup.getSection()) {
-				currentGroup.setNextSibling(newGroup);
-				newGroup.setPreviousSibling(currentGroup);
-				newGroup.setParent(currentGroup.getParent());
-			} else {
-				//find matching section
-				GroupField prevSibling = findMatchingSection(section);
-				prevSibling.setNextSibling(newGroup);
-				newGroup.setPreviousSibling(prevSibling);
-			}
-			currentGroup = newGroup;
-		}
+
+		collection.addCobolField(newGroup);
+
 		if(times > 1) { 
 			((OccursGroup)newGroup).setTimes(times);
 			times = 1;
 		}
-	}
-
-	private GroupField findMatchingSection(int s) {
-		//section < than currentGroup
-		while (s <=  currentGroup.getSection()) {
-			CobolField n = currentGroup.next();
-			if(n.getType() == FieldType.GROUP || n.getType() == FieldType.OCCURSGROUP) {
-				currentGroup = (GroupField) n;
-			}
-			n = n.next();
-		}
-		return currentGroup;
-	}
-
-	private List<GroupField> makeNewGroupList(int times) {
-		return new ArrayList<>();
-	}
-
-	private GroupField findNamedGroup(List<GroupField> groups, String name) {
-		return groups.stream()
-				.filter(grp -> name.equals(grp.getName()))
-				.findAny()
-				.orElse(null);
-
 	}
 
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
@@ -122,47 +65,13 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	}
 
 	@Override public void exitPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
-			//alternative is to gather info and put it together when we exit
-		//that would be much better
 		CobolField cbf = CobolFieldFactory.makeField(usage, picType);
 		cbf.setName(name);
 		cbf.setSection(section);
 		cbf.setPicType(picType);
 		cbf.setPicCode(picCode);
 
-		currentGroup = findMatchingSection(section);
-		currentGroup.addChild(cbf);
-		// grp.addField(currentCopybookField);
-
-		// if(group != null) {
-
-		// 	// if section > lastGroupSection  - keep groups as a list.
-		// 	//	addfield to last Group
-		// 	// else 
-		// 	//  grp = getGroupWithSection (s)
-		// 	//  --- grp may be record level.... levels intead of groups?
-		// 	//  record level no different to another level ... just no parent
-		// 	// grp.close
-		// 	if( section == group.getSection() ) { //get group at this level
-		// 		closeGroup();
-		// 		group = null; //end of group
-		// 		recordField.addField(currentCopybookField);
-		// 	} else {
-		// 		if(section > group.getSection()) {
-		// 			group.addField(currentCopybookField);
-		// 		} else {
-		// 			ParentField p = group.getParent();
-		// 			int grpSec = p.getSection();
-		// 			while(section <= grpSec) {
-		// 				p = p.getParent();
-		// 				grpSec = p.getSection();
-		// 			}
-		// 			p.addField(currentCopybookField);
-		// 		}
-		// 	}
-		// } else {
-		// 	recordField.addField(currentCopybookField);
-		// }
+		collection.addCobolField(cbf);
 	}
 
 	@Override public void enterIdentifier(CobolCopybookParser.IdentifierContext ctx) { 
@@ -198,8 +107,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		}
 	}
 
-	public GroupField getRecordGroup() {
-		return recordGroup;
+	public CobolCollection getCollection() {
+		return collection;
 	}
 
 }

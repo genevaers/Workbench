@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class Copybook2LR {
 		ccbListener = new CopybookListener();
         ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
         walker.walk(ccbListener, tree); // initiate walk of tree with listener		
+        CCB2Dot.write(ccbListener.getCollection(), Paths.get("ccb.gv"));
 	}
 
 
@@ -57,7 +59,7 @@ public class Copybook2LR {
     }
 
     public GroupField getRecordField() {
-        return ccbListener.getRecordGroup();
+        return ccbListener.getCollection().getRecordGroup();
     }
 
     public void writeYAMLTo(String filename) {
