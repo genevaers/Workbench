@@ -211,7 +211,7 @@ public class SAFRLogger {
             getOverPrefs().get(UserPreferencesNodes.LOG_FILE_PATH, "");
         String baseLogPath = ((OverridePreferences)SAFRPreferences.getSAFRPreferences()).
             getBasePrefs().get(UserPreferencesNodes.LOG_FILE_PATH, "");
-        String appLogPath = ProfileLocation.getProfileLocation().getLocalProfile()+"log\\";
+        String appLogPath = ProfileLocation.getProfileLocation().getLocalProfile();
         
         // Intended state
         if (overLogPath.length() > 0) {
@@ -305,7 +305,7 @@ public class SAFRLogger {
         String logPath = SAFRPreferences.getSAFRPreferences().get(
                 UserPreferencesNodes.LOG_FILE_PATH, "");
         if (logPath == null || logPath.length() == 0) {
-            return ProfileLocation.getProfileLocation().getLocalProfile()+"log\\";            
+            return ProfileLocation.getProfileLocation().getLocalProfile()+"/log";            
         }
         else {
             if (!logPath.endsWith("\\") && !logPath.endsWith("/")) {
