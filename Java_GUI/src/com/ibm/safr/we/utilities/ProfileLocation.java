@@ -67,19 +67,9 @@ public class ProfileLocation {
     public String getLocalProfile() {
         return genevaPath.toString();
     }
-
-    /**
-     * @return String - the Windows roaming user profile
-     */    
-    public String getRoamProfile() {
-        return genevaPath.toString();
-    }
-
-    /**
-     * @return String - the Windows all user profile
-     */        
-    public String getAllProfile() {
-        return genevaPath.toString();
+    
+    public Path getGenevaPath() {
+    	return genevaPath;
     }
 
     /**
