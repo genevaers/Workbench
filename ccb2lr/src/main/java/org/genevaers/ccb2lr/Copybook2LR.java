@@ -79,8 +79,8 @@ public class Copybook2LR {
     public void addRecordFieldToYamlTree() {
         yamlMapper = new ObjectMapper(new YAMLFactory());
         copyRecord = yamlMapper.createObjectNode();
-        GroupField recField = getRecordField();
-        recField.resolvePositions();
+        GroupField recField = getCobolCollection().getRecordGroup();;
+        //recField.resolvePositions();
         addRecordFieldToRoot(recField, copyRecord);
     }
 

@@ -61,15 +61,6 @@ public class GroupField extends CobolField {
         return fieldsByName.values().iterator();
     }
 
-    public void resolvePositions() {
-        int pos = 1;
-        CobolField c = firstChild;
-        while(c != null) {
-            pos = c.resolvePosition(pos);
-            c = c.next();
-        }
-    }
-
 
     @Override
     public int resolvePosition(int pos) {

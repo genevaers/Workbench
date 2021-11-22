@@ -77,10 +77,53 @@ public class CCB2Dot {
         }
     }
 
+    public static void writeFromRecord(CobolCollection cobolCollection, Path dest) {
+        try {
+            fw = new FileWriter(dest.toFile());
+            writeRecord(cobolCollection.getRecordGroup());
+            fw.write("}\n");
+            fw.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     private static void writeFields(List<CobolField> fields) throws IOException {
         writeHeader();
         writeNodes(fields);
+    }
 
+    private static void writeRecord(CobolField record) throws IOException {
+        writeHeader();
+        writeRecordNodes(record);
+    }
+
+    private static void writeRecordNodes(CobolField record) throws IOException {
+        dotField(record);
+        CobolField n = record.next();
+        String rec = "subgraph cluster"+n.getSection() + " { label=\"Section "+ n.getSection() + "\" node [shape=plaintext] rank=same\n";
+        fw.write(rec);
+        int section = 0;
+        while(n != null) {
+            if(section != n.getSection()) {
+                section = n.getSection();
+                if(section > 1) {
+                    fw.write("}\n");
+                }
+                String subg = "subgraph cluster"+n.getSection() + " { label=\"Section "+ n.getSection() + "\" node [shape=plaintext] rank=same\n";
+                fw.write(subg);
+            }            
+            dotField(n);
+            n = n.next();
+        }
+        fw.write("}\n");
+        writeEdges(record);
+        n = record.next();
+        while(n != null) {
+            writeEdges(n);
+            n = n.next();
+        }
     }
 
     private static void writeNodes(List<CobolField> fields) throws IOException {
