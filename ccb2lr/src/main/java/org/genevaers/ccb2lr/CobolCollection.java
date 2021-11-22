@@ -1,14 +1,17 @@
 package org.genevaers.ccb2lr;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.antlr.v4.parse.ANTLRParser.parserRule_return;
 
 public class CobolCollection {
     
 	private List<CobolField> fields = new ArrayList<>();
 	private CobolField currentField;
 	private GroupField recordGroup;
-	private boolean expansionRequired;
+	private int expansionsRequired = 0;
 
     public void addCobolField(CobolField newField) {
 		if(currentField == null) {
@@ -22,9 +25,6 @@ public class CobolCollection {
 				CobolField s = findSibling(newField);
 				s.addSibling(newField);
 			}
-		}
-		if(newField.getType() == FieldType.OCCURSGROUP) {
-			expansionRequired = true;
 		}
 		fields.add(newField);
 		currentField = newField;
@@ -59,15 +59,43 @@ public class CobolCollection {
     }
 
 	public void resolvePositions() {
-		if(expansionRequired) {
+		countExpansionsRequired();
+		int e = 1;
+		while(expansionsRequired > 0) {
 			expandOccursGroups();
+			refreshFields();
+			CCB2Dot.write(this, Paths.get("expandedgroupInGroupOccurs" + e + ".gv"));
+			countExpansionsRequired();
+			e++;
 		}
-			// int pos = 1;
-			// CobolField c = firstChild;
-			// while(c != null) {
-			// 	pos = c.resolvePosition(pos);
-			// 	c = c.next();
-			// }
+		refreshFields();
+		int pos = 1;
+		CobolField c = recordGroup.getFirstChild();
+		while(c != null) {
+			pos = c.resolvePosition(pos);
+			c = c.next();
+		}
+	}
+
+	private void countExpansionsRequired() {
+		expansionsRequired = 0;
+		CobolField c = recordGroup.getFirstChild();
+		while(c != null) {
+			if(c.getType() == FieldType.OCCURSGROUP) {
+				expansionsRequired++;
+			}
+			c = c.next();
+		}
+	}
+
+	private void refreshFields() {
+		fields.clear();
+		fields.add(recordGroup);
+		CobolField n = recordGroup.next();
+		while(n != null) {
+			fields.add(n);
+			n = n.next();
+		}
 	}
 
 	private void expandOccursGroups() {
@@ -89,34 +117,18 @@ public class CobolCollection {
         }
         CobolField connectToMe = null;
         for(int t=1; t<=og.getTimes(); t++) {
-            GroupField newMe = (GroupField) CobolFieldFactory.makeNamelessFieldFrom(og);
-            String ext = parentExt + "-" + String.format("%02d", t);
-            String newName = og.getName() + ext;
-            newMe.setName(newName);
-
-            CobolField child = og.next(); //this will be our first child
-            //What if the child is itself an occurs group
-            while(child != null) {
-
-				// child could be a group
-				// so we will need to go into it
-                if(child.getType() == FieldType.OCCURSGROUP) {
-					expandOccursGroup(((OccursGroup)child), ext);
-                } else {
-                    CobolField newChild = CobolFieldFactory.makeNamelessFieldFrom(child);
-                    String newChildName = child.getName() + ext;
-                    newChild.setName(newChildName);
-                    newMe.addChild(newChild);
-                }
-                child = child.getNextSibling();
-            }
+			String ext = parentExt + "-" + String.format("%02d", t);
+			OccursGroup newMe = makeNewMe(og, t, ext);
+            //CobolField child = og.next(); 
+			copyAndRenameOriginalChildren(og, newMe, ext);
+            //expandChildFields(newMe, ext, child);
 
             if(t == 1) {
                 if(connectSibling) {
                     og.getPreviousSibling().setNextSibling(newMe);
                     newMe.setPreviousSibling(og.getPreviousSibling());
                 } else {
-                    og.getParent().addChild(newMe);
+                    og.getParent().replaceFirstChild(newMe); 
                     newMe.parent = og.getParent();
                 }
                 connectToMe = newMe;
@@ -130,8 +142,44 @@ public class CobolCollection {
             }
         }
         if(connectToMe != null) {
-            connectToMe.nextSibling = og.getNextSibling();
-			og.getNextSibling().setPreviousSibling(connectToMe);
+			if(og.getNextSibling() != null) {
+            	connectToMe.nextSibling = og.getNextSibling();
+				og.getNextSibling().setPreviousSibling(connectToMe);
+			} else if(og.getParent() != null) {
+				connectToMe.parent = og.getParent();
+			}
         }
+	}
+
+	private OccursGroup makeNewMe(OccursGroup og, int t, String ext) {
+		OccursGroup newMe = (OccursGroup) CobolFieldFactory.makeNamelessFieldFrom(og);
+		String newName = og.getName() + ext;
+		newMe.setName(newName);
+		newMe.resetOccurs();
+		return newMe;
+}		
+
+	private void copyAndRenameOriginalChildren(GroupField origin, GroupField newMe, String ext) {
+		CobolField ochild = origin.getFirstChild();
+		
+		while(ochild != null) {
+			CobolField newChild = makeNewChild(ochild, ext);
+			newMe.addChild(newChild);
+			if(ochild.getType() == FieldType.OCCURSGROUP || ochild.getType() == FieldType.GROUP) {
+				copyAndRenameOriginalChildren((GroupField)ochild, (GroupField)newChild, ext);
+			} else {
+				CobolField sib = makeNewChild(newChild, ext);
+				ochild.addChild(sib);
+			}
+			//child = child.next();
+			ochild = ochild.getNextSibling();
+		}
+	}
+
+	private CobolField makeNewChild(CobolField child, String ext) {
+		CobolField newChild = CobolFieldFactory.makeNamelessFieldFrom(child);
+		String newChildName = child.getName() + ext;
+		newChild.setName(newChildName);
+		return newChild;
 	}
 }

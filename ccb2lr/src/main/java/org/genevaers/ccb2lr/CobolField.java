@@ -188,4 +188,8 @@ public abstract class CobolField {
         newField.parent = this.parent;
     }
 
+    public void replaceFirstChild(GroupField newMe) {
+        firstChild = newMe;
+    }
+
 }

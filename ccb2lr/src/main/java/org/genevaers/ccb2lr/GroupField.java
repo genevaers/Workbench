@@ -80,4 +80,5 @@ public class GroupField extends CobolField {
         return fieldsByName.values().iterator();
     }
 
+
 }

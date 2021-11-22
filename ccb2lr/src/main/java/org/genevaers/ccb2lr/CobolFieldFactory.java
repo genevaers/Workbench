@@ -30,7 +30,11 @@ public class CobolFieldFactory {
         CobolField trg = null;
         if (src != null) {
             if(src.getType() == FieldType.OCCURSGROUP) {
-                trg = makeField(FieldType.GROUP); //Don't want endless repeats
+                OccursGroup otrg = (OccursGroup) makeField(FieldType.OCCURSGROUP); //Don't want endless repeats
+                if(otrg != null) {
+                    otrg.setTimes(((OccursGroup)src).getTimes());
+                    trg = otrg;
+                }
             } else {
                 trg = makeField(src.getType());
             }

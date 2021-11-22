@@ -7,10 +7,15 @@ import java.util.Map.Entry;
 public class OccursGroup extends GroupField {
 
     private int times = 1;
+    FieldType fieldType;
 
     @Override
     public FieldType getType() {
-        return FieldType.OCCURSGROUP;
+        if(fieldType == null) {
+            return FieldType.OCCURSGROUP;
+        } else {
+            return fieldType;
+        }
     }
 
     @Override
@@ -31,21 +36,21 @@ public class OccursGroup extends GroupField {
         return false;
     }
 
-    @Override
-    public int resolvePosition(int pos) {
-        position = pos;
-        if(times > 1) {
-            expandFields("");
-        }
-        //Following the expansion we disappear
-        //Need our replacement
-        CobolField c = parent;
-        while(c != null) {
-            pos = c.resolvePosition(pos);
-            c = c.next();
-        }
-       return pos;
-    }
+    // @Override
+    // public int resolvePosition(int pos) {
+    //     position = pos;
+    //     if(times > 1) {
+    //         expandFields("");
+    //     }
+    //     //Following the expansion we disappear
+    //     //Need our replacement
+    //     CobolField c = parent;
+    //     while(c != null) {
+    //         pos = c.resolvePosition(pos);
+    //         c = c.next();
+    //     }
+    //    return pos;
+    // }
 
     public void setTimes(int t) {
         times = t;
@@ -155,4 +160,9 @@ public class OccursGroup extends GroupField {
         //     parent.addField(newGroup);
 		// }
     }
+
+    public void resetOccurs() {
+        fieldType = FieldType.GROUP;
+    }
+
 }
