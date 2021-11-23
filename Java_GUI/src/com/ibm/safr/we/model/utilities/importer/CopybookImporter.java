@@ -13,8 +13,8 @@ import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
+import org.genevaers.ccb2lr.CobolCollection;
 import org.genevaers.ccb2lr.Copybook2LR;
-import org.genevaers.ccb2lr.RecordField;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -147,7 +147,6 @@ public class CopybookImporter extends LogicalRecordImporter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ccb2lr.generateData();
 		if(ccb2lr.hasErrors()) {
 			SAFRValidationException sve = new SAFRValidationException();
 			String err = "Copybook parsing error(s) \n";
@@ -158,8 +157,6 @@ public class CopybookImporter extends LogicalRecordImporter {
 			sve.setErrorMessage(Property.LR_NAME, err);
 			throw sve;
 		} else {
-			RecordField rf = ccb2lr.getRecordField();
-			
 			//Make the YAML object as if we were going to write it
 			ccb2lr.addRecordFieldToYamlTree();
 			//now that we have record make some transfer objects

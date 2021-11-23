@@ -388,7 +388,12 @@ public class ImportUtilityEditor extends SAFREditorPart {
         buttonRefresh.setLayoutData(dataRefresh);
         buttonRefresh.setEnabled(false);
 
-        buttonRefresh.addSelectionListener(new SelectionListener() {
+        buttonRefresh.addSelectionListener(makeRefreshListener());
+		return dataRefresh;
+	}
+
+	private SelectionListener makeRefreshListener() {
+		return new SelectionListener() {
 
             public void widgetDefaultSelected(SelectionEvent e) {
                 // no op
@@ -404,8 +409,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
             }
 
 
-        });
-		return dataRefresh;
+        };
 	}
 
 	private void loadComponentFiles() {
