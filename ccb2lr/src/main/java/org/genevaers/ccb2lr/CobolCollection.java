@@ -1,10 +1,7 @@
 package org.genevaers.ccb2lr;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.antlr.v4.parse.ANTLRParser.parserRule_return;
 
 public class CobolCollection {
     
@@ -23,7 +20,9 @@ public class CobolCollection {
 				currentField.addChild(newField);
 			} else {
 				CobolField s = findSibling(newField);
-				s.addSibling(newField);
+				if(s != null) {
+					s.addSibling(newField);
+				}
 			}
 		}
 		fields.add(newField);
@@ -31,22 +30,10 @@ public class CobolCollection {
 	}
 
 	private CobolField findSibling(CobolField newField) {
-		//section < than currentGroup - Find the LAST match not the first
-		//CobolField grp = currentField;
 		CobolField prnt = currentField.getParent();
 		while(prnt != null && prnt.getSection() != newField.getSection() ) {
-			// if(prnt.getType() == FieldType.GROUP || prnt.getType() == FieldType.OCCURSGROUP) {
-			// 	grp = prnt;
-			// }
 			prnt = prnt.getParent();
 		}
-		// CobolField n = currentGroup.parent;
-		// while (s <=  n.getSection()) {
-		// 	if(n.getType() == FieldType.GROUP || n.getType() == FieldType.OCCURSGROUP) {
-		// 		currentGroup = (GroupField) n;
-		// 	}
-		// 	n = n.next();
-		// }
 		return prnt;
 	}
 
@@ -59,22 +46,24 @@ public class CobolCollection {
     }
 
 	public void resolvePositions() {
-		countExpansionsRequired();
-		int e = 1;
-		while(expansionsRequired > 0) {
-			expandOccursGroups();
-			refreshFields();
-			CCB2Dot.write(this, Paths.get("expandedgroupInGroupOccurs" + e + ".gv"));
-			countExpansionsRequired();
-			e++;
-		}
-		refreshFields();
 		int pos = 1;
 		CobolField c = recordGroup.getFirstChild();
 		while(c != null) {
 			pos = c.resolvePosition(pos);
 			c = c.next();
 		}
+	}
+
+	public void expandOccursGroupsIfNeeded() {
+		countExpansionsRequired();
+		int e = 1;
+		while(expansionsRequired > 0) {
+			expandOccursGroups();
+			refreshFields();
+			countExpansionsRequired();
+			e++;
+		}
+		refreshFields();
 	}
 
 	private void countExpansionsRequired() {
@@ -119,19 +108,10 @@ public class CobolCollection {
         for(int t=1; t<=og.getTimes(); t++) {
 			String ext = parentExt + "-" + String.format("%02d", t);
 			OccursGroup newMe = makeNewMe(og, t, ext);
-            //CobolField child = og.next(); 
 			copyAndRenameOriginalChildren(og, newMe, ext);
-            //expandChildFields(newMe, ext, child);
 
             if(t == 1) {
-                if(connectSibling) {
-                    og.getPreviousSibling().setNextSibling(newMe);
-                    newMe.setPreviousSibling(og.getPreviousSibling());
-                } else {
-                    og.getParent().replaceFirstChild(newMe); 
-                    newMe.parent = og.getParent();
-                }
-                connectToMe = newMe;
+                connectToMe = linkFirstExpandedField(og, connectSibling, newMe);
             } else {
                 //we are a sibling of the first newME
                 if(connectToMe != null) {
@@ -149,6 +129,19 @@ public class CobolCollection {
 				connectToMe.parent = og.getParent();
 			}
         }
+	}
+
+	private CobolField linkFirstExpandedField(OccursGroup og, boolean connectSibling, OccursGroup newMe) {
+		CobolField connectToMe;
+		if(connectSibling) {
+		    og.getPreviousSibling().setNextSibling(newMe);
+		    newMe.setPreviousSibling(og.getPreviousSibling());
+		} else {
+		    og.getParent().replaceFirstChild(newMe); 
+		    newMe.parent = og.getParent();
+		}
+		connectToMe = newMe;
+		return connectToMe;
 	}
 
 	private OccursGroup makeNewMe(OccursGroup og, int t, String ext) {
@@ -171,7 +164,6 @@ public class CobolCollection {
 				CobolField sib = makeNewChild(newChild, ext);
 				ochild.addChild(sib);
 			}
-			//child = child.next();
 			ochild = ochild.getNextSibling();
 		}
 	}

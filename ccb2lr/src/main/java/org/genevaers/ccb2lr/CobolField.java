@@ -138,25 +138,6 @@ public abstract class CobolField {
             num++;
             n = n.next();
         }
-        // if(firstChild != null) {
-        //     num += firstChild.getNumberOfCobolFields();
-        // }
-        // CobolField sib = nextSibling;
-        // while(sib != null) {
-        //     num += nextSibling.getNumberOfCobolFields();
-        //     num++;
-        // }
-
-
-
-        // Iterator<CobolField> fit = fieldsByName.values().iterator();
-        // while(fit.hasNext()) {
-        //     CobolField cbf = fit.next();
-        //     if(cbf.getType() == FieldType.GROUP) {
-        //         num += ((GroupField)cbf).getNumberOfFields();
-        //     }
-        //     num++;
-        // }
         return num;
     }
 

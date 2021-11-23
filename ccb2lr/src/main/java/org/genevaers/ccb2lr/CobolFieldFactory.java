@@ -1,7 +1,5 @@
 package org.genevaers.ccb2lr;
 
-import java.util.Iterator;
-
 public class CobolFieldFactory {
 
     private CobolFieldFactory() {
@@ -50,22 +48,6 @@ public class CobolFieldFactory {
         trg.setPicCode(src.getPicCode());
         trg.setPicType(src.getPicType());
         trg.setSection(src.getSection());
-        // trg.setParent(src.getParent());
-    }
-
-    public static GroupField copyGroupWith(GroupField group, int t) {
-        GroupField newGroup = (GroupField) makeField(FieldType.GROUP);
-        // String newGroupName = group.getName() + String.format("-%02d", t);
-        // newGroup.setName(newGroupName);
-        // Iterator<CobolField> oi = group.getFieldIterator();
-        // while (oi.hasNext()) {
-        //     CobolField of = oi.next();
-        //     String newName = of.getName() + String.format("-%02d", t);
-        //     CobolField newField = CobolFieldFactory.makeNamedFieldFrom(of);
-        //     newField.setName(newName);
-        //     newGroup.addField(newField);
-        // }
-        return newGroup;
     }
 
     public static GroupField makeNewGroup(int times) {

@@ -37,4 +37,17 @@ public class TestCopybookWriter {
 		assertTrue(scbf.exists());
 	}
 
+	@Test
+	public void testCCB2LRGroupInGroupOccurstoYaml() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupInGroupOccurs.cpy");
+		ccb2lr.processCopybook(testPath);
+		ccb2lr.generateData();
+		File out = new File("build/out");
+		out.mkdirs();
+		ccb2lr.writeYAMLTo("build/out/groupInGroupOccurs.yaml");
+		File scbf = new File("build/out/groupInGroupOccurs.yaml");
+		assertTrue(scbf.exists());
+	}
+
 }

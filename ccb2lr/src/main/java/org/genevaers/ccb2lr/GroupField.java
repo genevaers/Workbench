@@ -22,10 +22,8 @@ public class GroupField extends CobolField {
         int length = 0;
         CobolField c = firstChild;
         while(c != null) {
-            if(c.getType() != FieldType.GROUP && c.getType() != FieldType.OCCURSGROUP) {
-                length += c.getLength();
-            }
-            c = c.next();
+            length += c.getLength();
+            c = c.getNextSibling();
         }
         return length;
     }
@@ -66,10 +64,6 @@ public class GroupField extends CobolField {
     public int resolvePosition(int pos) {
         position = pos;
         return pos;
-    }
-
-    public void close(CobolField parent) {
-		//parent.addField(this);
     }
 
     public int getMatchingSection() {

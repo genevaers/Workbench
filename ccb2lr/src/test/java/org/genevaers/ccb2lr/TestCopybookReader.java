@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 
 import org.junit.Test;
 
@@ -34,7 +33,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/OneLine.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		assertEquals("ONE_LINE", ccb2lr.getRecordField().getName());
 		assertFalse(ccb2lr.hasErrors());
 	}
@@ -44,7 +42,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("cbrec.gv"));
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
@@ -55,7 +52,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		GroupField rf = ccb2lr.getRecordField();
 		boolean packedFound = false;
@@ -80,7 +76,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertEquals(77, ccb2lr.getRecordField().getLength());
@@ -91,7 +86,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertEquals(75, ccb2lr.getRecordField().getLength());
@@ -102,7 +96,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simpleSigned.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(8, ccb2lr.getRecordField().getNumberOfCobolFields());
 		//maybe we should store the fields in a map then we can get them by name
@@ -116,7 +109,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/group.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("cbrec.gv"));
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(8, ccb2lr.getRecordField().getNumberOfCobolFields());
@@ -132,11 +124,8 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("simple.gv"));
 		GroupField rf = ccb2lr.getRecordField();
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		int positions [] = {1,16,24,44,61,63,68};
 		checkFieldPositions(rf, positions);
 		assertEquals(77, ccb2lr.getRecordField().getLength());
@@ -147,9 +136,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/group.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("group.gv"));
 		GroupField rf = ccb2lr.getRecordField();
 		int positions [] = {1,1,16,24,44,61,63,68};
@@ -162,9 +148,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/groupInGroup.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("groupInGroup.gv"));
 		GroupField rf = ccb2lr.getRecordField();
 		int positions [] = {1,31,31,31,46,54,54,69,77,77,87,102,110,125,140,142};
@@ -186,11 +169,7 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/groupCustomerArray.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("groupCustomerArray.gv"));
 		assertFalse(ccb2lr.hasErrors());
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("expandedGroupCustomerArray.gv"));
 		assertEquals(192, ccb2lr.getRecordField().getLength());
 	}
@@ -200,10 +179,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/groupAtTheEnd.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
-		GroupField rf = ccb2lr.getRecordField();
 		assertFalse(ccb2lr.hasErrors());
 		assertEquals(146, ccb2lr.getRecordField().getLength());
 	}
@@ -213,11 +188,6 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/groupCustomerArrayAtEnd.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("groupCustomerArrayAtEnd.gv"));
-		assertFalse(ccb2lr.hasErrors());
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("expandedGroupCustomerArrayAtEnd.gv"));
 		assertFalse(ccb2lr.hasErrors());
 		assertEquals(192, ccb2lr.getRecordField().getLength());
@@ -228,14 +198,10 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/groupInGroupOccurs.cpy");
 		ccb2lr.processCopybook(testPath);
-		ccb2lr.generateData();
-		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("groupInGroupOccurs.gv"));
 		assertFalse(ccb2lr.hasErrors());
-		CobolCollection cbc = ccb2lr.getCobolCollection();
-		cbc.resolvePositions();
 		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("expandedgroupInGroupOccurs.gv"));
 		assertFalse(ccb2lr.hasErrors());
-		assertEquals(192, ccb2lr.getRecordField().getLength());
+		assertEquals(274, ccb2lr.getRecordField().getLength());
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {

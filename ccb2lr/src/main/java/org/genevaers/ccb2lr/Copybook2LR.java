@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,13 +38,15 @@ public class Copybook2LR {
         errorListener = new ParseErrorListener();
         parser.addErrorListener(errorListener); // add ours
         tree = parser.goal(); // parse
+        generateData();
+        ccbListener.getCollection().expandOccursGroupsIfNeeded();
+        ccbListener.getCollection().resolvePositions();
 	}
 
 	public void generateData() {
 		ccbListener = new CopybookListener();
         ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
         walker.walk(ccbListener, tree); // initiate walk of tree with listener		
-        CCB2Dot.write(ccbListener.getCollection(), Paths.get("ccb.gv"));
 	}
 
 
@@ -79,9 +79,10 @@ public class Copybook2LR {
     public void addRecordFieldToYamlTree() {
         yamlMapper = new ObjectMapper(new YAMLFactory());
         copyRecord = yamlMapper.createObjectNode();
-        GroupField recField = getCobolCollection().getRecordGroup();;
-        //recField.resolvePositions();
-        addRecordFieldToRoot(recField, copyRecord);
+		CobolCollection cbc = getCobolCollection();
+        cbc.expandOccursGroupsIfNeeded();
+		cbc.resolvePositions();
+        addRecordFieldToRoot(cbc.getRecordGroup(), copyRecord);
     }
 
     public ObjectNode getRecord() {
@@ -89,16 +90,13 @@ public class Copybook2LR {
     }
 
 	private void addRecordFieldToRoot(GroupField rf, ObjectNode record) {
-		// Iterator<CobolField> fit = rf.getFieldIterator();
-        // record.put("recordName", rf.getName().replace('-','_'));
-        // ArrayNode fieldsArray = record.putArray("fields");
-		// while(fit.hasNext()) {
-		// 	CobolField f = fit.next();
-        //     addFieldToFieldsArray(f, fieldsArray);
-		// 	if(f.getType() == FieldType.GROUP) {
-		// 		recurseGroup(f, fieldsArray);
-		// 	}
-		// }
+        record.put("recordName", rf.getName().replace('-','_'));
+        ArrayNode fieldsArray = record.putArray("fields");
+        CobolField n = rf.next();
+		while(n != null) {
+            addFieldToFieldsArray(n, fieldsArray);
+            n = n.next();
+		}
 	}
 
 	private void addFieldToFieldsArray(CobolField f, ArrayNode fieldsArray) {
@@ -110,17 +108,6 @@ public class Copybook2LR {
         fieldObj.put("length", f.getLength());
         fieldObj.put("signed", f.isSigned());
         fieldsArray.add(fieldObj);
-    }
-
-    private void recurseGroup(CobolField f, ArrayNode fieldsArray) {
-        Iterator<CobolField> git = ((GroupField) f).getChildIterator();
-        while (git.hasNext()) {
-            CobolField gf = git.next();
-            addFieldToFieldsArray(gf, fieldsArray);
-            if (gf.getType() == FieldType.GROUP) {
-                recurseGroup(gf, fieldsArray);
-            }
-        }
     }
 
     public CobolCollection getCobolCollection() {

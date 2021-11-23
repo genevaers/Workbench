@@ -20,11 +20,8 @@ package org.genevaers.ccb2lr;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 
 
 /**
@@ -43,23 +40,13 @@ public class CCB2Dot {
     private static final String BINARY = "skyblue";
     private static final String PACKED = "gold";
     private static final String ALPHA = "pink";
-    // Node Function Shapes
-    private static final String EMITABLE = "octagon";
     private static final String FRAMEWORK = "rect";
     private static FileWriter fw;
-    private static String[] views;
-    private static String[] cols;
-    private static boolean nodeEnabled = true;
-    private static boolean filter = false;
-    private static String lf_id;
     static int nodeNum = 1;
     private static String idString;
     private static String label;
     private static String colour;
     private static String shape;
-
-    private static boolean reverseArrow = false; // Default arrow direction
-    private static boolean dataflow = false; // Default arrow direction
 
     CCB2Dot() {
 
@@ -201,48 +188,52 @@ public class CCB2Dot {
 
     private static void dotPacked(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = PACKED;
         shape = FRAMEWORK;
     }
 
+    private static void formatLabel(CobolField f) {
+        label = f.getName() + " " + f.getPosition() + "(" + f.getLength() + ")";
+    }
+
     private static void wtf(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         shape = FRAMEWORK;
     }
 
     private static void dotGroup(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = GROUP;
         shape = FRAMEWORK;
     }
 
     private static void dotOccurs(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = OCCURS;
         shape = FRAMEWORK;
     }
 
     private static void dotBinary(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = BINARY;
         shape = FRAMEWORK;
     }
 
     private static void dotZoned(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = ZONED;
         shape = FRAMEWORK;
     }
 
     private static void dotAlpha(CobolField f) {
         idString = f.getName().replace('-','_');
-        label = f.getName();
+        formatLabel(f);
         colour = ALPHA;
         shape = FRAMEWORK;
     }
@@ -254,6 +245,5 @@ public class CCB2Dot {
                 "graph [label=\" Cobol Tree Nodes\", labelloc=t, labeljust=center, fontname=Helvetica, fontsize=22, concentrate=false];\n");
         fw.write("labeljust=center;\n");
     }
-
  
 }
