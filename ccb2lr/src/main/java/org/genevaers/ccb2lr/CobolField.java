@@ -53,10 +53,10 @@ public abstract class CobolField {
 
     abstract public int getLength();
 
-    protected int getParenLength(int parenStart) {
+    protected int getParenLength(int parenStart, String bracketedPic) {
         int len;
-        int parenEnd = picCode.indexOf(')', 0);
-        String lenStr = picCode.substring(parenStart+1, parenEnd);
+        int parenEnd = bracketedPic.indexOf(')', 0);
+        String lenStr = bracketedPic.substring(parenStart+1, parenEnd);
         len = Integer.parseInt(lenStr);
         return len;
     }
@@ -65,7 +65,7 @@ public abstract class CobolField {
         int len;
         int parenStart = picCode.indexOf('(', 0);
         if(parenStart != -1) {
-            len = getParenLength(parenStart);
+            len = getParenLength(parenStart, picCode);
         } else {
             len = picCode.length();
         }
@@ -191,6 +191,20 @@ public abstract class CobolField {
 
     public boolean isRedefines() {
         return redefines;
+    }
+
+    public int getNunberOfDecimalPlaces() {
+        String[] decBits = picCode.split("V");
+        if(decBits.length == 2) {
+            //assume all nines for the moment
+            int parenStart = decBits[1].indexOf('(', 0);
+            if(parenStart != -1) {
+                return getParenLength(parenStart, decBits[1]);
+            } else {
+                return decBits[1].length();
+            }
+        }
+        return 0;
     }
 
 }
