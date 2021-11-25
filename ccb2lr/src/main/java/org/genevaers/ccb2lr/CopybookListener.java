@@ -34,6 +34,9 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private String picType;
 	private String picCode;
 	private int times = 1;
+	private boolean redefines;
+	private boolean groupRedefines;
+	private String redefinedName;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -41,6 +44,11 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	
 	public List<String> getErrors() {
 		return errors;
+	}
+
+	@Override 
+	public void enterGroup(CobolCopybookParser.GroupContext ctx) { 
+		groupRedefines = false;
 	}
 
 	@Override 
@@ -52,12 +60,19 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		newGroup.setName(name);
 		newGroup.setSection(section);
 
-		collection.addCobolField(newGroup);
-
 		if(times > 1) { 
 			((OccursGroup)newGroup).setTimes(times);
 			times = 1;
 		}
+		if(redefines) {
+			newGroup.setRedefinedName(redefinedName);
+			newGroup.setRedefines(true);
+			groupRedefines = redefines;
+			redefinedName = "";
+			redefines = false;
+		}
+
+		collection.addCobolField(newGroup);
 	}
 
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
@@ -70,12 +85,20 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		cbf.setSection(section);
 		cbf.setPicType(picType);
 		cbf.setPicCode(picCode);
+		cbf.setRedefines(redefines || groupRedefines);
+		cbf.setRedefinedName(redefinedName);
 
 		collection.addCobolField(cbf);
+		redefinedName = "";
+		redefines = false;
 	}
 
 	@Override public void enterIdentifier(CobolCopybookParser.IdentifierContext ctx) { 
-		name = ctx.getText();
+		if(redefines) {
+			redefinedName = ctx.getText();
+		} else {
+			name = ctx.getText();
+		}
 	}
 
 	@Override public void enterSection(CobolCopybookParser.SectionContext ctx) { 
@@ -105,6 +128,10 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		if(numChildren == 3) { //simple OCCURS x TIMES
 			times = Integer.parseInt(ctx.getChild(1).getText());
 		}
+	}
+
+	@Override public void enterRedefines(CobolCopybookParser.RedefinesContext ctx) { 
+		redefines = true;
 	}
 
 	public CobolCollection getCollection() {

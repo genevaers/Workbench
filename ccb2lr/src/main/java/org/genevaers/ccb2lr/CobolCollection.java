@@ -1,11 +1,15 @@
 package org.genevaers.ccb2lr;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CobolCollection {
     
-	private List<CobolField> fields = new ArrayList<>();
+	private Map<String, CobolField> fields = new HashMap<>();
+	private Map<String, CobolField> redefinedFields = new LinkedHashMap<>();
 	private CobolField currentField;
 	private GroupField recordGroup;
 	private int expansionsRequired = 0;
@@ -14,19 +18,38 @@ public class CobolCollection {
 		if(currentField == null) {
 			recordGroup = (GroupField) newField;
 		} else {
-			if(newField.getSection() == currentField.getSection()) {
-				currentField.addSibling(newField);
-			} else if ( newField.getSection() > currentField.getSection()) {
-				currentField.addChild(newField);
+			if(newField.isRedefines()) {
+				insertRedefines(newField);
 			} else {
-				CobolField s = findSibling(newField);
-				if(s != null) {
-					s.addSibling(newField);
-				}
+				insert(newField);
 			}
 		}
-		fields.add(newField);
 		currentField = newField;
+	}
+
+	private void insertRedefines(CobolField newField) {
+		if(currentField.isRedefines() && newField.getType() != FieldType.GROUP) { //redefined groups float
+			addChildOrSibling(newField);
+		}
+		redefinedFields.put(newField.getName(), newField);
+	}
+
+	private void insert(CobolField newField) {
+		addChildOrSibling(newField);
+		fields.put(newField.getName(), newField);
+	}
+
+	private void addChildOrSibling(CobolField newField) {
+		if(newField.getSection() == currentField.getSection()) {
+			currentField.addSibling(newField);
+		} else if ( newField.getSection() > currentField.getSection()) {
+			currentField.addChild(newField);
+		} else {
+			CobolField s = findSibling(newField);
+			if(s != null) {
+				s.addSibling(newField);
+			}
+		}
 	}
 
 	private CobolField findSibling(CobolField newField) {
@@ -37,8 +60,8 @@ public class CobolCollection {
 		return prnt;
 	}
 
-    public List<CobolField> getFields() {
-        return fields;
+    public Collection<CobolField> getFields() {
+        return fields.values();
     }
 
     public GroupField getRecordGroup() {
@@ -48,9 +71,31 @@ public class CobolCollection {
 	public void resolvePositions() {
 		int pos = 1;
 		CobolField c = recordGroup.getFirstChild();
+		resolveChildPositions(pos, c);
+		resolveRedefinedPostions();
+	}
+
+	private void resolveChildPositions(int pos, CobolField c) {
 		while(c != null) {
 			pos = c.resolvePosition(pos);
 			c = c.next();
+		}
+	}
+
+	private void resolveRedefinedPostions() {
+		Iterator<CobolField> ri = redefinedFields.values().iterator();
+		while(ri.hasNext()) {
+			CobolField r = ri.next();
+			CobolField f = fields.get(r.getRedefinedName());
+			if(r.getType() == FieldType.GROUP) {
+				GroupField grp = (GroupField) r; 
+				r.setPosition(f.getPosition());
+				resolveChildPositions(f.getPosition(), grp.getFirstChild());
+			} else {
+				if(f != null) {
+					r.setPosition(f.getPosition());
+				}
+			}
 		}
 	}
 
@@ -79,10 +124,10 @@ public class CobolCollection {
 
 	private void refreshFields() {
 		fields.clear();
-		fields.add(recordGroup);
+		fields.put(recordGroup.getName(), recordGroup);
 		CobolField n = recordGroup.next();
 		while(n != null) {
-			fields.add(n);
+			fields.put(n.getName(), n);
 			n = n.next();
 		}
 	}
@@ -174,4 +219,16 @@ public class CobolCollection {
 		newChild.setName(newChildName);
 		return newChild;
 	}
+
+	public int getNumberOfFields() {
+		return fields.size() + redefinedFields.size();
+	}
+
+	public  CobolField getNamedRedefine(String name) {
+		return redefinedFields.get(name);
+	}
+
+    public  Iterator<CobolField> getRedifinesIterator() {
+		return redefinedFields.values().iterator();
+    }
 }

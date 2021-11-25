@@ -1,9 +1,7 @@
 package org.genevaers.ccb2lr;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GroupField extends CobolField {
@@ -58,7 +56,6 @@ public class GroupField extends CobolField {
     public Iterator<CobolField> getChildIterator() {
         return fieldsByName.values().iterator();
     }
-
 
     @Override
     public int resolvePosition(int pos) {

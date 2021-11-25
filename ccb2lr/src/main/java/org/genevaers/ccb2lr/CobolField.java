@@ -15,6 +15,8 @@ public abstract class CobolField {
     private String picType;
     protected String picCode;
     protected int position = 0;
+    protected String redefinedName;
+    protected boolean redefines;
 
     public int getSection() {
         return section;
@@ -83,7 +85,9 @@ public abstract class CobolField {
     }
 
     public int resolvePosition(int pos) {
-        position = pos;  
+        if(redefinedName == null || redefinedName.length() == 0) {
+            position = pos;  
+        }
         return pos + getLength();
     }
 
@@ -171,6 +175,22 @@ public abstract class CobolField {
 
     public void replaceFirstChild(GroupField newMe) {
         firstChild = newMe;
+    }
+
+    public void setRedefinedName(String name) {
+        redefinedName = name;
+    }
+
+    public String getRedefinedName() {
+        return redefinedName;
+    }
+
+    public void setRedefines(boolean redefines) {
+        this.redefines = redefines;
+    }
+
+    public boolean isRedefines() {
+        return redefines;
     }
 
 }

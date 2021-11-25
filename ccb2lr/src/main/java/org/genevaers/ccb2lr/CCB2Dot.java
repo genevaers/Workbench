@@ -20,8 +20,8 @@ package org.genevaers.ccb2lr;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -76,19 +76,28 @@ public class CCB2Dot {
         }
     }
 
-    private static void writeFields(List<CobolField> fields) throws IOException {
-        writeHeader();
-        writeNodes(fields);
+    private static void addRedeines(Collection<CobolField> redefines) throws IOException {
+        Iterator<CobolField> ri = redefines.iterator();
+        while(ri.hasNext()) {
+            CobolField r = ri.next();
+            dotField(r);
+            writeEdges(r);
+        }
     }
 
-    private static void writeRecord(CobolField record) throws IOException {
+    private static void writeFields(Collection<CobolField> collection) throws IOException {
         writeHeader();
-        writeRecordNodes(record);
+        writeNodes(collection);
     }
 
-    private static void writeRecordNodes(CobolField record) throws IOException {
-        dotField(record);
-        CobolField n = record.next();
+    private static void writeRecord(CobolField cbf) throws IOException {
+        writeHeader();
+        writeRecordNodes(cbf);
+    }
+
+    private static void writeRecordNodes(CobolField cbf) throws IOException {
+        dotField(cbf);
+        CobolField n = cbf.next();
         String rec = "subgraph cluster"+n.getSection() + " { label=\"Section "+ n.getSection() + "\" node [shape=plaintext] rank=same\n";
         fw.write(rec);
         int section = 0;
@@ -105,16 +114,16 @@ public class CCB2Dot {
             n = n.next();
         }
         fw.write("}\n");
-        writeEdges(record);
-        n = record.next();
+        writeEdges(cbf);
+        n = cbf.next();
         while(n != null) {
             writeEdges(n);
             n = n.next();
         }
     }
 
-    private static void writeNodes(List<CobolField> fields) throws IOException {
-        Iterator<CobolField> fi = fields.iterator();
+    private static void writeNodes(Collection<CobolField> collection) throws IOException {
+        Iterator<CobolField> fi = collection.iterator();
         int section = 0;
         while(fi.hasNext()) {
             CobolField f = fi.next();
@@ -129,7 +138,7 @@ public class CCB2Dot {
             dotField(f);
         }
         fw.write("}\n");
-        Iterator<CobolField> fi2 = fields.iterator();
+        Iterator<CobolField> fi2 = collection.iterator();
         while(fi2.hasNext()) {
             CobolField f = fi2.next();
             writeEdges(f);

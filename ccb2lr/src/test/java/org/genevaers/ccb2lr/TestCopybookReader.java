@@ -204,6 +204,41 @@ public class TestCopybookReader {
 		assertEquals(274, ccb2lr.getRecordField().getLength());
 	}
 
+	@Test
+	public void testCCB2LRAllContacts() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupAllContacts.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("expandedgroupAllContacts.gv"));
+		assertEquals(274, ccb2lr.getRecordField().getLength());
+	}
+
+	@Test
+	public void testCCB2LRRedineField() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupRedefineZip.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedgroupRedefineZip.gv"));
+		assertEquals(77, ccb2lr.getRecordField().getLength());
+		assertEquals(10,ccb2lr.getNumberOfCobolFields());
+		CobolField zc = ccb2lr.getRecordField().getField("ZIP-CODE");
+		CobolField zn = ccb2lr.getCobolCollection().getNamedRedefine("ZIP-NAME");
+		assertEquals(zn.getPosition(), zc.getPosition());
+	}
+
+	@Test
+	public void testCCB2LRRedineGroup() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/groupRedefined.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedgroupRedefined.gv"));
+		assertEquals(77, ccb2lr.getRecordField().getLength());
+		assertEquals(12,ccb2lr.getNumberOfCobolFields());
+	}
+
 	private void checkFieldPositions(GroupField rf, int[] positions) {
 		CobolField f = rf.getFirstChild();
 		int ndx = 0;

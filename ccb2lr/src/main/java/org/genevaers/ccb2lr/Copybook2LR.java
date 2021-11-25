@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,21 +83,31 @@ public class Copybook2LR {
 		CobolCollection cbc = getCobolCollection();
         cbc.expandOccursGroupsIfNeeded();
 		cbc.resolvePositions();
-        addRecordFieldToRoot(cbc.getRecordGroup(), copyRecord);
+        addRecordFieldToRoot(cbc, copyRecord);
+    }
+
+    private void addRedefines(CobolCollection cbc, ArrayNode fieldsArray) {
+        Iterator<CobolField> ri = cbc.getRedifinesIterator();
+        while(ri.hasNext()) {
+            CobolField r = ri.next();
+            addFieldToFieldsArray(r, fieldsArray);
+        }
     }
 
     public ObjectNode getRecord() {
         return copyRecord;
     }
 
-	private void addRecordFieldToRoot(GroupField rf, ObjectNode record) {
-        record.put("recordName", rf.getName().replace('-','_'));
-        ArrayNode fieldsArray = record.putArray("fields");
-        CobolField n = rf.next();
+	private void addRecordFieldToRoot(CobolCollection cbc, ObjectNode yamlRecord) {
+        GroupField rec = cbc.getRecordGroup();
+        yamlRecord.put("recordName", rec.getName().replace('-','_'));
+        ArrayNode fieldsArray = yamlRecord.putArray("fields");
+        CobolField n = rec.next();
 		while(n != null) {
             addFieldToFieldsArray(n, fieldsArray);
             n = n.next();
 		}
+        addRedefines(cbc, fieldsArray);
 	}
 
 	private void addFieldToFieldsArray(CobolField f, ArrayNode fieldsArray) {
@@ -112,5 +123,9 @@ public class Copybook2LR {
 
     public CobolCollection getCobolCollection() {
         return ccbListener.getCollection();
+    }
+
+    public int getNumberOfCobolFields() {
+        return ccbListener.getCollection().getNumberOfFields();
     }
 }
