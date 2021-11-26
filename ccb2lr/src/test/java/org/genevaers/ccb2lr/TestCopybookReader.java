@@ -247,8 +247,10 @@ public class TestCopybookReader {
 		assertFalse(ccb2lr.hasErrors());
 		CobolField nines = ccb2lr.getRecordField().getField("NINES-WITH-V");
 		assertEquals(5, nines.getNunberOfDecimalPlaces());
+		assertEquals(11, nines.getLength());
 		CobolField bracketed = ccb2lr.getRecordField().getField("BRACKETED-NINES");
 		assertEquals(3, bracketed.getNunberOfDecimalPlaces());
+		assertEquals(8, bracketed.getLength());
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {

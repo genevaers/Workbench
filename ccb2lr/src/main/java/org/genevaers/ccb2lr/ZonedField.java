@@ -7,10 +7,4 @@ public class ZonedField extends CobolField {
         return FieldType.ZONED;
     }
 
-    @Override
-    public int getLength() {
-        return getPicLength();
-    }
-
-
 }

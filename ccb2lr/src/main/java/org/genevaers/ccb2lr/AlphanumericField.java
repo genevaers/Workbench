@@ -7,9 +7,4 @@ public class AlphanumericField extends CobolField {
         return FieldType.ALPHA;
     }
 
-    @Override
-    public int getLength() {
-        return getPicLength();
-    }
-
 }
