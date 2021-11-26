@@ -96,7 +96,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 		trans.setModifyBy("");
 		trans.setLength(fieldNode.get("length").asInt());
 		trans.setDataType(fieldNode.get("datatypeCode").asText());
-		trans.setDecimalPlaces(0);
+		trans.setDecimalPlaces(fieldNode.get("decimalPlaces").asInt());
 		trans.setSigned(fieldNode.get("signed").asBoolean());
 		trans.setDateTimeFormat(null);
 		trans.setScalingFactor(0);

@@ -117,6 +117,7 @@ public class Copybook2LR {
         fieldObj.put("datatypeCode", f.getType().getCode());
         fieldObj.put("position", f.getPosition());
         fieldObj.put("length", f.getLength());
+        fieldObj.put("decimalPlaces", f.getNunberOfDecimalPlaces());
         fieldObj.put("signed", f.isSigned());
         fieldsArray.add(fieldObj);
     }
