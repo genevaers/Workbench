@@ -19,6 +19,8 @@ package com.ibm.safr.we.utilities;
 
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 /**
@@ -32,11 +34,9 @@ import java.util.Map;
  */
 public class ProfileLocation {
 
-    private String localProfile;    // user local settings area
-    private String roamProfile;  // user roaming profile area
-    private String allProfile;      // all users settings area  
     
     private static ProfileLocation profileLocation = null;
+	private Path genevaPath;
     
     private ProfileLocation() {
         
@@ -44,71 +44,32 @@ public class ProfileLocation {
         // initialise java property and env vars
         String platform = System.getProperty("os.name");
         Map<String, String> env = System.getenv();
-        String userArea = env.get("USERPROFILE");
-        String allHome = env.get("ALLUSERSPROFILE");
-        String osgiCArea = System.getProperty("osgi.configuration.area");
-        String roamdata = env.get("APPDATA");        
-        if (osgiCArea == null || osgiCArea.contains("Application data") || osgiCArea.contains("Local")) {
-            roamdata = env.get("APPDATA");
+        String home = env.get("HOME");
+        String homepath = env.get("HOMEPATH");
+        String safrpart = ".genevaers";
+        Path whereToHoldStuff = null;
+        if (homepath != null) {
+        	whereToHoldStuff = Paths.get(homepath);
         }
-        else {
-            if (osgiCArea.contains("file:/")) {
-                osgiCArea = osgiCArea.substring(6);
-            }
-            roamdata = osgiCArea;
+        if (home != null) {
+        	whereToHoldStuff = Paths.get(home);        	
         }
-            
-        String safrpart = "\\SAFR\\Workbench Eclipse\\";
-        
-        // if using older Documents and Settings for settings
-        if (platform.contains("Windows XP") ||
-            platform.contains("Windows Server 2003"))  {
-
-            String localXp = "\\Local Settings\\Application data" + safrpart;
-            String roamXp = "\\Application data" + safrpart;
-            
-            roamProfile = roamdata + safrpart;                
-            localProfile = userArea + localXp;                
-            allProfile = allHome + roamXp;
-        }
-        // else using modern Users folder for settings
-        else
-        {
-            String local7 = "\\AppData\\Local" + safrpart;
-            
-            roamProfile = roamdata + safrpart;                            
-            localProfile = userArea + local7;                
-            allProfile = allHome + safrpart;
-        }   
-        
         // create these paths
-        File allPrefPath = new File(allProfile);
-        allPrefPath.mkdirs();
-        File roamPrefPath = new File(roamProfile);
-        roamPrefPath.mkdirs();
-        File localPrefPath = new File(localProfile);
-        localPrefPath.mkdirs();        
+        if(whereToHoldStuff != null) {
+        	genevaPath = whereToHoldStuff.resolve(safrpart);
+        	genevaPath.toFile().mkdirs();
+        }
     }
     
     /**
      * @return String - the Windows local user profile
      */
     public String getLocalProfile() {
-        return localProfile;
+        return genevaPath.toString();
     }
-
-    /**
-     * @return String - the Windows roaming user profile
-     */    
-    public String getRoamProfile() {
-        return roamProfile;
-    }
-
-    /**
-     * @return String - the Windows all user profile
-     */        
-    public String getAllProfile() {
-        return allProfile;
+    
+    public Path getGenevaPath() {
+    	return genevaPath;
     }
 
     /**

@@ -70,7 +70,7 @@ public class SAFRLogger {
         FileHandler fileHandler = null;
     	try {
     		    		
-	        String pattern = logPath + "Trace.%g.log";
+	        String pattern = logPath + "/Trace.%g.log";
 	        fileHandler = new FileHandler(pattern, 5000000, 40);
 	        fileHandler.setFilter(new Filter() {
 	
@@ -109,7 +109,7 @@ public class SAFRLogger {
             final Logger logger = Logger.getLogger("");
             try {
                             
-                String pattern = logPath + "WE.%g.log";
+                String pattern = logPath + "/WE.%g.log";
                 userHandler = new FileHandler(pattern, 1000000, 10);
                 userHandler.setFilter(new Filter() {
         
@@ -211,7 +211,7 @@ public class SAFRLogger {
             getOverPrefs().get(UserPreferencesNodes.LOG_FILE_PATH, "");
         String baseLogPath = ((OverridePreferences)SAFRPreferences.getSAFRPreferences()).
             getBasePrefs().get(UserPreferencesNodes.LOG_FILE_PATH, "");
-        String appLogPath = ProfileLocation.getProfileLocation().getLocalProfile()+"log\\";
+        String appLogPath = ProfileLocation.getProfileLocation().getLocalProfile() + "/logs";
         
         // Intended state
         if (overLogPath.length() > 0) {
@@ -302,10 +302,9 @@ public class SAFRLogger {
      * @return the log path
      */
     public static String getLogPath() {
-        String logPath = SAFRPreferences.getSAFRPreferences().get(
-                UserPreferencesNodes.LOG_FILE_PATH, "");
+        String logPath = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.LOG_FILE_PATH, "");
         if (logPath == null || logPath.length() == 0) {
-            return ProfileLocation.getProfileLocation().getLocalProfile()+"log\\";            
+            return ProfileLocation.getProfileLocation().getLocalProfile()+"/logs";            
         }
         else {
             if (!logPath.endsWith("\\") && !logPath.endsWith("/")) {

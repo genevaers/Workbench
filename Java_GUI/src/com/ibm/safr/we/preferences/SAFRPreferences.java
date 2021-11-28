@@ -1,5 +1,7 @@
 package com.ibm.safr.we.preferences;
 
+import java.io.File;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -57,10 +59,12 @@ public class SAFRPreferences {
     public static Preferences getSAFRPreferences() {
         
         if (preferences == null) {
-        	String allPref = ProfileLocation.getProfileLocation().getAllProfile() + SAFRPreferences.SAFRWE_PREFS;
+        	String prefsLocation = ProfileLocation.getProfileLocation().getLocalProfile() + "/prefs/";
+        	makePrefsDirectory(prefsLocation);
+        	String allPref = prefsLocation + SAFRPreferences.SAFRWE_PREFS;
         	String userPref;        	
         	if (System.getProperties().get(SAFREnvProp.DEV) == null) {
-                userPref = ProfileLocation.getProfileLocation().getRoamProfile() + SAFRPreferences.SAFRWE_PREFS;        		
+                userPref = prefsLocation + SAFRPreferences.SAFRWE_PREFS;    
         	}
         	else {
         		String location = Platform.getInstanceLocation().getURL().getPath();
@@ -82,7 +86,12 @@ public class SAFRPreferences {
         return preferences;
     }
     
-    public static Preferences getConnectionPreferences(String connectionName) {
+    private static void makePrefsDirectory(String userPref) {
+        File upf = new File(userPref);
+        upf.mkdirs();
+	}
+
+	public static Preferences getConnectionPreferences(String connectionName) {
     	Preferences connPrefs = getConnectionPreferencesMap().get(connectionName);
     	return connPrefs;
     }
