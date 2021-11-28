@@ -5350,10 +5350,6 @@ under the License.
                name="windowImages"
                value="icons/GenevaERS16.gif,icons/GenevaERS32.gif,icons/GenevaERS48.gif">
          </property>
-         <property
-               name="preferenceCustomization"
-               value="plugin_customization.ini">
-         </property>
       </product>
    </extension>
    <extension

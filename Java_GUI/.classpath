@@ -16,7 +16,5 @@
 	<classpathentry kind="lib" path="lib/jackson-core-2.13.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-databind-2.13.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-dataformat-yaml-2.13.0.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ccb2lr"/>
-	<classpathentry kind="lib" path="/ccb2lr/build/libs/ccb2lr.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
