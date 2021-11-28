@@ -15,10 +15,12 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.genevaers.ccb2lr.CobolCollection;
 import org.genevaers.ccb2lr.Copybook2LR;
+import org.xml.sax.SAXException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.ibm.safr.we.constants.ActivityResult;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.transfer.LRFieldTransfer;
 import com.ibm.safr.we.data.transfer.LogicalRecordTransfer;
@@ -50,10 +52,20 @@ public class CopybookImporter extends LogicalRecordImporter {
 	
 	private int environementId;
 
-	public void importCopybook(ImportFile file, Integer envid) throws SAFRException, XPathExpressionException {
-		cbFile = file;
-		environementId = envid;
-		doImport();
+	public void importCopybook(ImportFile file, Integer envid) {
+		try {
+			cbFile = file;
+			environementId = envid;
+			doImport();
+			file.setResult(ActivityResult.PASS);
+		}  catch (SAFRValidationException e) {
+			String msg = e.getMessage()
+					+ ". "
+					+ (e.getCause() != null ? e.getCause().getMessage()
+							: "");
+			file.setResult(ActivityResult.FAIL);
+			file.setErrorMsg(msg);
+		}
 	}
 
 	private void addTransferObjectsToRecords(ObjectNode yamlRecord) {
@@ -138,7 +150,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 	}
 
 	@Override
-	protected void doImport() throws SAFRException {
+	protected void doImport() throws SAFRValidationException {
 		clearMaps();
 		Copybook2LR ccb2lr = new Copybook2LR();
 		try {

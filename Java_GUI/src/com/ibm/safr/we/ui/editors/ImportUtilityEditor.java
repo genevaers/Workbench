@@ -545,10 +545,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
 						getMsgManager().removeAllMessages();
 						buttonRefresh.setEnabled(true);
 						
-						// CQ 8843. Nikita. 16/11/2010
-						// Refresh metadata view to automatically
-						// reflect the imported component(s)
-
 						// refresh only if the selected
 						// target environment is the same as the
 						// currently logged in
@@ -1292,6 +1288,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		case LookupPath:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LookupPath, null);
 		case LogicalRecord:
+		case CobolCopyBook:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LogicalRecord, null);
 		case LogicalFile:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LogicalFile, null);
