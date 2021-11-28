@@ -9,3 +9,5 @@ product/libs/sycadas.jar
 release/**
 .gradle/**
 **/.DS_Store
+ccb2lr/*.gv
+ccb2lr/*.gv.svg

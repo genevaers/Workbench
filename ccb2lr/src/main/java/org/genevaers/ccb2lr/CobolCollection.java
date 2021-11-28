@@ -1,0 +1,234 @@
+package org.genevaers.ccb2lr;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class CobolCollection {
+    
+	private Map<String, CobolField> fields = new HashMap<>();
+	private Map<String, CobolField> redefinedFields = new LinkedHashMap<>();
+	private CobolField currentField;
+	private GroupField recordGroup;
+	private int expansionsRequired = 0;
+
+    public void addCobolField(CobolField newField) {
+		if(currentField == null) {
+			recordGroup = (GroupField) newField;
+		} else {
+			if(newField.isRedefines()) {
+				insertRedefines(newField);
+			} else {
+				insert(newField);
+			}
+		}
+		currentField = newField;
+	}
+
+	private void insertRedefines(CobolField newField) {
+		if(currentField.isRedefines() && newField.getType() != FieldType.GROUP) { //redefined groups float
+			addChildOrSibling(newField);
+		}
+		redefinedFields.put(newField.getName(), newField);
+	}
+
+	private void insert(CobolField newField) {
+		addChildOrSibling(newField);
+		fields.put(newField.getName(), newField);
+	}
+
+	private void addChildOrSibling(CobolField newField) {
+		if(newField.getSection() == currentField.getSection()) {
+			currentField.addSibling(newField);
+		} else if ( newField.getSection() > currentField.getSection()) {
+			currentField.addChild(newField);
+		} else {
+			CobolField s = findSibling(newField);
+			if(s != null) {
+				s.addSibling(newField);
+			}
+		}
+	}
+
+	private CobolField findSibling(CobolField newField) {
+		CobolField prnt = currentField.getParent();
+		while(prnt != null && prnt.getSection() != newField.getSection() ) {
+			prnt = prnt.getParent();
+		}
+		return prnt;
+	}
+
+    public Collection<CobolField> getFields() {
+        return fields.values();
+    }
+
+    public GroupField getRecordGroup() {
+        return recordGroup;
+    }
+
+	public void resolvePositions() {
+		int pos = 1;
+		CobolField c = recordGroup.getFirstChild();
+		resolveChildPositions(pos, c);
+		resolveRedefinedPostions();
+	}
+
+	private void resolveChildPositions(int pos, CobolField c) {
+		while(c != null) {
+			pos = c.resolvePosition(pos);
+			c = c.next();
+		}
+	}
+
+	private void resolveRedefinedPostions() {
+		Iterator<CobolField> ri = redefinedFields.values().iterator();
+		while(ri.hasNext()) {
+			CobolField r = ri.next();
+			CobolField f = fields.get(r.getRedefinedName());
+			if(r.getType() == FieldType.GROUP) {
+				GroupField grp = (GroupField) r; 
+				r.setPosition(f.getPosition());
+				resolveChildPositions(f.getPosition(), grp.getFirstChild());
+			} else {
+				if(f != null) {
+					r.setPosition(f.getPosition());
+				}
+			}
+		}
+	}
+
+	public void expandOccursGroupsIfNeeded() {
+		countExpansionsRequired();
+		int e = 1;
+		while(expansionsRequired > 0) {
+			expandOccursGroups();
+			refreshFields();
+			countExpansionsRequired();
+			e++;
+		}
+		refreshFields();
+	}
+
+	private void countExpansionsRequired() {
+		expansionsRequired = 0;
+		CobolField c = recordGroup.getFirstChild();
+		while(c != null) {
+			if(c.getType() == FieldType.OCCURSGROUP) {
+				expansionsRequired++;
+			}
+			c = c.next();
+		}
+	}
+
+	private void refreshFields() {
+		fields.clear();
+		fields.put(recordGroup.getName(), recordGroup);
+		CobolField n = recordGroup.next();
+		while(n != null) {
+			fields.put(n.getName(), n);
+			n = n.next();
+		}
+	}
+
+	private void expandOccursGroups() {
+		CobolField n = recordGroup.next();
+		while(n != null) {
+			if(n.getType() == FieldType.OCCURSGROUP) {
+				expandOccursGroup((OccursGroup)n, "");
+				n = n.getNextSibling();
+			} else {
+				n = n.next();
+			}
+		}
+	}
+
+	private void expandOccursGroup(OccursGroup og, String parentExt) {
+        boolean connectSibling = false;
+        if(og.getPreviousSibling() != null) {
+            connectSibling = true;
+        }
+        CobolField connectToMe = null;
+        for(int t=1; t<=og.getTimes(); t++) {
+			String ext = parentExt + "-" + String.format("%02d", t);
+			OccursGroup newMe = makeNewMe(og, t, ext);
+			copyAndRenameOriginalChildren(og, newMe, ext);
+
+            if(t == 1) {
+                connectToMe = linkFirstExpandedField(og, connectSibling, newMe);
+            } else {
+                //we are a sibling of the first newME
+                if(connectToMe != null) {
+                    connectToMe.setNextSibling(newMe);
+                    newMe.setPreviousSibling(connectToMe);
+                    connectToMe = newMe;
+                }
+            }
+        }
+        if(connectToMe != null) {
+			if(og.getNextSibling() != null) {
+            	connectToMe.nextSibling = og.getNextSibling();
+				og.getNextSibling().setPreviousSibling(connectToMe);
+			} else if(og.getParent() != null) {
+				connectToMe.parent = og.getParent();
+			}
+        }
+	}
+
+	private CobolField linkFirstExpandedField(OccursGroup og, boolean connectSibling, OccursGroup newMe) {
+		CobolField connectToMe;
+		if(connectSibling) {
+		    og.getPreviousSibling().setNextSibling(newMe);
+		    newMe.setPreviousSibling(og.getPreviousSibling());
+		} else {
+		    og.getParent().replaceFirstChild(newMe); 
+		    newMe.parent = og.getParent();
+		}
+		connectToMe = newMe;
+		return connectToMe;
+	}
+
+	private OccursGroup makeNewMe(OccursGroup og, int t, String ext) {
+		OccursGroup newMe = (OccursGroup) CobolFieldFactory.makeNamelessFieldFrom(og);
+		String newName = og.getName() + ext;
+		newMe.setName(newName);
+		newMe.resetOccurs();
+		return newMe;
+}		
+
+	private void copyAndRenameOriginalChildren(GroupField origin, GroupField newMe, String ext) {
+		CobolField ochild = origin.getFirstChild();
+		
+		while(ochild != null) {
+			CobolField newChild = makeNewChild(ochild, ext);
+			newMe.addChild(newChild);
+			if(ochild.getType() == FieldType.OCCURSGROUP || ochild.getType() == FieldType.GROUP) {
+				copyAndRenameOriginalChildren((GroupField)ochild, (GroupField)newChild, ext);
+			} else {
+				CobolField sib = makeNewChild(newChild, ext);
+				ochild.addChild(sib);
+			}
+			ochild = ochild.getNextSibling();
+		}
+	}
+
+	private CobolField makeNewChild(CobolField child, String ext) {
+		CobolField newChild = CobolFieldFactory.makeNamelessFieldFrom(child);
+		String newChildName = child.getName() + ext;
+		newChild.setName(newChildName);
+		return newChild;
+	}
+
+	public int getNumberOfFields() {
+		return fields.size() + redefinedFields.size();
+	}
+
+	public  CobolField getNamedRedefine(String name) {
+		return redefinedFields.get(name);
+	}
+
+    public  Iterator<CobolField> getRedifinesIterator() {
+		return redefinedFields.values().iterator();
+    }
+}

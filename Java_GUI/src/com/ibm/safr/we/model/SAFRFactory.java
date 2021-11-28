@@ -1741,4 +1741,8 @@ public class SAFRFactory extends SAFRObject {
         return DAOFactoryHolder.getDAOFactory().getLRFieldDAO().getNextKey();
     }
 
+    public int getNextLRId() {
+        return DAOFactoryHolder.getDAOFactory().getLogicalRecordDAO().getNextKey();
+    }
+
 }
