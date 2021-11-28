@@ -30,7 +30,12 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: lib/postgresql-42.2.16.jar,
  .,
  lib/sycadas.jar,
- lib/antlr4-runtime-4.5.jar
+ lib/antlr4-runtime-4.5.jar,
+ lib/jackson-annotations-2.13.0.jar,
+ lib/jackson-core-2.13.0.jar,
+ lib/jackson-databind-2.13.0.jar,
+ lib/jackson-dataformat-yaml-2.13.0.jar,
+ lib/ccb2lr.jar
 Export-Package: com.ibm.safr.we,
  com.ibm.safr.we.constants;uses:="com.ibm.safr.we.security",
  com.ibm.safr.we.data;uses:="com.ibm.safr.we.data.dao",

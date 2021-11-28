@@ -41,6 +41,7 @@ import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.ViewFolderQueryBean;
 import com.ibm.safr.we.model.utilities.Migration;
 import com.ibm.safr.we.model.utilities.MockConfirmWarningStrategy;
+import com.ibm.safr.we.model.utilities.importer.ImportFile;
 import com.ibm.safr.we.model.view.View;
 
 public class TestImportLF extends TestImport {

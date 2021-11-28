@@ -3535,4 +3535,36 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
         return logicalRecordQueryBean;
     }
 
+	@Override
+	public Integer getNextKey() {
+        try {
+            String statement = "SELECT nextval(pg_get_serial_sequence('" + params.getSchema() + 
+                    ".logrec', 'logrecid'))";
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(statement);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            rs.next();
+            Integer result = rs.getInt(1);          
+            rs.close();            
+            pst.close();
+            return result;
+        } catch (SQLException e) {
+            String msg = "Database error occurred while retrieving LR Field next id";
+            throw DataUtilities.createDAOException(msg, e);
+        }
+    }
+
 }

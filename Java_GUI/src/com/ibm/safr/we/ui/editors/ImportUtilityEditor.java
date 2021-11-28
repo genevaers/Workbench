@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -95,6 +97,7 @@ import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.base.SAFRPersistentObject;
 import com.ibm.safr.we.model.query.EnvironmentQueryBean;
 import com.ibm.safr.we.model.query.SAFRQuery;
+import com.ibm.safr.we.model.utilities.importer.CopybookImporter;
 import com.ibm.safr.we.model.utilities.importer.ImportFile;
 import com.ibm.safr.we.model.utilities.importer.ImportUtility;
 import com.ibm.safr.we.preferences.SAFRPreferences;
@@ -142,7 +145,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	private Label labelArchiveFolder;
 	Label labelXmlFiles;
 	private ArrayList<ImportFile> files = new ArrayList<ImportFile>();
-	private File xmlDir;
+	private File importFromDir;
 
 	private Table tableXmlFiles;
 	private CheckboxTableViewer tableViewerXmlFiles;
@@ -181,10 +184,10 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		public void run(IProgressMonitor monitor)
 				throws InvocationTargetException, InterruptedException {
 			try {
-				importUtility.importMetadata();		
+				importUtility.importMetadata();
 			} catch (SAFRException se) {
 				ie = se;
-			}	
+			}
 		}
 		
 		public void endProgress() {
@@ -324,8 +327,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	}
 
 	private void createSectionComponent(Composite body) {
-		sectionComponents = safrGuiToolkit.createSection(body,
-				Section.TITLE_BAR, "Files to Import");
+		sectionComponents = safrGuiToolkit.createSection(body, Section.TITLE_BAR, "Files to Import");
 		FormData dataSectionComp = new FormData();
 		dataSectionComp.top = new FormAttachment(0, 10);
 		dataSectionComp.left = new FormAttachment(0, 5);
@@ -337,208 +339,277 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		compositeComponents.setLayout(new FormLayout());
 		compositeComponents.setLayoutData(new FormData());
 
-		Label labelEnvironment = safrGuiToolkit.createLabel(
-				compositeComponents, SWT.NONE, "Target &Environment:");
-		FormData dataLabelEnvironment = new FormData();
-		dataLabelEnvironment.width = SWT.DEFAULT;
-		dataLabelEnvironment.left = new FormAttachment(0, 5);
-		dataLabelEnvironment.top = new FormAttachment(0, 13);
-		labelEnvironment.setLayoutData(dataLabelEnvironment);
+		//The label is used as a reference for alignment
+		Label labelEnvironment = addEnvironmentCombo();
+		Label labelComponentType = addComponentCombo(labelEnvironment);
+		FormData dataButtonLocation = addFolderSelection(labelEnvironment, labelComponentType);
 
-		comboEnvironmentViewer = safrGuiToolkit.createTableComboForComponents(
-				compositeComponents, ComponentType.Environment);
-		comboEnvironment = comboEnvironmentViewer.getTableCombo();
-		comboEnvironment.setData(SAFRLogger.USER, "Target Environment");                              
-		addEnvOpenEditorMenu();
+		addFilesTable(labelEnvironment);       
 		
-		FormData dataComboEnvironment = new FormData();
-		dataComboEnvironment.left = new FormAttachment(labelEnvironment, 10);
-		dataComboEnvironment.top = new FormAttachment(0, 15);
-		dataComboEnvironment.width = 375;
-		comboEnvironment.setLayoutData(dataComboEnvironment);
-		// load the data
-		try {
-			// CQ 8863. Nikita. 19/11/2010
-			// Show only those environments in the Target Env combo on which the
-			// user has Admin rights.
-			envList = SAFRQuery.queryEnvironmentsForLoggedInUser(
-					SortType.SORT_BY_NAME, true);
-		} catch (DAOException e1) {
-			UIUtilities.handleWEExceptions(e1,
-					"Error occurred while retrieving all environments.",
-					UIUtilities.titleStringDbException);
+		addButtons(labelEnvironment, dataButtonLocation);
+        
+		sectionComponents.setClient(compositeComponents);
+	}
+
+	private void addButtons(Label labelEnvironment, FormData dataButtonLocation) {
+		FormData dataImportButton = addImportButton();
+        FormData dataSelectAll = addSelectAllButton(labelEnvironment);		
+		FormData dataDeSelectAll = addDeSelectAllButton();		
+        FormData dataRefresh = addRefreshButton();       
+        setButtonWidths(dataButtonLocation, dataImportButton, dataSelectAll, dataDeSelectAll, dataRefresh);
+	}
+
+	private void setButtonWidths(FormData dataButtonLocation, FormData dataImportButton, FormData dataSelectAll,
+			FormData dataDeSelectAll, FormData dataRefresh) {
+		// Set width of all buttons to the widest button
+        List<Button> buttons = new ArrayList<Button>();
+        buttons.add(buttonSelectAll);
+        buttons.add(buttonDeSelectAll);
+        buttons.add(buttonRefresh);
+        buttons.add(buttonImport);
+        buttons.add(buttonLocation);
+        int width = UIUtilities.computePreferredButtonWidth(buttons);
+        dataSelectAll.width = width;
+        dataDeSelectAll.width = width;
+        dataRefresh.width = width;
+        dataImportButton.width = width;
+        dataButtonLocation.width = width;
+	}
+
+	private FormData addRefreshButton() {
+		// CQ10364 Refresh button
+        buttonRefresh = safrGuiToolkit.createButton(compositeComponents,
+                SWT.PUSH, "&Refresh");
+        buttonRefresh.setData(SAFRLogger.USER, "Refresh");                                                                    
+        FormData dataRefresh = new FormData();
+        dataRefresh.left = new FormAttachment(buttonDeSelectAll, 10);
+        dataRefresh.top = new FormAttachment(tableXmlFiles, 5);
+        dataRefresh.bottom = new FormAttachment(100, -10);
+        buttonRefresh.setLayoutData(dataRefresh);
+        buttonRefresh.setEnabled(false);
+
+        buttonRefresh.addSelectionListener(makeRefreshListener());
+		return dataRefresh;
+	}
+
+	private SelectionListener makeRefreshListener() {
+		return new SelectionListener() {
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // no op
+            }
+
+            public void widgetSelected(SelectionEvent e) {
+				loadComponentFiles();
+                tableViewerXmlFiles.refresh();
+                tableViewerXmlFiles.setAllChecked(false);
+                showSectionErrors(false);
+                enableImportButtons(false);
+                prevSelection = 0;              
+            }
+
+
+        };
+	}
+
+	private void loadComponentFiles() {
+		if(componentType == ComponentType.CobolCopyBook) {
+			loadFiles(".cpy");					
+		} else {
+			loadFiles(".xml");
 		}
-		Integer count = 0;
-		if (envList != null) {
-			for (EnvironmentQueryBean enviromentQuerybean : envList) {
-				comboEnvironment.setData(Integer.toString(count),
-						enviromentQuerybean);
-				count++;
-			}
-		}
+	}
+	
+	private FormData addDeSelectAllButton() {
+		buttonDeSelectAll = safrGuiToolkit.createButton(compositeComponents,
+				SWT.PUSH, "&Deselect All");
+		buttonDeSelectAll.setData(SAFRLogger.USER, "Deselect All");                                                                    		
+		FormData dataDeSelectAll = new FormData();
+		dataDeSelectAll.left = new FormAttachment(buttonSelectAll, 10);
+		dataDeSelectAll.top = new FormAttachment(tableXmlFiles, 5);
+		dataDeSelectAll.bottom = new FormAttachment(100, -10);
+		buttonDeSelectAll.setLayoutData(dataDeSelectAll);
+		buttonDeSelectAll.setEnabled(false);
 
-		comboEnvironmentViewer.setInput(envList);
-
-		comboEnvironment.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
-				if (comboEnvironment.getSelectionIndex() != selectedEnvironment) {
-					EnvironmentQueryBean environmentQueryBean = (EnvironmentQueryBean) comboEnvironment
-							.getTable().getSelection()[0].getData();
-					if (environmentQueryBean != null) {
-						currentEnvID = environmentQueryBean.getId();
-						currentEnvironment = environmentQueryBean;
-					}
-
-					try {
-						// Display cursor in the form of an
-						// hourglass while the View Folders combo is
-						// being populated
-						getSite().getShell().setCursor(
-								getSite().getShell().getDisplay()
-										.getSystemCursor(SWT.CURSOR_WAIT));
-
-						if (componentType != null) {
-							tableViewerXmlFiles.refresh();
-							labelXmlFiles.setEnabled(true);
-
-							if (currentEnvID > 0l) {
-								if (componentType == ComponentType.View) {
-									enableLocationWidgets(false);
-									enableFileTableButtons(false);
-								} else {
-									enableLocationWidgets(true);
-									enableFileTableButtons(true);
-								}
-							}
-						}
-
-						if (tableViewerXmlFiles.getCheckedElements().length > 0
-								&& currentEnvironment != null) {
-							enableImportButtons(true);
-						} else {
-							enableImportButtons(false);
-						}
-					} finally {
-						// restore cursor to original one
-						getSite().getShell().setCursor(null);
-					}
-
-					selectedEnvironment = comboEnvironment.getSelectionIndex();
-				}
-			}
-
-		});
-
-		Label labelComponentType = safrGuiToolkit.createLabel(
-				compositeComponents, SWT.NONE, "Component &Type:");
-		FormData dataLabelComponentType = new FormData();
-		dataLabelComponentType.width = SWT.DEFAULT;
-		dataLabelComponentType.top = new FormAttachment(labelEnvironment, 18);
-		dataLabelComponentType.left = new FormAttachment(0, 5);
-		labelComponentType.setLayoutData(dataLabelComponentType);
-
-		comboComponentType = safrGuiToolkit.createComboBox(compositeComponents,
-				SWT.READ_ONLY, "");
-		comboComponentType.setData(SAFRLogger.USER, "Component Type");                              		
-		FormData dataComboComponentType = new FormData();
-		dataComboComponentType.left = new FormAttachment(labelEnvironment, 10);
-		dataComboComponentType.top = new FormAttachment(comboEnvironment, 10);
-		dataComboComponentType.width = 350;
-		comboComponentType.setLayoutData(dataComboComponentType);
-		int i = 0;
-		comboComponentType.add("View");
-		comboComponentType.setData(String.valueOf(i++), ComponentType.View);
-        comboComponentType.add("View Folder");
-        comboComponentType.setData(String.valueOf(i++), ComponentType.ViewFolder);
-		comboComponentType.addFocusListener(new FocusAdapter() {
-
-			public void focusLost(FocusEvent e) {
-				if (comboComponentType.getSelectionIndex() != selectedComponentType) {
-					componentType = (ComponentType) comboComponentType
-							.getData(String.valueOf(comboComponentType
-									.getSelectionIndex()));
-
-					if (currentEnvID > 0l) {
-						tableViewerXmlFiles.refresh();
-						labelXmlFiles.setEnabled(true);
-
-						enableLocationWidgets(true);
-						enableFileTableButtons(true);
-					}
-
-					if (tableViewerXmlFiles.getCheckedElements().length > 0
-							&& componentType != null
-							&& currentEnvironment != null) {
-						enableImportButtons(true);
-					} else {
-						enableImportButtons(false);
-					}
-
-					selectedComponentType = comboComponentType
-							.getSelectionIndex();
-				}
-			}
-
-		});
-
-
-		labelArchiveFolder = safrGuiToolkit.createLabel(compositeComponents,
-				SWT.NONE, "Archive F&older:");
-		FormData dataLabel = new FormData();
-		dataLabel.width = SWT.DEFAULT;
-		dataLabel.top = new FormAttachment(labelComponentType, 18);
-		dataLabel.left = new FormAttachment(0, 5);
-		labelArchiveFolder.setLayoutData(dataLabel);
-		labelArchiveFolder.setEnabled(false);
-
-		textPath = safrGuiToolkit.createTextBox(compositeComponents, SWT.NONE);
-		textPath.setData(SAFRLogger.USER, "Archive Folder");                                    		
-		FormData dataLocation = new FormData();
-		dataLocation.left = new FormAttachment(labelEnvironment, 10);
-		dataLocation.top = new FormAttachment(comboComponentType, 10);
-		dataLocation.width = 368;
-		textPath.setLayoutData(dataLocation);
-        Preferences preferences = SAFRPreferences.getSAFRPreferences(); 
-        String impPath = preferences.get(UserPreferencesNodes.IMPORT_PATH,"");
-        if (impPath==null || impPath.equals("")) { 
-            textPath.setText(ProfileLocation.getProfileLocation().getLocalProfile() + "xml");
-        }
-        else {
-            textPath.setText(impPath);            
-        }
-        xmlDir = new File(textPath.getText());
-		textPath.setEnabled(false);
-
-		buttonLocation = safrGuiToolkit.createButton(compositeComponents,
-				SWT.NONE, "&Browse...");
-		buttonLocation.setData(SAFRLogger.USER, "Browse");                                          		
-		FormData dataButtonLocation = new FormData();
-		dataButtonLocation.left = new FormAttachment(textPath, 5);
-		dataButtonLocation.top = new FormAttachment(labelComponentType, 16);
-		buttonLocation.setLayoutData(dataButtonLocation);
-		buttonLocation.setEnabled(false);
-		buttonLocation.addSelectionListener(new SelectionListener() {
+		buttonDeSelectAll.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
+
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-
-				// User has selected to open multiple files
-				dialogLocation = new DirectoryDialog(getSite().getShell());
-				dialogLocation.setFilterPath(textPath.getText());
-				String path = dialogLocation.open();
-				if (path != null) {
-					textPath.setText(path);
+				if (files == null || files.size() == 0) {
+					return;
 				}
+				tableViewerXmlFiles.setAllChecked(false);
+				enableImportButtons(false);
+				for (ImportFile iFile : files) {
+					iFile.setSelected(false);
+				}
+				prevSelection = 0;
+			}
 
-				xmlDir = new File(dialogLocation.getFilterPath());
-				loadFiles();
-				tableViewerXmlFiles.refresh();
-				showSectionErrors(false);
+		});
+		return dataDeSelectAll;
+	}
+
+	private FormData addSelectAllButton(Label labelEnvironment) {
+		buttonSelectAll = safrGuiToolkit.createButton(compositeComponents,
+                SWT.PUSH, "&Select All");
+        buttonSelectAll.setData(SAFRLogger.USER, "Select All");                                                                           
+        FormData dataSelectAll = new FormData();
+        dataSelectAll.left = new FormAttachment(labelEnvironment,10);
+        dataSelectAll.top = new FormAttachment(tableXmlFiles, 5);
+        dataSelectAll.bottom = new FormAttachment(100, -10);
+        buttonSelectAll.setLayoutData(dataSelectAll);
+        buttonSelectAll.setEnabled(false);
+    
+        buttonSelectAll.addSelectionListener(new SelectionListener() {
+    
+            public void widgetDefaultSelected(SelectionEvent e) {
+    
+            }
+    
+            public void widgetSelected(SelectionEvent e) {
+                if (files == null || files.size() == 0) {
+                    return;
+                }
+    
+                tableViewerXmlFiles.setAllChecked(true);
+                if (componentType != null && currentEnvironment != null) {
+                    enableImportButtons(true);
+                    for (ImportFile iFile : files) {
+                        iFile.setSelected(true);
+                    }
+                } else {
+                    enableImportButtons(false);
+                }
+                prevSelection = 0;                              
+            }
+    
+        });
+		return dataSelectAll;
+	}
+
+	private FormData addImportButton() {
+		buttonImport = safrGuiToolkit.createButton(compositeComponents,
+				SWT.PUSH, "&Import");
+		buttonImport.setData(SAFRLogger.USER, "Import");                                                      		
+		FormData dataImportButton = new FormData();
+		dataImportButton.top = new FormAttachment(tableXmlFiles, 5);
+		dataImportButton.bottom = new FormAttachment(100, -10);
+		dataImportButton.right = new FormAttachment(tableXmlFiles, 0, SWT.RIGHT);
+		buttonImport.setLayoutData(dataImportButton);
+		buttonImport.setEnabled(false);
+
+		buttonImport.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (tableViewerXmlFiles.getCheckedElements().length > -1) {
+					
+			        Preferences preferences = SAFRPreferences.getSAFRPreferences(); 
+			        preferences.put(UserPreferencesNodes.IMPORT_PATH, textPath.getText());
+			        try {
+			            preferences.flush();
+			        } catch (BackingStoreException e1) {
+			            logger.log(Level.SEVERE, "Failed to save preferences", e1);
+			            throw new SAFRFatalException(e1);                    
+			        }       
+				    
+					Object[] checkedElements = tableViewerXmlFiles
+							.getCheckedElements();
+
+					// !!DO THE IMPORT!!
+
+					List<ImportFile> selectedFiles = new ArrayList<ImportFile>();
+					for (Object item : checkedElements) {
+						ImportFile f = (ImportFile) item;
+						selectedFiles.add(f);
+					}
+
+					importUtility = new ImportUtility(currentEnvironment, componentType, selectedFiles);
+					importUtility.setConfirmWarningStrategy(new SAFRGUIConfirmWarningStrategy(
+					    SAFRGUIContext.IMPORT));
+					ImportProcess proc = new ImportProcess();
+					try {
+						
+						IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+						progressService.run(true, false, proc);
+						proc.endProgress();
+						
+						SAFRException ex = proc.getSAFRException();
+						if (ex != null) {
+							throw ex;
+						}
+						
+						tableViewerXmlFiles.refresh();
+						getMsgManager().removeAllMessages();
+						buttonRefresh.setEnabled(true);
+						
+						// refresh only if the selected
+						// target environment is the same as the
+						// currently logged in
+						// environment
+						if (currentEnvironment.getId().equals(
+								UIUtilities.getCurrentEnvironmentID())) {
+							Boolean importSuccess = false;
+							for (ImportFile item : selectedFiles) {
+								if (item.getErrorMsg() == null) {
+									importSuccess = true;
+									break;
+								}
+							}
+
+							// refresh if any of the selected files were
+							// imported successfully
+							if (importSuccess) {
+								refreshMetadataView();
+								if (componentType.equals(ComponentType.ViewFolder)) {
+								    ApplicationMediator.getAppMediator().refreshNavigator();
+								}
+								UIUtilities.enableDisableMenuAsPerUserRights();
+							}
+						}
+					} catch (SAFRValidationException e1) {
+						decorateEditor(e1);
+						String ctx = e1.getContextMessage();
+						ctx = (ctx != null ? ctx.replaceAll("&", "&&") : "");
+						String msg = e1.getMessageString().replaceAll("&","&&");
+						MessageDialog.openError(getSite().getShell(),
+								"Error with the import parameters", ctx + msg);
+					} catch (SAFRException e2) {
+					    logger.log(Level.SEVERE, "System error on import", e2);
+						tableViewerXmlFiles.refresh();
+						String msg = e2.getMessage().replaceAll("&","&&");
+						MessageDialog.openError(getSite().getShell(),
+								"System error on import", msg);
+					} catch (InvocationTargetException e3) {
+                        logger.log(Level.SEVERE, "System error on import", e3);
+						tableViewerXmlFiles.refresh();
+						if ((e3.getCause()) != null) {
+							if (e3.getCause() instanceof RuntimeException) {
+								throw (RuntimeException)e3.getCause();
+							} else {
+								throw new RuntimeException(e3.getCause());
+							}
+						} else {
+							throw new RuntimeException(e3);
+						}
+					} catch (InterruptedException e4) {
+						tableViewerXmlFiles.refresh();						
+						logger.log(Level.SEVERE, "System error on import", e4);
+						MessageDialog.openError(getSite().getShell(),
+								"System error on import", "Operation interrupted. See log file for details.");
+					} finally {
+						proc.endProgress();
+					}
+					
+				}
 			}
 		});
+		return dataImportButton;
+	}
 
+	private void addFilesTable(Label labelEnvironment) {
 		labelXmlFiles = safrGuiToolkit.createLabel(compositeComponents,
 				SWT.NONE, "Fi&le(s):");
 		FormData dataLabelComponents = new FormData();
@@ -715,236 +786,228 @@ public class ImportUtilityEditor extends SAFREditorPart {
                 tableViewerXmlFiles.getTable().getColumn(2));
             tableViewerXmlFiles.getTable().setSortDirection(SWT.UP);
             tableViewerXmlFiles.setSorter(new XmlFilesTableSorter(2, SWT.UP));
-        }       
-		
-		buttonImport = safrGuiToolkit.createButton(compositeComponents,
-				SWT.PUSH, "&Import");
-		buttonImport.setData(SAFRLogger.USER, "Import");                                                      		
-		FormData dataImportButton = new FormData();
-		dataImportButton.top = new FormAttachment(tableXmlFiles, 5);
-		dataImportButton.bottom = new FormAttachment(100, -10);
-		dataImportButton.right = new FormAttachment(tableXmlFiles, 0, SWT.RIGHT);
-		buttonImport.setLayoutData(dataImportButton);
-		buttonImport.setEnabled(false);
+        }
+	}
 
-		buttonImport.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				if (tableViewerXmlFiles.getCheckedElements().length > -1) {
-					
-			        Preferences preferences = SAFRPreferences.getSAFRPreferences(); 
-			        preferences.put(UserPreferencesNodes.IMPORT_PATH, textPath.getText());
-			        try {
-			            preferences.flush();
-			        } catch (BackingStoreException e1) {
-			            logger.log(Level.SEVERE, "Failed to save preferences", e1);
-			            throw new SAFRFatalException(e1);                    
-			        }       
-				    
-					Object[] checkedElements = tableViewerXmlFiles
-							.getCheckedElements();
+	private FormData addFolderSelection(Label labelEnvironment, Label labelComponentType) {
+		labelArchiveFolder = safrGuiToolkit.createLabel(compositeComponents, SWT.NONE, "Archive F&older:");
+		FormData dataLabel = new FormData();
+		dataLabel.width = SWT.DEFAULT;
+		dataLabel.top = new FormAttachment(labelComponentType, 18);
+		dataLabel.left = new FormAttachment(0, 5);
+		labelArchiveFolder.setLayoutData(dataLabel);
+		labelArchiveFolder.setEnabled(false);
 
-					// !!DO THE IMPORT!!
+		textPath = safrGuiToolkit.createTextBox(compositeComponents, SWT.NONE);
+		textPath.setData(SAFRLogger.USER, "Archive Folder");                                    		
+		FormData dataLocation = new FormData();
+		dataLocation.left = new FormAttachment(labelEnvironment, 10);
+		dataLocation.top = new FormAttachment(comboComponentType, 10);
+		dataLocation.width = 368;
+		textPath.setLayoutData(dataLocation);
+        Preferences preferences = SAFRPreferences.getSAFRPreferences(); 
+        String impPath = preferences.get(UserPreferencesNodes.IMPORT_PATH,"");
+        if (impPath==null || impPath.equals("")) { 
+            textPath.setText(ProfileLocation.getProfileLocation().getLocalProfile() + "xml");
+        }
+        else {
+            textPath.setText(impPath);            
+        }
+        importFromDir = new File(textPath.getText());
+		textPath.setEnabled(false);
 
-					List<ImportFile> selectedFiles = new ArrayList<ImportFile>();
-					for (Object item : checkedElements) {
-						ImportFile f = (ImportFile) item;
-						selectedFiles.add(f);
-					}
+		FormData dataButtonLocation = makeBrowseButtonAlignedTo(labelComponentType);
+		return dataButtonLocation;
+	}
 
-					importUtility = new ImportUtility(currentEnvironment, componentType, selectedFiles);
-					importUtility.setConfirmWarningStrategy(new SAFRGUIConfirmWarningStrategy(
-					    SAFRGUIContext.IMPORT));
-					ImportProcess proc = new ImportProcess();
-					try {
-						
-						IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-						progressService.run(true, false, proc);
-						proc.endProgress();
-						
-						SAFRException ex = proc.getSAFRException();
-						if (ex != null) {
-							throw ex;
-						}
-						
-						tableViewerXmlFiles.refresh();
-						getMsgManager().removeAllMessages();
-						buttonRefresh.setEnabled(true);
-						
-						// CQ 8843. Nikita. 16/11/2010
-						// Refresh metadata view to automatically
-						// reflect the imported component(s)
+	private FormData makeBrowseButtonAlignedTo(Label labelComponentType) {
+		buttonLocation = safrGuiToolkit.createButton(compositeComponents, SWT.NONE, "&Browse...");
+		buttonLocation.setData(SAFRLogger.USER, "Browse");                                          		
+		FormData dataButtonLocation = new FormData();
+		dataButtonLocation.left = new FormAttachment(textPath, 5);
+		dataButtonLocation.top = new FormAttachment(labelComponentType, 16);
+		buttonLocation.setLayoutData(dataButtonLocation);
+		buttonLocation.setEnabled(false);
+		buttonLocation.addSelectionListener(getFileSelectionListener());
+		return dataButtonLocation;
+	}
 
-						// refresh only if the selected
-						// target environment is the same as the
-						// currently logged in
-						// environment
-						if (currentEnvironment.getId().equals(
-								UIUtilities.getCurrentEnvironmentID())) {
-							Boolean importSuccess = false;
-							for (ImportFile item : selectedFiles) {
-								if (item.getErrorMsg() == null) {
-									importSuccess = true;
-									break;
-								}
-							}
-
-							// refresh if any of the selected files was
-							// imported successfully
-							if (importSuccess) {
-								refreshMetadataView();
-								if (componentType.equals(ComponentType.ViewFolder)) {
-								    ApplicationMediator.getAppMediator().refreshNavigator();
-								}
-								UIUtilities.enableDisableMenuAsPerUserRights();
-							}
-						}
-					} catch (SAFRValidationException e1) {
-						decorateEditor(e1);
-						String ctx = e1.getContextMessage();
-						ctx = (ctx != null ? ctx.replaceAll("&", "&&") : "");
-						String msg = e1.getMessageString().replaceAll("&","&&");
-						MessageDialog.openError(getSite().getShell(),
-								"Error with the import parameters", ctx + msg);
-					} catch (SAFRException e2) {
-					    logger.log(Level.SEVERE, "System error on import", e2);
-						tableViewerXmlFiles.refresh();
-						String msg = e2.getMessage().replaceAll("&","&&");
-						MessageDialog.openError(getSite().getShell(),
-								"System error on import", msg);
-					} catch (InvocationTargetException e3) {
-                        logger.log(Level.SEVERE, "System error on import", e3);
-						tableViewerXmlFiles.refresh();
-						if ((e3.getCause()) != null) {
-							if (e3.getCause() instanceof RuntimeException) {
-								throw (RuntimeException)e3.getCause();
-							} else {
-								throw new RuntimeException(e3.getCause());
-							}
-						} else {
-							throw new RuntimeException(e3);
-						}
-					} catch (InterruptedException e4) {
-						tableViewerXmlFiles.refresh();						
-						logger.log(Level.SEVERE, "System error on import", e4);
-						MessageDialog.openError(getSite().getShell(),
-								"System error on import", "Operation interrupted. See log file for details.");
-					} finally {
-						proc.endProgress();
-					}
-					
-				}
-			}
-		});
-
-        buttonSelectAll = safrGuiToolkit.createButton(compositeComponents,
-                SWT.PUSH, "&Select All");
-        buttonSelectAll.setData(SAFRLogger.USER, "Select All");                                                                           
-        FormData dataSelectAll = new FormData();
-        dataSelectAll.left = new FormAttachment(labelEnvironment,10);
-        dataSelectAll.top = new FormAttachment(tableXmlFiles, 5);
-        dataSelectAll.bottom = new FormAttachment(100, -10);
-        buttonSelectAll.setLayoutData(dataSelectAll);
-        buttonSelectAll.setEnabled(false);
-    
-        buttonSelectAll.addSelectionListener(new SelectionListener() {
-    
-            public void widgetDefaultSelected(SelectionEvent e) {
-    
-            }
-    
-            public void widgetSelected(SelectionEvent e) {
-                if (files == null || files.size() == 0) {
-                    return;
-                }
-    
-                tableViewerXmlFiles.setAllChecked(true);
-                if (componentType != null && currentEnvironment != null) {
-                    enableImportButtons(true);
-                    for (ImportFile iFile : files) {
-                        iFile.setSelected(true);
-                    }
-                } else {
-                    enableImportButtons(false);
-                }
-                prevSelection = 0;                              
-            }
-    
-        });
-		
-		buttonDeSelectAll = safrGuiToolkit.createButton(compositeComponents,
-				SWT.PUSH, "&Deselect All");
-		buttonDeSelectAll.setData(SAFRLogger.USER, "Deselect All");                                                                    		
-		FormData dataDeSelectAll = new FormData();
-		dataDeSelectAll.left = new FormAttachment(buttonSelectAll, 10);
-		dataDeSelectAll.top = new FormAttachment(tableXmlFiles, 5);
-		dataDeSelectAll.bottom = new FormAttachment(100, -10);
-		buttonDeSelectAll.setLayoutData(dataDeSelectAll);
-		buttonDeSelectAll.setEnabled(false);
-
-		buttonDeSelectAll.addSelectionListener(new SelectionListener() {
+	private SelectionListener getFileSelectionListener() {
+		return new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
-
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				if (files == null || files.size() == 0) {
-					return;
+
+				// User has selected to open multiple files
+				dialogLocation = new DirectoryDialog(getSite().getShell());
+				dialogLocation.setFilterPath(textPath.getText());
+				String path = dialogLocation.open();
+				if (path != null) {
+					textPath.setText(path);
 				}
-				tableViewerXmlFiles.setAllChecked(false);
-				enableImportButtons(false);
-				for (ImportFile iFile : files) {
-					iFile.setSelected(false);
+
+				//Dir is wrong
+				//And we need to set extension based on component type?
+				importFromDir = new File(path);
+				loadComponentFiles();
+				tableViewerXmlFiles.refresh();
+				showSectionErrors(false);
+			}
+		};
+	}
+
+	private Label addComponentCombo(Label labelEnvironment) {
+		Label labelComponentType = safrGuiToolkit.createLabel(
+				compositeComponents, SWT.NONE, "Component &Type:");
+		FormData dataLabelComponentType = new FormData();
+		dataLabelComponentType.width = SWT.DEFAULT;
+		dataLabelComponentType.top = new FormAttachment(labelEnvironment, 18);
+		dataLabelComponentType.left = new FormAttachment(0, 5);
+		labelComponentType.setLayoutData(dataLabelComponentType);
+
+		comboComponentType = safrGuiToolkit.createComboBox(compositeComponents,
+				SWT.READ_ONLY, "");
+		comboComponentType.setData(SAFRLogger.USER, "Component Type");                              		
+		FormData dataComboComponentType = new FormData();
+		dataComboComponentType.left = new FormAttachment(labelEnvironment, 10);
+		dataComboComponentType.top = new FormAttachment(comboEnvironment, 10);
+		dataComboComponentType.width = 350;
+		comboComponentType.setLayoutData(dataComboComponentType);
+		int i = 0;
+		comboComponentType.add("View");
+		comboComponentType.setData(String.valueOf(i++), ComponentType.View);
+        comboComponentType.add("View Folder");
+        comboComponentType.setData(String.valueOf(i++), ComponentType.ViewFolder);
+
+        comboComponentType.add(ComponentType.CobolCopyBook.getLabel());
+        comboComponentType.setData(String.valueOf(i++), ComponentType.CobolCopyBook);
+
+        comboComponentType.addFocusListener(new FocusAdapter() {
+
+			public void focusLost(FocusEvent e) {
+				if (comboComponentType.getSelectionIndex() != selectedComponentType) {
+					componentType = (ComponentType)comboComponentType.getData(String.valueOf(comboComponentType.getSelectionIndex()));
+
+					if (currentEnvID > 0l) {
+						tableViewerXmlFiles.refresh();
+						labelXmlFiles.setEnabled(true);
+
+						enableLocationWidgets(true);
+						enableFileTableButtons(true);
+					}
+
+					if (tableViewerXmlFiles.getCheckedElements().length > 0
+							&& componentType != null
+							&& currentEnvironment != null) {
+						enableImportButtons(true);
+					} else {
+						enableImportButtons(false);
+					}
+
+					selectedComponentType = comboComponentType
+							.getSelectionIndex();
 				}
-				prevSelection = 0;
 			}
 
 		});
+		return labelComponentType;
+	}
+
+	private Label addEnvironmentCombo() {
+		Label labelEnvironment = safrGuiToolkit.createLabel(
+				compositeComponents, SWT.NONE, "Target &Environment:");
+		FormData dataLabelEnvironment = new FormData();
+		dataLabelEnvironment.width = SWT.DEFAULT;
+		dataLabelEnvironment.left = new FormAttachment(0, 5);
+		dataLabelEnvironment.top = new FormAttachment(0, 13);
+		labelEnvironment.setLayoutData(dataLabelEnvironment);
+
+		comboEnvironmentViewer = safrGuiToolkit.createTableComboForComponents(
+				compositeComponents, ComponentType.Environment);
+		comboEnvironment = comboEnvironmentViewer.getTableCombo();
+		comboEnvironment.setData(SAFRLogger.USER, "Target Environment");                              
+		addEnvOpenEditorMenu();
 		
-        // CQ10364 Refresh button
-        buttonRefresh = safrGuiToolkit.createButton(compositeComponents,
-                SWT.PUSH, "&Refresh");
-        buttonRefresh.setData(SAFRLogger.USER, "Refresh");                                                                    
-        FormData dataRefresh = new FormData();
-        dataRefresh.left = new FormAttachment(buttonDeSelectAll, 10);
-        dataRefresh.top = new FormAttachment(tableXmlFiles, 5);
-        dataRefresh.bottom = new FormAttachment(100, -10);
-        buttonRefresh.setLayoutData(dataRefresh);
-        buttonRefresh.setEnabled(false);
+		FormData dataComboEnvironment = new FormData();
+		dataComboEnvironment.left = new FormAttachment(labelEnvironment, 10);
+		dataComboEnvironment.top = new FormAttachment(0, 15);
+		dataComboEnvironment.width = 375;
+		comboEnvironment.setLayoutData(dataComboEnvironment);
+		// load the data
+		try {
+			// CQ 8863. Nikita. 19/11/2010
+			// Show only those environments in the Target Env combo on which the
+			// user has Admin rights.
+			envList = SAFRQuery.queryEnvironmentsForLoggedInUser(
+					SortType.SORT_BY_NAME, true);
+		} catch (DAOException e1) {
+			UIUtilities.handleWEExceptions(e1,
+					"Error occurred while retrieving all environments.",
+					UIUtilities.titleStringDbException);
+		}
+		Integer count = 0;
+		if (envList != null) {
+			for (EnvironmentQueryBean enviromentQuerybean : envList) {
+				comboEnvironment.setData(Integer.toString(count),
+						enviromentQuerybean);
+				count++;
+			}
+		}
 
-        buttonRefresh.addSelectionListener(new SelectionListener() {
+		comboEnvironmentViewer.setInput(envList);
 
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // no op
-            }
+		comboEnvironment.addFocusListener(new FocusAdapter() {
+			public void focusLost(FocusEvent e) {
+				if (comboEnvironment.getSelectionIndex() != selectedEnvironment) {
+					EnvironmentQueryBean environmentQueryBean = (EnvironmentQueryBean) comboEnvironment
+							.getTable().getSelection()[0].getData();
+					if (environmentQueryBean != null) {
+						currentEnvID = environmentQueryBean.getId();
+						currentEnvironment = environmentQueryBean;
+					}
 
-            public void widgetSelected(SelectionEvent e) {
-                loadFiles();
-                tableViewerXmlFiles.refresh();
-                tableViewerXmlFiles.setAllChecked(false);
-                showSectionErrors(false);
-                enableImportButtons(false);
-                prevSelection = 0;              
-            }
+					try {
+						// Display cursor in the form of an
+						// hourglass while the View Folders combo is
+						// being populated
+						getSite().getShell().setCursor(
+								getSite().getShell().getDisplay()
+										.getSystemCursor(SWT.CURSOR_WAIT));
 
-        });
-        
-		
-        // Set width of all buttons to the widest button
-        List<Button> buttons = new ArrayList<Button>();
-        buttons.add(buttonSelectAll);
-        buttons.add(buttonDeSelectAll);
-        buttons.add(buttonRefresh);
-        buttons.add(buttonImport);
-        buttons.add(buttonLocation);
-        int width = UIUtilities.computePreferredButtonWidth(buttons);
-        dataSelectAll.width = width;
-        dataDeSelectAll.width = width;
-        dataRefresh.width = width;
-        dataImportButton.width = width;
-        dataButtonLocation.width = width;
-        
-		sectionComponents.setClient(compositeComponents);
+						if (componentType != null) {
+							tableViewerXmlFiles.refresh();
+							labelXmlFiles.setEnabled(true);
+
+							if (currentEnvID > 0l) {
+								if (componentType == ComponentType.View) {
+									enableLocationWidgets(false);
+									enableFileTableButtons(false);
+								} else {
+									enableLocationWidgets(true);
+									enableFileTableButtons(true);
+								}
+							}
+						}
+
+						if (tableViewerXmlFiles.getCheckedElements().length > 0
+								&& currentEnvironment != null) {
+							enableImportButtons(true);
+						} else {
+							enableImportButtons(false);
+						}
+					} finally {
+						// restore cursor to original one
+						getSite().getShell().setCursor(null);
+					}
+
+					selectedEnvironment = comboEnvironment.getSelectionIndex();
+				}
+			}
+
+		});
+		return labelEnvironment;
 	}
 
     private void addEnvOpenEditorMenu()
@@ -1225,6 +1288,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		case LookupPath:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LookupPath, null);
 		case LogicalRecord:
+		case CobolCopyBook:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LogicalRecord, null);
 		case LogicalFile:
             ApplicationMediator.getAppMediator().refreshMetadataView(ComponentType.LogicalFile, null);
@@ -1268,15 +1332,15 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		return array;
 	}
 		
-	private void loadFiles() {
-		if (files == null || xmlDir == null) {
+	private void loadFiles(String ext) {
+		if (files == null || importFromDir == null) {
 			return;
 		}
 		files.clear();
-		if (xmlDir.listFiles() != null) {
-			for (File f : xmlDir.listFiles()) {
+		if (importFromDir.listFiles() != null) {
+			for (File f : importFromDir.listFiles()) {
 				if (f.isFile()) {
-					if (f.getName().toLowerCase().endsWith(".xml")) {
+					if (f.getName().toLowerCase().endsWith(ext)) {
 						ImportFile impFile = new ImportFile(f);
 						files.add(impFile);
 					}

@@ -8,3 +8,5 @@ product/libs/postgresql-42.2.18.jar
 product/libs/sycadas.jar
 release/**
 .gradle/**
+ccb2lr/*.gv
+ccb2lr/*.gv.svg
