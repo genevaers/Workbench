@@ -95,7 +95,7 @@ public class TestPGEnvironment extends TestCase {
 			List<String> idnames = new ArrayList<String>();
 			idnames.add(COL_ID);
 
-			DAOFactory fact;
+			DAOFactory fact = null;
 			if(postgres) {
 				fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();				
 			}

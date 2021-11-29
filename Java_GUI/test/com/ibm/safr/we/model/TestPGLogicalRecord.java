@@ -1669,7 +1669,7 @@ public class TestPGLogicalRecord extends TestCase {
         	noException = false;
         }
 
-		DAOFactory fact;
+		DAOFactory fact = null;
 		if(postgres) {
 			fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();		
 		}

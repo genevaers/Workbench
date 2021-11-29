@@ -86,7 +86,7 @@ public class TestPGPhysicalFile extends TestCase {
             List<String> idnames = new ArrayList<String>();
             idnames.add(COL_ID);
 
-			DAOFactory fact;
+			DAOFactory fact = null;
 			if(postgres) {
 				fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();				
 			}
@@ -232,7 +232,7 @@ public class TestPGPhysicalFile extends TestCase {
         	noException = false;
         }
 
-		DAOFactory fact;
+		DAOFactory fact = null;
 		if(postgres) {
 			fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();		
 		}
@@ -301,7 +301,7 @@ public class TestPGPhysicalFile extends TestCase {
         } catch (SAFRException e) {
         	noException = false;
         }
-		DAOFactory fact;
+		DAOFactory fact = null;
 		if(postgres) {
 			fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();		
 		}

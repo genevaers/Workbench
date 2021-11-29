@@ -25,8 +25,6 @@ import junit.framework.TestSuite;
 public class AllMigrationTests extends TestSuite {
 
 	static Class<?> classes[] = {
-		TestMigration.class,
-        TestMigrationCR.class,
         TestMigrationLF.class,
         TestMigrationLR.class,
         TestMigrationLU.class,

@@ -30,7 +30,6 @@ import com.ibm.safr.we.model.utilities.TestBatchActivateLookupPaths;
 import com.ibm.safr.we.model.utilities.TestBatchActivateViews;
 import com.ibm.safr.we.model.utilities.TestBatchComponent;
 import com.ibm.safr.we.model.utilities.TestDependencyChecker;
-import com.ibm.safr.we.model.utilities.TestExportUtility;
 import com.ibm.safr.we.model.utilities.TestFindReplaceComponent;
 import com.ibm.safr.we.model.utilities.TestFindReplaceText;
 import com.ibm.safr.we.model.utilities.importer.AllImportTests;
@@ -42,7 +41,7 @@ import com.ibm.safr.we.model.view.TestHeaderFooterItem;
     TestLogicTextParser.class,TestLogicTextParserBracket.class,TestLogicTextParserFind.class,
     TestBatchActivateLookupPaths.class,
     TestBatchComponent.class, TestCode.class, TestCodeSet.class, TestControlRecord.class,
-    TestEnvironment.class, TestExportUtility.class, TestFindReplaceText.class, 
+    TestEnvironment.class,  TestFindReplaceText.class, 
     TestGroup.class, TestHeaderFooterItem.class, TestLogicalFile.class, TestLogicalRecord.class,
     TestLookupPath.class, TestLookupPathSourceField.class, TestLookupPathStep.class, TestPhysicalFile.class,
     TestSAFRApplication.class, TestSAFRFactory.class, TestSAFRValidator.class, TestUser.class,

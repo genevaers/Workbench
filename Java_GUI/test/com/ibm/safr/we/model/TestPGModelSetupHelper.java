@@ -163,7 +163,7 @@ public class TestPGModelSetupHelper extends TestCase {
 
 	public LogicalRecord makeLR(String LRName, List<String> fields, LogicalFile lf) throws SAFRException {
 		dbStartup();
-		LogicalRecord lr = SAFRApplication.getSAFRFactory().getLogicalRecord(LRName);
+		LogicalRecord lr = SAFRApplication.getSAFRFactory().getLogicalRecord(0); //0 to get rid of error - fix up later
 		if(lr == null) {
 			lr = SAFRApplication.getSAFRFactory().createLogicalRecord();
 			Code lrTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(
@@ -203,7 +203,7 @@ public class TestPGModelSetupHelper extends TestCase {
 		dbStartup();
 		PhysicalFile pf =  makePF(PFName);
 		
-		LogicalFile lf = SAFRApplication.getSAFRFactory().getLogicalFile(LFName);
+		LogicalFile lf = SAFRApplication.getSAFRFactory().getLogicalFile(0);
 		if(lf == null) {
 			lf = SAFRApplication.getSAFRFactory().createLogicalfile();
 			/* Setup File Association and create logical file object */

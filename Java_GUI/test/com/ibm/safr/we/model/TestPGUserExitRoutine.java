@@ -69,7 +69,7 @@ public class TestPGUserExitRoutine extends TestCase {
 			List<String> idNames = new ArrayList<String>();
 			idNames.add(COL_ID);
 
-			DAOFactory fact;
+			DAOFactory fact = null;
 			if(postgres) {
 				fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();				
 			}

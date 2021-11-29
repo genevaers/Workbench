@@ -156,7 +156,7 @@ public class TestPGLogicalFile extends TestCase {
         	noException = false;
         }
 
-		DAOFactory fact;
+		DAOFactory fact = null;
 		if(postgres) {
 			fact = (PGDAOFactory) DAOFactoryHolder.getDAOFactory();		
 		}
