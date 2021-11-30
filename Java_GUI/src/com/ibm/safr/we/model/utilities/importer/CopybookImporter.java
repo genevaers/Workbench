@@ -133,7 +133,7 @@ public class CopybookImporter extends LogicalRecordImporter {
 		trans.setName(rec);
 
 		trans.setLrTypeCode("FILE");
-		trans.setLrStatusCode("ACTVE");
+		trans.setLrStatusCode("INACT");
 		trans.setLookupExitId(0);
 		trans.setLookupExitParams("");
 		trans.setComments("");
