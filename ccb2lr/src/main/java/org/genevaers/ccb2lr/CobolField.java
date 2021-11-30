@@ -21,6 +21,8 @@ public abstract class CobolField {
     protected int fieldLength;
     private int mantissaLen;
     private int unitLen;
+    private boolean signed;
+    private boolean nines;
 
     public int getSection() {
         return section;
@@ -68,14 +70,22 @@ public abstract class CobolField {
     }
 
     protected int resolvePicLength() {
+        resolveSign();
         if(picHasAVirtualDecimal()) {
             unitLen = getUnitLength();
             mantissaLen = getMantissaLength();
             fieldLength = unitLen + mantissaLen;
+            if(signed && nines) {
+                fieldLength--;
+            }
         } else {
             fieldLength =  getPicTermLength(picCode);
         }
         return fieldLength;
+    }
+
+    private void resolveSign() {
+        signed = picCode.charAt(0) == 'S';
     }
 
     private int getMantissaLength() {
@@ -92,6 +102,7 @@ public abstract class CobolField {
         if(bStart != -1) {
             len = getBracketedLength(bStart, term);
         } else {
+            nines = true;
             len = term.length();
         }
         return len;
@@ -107,7 +118,7 @@ public abstract class CobolField {
     }
 
     public boolean isSigned() {
-        return picCode.charAt(0) == 'S';
+        return signed;
     }
 
     public int getPosition() {
