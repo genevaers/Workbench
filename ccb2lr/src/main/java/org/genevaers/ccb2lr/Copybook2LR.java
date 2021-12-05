@@ -18,7 +18,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser.GoalContext;
-import org.genevaers.ccb2lr.grammar.CopybookLexer;
+import org.genevaers.ccb2lr.grammar.CobolCopybookLexer;
 
 public class Copybook2LR {
 
@@ -32,7 +32,7 @@ public class Copybook2LR {
         InputStream is = new FileInputStream(fp.toFile());
 		ANTLRInputStream input = new ANTLRInputStream(is);
 
-        CopybookLexer lexer = new CopybookLexer(input);
+        CobolCopybookLexer lexer = new CobolCopybookLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CobolCopybookParser parser = new CobolCopybookParser(tokens);
         parser.removeErrorListeners(); // remove ConsoleErrorListener
