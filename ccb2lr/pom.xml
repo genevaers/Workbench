@@ -74,7 +74,7 @@
           <artifactId>antlr4-maven-plugin</artifactId>
           <version>4.5</version>
             <configuration>
-              <!-- <libDirectory>src/main/antlr/imports/org/genevaers/ccb2lr/grammar</libDirectory> -->
+              <libDirectory>src/main/antlr4/org/genevaers/ccb2lr/grammar</libDirectory>
               <!-- <package>org.genevaers.ccb2lr.grammar</package> -->
             </configuration>
           <executions>
