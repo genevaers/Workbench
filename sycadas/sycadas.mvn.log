@@ -1,0 +1,1278 @@
+Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
+Maven home: C:\Users\IanCunningham\maven\apache-maven-3.8.4
+Java version: 11.0.10, vendor: AdoptOpenJDK, runtime: C:\adoptOpenJDK\jdk-11.0.10+9
+Default locale: en_AU, platform encoding: Cp1252
+OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
+[DEBUG] Reading global settings from C:\Users\IanCunningham\maven\apache-maven-3.8.4\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\IanCunningham\.m2\settings.xml
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for C:\Users\IanCunningham\.m2\repository
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=862200, ConflictMarker.markTime=370600, ConflictMarker.nodeCount=2, ConflictIdSorter.graphTime=455500, ConflictIdSorter.topsortTime=355100, ConflictIdSorter.conflictIdCount=2, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=4890200, ConflictResolver.conflictItemCount=2, DefaultDependencyCollector.collectTime=89386300, DefaultDependencyCollector.transformTime=8593300}
+[DEBUG] org.eclipse.tycho.extras:tycho-pomless:jar:2.5.0
+[DEBUG]    io.takari.polyglot:polyglot-common:jar:0.4.6:compile
+[DEBUG] Populating class realm coreExtension>org.eclipse.tycho.extras:tycho-pomless:2.5.0
+[DEBUG]   Included C:\Users\IanCunningham\.m2\repository\org\eclipse\tycho\extras\tycho-pomless\2.5.0\tycho-pomless-2.5.0.jar
+[DEBUG]   Included C:\Users\IanCunningham\.m2\repository\io\takari\polyglot\polyglot-common\0.4.6\polyglot-common-0.4.6.jar
+[DEBUG] Populating class realm maven.ext
+[DEBUG] Created new class realm maven.api
+[DEBUG] Importing foreign packages into class realm maven.api
+[DEBUG]   Imported: javax.annotation.* < maven.ext
+[DEBUG]   Imported: javax.annotation.security.* < maven.ext
+[DEBUG]   Imported: javax.inject.* < maven.ext
+[DEBUG]   Imported: org.apache.maven.* < maven.ext
+[DEBUG]   Imported: org.apache.maven.artifact < maven.ext
+[DEBUG]   Imported: org.apache.maven.classrealm < maven.ext
+[DEBUG]   Imported: org.apache.maven.cli < maven.ext
+[DEBUG]   Imported: org.apache.maven.configuration < maven.ext
+[DEBUG]   Imported: org.apache.maven.exception < maven.ext
+[DEBUG]   Imported: org.apache.maven.execution < maven.ext
+[DEBUG]   Imported: org.apache.maven.execution.scope < maven.ext
+[DEBUG]   Imported: org.apache.maven.lifecycle < maven.ext
+[DEBUG]   Imported: org.apache.maven.model < maven.ext
+[DEBUG]   Imported: org.apache.maven.monitor < maven.ext
+[DEBUG]   Imported: org.apache.maven.plugin < maven.ext
+[DEBUG]   Imported: org.apache.maven.profiles < maven.ext
+[DEBUG]   Imported: org.apache.maven.project < maven.ext
+[DEBUG]   Imported: org.apache.maven.reporting < maven.ext
+[DEBUG]   Imported: org.apache.maven.repository < maven.ext
+[DEBUG]   Imported: org.apache.maven.rtinfo < maven.ext
+[DEBUG]   Imported: org.apache.maven.settings < maven.ext
+[DEBUG]   Imported: org.apache.maven.toolchain < maven.ext
+[DEBUG]   Imported: org.apache.maven.usability < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.* < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.authentication < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.authorization < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.events < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.observers < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.proxy < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.repository < maven.ext
+[DEBUG]   Imported: org.apache.maven.wagon.resource < maven.ext
+[DEBUG]   Imported: org.codehaus.classworlds < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.* < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.classworlds < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.component < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.configuration < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.container < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.context < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.lifecycle < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.logging < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.personality < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.Xpp3Dom < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParser < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlPullParserException < maven.ext
+[DEBUG]   Imported: org.codehaus.plexus.util.xml.pull.XmlSerializer < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.* < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.artifact < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.collection < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.deployment < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.graph < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.impl < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.installation < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.internal.impl < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.metadata < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.repository < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.resolution < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.spi < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.transfer < maven.ext
+[DEBUG]   Imported: org.eclipse.aether.version < maven.ext
+[DEBUG]   Imported: org.fusesource.jansi.* < maven.ext
+[DEBUG]   Imported: org.slf4j.* < maven.ext
+[DEBUG]   Imported: org.slf4j.event.* < maven.ext
+[DEBUG]   Imported: org.slf4j.helpers.* < maven.ext
+[DEBUG]   Imported: org.slf4j.spi.* < maven.ext
+[DEBUG] Populating class realm maven.api
+[INFO] Error stacktraces are turned on.
+[DEBUG] Message scheme: color
+[DEBUG] Message styles: debug info warning error success failure strong mojo project
+[DEBUG] Reading global settings from C:\Users\IanCunningham\maven\apache-maven-3.8.4\conf\settings.xml
+[DEBUG] Reading user settings from C:\Users\IanCunningham\.m2\settings.xml
+[DEBUG] Reading global toolchains from C:\Users\IanCunningham\maven\apache-maven-3.8.4\conf\toolchains.xml
+[DEBUG] Reading user toolchains from C:\Users\IanCunningham\.m2\toolchains.xml
+[DEBUG] Using local repository at C:\Users\IanCunningham\.m2\repository
+[DEBUG] Using manager EnhancedLocalRepositoryManager with priority 10.0 for C:\Users\IanCunningham\.m2\repository
+[INFO] Scanning for projects...
+[DEBUG] Extension realms for project org.genevaers:sycadas:jar:1.0-SNAPSHOT: (none)
+[DEBUG] Looking up lifecycle mappings for packaging jar from ClassRealm[maven.ext, parent: ClassRealm[plexus.core, parent: null]]
+[DEBUG] Extension realms for project org.genevaers:parent:pom:4.50.0: (none)
+[DEBUG] Looking up lifecycle mappings for packaging pom from ClassRealm[maven.ext, parent: ClassRealm[plexus.core, parent: null]]
+[DEBUG] === REACTOR BUILD PLAN ================================================
+[DEBUG] Project: org.genevaers:sycadas:jar:1.0-SNAPSHOT
+[DEBUG] Tasks:   [compile]
+[DEBUG] Style:   Regular
+[DEBUG] =======================================================================
+[INFO] 
+[INFO] -----------------------< org.genevaers:sycadas >------------------------
+[INFO] Building Syntax Checker and Dependency Analysis 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for ossrh-snapshots (http://oss.sonatype.org/content/repositories/snapshots).
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] Lifecycle default -> [validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy]
+[DEBUG] Lifecycle clean -> [pre-clean, clean, post-clean]
+[DEBUG] Lifecycle site -> [pre-site, site, post-site, site-deploy]
+[DEBUG] === PROJECT BUILD PLAN ================================================
+[DEBUG] Project:       org.genevaers:sycadas:1.0-SNAPSHOT
+[DEBUG] Dependencies (collect): []
+[DEBUG] Dependencies (resolve): [compile]
+[DEBUG] Repositories (dependencies): [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] Repositories (plugins)     : [central (https://repo.maven.apache.org/maven2, default, releases)]
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.antlr:antlr4-maven-plugin:4.5:antlr4 (default)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <atn default-value="false">${antlr4.atn}</atn>
+  <encoding>${project.build.sourceEncoding}</encoding>
+  <forceATN default-value="false">${antlr4.forceATN}</forceATN>
+  <libDirectory default-value="${basedir}/src/main/antlr4/imports">src/main/antlr4/org/genevaers/sycadas/grammar</libDirectory>
+  <listener default-value="true">${antlr4.listener}</listener>
+  <outputDirectory default-value="${project.build.directory}/generated-sources/antlr4"/>
+  <project>${project}</project>
+  <sourceDirectory default-value="${basedir}/src/main/antlr4"/>
+  <treatWarningsAsErrors default-value="false">${antlr4.treatWarningsAsErrors}</treatWarningsAsErrors>
+  <visitor default-value="false">${antlr4.visitor}</visitor>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.codehaus.mojo:build-helper-maven-plugin:3.2.0:add-source (add-source)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <project default-value="${project}"/>
+  <sources>
+    <source>target/generated-sources/antlr4/org/genevaers/sycadas/grammar</source>
+  </sources>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-resources-plugin:3.0.2:resources (default-resources)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <addDefaultExcludes default-value="true"/>
+  <buildFilters default-value="${project.build.filters}"/>
+  <encoding default-value="${project.build.sourceEncoding}"/>
+  <escapeWindowsPaths default-value="true"/>
+  <fileNameFiltering default-value="false"/>
+  <includeEmptyDirs default-value="false"/>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <overwrite default-value="false"/>
+  <project default-value="${project}"/>
+  <resources default-value="${project.resources}"/>
+  <session default-value="${session}"/>
+  <skip default-value="false">${maven.resources.skip}</skip>
+  <supportMultiLineFiltering default-value="false"/>
+  <useBuildFilters default-value="true"/>
+  <useDefaultDelimiters default-value="true"/>
+</configuration>
+[DEBUG] -----------------------------------------------------------------------
+[DEBUG] Goal:          org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile)
+[DEBUG] Style:         Regular
+[DEBUG] Configuration: <?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <basedir default-value="${basedir}"/>
+  <buildDirectory default-value="${project.build.directory}"/>
+  <compilePath default-value="${project.compileClasspathElements}"/>
+  <compileSourceRoots default-value="${project.compileSourceRoots}"/>
+  <compilerId default-value="javac">${maven.compiler.compilerId}</compilerId>
+  <compilerReuseStrategy default-value="${reuseCreated}">${maven.compiler.compilerReuseStrategy}</compilerReuseStrategy>
+  <compilerVersion>${maven.compiler.compilerVersion}</compilerVersion>
+  <debug default-value="true">${maven.compiler.debug}</debug>
+  <debuglevel>${maven.compiler.debuglevel}</debuglevel>
+  <encoding default-value="${project.build.sourceEncoding}">${encoding}</encoding>
+  <executable>${maven.compiler.executable}</executable>
+  <failOnError default-value="true">${maven.compiler.failOnError}</failOnError>
+  <failOnWarning default-value="false">${maven.compiler.failOnWarning}</failOnWarning>
+  <forceJavacCompilerUse default-value="false">${maven.compiler.forceJavacCompilerUse}</forceJavacCompilerUse>
+  <fork default-value="false">${maven.compiler.fork}</fork>
+  <generatedSourcesDirectory default-value="${project.build.directory}/generated-sources/annotations"/>
+  <maxmem>${maven.compiler.maxmem}</maxmem>
+  <meminitial>${maven.compiler.meminitial}</meminitial>
+  <mojoExecution default-value="${mojoExecution}"/>
+  <optimize default-value="false">${maven.compiler.optimize}</optimize>
+  <outputDirectory default-value="${project.build.outputDirectory}"/>
+  <parameters default-value="false">${maven.compiler.parameters}</parameters>
+  <project default-value="${project}"/>
+  <projectArtifact default-value="${project.artifact}"/>
+  <release>${maven.compiler.release}</release>
+  <session default-value="${session}"/>
+  <showDeprecation default-value="false">${maven.compiler.showDeprecation}</showDeprecation>
+  <showWarnings default-value="false">${maven.compiler.showWarnings}</showWarnings>
+  <skipMain>${maven.main.skip}</skipMain>
+  <skipMultiThreadWarning default-value="false">${maven.compiler.skipMultiThreadWarning}</skipMultiThreadWarning>
+  <source default-value="1.6">${maven.compiler.source}</source>
+  <staleMillis default-value="0">${lastModGranularityMs}</staleMillis>
+  <target default-value="1.6">${maven.compiler.target}</target>
+  <useIncrementalCompilation default-value="true">${maven.compiler.useIncrementalCompilation}</useIncrementalCompilation>
+  <verbose default-value="false">${maven.compiler.verbose}</verbose>
+</configuration>
+[DEBUG] =======================================================================
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=6100, ConflictMarker.markTime=85800, ConflictMarker.nodeCount=1, ConflictIdSorter.graphTime=1700, ConflictIdSorter.topsortTime=3900, ConflictIdSorter.conflictIdCount=0, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=8000, ConflictResolver.conflictItemCount=0, DefaultDependencyCollector.collectTime=3500, DefaultDependencyCollector.transformTime=117800}
+[DEBUG] org.genevaers:sycadas:jar:1.0-SNAPSHOT
+[INFO] 
+[INFO] --- antlr4-maven-plugin:4.5:antlr4 (default) @ sycadas ---
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for apache.snapshots (http://repository.apache.org/snapshots).
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for snapshots (http://snapshots.maven.codehaus.org/maven2).
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for central (http://repo1.maven.org/maven2).
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=340600, ConflictMarker.markTime=180500, ConflictMarker.nodeCount=54, ConflictIdSorter.graphTime=126200, ConflictIdSorter.topsortTime=82900, ConflictIdSorter.conflictIdCount=29, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=3303200, ConflictResolver.conflictItemCount=52, DefaultDependencyCollector.collectTime=185669600, DefaultDependencyCollector.transformTime=4112300}
+[DEBUG] org.antlr:antlr4-maven-plugin:jar:4.5
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.0.5:compile
+[DEBUG]       org.apache.maven:maven-model:jar:3.0.5:compile
+[DEBUG]       org.apache.maven:maven-artifact:jar:3.0.5:compile
+[DEBUG]       org.sonatype.sisu:sisu-inject-plexus:jar:2.3.0:compile
+[DEBUG]          org.codehaus.plexus:plexus-component-annotations:jar:1.5.5:compile
+[DEBUG]          org.codehaus.plexus:plexus-classworlds:jar:2.4:compile
+[DEBUG]          org.sonatype.sisu:sisu-inject-bean:jar:2.3.0:compile
+[DEBUG]             org.sonatype.sisu:sisu-guice:jar:no_aop:3.1.0:compile
+[DEBUG]                org.sonatype.sisu:sisu-guava:jar:0.9.9:compile
+[DEBUG]    org.apache.maven:maven-project:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-profile:jar:2.2.1:compile
+[DEBUG]       org.apache.maven:maven-artifact-manager:jar:2.2.1:compile
+[DEBUG]          org.apache.maven:maven-repository-metadata:jar:2.2.1:compile
+[DEBUG]          backport-util-concurrent:backport-util-concurrent:jar:3.1:compile
+[DEBUG]       org.apache.maven:maven-plugin-registry:jar:2.2.1:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.11:compile
+[DEBUG]       org.codehaus.plexus:plexus-utils:jar:1.5.15:compile
+[DEBUG]       org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:compile
+[DEBUG]          junit:junit:jar:3.8.1:compile
+[DEBUG]          classworlds:classworlds:jar:1.1-alpha-2:compile
+[DEBUG]    org.codehaus.plexus:plexus-compiler-api:jar:2.2:compile
+[DEBUG]    org.sonatype.plexus:plexus-build-api:jar:0.0.7:compile
+[DEBUG]    org.antlr:antlr4:jar:4.5:compile
+[DEBUG]       org.antlr:antlr4-runtime:jar:4.5:compile
+[DEBUG]          org.abego.treelayout:org.abego.treelayout.core:jar:1.0.1:compile
+[DEBUG]       org.antlr:antlr-runtime:jar:3.5.2:compile
+[DEBUG]       org.antlr:ST4:jar:4.0.8:compile
+[DEBUG] Created new class realm plugin>org.antlr:antlr4-maven-plugin:4.5
+[DEBUG] Importing foreign packages into class realm plugin>org.antlr:antlr4-maven-plugin:4.5
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.antlr:antlr4-maven-plugin:4.5
+[DEBUG]   Included: org.antlr:antlr4-maven-plugin:jar:4.5
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.5.5
+[DEBUG]   Included: org.sonatype.sisu:sisu-inject-bean:jar:2.3.0
+[DEBUG]   Included: org.sonatype.sisu:sisu-guice:jar:no_aop:3.1.0
+[DEBUG]   Included: org.sonatype.sisu:sisu-guava:jar:0.9.9
+[DEBUG]   Included: backport-util-concurrent:backport-util-concurrent:jar:3.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.11
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:1.5.15
+[DEBUG]   Included: junit:junit:jar:3.8.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-api:jar:2.2
+[DEBUG]   Included: org.sonatype.plexus:plexus-build-api:jar:0.0.7
+[DEBUG]   Included: org.antlr:antlr4:jar:4.5
+[DEBUG]   Included: org.antlr:antlr4-runtime:jar:4.5
+[DEBUG]   Included: org.abego.treelayout:org.abego.treelayout.core:jar:1.0.1
+[DEBUG]   Included: org.antlr:antlr-runtime:jar:3.5.2
+[DEBUG]   Included: org.antlr:ST4:jar:4.0.8
+[DEBUG] Configuring mojo org.antlr:antlr4-maven-plugin:4.5:antlr4 from plugin realm ClassRealm[plugin>org.antlr:antlr4-maven-plugin:4.5, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@51ee74ad]
+[DEBUG] Configuring mojo 'org.antlr:antlr4-maven-plugin:4.5:antlr4' with basic configurator -->
+[DEBUG]   (f) atn = false
+[DEBUG]   (f) encoding = UTF-8
+[DEBUG]   (f) forceATN = false
+[DEBUG]   (f) libDirectory = C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar
+[DEBUG]   (f) listener = true
+[DEBUG]   (f) outputDirectory = C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+[DEBUG]   (f) project = MavenProject: org.genevaers:sycadas:1.0-SNAPSHOT @ C:\Users\IanCunningham\git\wb\sycadas\pom.xml
+[DEBUG]   (f) sourceDirectory = C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4
+[DEBUG]   (f) treatWarningsAsErrors = false
+[DEBUG]   (f) visitor = false
+[DEBUG] -- end configuration --
+[DEBUG] ANTLR: Output: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+[DEBUG] ANTLR: Library: C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\FormatFilter.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\FormatFilter.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\ExtractParser.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\ExtractParser.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\FormatParser.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\FormatParser.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\GenevaERSLexer.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\GenevaERSLexer.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\ExtractColumn.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\ExtractColumn.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\ExtractFilter.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\ExtractFilter.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\ExtractOutput.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\ExtractOutput.g4
+[DEBUG] Grammar file 'C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4\org\genevaers\sycadas\grammar\FormatCalculation.g4' detected.
+[DEBUG]   ... relative path is: org\genevaers\sycadas\grammar\FormatCalculation.g4
+[DEBUG] Output directory base will be C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+[INFO] ANTLR 4: Processing source directory C:\Users\IanCunningham\git\wb\sycadas\src\main\antlr4
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\FormatFilter.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatFilterLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatFilter.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\ExtractParser.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractParserLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractParserLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractParserParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractParserListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractParserBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractParser.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\FormatParser.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatParserLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatParserLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatParserParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatParserListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatParserBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatParser.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\GenevaERSLexer.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/GenevaERSLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/GenevaERSLexer.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\ExtractColumn.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractColumnLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractColumnLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractColumnParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractColumnListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractColumnBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractColumn.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\ExtractFilter.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractFilterLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractFilterLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractFilterParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractFilterListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractFilterBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractFilter.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\ExtractOutput.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractOutputLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractOutputLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractOutputParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractOutputListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/ExtractOutputBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/ExtractOutput.tokens
+[INFO] Processing grammar: org\genevaers\sycadas\grammar\FormatCalculation.g4
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatCalculationLexer.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatCalculationLexer.tokens
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatCalculationParser.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatCalculationListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatCalculationBaseListener.java
+[DEBUG]   Writing file: target/generated-sources/antlr4/FormatCalculation.tokens
+[INFO] 
+[INFO] --- build-helper-maven-plugin:3.2.0:add-source (add-source) @ sycadas ---
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for codehaus.snapshots (http://snapshots.repository.codehaus.org).
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=713300, ConflictMarker.markTime=328800, ConflictMarker.nodeCount=82, ConflictIdSorter.graphTime=326200, ConflictIdSorter.topsortTime=60000, ConflictIdSorter.conflictIdCount=31, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=3100500, ConflictResolver.conflictItemCount=80, DefaultDependencyCollector.collectTime=214947200, DefaultDependencyCollector.transformTime=4590500}
+[DEBUG] org.codehaus.mojo:build-helper-maven-plugin:jar:3.2.0
+[DEBUG]    org.apache.maven:maven-core:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-artifact:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-aether-provider:jar:3.0:runtime
+[DEBUG]       org.sonatype.aether:aether-impl:jar:1.7:compile
+[DEBUG]          org.sonatype.aether:aether-spi:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-api:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-util:jar:1.7:compile
+[DEBUG]       org.sonatype.sisu:sisu-inject-plexus:jar:1.4.2:compile
+[DEBUG]          org.sonatype.sisu:sisu-inject-bean:jar:1.4.2:compile
+[DEBUG]             org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.14:compile
+[DEBUG]       org.codehaus.plexus:plexus-classworlds:jar:2.2.3:compile
+[DEBUG]       org.codehaus.plexus:plexus-component-annotations:jar:1.5.5:compile
+[DEBUG]       org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3:compile
+[DEBUG]          org.sonatype.plexus:plexus-cipher:jar:1.4:compile
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.0:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.0.24:compile
+[DEBUG]    org.apache-extras.beanshell:bsh:jar:2.0b6:compile
+[DEBUG]    org.apache.maven.shared:file-management:jar:3.0.0:compile
+[DEBUG]       org.apache.maven.shared:maven-shared-io:jar:3.0.0:compile
+[DEBUG]          org.apache.maven:maven-compat:jar:3.0:compile
+[DEBUG]          org.apache.maven.wagon:wagon-provider-api:jar:2.10:compile
+[DEBUG]       org.apache.maven.shared:maven-shared-utils:jar:3.0.0:compile
+[DEBUG]          commons-io:commons-io:jar:2.4:compile
+[DEBUG]          com.google.code.findbugs:jsr305:jar:2.0.1:compile
+[DEBUG] Created new class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.2.0
+[DEBUG] Importing foreign packages into class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.2.0
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.codehaus.mojo:build-helper-maven-plugin:3.2.0
+[DEBUG]   Included: org.codehaus.mojo:build-helper-maven-plugin:jar:3.2.0
+[DEBUG]   Included: org.sonatype.aether:aether-util:jar:1.7
+[DEBUG]   Included: org.sonatype.sisu:sisu-inject-bean:jar:1.4.2
+[DEBUG]   Included: org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.14
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.5.5
+[DEBUG]   Included: org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3
+[DEBUG]   Included: org.sonatype.plexus:plexus-cipher:jar:1.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.0.24
+[DEBUG]   Included: org.apache-extras.beanshell:bsh:jar:2.0b6
+[DEBUG]   Included: org.apache.maven.shared:file-management:jar:3.0.0
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-io:jar:3.0.0
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.0.0
+[DEBUG]   Included: commons-io:commons-io:jar:2.4
+[DEBUG]   Included: com.google.code.findbugs:jsr305:jar:2.0.1
+[DEBUG] Configuring mojo org.codehaus.mojo:build-helper-maven-plugin:3.2.0:add-source from plugin realm ClassRealm[plugin>org.codehaus.mojo:build-helper-maven-plugin:3.2.0, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@51ee74ad]
+[DEBUG] Configuring mojo 'org.codehaus.mojo:build-helper-maven-plugin:3.2.0:add-source' with basic configurator -->
+[DEBUG]   (f) project = MavenProject: org.genevaers:sycadas:1.0-SNAPSHOT @ C:\Users\IanCunningham\git\wb\sycadas\pom.xml
+[DEBUG]   (f) sources = [C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar]
+[DEBUG] -- end configuration --
+[INFO] Source directory: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar added.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ sycadas ---
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=410700, ConflictMarker.markTime=294000, ConflictMarker.nodeCount=68, ConflictIdSorter.graphTime=206500, ConflictIdSorter.topsortTime=105700, ConflictIdSorter.conflictIdCount=28, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=2619100, ConflictResolver.conflictItemCount=67, DefaultDependencyCollector.collectTime=35393900, DefaultDependencyCollector.transformTime=3711400}
+[DEBUG] org.apache.maven.plugins:maven-resources-plugin:jar:3.0.2
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-artifact:jar:3.0:compile
+[DEBUG]       org.sonatype.sisu:sisu-inject-plexus:jar:1.4.2:compile
+[DEBUG]          org.sonatype.sisu:sisu-inject-bean:jar:1.4.2:compile
+[DEBUG]             org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7:compile
+[DEBUG]    org.apache.maven:maven-core:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-aether-provider:jar:3.0:runtime
+[DEBUG]       org.sonatype.aether:aether-impl:jar:1.7:compile
+[DEBUG]          org.sonatype.aether:aether-spi:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-api:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-util:jar:1.7:compile
+[DEBUG]       org.codehaus.plexus:plexus-classworlds:jar:2.2.3:compile
+[DEBUG]       org.codehaus.plexus:plexus-component-annotations:jar:1.6:compile (version managed from default)
+[DEBUG]       org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3:compile
+[DEBUG]          org.sonatype.plexus:plexus-cipher:jar:1.4:compile
+[DEBUG]    org.apache.maven:maven-model:jar:3.0:compile
+[DEBUG]    org.codehaus.plexus:plexus-utils:jar:3.0.24:compile
+[DEBUG]    org.apache.maven.shared:maven-filtering:jar:3.1.1:compile
+[DEBUG]       org.apache.maven.shared:maven-shared-utils:jar:3.0.0:compile
+[DEBUG]          com.google.code.findbugs:jsr305:jar:2.0.1:compile
+[DEBUG]       org.sonatype.plexus:plexus-build-api:jar:0.0.7:compile
+[DEBUG]    commons-io:commons-io:jar:2.5:compile
+[DEBUG]    org.codehaus.plexus:plexus-interpolation:jar:1.24:compile
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.0.2
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.0.2
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-resources-plugin:3.0.2
+[DEBUG]   Included: org.apache.maven.plugins:maven-resources-plugin:jar:3.0.2
+[DEBUG]   Included: org.sonatype.sisu:sisu-inject-bean:jar:1.4.2
+[DEBUG]   Included: org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7
+[DEBUG]   Included: org.sonatype.aether:aether-util:jar:1.7
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.6
+[DEBUG]   Included: org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3
+[DEBUG]   Included: org.sonatype.plexus:plexus-cipher:jar:1.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:3.0.24
+[DEBUG]   Included: org.apache.maven.shared:maven-filtering:jar:3.1.1
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.0.0
+[DEBUG]   Included: com.google.code.findbugs:jsr305:jar:2.0.1
+[DEBUG]   Included: org.sonatype.plexus:plexus-build-api:jar:0.0.7
+[DEBUG]   Included: commons-io:commons-io:jar:2.5
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.24
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-resources-plugin:3.0.2:resources from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-resources-plugin:3.0.2, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@51ee74ad]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-resources-plugin:3.0.2:resources' with basic configurator -->
+[DEBUG]   (f) addDefaultExcludes = true
+[DEBUG]   (f) buildFilters = []
+[DEBUG]   (f) encoding = UTF-8
+[DEBUG]   (f) escapeWindowsPaths = true
+[DEBUG]   (f) fileNameFiltering = false
+[DEBUG]   (s) includeEmptyDirs = false
+[DEBUG]   (s) outputDirectory = C:\Users\IanCunningham\git\wb\sycadas\target\classes
+[DEBUG]   (s) overwrite = false
+[DEBUG]   (f) project = MavenProject: org.genevaers:sycadas:1.0-SNAPSHOT @ C:\Users\IanCunningham\git\wb\sycadas\pom.xml
+[DEBUG]   (s) resources = [Resource {targetPath: null, filtering: false, FileSet {directory: C:\Users\IanCunningham\git\wb\sycadas\src\main\resources, PatternSet [includes: {}, excludes: {}]}}]
+[DEBUG]   (f) session = org.apache.maven.execution.MavenSession@fc48d7e8
+[DEBUG]   (f) skip = false
+[DEBUG]   (f) supportMultiLineFiltering = false
+[DEBUG]   (f) useBuildFilters = true
+[DEBUG]   (s) useDefaultDelimiters = true
+[DEBUG] -- end configuration --
+[DEBUG] properties used {env.NUMBER_OF_PROCESSORS=8, env.USERPROFILE=C:\Users\IanCunningham, java.specification.version=11, com.ibm.vm.bitmode=64, env.PROGRAMW6432=C:\Program Files, java.vendor.url=https://adoptopenjdk.net/, env.OS=Windows_NT, env.CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_40656_NWYJVXVFFQFIRSQF, sun.boot.library.path=C:\adoptOpenJDK\jdk-11.0.10+9\bin\compressedrefs;C:\adoptOpenJDK\jdk-11.0.10+9\bin, sun.java.command=org.codehaus.plexus.classworlds.launcher.Launcher compile -X, maven.version=3.8.4, env.NSPR_NATIVE_THREADS_ONLY=1, ibm.signalhandling.rs=false, env.GIT_ASKPASS=c:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass.sh, java.specification.name=Java Platform API Specification, java.vm.specification.vendor=Oracle Corporation, env.MANPATH=C:\Program Files\Git\mingw64\local\man;C:\Program Files\Git\mingw64\share\man;C:\Program Files\Git\usr\local\man;C:\Program Files\Git\usr\share\man;C:\Program Files\Git\usr\man;C:\Program Files\Git\share\man, env.USERDOMAIN_ROAMINGPROFILE=GMX, java.fullversion=11.0.10+9
+JRE 11 Windows 10 amd64-64-Bit Compressed References 20210120_899 (JIT enabled, AOT enabled)
+OpenJ9   - 345e1b09e
+OMR      - 741e94ea8
+JCL      - 0a86953833 based on jdk-11.0.10+9, java.runtime.version=11.0.10+9, env.PUBLIC=C:\Users\Public, env.COMMONPROGRAMW6432=C:\Program Files\Common Files, java.vendor.version=AdoptOpenJDK, env.COMPUTERNAME=LAPTOP-TDS338E9, project.baseUri=file:/C:/Users/IanCunningham/git/wb/sycadas/, java.io.tmpdir=C:\Users\IANCUN~1\AppData\Local\Temp\, java.version=11.0.10, java.vm.specification.name=Java Virtual Machine Specification, env.MINGW_CHOST=x86_64-w64-mingw32, os.encoding=UTF8, java.library.path=C:\adoptOpenJDK\jdk-11.0.10+9\bin\compressedrefs;C:\adoptOpenJDK\jdk-11.0.10+9\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\IanCunningham\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\IanCunningham\bin;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Box\Box Edit;C:\Program Files (x86)\PuTTY;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0;C:\Program Files\doxygen\bin;C:\Program Files (x86)\IBM\Personal Communications;C:\Program Files (x86)\IBM\Trace Facility;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\7-Zip;C:\antlr;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH;C:\Program Files\nodejs;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\WinMerge;C:\Users\IanCunningham\git\GenevaERS-Java-Frontend\RunControlGenerator\build\unpacked\dist\RunControlGenerator\bin;C:\Users\IanCunningham\RTC64bit\PerfEngCpp\DebugBin32;C:\Program Files (x86)\Graphviz2.38\bin;C:\adoptOpenJDK\jdk-11.0.10+9\bin;C:\cygwin64\bin;C:\Program Files (x86)\Beyond Compare 2;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Gradle\gradle-6.5.1-all\gradle-6.5.1\bin;C:\Program Files\PostgreSQL\12\bin;C:\antlr;C:\perl\ActivePerl-5.8.8.816-MSWin32-x86-255195\perl\bin;C:\Users\IanCunningham\maven\apache-maven-3.8.4\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl;., java.vendor=AdoptOpenJDK, env.ERROR_CODE=0, env.GIT_TRACE_PACKET=0, env.LANG=en_US.UTF-8, user.timezone=, java.vm.specification.version=11, env.=EXITCODE=00000001, env.PCOMM_ROOT=C:\Program Files (x86)\IBM\Personal Communications\, maven.compiler.source=1.8, user.home=C:\Users\IanCunningham, env.COLORTERM=truecolor, env.ALLUSERSPROFILE=C:\ProgramData, java.compiler=j9jit29, env.SESSIONNAME=Console, com.ibm.util.extralibs.properties=, com.ibm.oti.vm.bootstrap.library.path=C:\adoptOpenJDK\jdk-11.0.10+9\bin\compressedrefs;C:\adoptOpenJDK\jdk-11.0.10+9\bin, os.version=10.0, env.ORIGINAL_TMP=C:/Users/IANCUN~1/AppData/Local/Temp, env.PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC, java.vm.name=Eclipse OpenJ9 VM, env.USERNAME=362415616, os.arch=amd64, env.CONFIG_SITE=C:/Program Files/Git/mingw64/etc/config.site, com.ibm.jcl.checkClassPath=, env.FPS_BROWSER_USER_PROFILE_STRING=Default, env.ORIGINAL_TEMP=C:/Users/IANCUN~1/AppData/Local/Temp, awt.toolkit=sun.awt.windows.WToolkit, env.ONEDRIVE=C:\Users\IanCunningham\OneDrive, env.FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer, env.CATALINA_HOME=C:\Program Files (x86)\Apache Software Foundation\Tomcat 8.5, env.VSCODE_GIT_ASKPASS_MAIN=c:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass-main.js, env.JAVA_HOME=C:\adoptOpenJDK\jdk-11.0.10+9, env.PROGRAMFILES=C:\Program Files, env.CLASSWORLDS_JAR="C:\Users\IanCunningham\maven\apache-maven-3.8.4\boot\plexus-classworlds-2.6.0.jar", env.GIT_CURL_VERBOSE=0, env.PLINK_PROTOCOL=ssh, env.DRIVERDATA=C:\Windows\System32\Drivers\DriverData, env.SYSTEMDRIVE=C:, env.VS110COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\Tools\, com.ibm.system.agent.path=C:\adoptOpenJDK\jdk-11.0.10+9\bin, env.PROCESSOR_LEVEL=6, env.TMP=C:\Users\IANCUN~1\AppData\Local\Temp, maven.compiler.target=1.8, env.TMPDIR=C:\Users\IANCUN~1\AppData\Local\Temp, ibm.system.encoding=Cp1252, library.jansi.path=C:\Users\IanCunningham\maven\apache-maven-3.8.4\lib\jansi-native, env.WINDIR=C:\WINDOWS, jdk.extensions.version=11.0.10.0, env.USERDNSDOMAIN=gmx.ibm.com, env.CLASSPATH=C:\antlr\antlr-4.8-complete.jar;C:\antlr\277\lib\antlr.jar, maven.conf=C:\Users\IanCunningham\maven\apache-maven-3.8.4/conf, sun.java.launcher=SUN_STANDARD, user.country=AU, env.USERDOMAIN=GMX, env.JAVACMD=C:\adoptOpenJDK\jdk-11.0.10+9\bin\java.exe, env.ORIGINAL_PATH=C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\IanCunningham\bin;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Box\Box Edit;C:\Program Files (x86)\PuTTY;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0;C:\Program Files\doxygen\bin;C:\Program Files (x86)\IBM\Personal Communications;C:\Program Files (x86)\IBM\Trace Facility;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\7-Zip;C:\antlr;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH;C:\Program Files\nodejs;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\WinMerge;C:\Users\IanCunningham\git\GenevaERS-Java-Frontend\RunControlGenerator\build\unpacked\dist\RunControlGenerator\bin;C:\Users\IanCunningham\RTC64bit\PerfEngCpp\DebugBin32;C:\Program Files (x86)\Graphviz2.38\bin;C:\adoptOpenJDK\jdk-11.0.10+9\bin;C:\cygwin64\bin;C:\Program Files (x86)\Beyond Compare 2;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Gradle\gradle-6.5.1-all\gradle-6.5.1\bin;C:\Program Files\PostgreSQL\12\bin;C:\antlr;C:\perl\ActivePerl-5.8.8.816-MSWin32-x86-255195\perl\bin;C:\Users\IanCunningham\maven\apache-maven-3.8.4\bin, env.VSCODE_GIT_IPC_HANDLE=\\.\pipe\vscode-git-1d9733a775-sock, env.MINGW_PACKAGE_PREFIX=mingw-w64-x86_64, env.MAVEN_HOME=C:\Users\IanCunningham\maven\apache-maven-3.8.4, com.ibm.oti.shared.enabled=false, env.VSCODE_GIT_ASKPASS_EXTRA_ARGS=--ms-enable-electron-run-as-node, env.=C:=C:\Users\IanCunningham\git\wb\sycadas, env.CONFIGSETROOT=C:\WINDOWS\ConfigSetRoot, java.runtime.name=OpenJDK Runtime Environment, env.COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files, env.MAVEN_CMD_LINE_ARGS=compile -X, env.TERM=xterm, sun.arch.data.model=64, env.SYSTEMROOT=C:\WINDOWS, java.specification.vendor=Oracle Corporation, java.version.date=2021-01-19, java.home=C:\adoptOpenJDK\jdk-11.0.10+9, jdk.extensions.name=Extensions for OpenJDK for Eclipse OpenJ9, env.LOCALAPPDATA=C:\Users\IanCunningham\AppData\Local, env.SSH_ASKPASS=C:/Program Files/Git/mingw64/libexec/git-core/git-gui--askpass, env.PATH=C:\Users\IanCunningham\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\IanCunningham\bin;C:\Program Files\Intel\iCLS Client;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\Box\Box Edit;C:\Program Files (x86)\PuTTY;C:\Program Files\Microsoft SQL Server\110\Tools\Binn;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0;C:\Program Files\doxygen\bin;C:\Program Files (x86)\IBM\Personal Communications;C:\Program Files (x86)\IBM\Trace Facility;C:\Program Files\Intel\WiFi\bin;C:\Program Files\Common Files\Intel\WirelessCommon;C:\Program Files\7-Zip;C:\antlr;C:\Program Files\Git\cmd;C:\WINDOWS\System32\OpenSSH;C:\Program Files\nodejs;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\WinMerge;C:\Users\IanCunningham\git\GenevaERS-Java-Frontend\RunControlGenerator\build\unpacked\dist\RunControlGenerator\bin;C:\Users\IanCunningham\RTC64bit\PerfEngCpp\DebugBin32;C:\Program Files (x86)\Graphviz2.38\bin;C:\adoptOpenJDK\jdk-11.0.10+9\bin;C:\cygwin64\bin;C:\Program Files (x86)\Beyond Compare 2;C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\bin;C:\Gradle\gradle-6.5.1-all\gradle-6.5.1\bin;C:\Program Files\PostgreSQL\12\bin;C:\antlr;C:\perl\ActivePerl-5.8.8.816-MSWin32-x86-255195\perl\bin;C:\Users\IanCunningham\maven\apache-maven-3.8.4\bin;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl, env.ORIGINAL_XDG_CURRENT_DESKTOP=undefined, env.EXEC_DIR=C:\Users\IanCunningham\git\wb\sycadas, file.encoding=Cp1252, env.HOSTNAME=LAPTOP-TDS338E9, env._=C:/Users/IanCunningham/AppData/Local/Programs/Microsoft VS Code/Code.exe, env.HOMEPATH=\Users\IanCunningham, env.SHLVL=2, env.APPDATA=C:\Users\IanCunningham\AppData\Roaming, env.GIT-TRACE=0, java.awt.printerjob=sun.awt.windows.WPrinterJob, classworlds.conf=C:\Users\IanCunningham\maven\apache-maven-3.8.4\bin\m2.conf, sun.io.unicode.encoding=UnicodeLittle, sun.desktop=windows, env.IBMJAVA_HOME=C:\Program Files (x86)\IBM\Java80\bin, os.name=Windows 10, env.DISPLAY=needs-to-be-defined, env.GIT_TRACE_SETUP=0, env.MR91WD=C:\Users\IanCunningham\TestFramework\TEST\python\mr91work, maven.build.timestamp=2021-12-06T01:27:08Z, env.MSYSTEM_CHOST=x86_64-w64-mingw32, java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment, com.ibm.oti.configuration=scar, env.MSYSTEM_PREFIX=C:/Program Files/Git/mingw64, env.GROOVY_HOME=C:\Groovy\apache-groovy-sdk-3.0.5\groovy-3.0.5, tycho-version=2.5.0, com.ibm.cpu.endian=little, path.separator=;, env.CLASSWORLDS_LAUNCHER=org.codehaus.plexus.classworlds.launcher.Launcher, env.SHELL=C:\Program Files\Git\usr\bin\bash.exe, env.EXEPATH=C:\Program Files\Git, maven.multiModuleProjectDirectory=C:\Users\IanCunningham\git\wb, env.VSCODE_GIT_ASKPASS_NODE=C:\Users\IanCunningham\AppData\Local\Programs\Microsoft VS Code\Code.exe, env.MAVEN_PROJECTBASEDIR=C:\Users\IanCunningham\git\wb, java.vm.info=JRE 11 Windows 10 amd64-64-Bit Compressed References 20210120_899 (JIT enabled, AOT enabled)
+OpenJ9   - 345e1b09e
+OMR      - 741e94ea8
+JCL      - 0a86953833 based on jdk-11.0.10+9, env.JDK_HOME=C:\adoptOpenJDK\jdk-11.0.10+9, env.VS120COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\Tools\, env.TEMP=C:\Users\IANCUN~1\AppData\Local\Temp, java.class.version=55.0, env.MSYSTEM=MINGW64, sun.jnu.encoding=Cp1252, maven.build.version=Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537), maven.home=C:\Users\IanCunningham\maven\apache-maven-3.8.4, file.separator=\, line.separator=
+, env.PROMPT=$P$G, java.awt.fonts=, env.PROCESSOR_REVISION=5e03, env.PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 94 Stepping 3, GenuineIntel, env.TERM_PROGRAM_VERSION=1.62.3, env.PROGRAMDATA=C:\ProgramData, user.name=362415616, ibm.signalhandling.sigchain=true, env.JVMCONFIG=\.mvn\jvm.config, env.PROGRAMFILES(X86)=C:\Program Files (x86), env.HOMEDRIVE=C:, env.PSMODULEPATH=C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules, env.ACLOCAL_PATH=C:\Program Files\Git\mingw64\share\aclocal;C:\Program Files\Git\usr\share\aclocal, env.LOGONSERVER=\\LAPTOP-TDS338E9, env.INFOPATH=C:\Program Files\Git\usr\local\info;C:\Program Files\Git\usr\share\info;C:\Program Files\Git\usr\info;C:\Program Files\Git\share\info, env.TERM_PROGRAM=vscode, env.OLDPWD=C:/Users/IanCunningham/git/wb/sycadas, env.PWD=C:/Users/IanCunningham/git/wb, file.encoding.pkg=sun.io, env.LC_CTYPE=en_US.UTF-8, env.MINGW_PREFIX=C:/Program Files/Git/mingw64, java.class.path=C:\Users\IanCunningham\maven\apache-maven-3.8.4\boot\plexus-classworlds-2.6.0.jar, env.HOME=C:\Users\IanCunningham, java.vm.vendor=Eclipse OpenJ9, env.PROCESSOR_ARCHITECTURE=AMD64, user.variant=, com.ibm.oti.vm.library.version=29, env.COMMONPROGRAMFILES=C:\Program Files\Common Files, env.COMSPEC=C:\WINDOWS\system32\cmd.exe, sun.cpu.endian=little, user.language=en, env.PKG_CONFIG_PATH=C:\Program Files\Git\mingw64\lib\pkgconfig;C:\Program Files\Git\mingw64\share\pkgconfig, env.APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL=true, env.MSYSTEM_CARCH=x86_64, env.WDIR=C:\Users\IanCunningham\git\wb, ibm.signalhandling.sigint=true, project.build.sourceEncoding=UTF-8, java.vendor.url.bug=https://github.com/AdoptOpenJDK/openjdk-support/issues, user.dir=C:\Users\IanCunningham\git\wb\sycadas, java.vm.version=openj9-0.24.0}
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[DEBUG] resource with targetPath null
+directory C:\Users\IanCunningham\git\wb\sycadas\src\main\resources
+excludes []
+includes []
+[INFO] skip non existing resourceDirectory C:\Users\IanCunningham\git\wb\sycadas\src\main\resources
+[DEBUG] no use filter components
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ sycadas ---
+[DEBUG] Using mirror maven-default-http-blocker (http://0.0.0.0/) for ow2-snapshot (http://repository.ow2.org/nexus/content/repositories/snapshots).
+[DEBUG] Dependency collection stats {ConflictMarker.analyzeTime=1195500, ConflictMarker.markTime=566800, ConflictMarker.nodeCount=118, ConflictIdSorter.graphTime=417500, ConflictIdSorter.topsortTime=111300, ConflictIdSorter.conflictIdCount=45, ConflictIdSorter.conflictIdCycleCount=0, ConflictResolver.totalTime=4295800, ConflictResolver.conflictItemCount=72, DefaultDependencyCollector.collectTime=123475900, DefaultDependencyCollector.transformTime=6647700}
+[DEBUG] org.apache.maven.plugins:maven-compiler-plugin:jar:3.8.0
+[DEBUG]    org.apache.maven:maven-plugin-api:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model:jar:3.0:compile
+[DEBUG]       org.sonatype.sisu:sisu-inject-plexus:jar:1.4.2:compile
+[DEBUG]          org.sonatype.sisu:sisu-inject-bean:jar:1.4.2:compile
+[DEBUG]             org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7:compile
+[DEBUG]    org.apache.maven:maven-artifact:jar:3.0:compile
+[DEBUG]       org.codehaus.plexus:plexus-utils:jar:2.0.4:compile
+[DEBUG]    org.apache.maven:maven-core:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-settings-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-repository-metadata:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-model-builder:jar:3.0:compile
+[DEBUG]       org.apache.maven:maven-aether-provider:jar:3.0:runtime
+[DEBUG]       org.sonatype.aether:aether-impl:jar:1.7:compile
+[DEBUG]          org.sonatype.aether:aether-spi:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-api:jar:1.7:compile
+[DEBUG]       org.sonatype.aether:aether-util:jar:1.7:compile
+[DEBUG]       org.codehaus.plexus:plexus-interpolation:jar:1.14:compile
+[DEBUG]       org.codehaus.plexus:plexus-classworlds:jar:2.2.3:compile
+[DEBUG]       org.codehaus.plexus:plexus-component-annotations:jar:1.7.1:compile (version managed from default)
+[DEBUG]       org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3:compile
+[DEBUG]          org.sonatype.plexus:plexus-cipher:jar:1.4:compile
+[DEBUG]    org.apache.maven.shared:maven-shared-utils:jar:3.2.1:compile
+[DEBUG]       commons-io:commons-io:jar:2.5:compile
+[DEBUG]    org.apache.maven.shared:maven-shared-incremental:jar:1.1:compile
+[DEBUG]    org.codehaus.plexus:plexus-java:jar:0.9.10:compile
+[DEBUG]       org.ow2.asm:asm:jar:6.2:compile
+[DEBUG]       com.thoughtworks.qdox:qdox:jar:2.0-M9:compile (version managed from default)
+[DEBUG]    org.codehaus.plexus:plexus-compiler-api:jar:2.8.4:compile
+[DEBUG]    org.codehaus.plexus:plexus-compiler-manager:jar:2.8.4:compile
+[DEBUG]    org.codehaus.plexus:plexus-compiler-javac:jar:2.8.4:runtime
+[DEBUG] Created new class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.8.0
+[DEBUG] Importing foreign packages into class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.8.0
+[DEBUG]   Imported:  < maven.api
+[DEBUG] Populating class realm plugin>org.apache.maven.plugins:maven-compiler-plugin:3.8.0
+[DEBUG]   Included: org.apache.maven.plugins:maven-compiler-plugin:jar:3.8.0
+[DEBUG]   Included: org.sonatype.sisu:sisu-inject-bean:jar:1.4.2
+[DEBUG]   Included: org.sonatype.sisu:sisu-guice:jar:noaop:2.1.7
+[DEBUG]   Included: org.codehaus.plexus:plexus-utils:jar:2.0.4
+[DEBUG]   Included: org.sonatype.aether:aether-util:jar:1.7
+[DEBUG]   Included: org.codehaus.plexus:plexus-interpolation:jar:1.14
+[DEBUG]   Included: org.codehaus.plexus:plexus-component-annotations:jar:1.7.1
+[DEBUG]   Included: org.sonatype.plexus:plexus-sec-dispatcher:jar:1.3
+[DEBUG]   Included: org.sonatype.plexus:plexus-cipher:jar:1.4
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-utils:jar:3.2.1
+[DEBUG]   Included: commons-io:commons-io:jar:2.5
+[DEBUG]   Included: org.apache.maven.shared:maven-shared-incremental:jar:1.1
+[DEBUG]   Included: org.codehaus.plexus:plexus-java:jar:0.9.10
+[DEBUG]   Included: org.ow2.asm:asm:jar:6.2
+[DEBUG]   Included: com.thoughtworks.qdox:qdox:jar:2.0-M9
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-api:jar:2.8.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-manager:jar:2.8.4
+[DEBUG]   Included: org.codehaus.plexus:plexus-compiler-javac:jar:2.8.4
+[DEBUG] Configuring mojo org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile from plugin realm ClassRealm[plugin>org.apache.maven.plugins:maven-compiler-plugin:3.8.0, parent: jdk.internal.loader.ClassLoaders$AppClassLoader@51ee74ad]
+[DEBUG] Configuring mojo 'org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile' with basic configurator -->
+[DEBUG]   (f) basedir = C:\Users\IanCunningham\git\wb\sycadas
+[DEBUG]   (f) buildDirectory = C:\Users\IanCunningham\git\wb\sycadas\target
+[DEBUG]   (f) compilePath = [C:\Users\IanCunningham\git\wb\sycadas\target\classes]
+[DEBUG]   (f) compileSourceRoots = [C:\Users\IanCunningham\git\wb\sycadas\src\main\java, C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4, C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar]
+[DEBUG]   (f) compilerId = javac
+[DEBUG]   (f) debug = true
+[DEBUG]   (f) encoding = UTF-8
+[DEBUG]   (f) failOnError = true
+[DEBUG]   (f) failOnWarning = false
+[DEBUG]   (f) forceJavacCompilerUse = false
+[DEBUG]   (f) fork = false
+[DEBUG]   (f) generatedSourcesDirectory = C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations
+[DEBUG]   (f) mojoExecution = org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile {execution: default-compile}
+[DEBUG]   (f) optimize = false
+[DEBUG]   (f) outputDirectory = C:\Users\IanCunningham\git\wb\sycadas\target\classes
+[DEBUG]   (f) parameters = false
+[DEBUG]   (f) project = MavenProject: org.genevaers:sycadas:1.0-SNAPSHOT @ C:\Users\IanCunningham\git\wb\sycadas\pom.xml
+[DEBUG]   (f) projectArtifact = org.genevaers:sycadas:jar:1.0-SNAPSHOT
+[DEBUG]   (f) session = org.apache.maven.execution.MavenSession@fc48d7e8
+[DEBUG]   (f) showDeprecation = false
+[DEBUG]   (f) showWarnings = false
+[DEBUG]   (f) skipMultiThreadWarning = false
+[DEBUG]   (f) source = 1.8
+[DEBUG]   (f) staleMillis = 0
+[DEBUG]   (s) target = 1.8
+[DEBUG]   (f) useIncrementalCompilation = true
+[DEBUG]   (f) verbose = false
+[DEBUG] -- end configuration --
+[DEBUG] Using compiler 'javac'.
+[DEBUG] Adding C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations to compile source roots:
+  C:\Users\IanCunningham\git\wb\sycadas\src\main\java
+  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar
+[DEBUG] New compile source roots:
+  C:\Users\IanCunningham\git\wb\sycadas\src\main\java
+  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar
+  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations
+[DEBUG] CompilerReuseStrategy: reuseCreated
+[DEBUG] useIncrementalCompilation enabled
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\SycadaType.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractOutputParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatCalculationListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractColumnBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractParserLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractColumnParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractColumnDependencyListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\DependencyAnalyser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatCalculationParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractOutputSycada.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractColumnLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractFilterParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatParserBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractParserParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractOutputDependencyListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\SycadaFactory.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatParserParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatCalculationBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatParserListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractOutputListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\FormatCalculationSyntaxChecker.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractParserBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatFilterListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractFilterSycada.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractFilterBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\GenevaERSLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ParseErrorListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractFilterDependencyListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatFilterParser.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractFilterListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractFilterLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatCalculationLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractParserListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatFilterLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatParserLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\dataprovider\SycadaDataProvider.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\FormatFilterBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\ExtractColumnSycada.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractOutputBaseListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\SyntaxChecker.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractColumnListener.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar\ExtractOutputLexer.java
+[DEBUG] Stale source detected: C:\Users\IanCunningham\git\wb\sycadas\src\main\java\org\genevaers\sycadas\FormatFilterSyntaxChecker.java
+[INFO] Changes detected - recompiling the module!
+[DEBUG] Classpath:
+[DEBUG]  C:\Users\IanCunningham\git\wb\sycadas\target\classes
+[DEBUG] Source roots:
+[DEBUG]  C:\Users\IanCunningham\git\wb\sycadas\src\main\java
+[DEBUG]  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4
+[DEBUG]  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar
+[DEBUG]  C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations
+[DEBUG] Command line options:
+[DEBUG] -d C:\Users\IanCunningham\git\wb\sycadas\target\classes -classpath C:\Users\IanCunningham\git\wb\sycadas\target\classes; -sourcepath C:\Users\IanCunningham\git\wb\sycadas\src\main\java;C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4;C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\antlr4\org\genevaers\sycadas\grammar;C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations; -s C:\Users\IanCunningham\git\wb\sycadas\target\generated-sources\annotations -g -nowarn -target 1.8 -source 1.8 -encoding UTF-8
+[DEBUG] incrementalBuildHelper#beforeRebuildExecution
+[INFO] Compiling 43 source files to C:\Users\IanCunningham\git\wb\sycadas\target\classes
+[DEBUG] incrementalBuildHelper#afterRebuildExecution
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[28,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[29,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[30,33] package org.antlr.v4.runtime.tree does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[4,32] package org.antlr.v4.runtime.dfa does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/SyntaxChecker.java:[26,33] package org.antlr.v4.runtime.tree does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[13,41] cannot find symbol
+  symbol: class Parser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[25,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[26,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[27,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[28,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[30,41] cannot find symbol
+  symbol: class BaseErrorListener
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[136,49] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[64,16] cannot find symbol
+  symbol:   class ParseTree
+  location: class org.genevaers.sycadas.FormatFilterSyntaxChecker
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[137,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[186,49] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[141,36] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[146,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[150,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[187,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[529,54] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[191,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[421,59] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[195,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[196,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[197,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[198,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[352,55] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[202,36] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[207,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[211,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[353,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[357,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[475,57] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[361,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[362,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[366,42] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[371,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[375,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[476,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[480,44] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[485,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[489,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[422,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[283,57] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[426,46] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[431,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[435,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[284,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[288,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[292,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[293,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[297,44] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[302,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[306,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[568,55] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[533,41] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[538,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[542,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[631,56] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[575,29] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[576,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[579,42] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[584,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[588,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[694,58] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[638,29] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[639,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[642,43] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[647,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[651,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[752,57] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[698,29] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[699,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[702,45] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[707,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[711,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[753,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[757,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[814,53] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[761,44] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[766,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[770,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[872,60] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[821,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[822,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[823,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[824,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[825,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[826,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[827,40] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[832,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[836,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[944,60] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[879,29] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[880,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[883,29] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[884,24] cannot find symbol
+  symbol:   class TerminalNode
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[887,47] cannot find symbol
+  symbol:   class ParserRuleContext
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[892,39] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[896,38] cannot find symbol
+  symbol:   class ParseTreeListener
+  location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[INFO] 100 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.555 s
+[INFO] Finished at: 2021-12-06T09:27:11+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project sycadas: Compilation failure: Compilation failure: 
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[28,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[29,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[30,33] package org.antlr.v4.runtime.tree does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[4,32] package org.antlr.v4.runtime.dfa does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/SyntaxChecker.java:[26,33] package org.antlr.v4.runtime.tree does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[13,41] cannot find symbol
+[ERROR]   symbol: class Parser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[25,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[26,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[27,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[28,28] package org.antlr.v4.runtime does not exist
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/ParseErrorListener.java:[30,41] cannot find symbol
+[ERROR]   symbol: class BaseErrorListener
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[136,49] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/src/main/java/org/genevaers/sycadas/FormatFilterSyntaxChecker.java:[64,16] cannot find symbol
+[ERROR]   symbol:   class ParseTree
+[ERROR]   location: class org.genevaers.sycadas.FormatFilterSyntaxChecker
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[137,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[186,49] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[141,36] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[146,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[150,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[187,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[529,54] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[191,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[421,59] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[195,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[196,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[197,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[198,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[352,55] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[202,36] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[207,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[211,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[353,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[357,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[475,57] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[361,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[362,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[366,42] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[371,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[375,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[476,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[480,44] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[485,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[489,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSkipContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[422,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[283,57] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[426,46] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[431,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[435,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtThenSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[284,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[288,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[292,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[293,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[297,44] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[302,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[306,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.StmtIfSelectContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[568,55] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[533,41] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[538,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[542,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.PredicateContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[631,56] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[575,29] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[576,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[579,42] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[584,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[588,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolOrContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[694,58] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[638,29] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[639,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[642,43] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[647,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[651,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAndContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[752,57] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[698,29] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[699,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[702,45] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[707,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[711,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolUnaryContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[753,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[757,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[814,53] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[761,44] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[766,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[770,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprBoolAtomContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[872,60] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[821,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[822,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[823,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[824,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[825,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[826,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[827,40] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[832,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[836,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprCompContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[944,60] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[879,29] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[880,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[883,29] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[884,24] cannot find symbol
+[ERROR]   symbol:   class TerminalNode
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[887,47] cannot find symbol
+[ERROR]   symbol:   class ParserRuleContext
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[892,39] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] /C:/Users/IanCunningham/git/wb/sycadas/target/generated-sources/antlr4/org/genevaers/sycadas/grammar/FormatFilterParser.java:[896,38] cannot find symbol
+[ERROR]   symbol:   class ParseTreeListener
+[ERROR]   location: class org.genevaers.sycadas.grammar.FormatFilterParser.ExprArithAddSubContext
+[ERROR] -> [Help 1]
+org.apache.maven.lifecycle.LifecycleExecutionException: Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project sycadas: Compilation failure
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:972)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:293)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:196)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:566)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+Caused by: org.apache.maven.plugin.compiler.CompilationFailureException: Compilation failure
+    at org.apache.maven.plugin.compiler.AbstractCompilerMojo.execute (AbstractCompilerMojo.java:1215)
+    at org.apache.maven.plugin.compiler.CompilerMojo.execute (CompilerMojo.java:188)
+    at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo (DefaultBuildPluginManager.java:137)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:210)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:156)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:148)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:305)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:972)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:293)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:196)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at jdk.internal.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:566)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:282)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:225)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:406)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:347)
+[ERROR] 
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>GenevaERS</name>
+	<name>tablecombo</name>
 	<comment></comment>
 	<projects>
-		<project>ccb2lr</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -12,18 +11,23 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<name>org.eclipse.pde.ManifestBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.pde.SchemaBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.m2e.core.maven2Nature</nature>
+		<nature>org.eclipse.pde.PluginNature</nature>
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1638087978097</id>
+			<id>1610673134696</id>
 			<name></name>
 			<type>30</type>
 			<matcher>

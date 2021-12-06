@@ -11,3 +11,5 @@ release/**
 **/.DS_Store
 ccb2lr/*.gv
 ccb2lr/*.gv.svg
+target/**
+*/target/**
