@@ -59,11 +59,6 @@ public class DAOFactoryHolder {
 					+ connection.get(UserPreferencesNodes.PORT, "") + "/"
 					+ connection.get(UserPreferencesNodes.DATABASENAME, "") + "?currentSchema="
 					+ connection.get(UserPreferencesNodes.SCHEMA, "");
-					// Uncomment for JDBC trace 
-/*            		+ ":traceDirectory=c:\\temp"
-            		+ ";traceFile=trace"
-            		+ ";traceFileAppend=false"
-            		+ ";traceLevel=" + com.ibm.db2.jcc.DB2BaseDataSource.TRACE_STATEMENT_CALLS + ";";*/
 
 			params.setUrl(url);
 
@@ -103,11 +98,6 @@ public class DAOFactoryHolder {
                 + prop.get("PORT") + "/"
 				+ prop.get("DATABASE") + "?currentSchema="
 				+ prop.get("SCHEMA");
-                // Uncomment for JDBC trace 
-/*                  + ":traceDirectory=c:\\temp"
-                + ";traceFile=trace"
-                + ";traceFileAppend=false"
-                + ";traceLevel=" + com.ibm.db2.jcc.DB2BaseDataSource.TRACE_STATEMENT_CALLS + ";";*/
 			
             params.setUrl(url);
 			genDAOFactory(params);
@@ -158,70 +148,6 @@ public class DAOFactoryHolder {
         DAOFactoryHolder.daoFactory = daoFactory;
     }	
 
-	/**
-	 * Get the ODBC connection string for the selected database type. This
-	 * string is prepared based on the configuration done in Connection Manager.
-	 * 
-	 * @return the ODBC string for the current DB connection or null if the
-	 *         selected database type is not DB2.<br>
-	 * <br>
-	 *         Example: for DB2 server the string returned by this function
-	 *         could be:<br>
-	 *         <code>Driver={IBM DB2 ODBC DRIVER};Hostname=bmsdev2.boulder.ibm.com;Port=5050;Protocol=TCPIP;UID=kaputin;PWD=mypswd;Database=BMS2DB2Z</code>
-	 */
-	// public static String getODBCConnectionString() {
-	// 	String returnStr = null;
-	// 	ConnectionParameters params = daoFactory.getConnectionParameters();
-	// 	if (params.getType() == DBType.DB2) {
-	// 		returnStr = "Driver=";
-	// 		returnStr += "{IBM DB2 ODBC SAFR WE DRIVER};";
-	// 		returnStr += "Hostname=" + params.getServer() + ";";
-	// 		returnStr += "Port=" + params.getPort() + ";";
-	// 		returnStr += "Protocol=TCPIP;";
-	// 		returnStr += "UID=" + params.getUserName() + ";";
-	// 		returnStr += "PWD=" + params.getPassWord() + ";";
-	// 		returnStr += "Database=" + params.getDatabase();
-	// 	}
-	// 	if (params.getType() == DBType.PostgresQL) {
-	// 		// returnStr = "Driver=";
-	// 		// returnStr += "{IBM DB2 ODBC SAFR WE DRIVER};";
-	// 		// returnStr += "Hostname=" + params.getServer() + ";";
-	// 		// returnStr += "Port=" + params.getPort() + ";";
-	// 		// returnStr += "Protocol=TCPIP;";
-	// 		// returnStr += "UID=" + params.getUserName() + ";";
-	// 		// returnStr += "PWD=" + params.getPassWord() + ";";
-	// 		// returnStr += "Database=" + params.getDatabase();
-	// 	}
-	// 	return returnStr;
-	// }
-
-	/**
-	 * Get the ODBC connection string for the selected database type for the old compiler. This
-	 * string is prepared based on the configuration done in Connection Manager.
-	 * 
-	 * @return the ODBC string for the current DB connection or null if the
-	 *         selected database type is not DB2.<br>
-	 * <br>
-	 *         Example: for DB2 server the string returned by this function
-	 *         could be:<br>
-	 *         <code>Driver={IBM DB2 ODBC SAFR WE DRIVER};Hostname=bmsdev2.boulder.ibm.com;Port=5050;Protocol=TCPIP;UID=kaputin;PWD=mypswd;Database=BMS2DB2Z</code>
-	 */
-	// public static String getODBCConnectionStringOld() {
-	// 	String returnStr = null;
-	// 	ConnectionParameters params = daoFactory.getConnectionParameters();
-	// 	if (params.getType() == DBType.DB2) {
-	// 		returnStr = "Driver=";
-	// 		returnStr += "{IBM DB2 ODBC SAFR WE DRIVER};";
-	// 		returnStr += "Hostname=" + params.getServer() + ";";
-	// 		returnStr += "Port=" + params.getPort() + ";";
-	// 		returnStr += "Protocol=TCPIP;";
-	// 		returnStr += "UID=" + params.getUserName() + ";";
-	// 		returnStr += "PWD=" + params.getPassWord() + ";";
-	// 		returnStr += "Database=" + params.getDatabase();
-	// 	}
-	// 	return returnStr;
-	// }
-	
 	/**
 	 * Disconnects the active connection.
 	 * 
