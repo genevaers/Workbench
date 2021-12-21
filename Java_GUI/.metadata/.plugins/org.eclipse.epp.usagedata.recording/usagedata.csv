@@ -1,8 +1,0 @@
-what,kind,bundleId,bundleVersion,description,time
-started,bundle,org.eclipse.ui.workbench,3.4.2.M20090127-1700,org.eclipse.ui.workbench,1248935644250
-started,bundle,org.eclipse.ui.workbench.texteditor,3.4.1.r341_v20080827-1100,org.eclipse.ui.workbench.texteditor,1248935644265
-started,bundle,org.eclipse.update.configurator,3.2.201.R34x_v20080819,org.eclipse.update.configurator,1248935644265
-started,bundle,org.eclipse.update.core,3.2.202.R34x_v20081128,org.eclipse.update.core,1248935644281
-started,bundle,org.eclipse.update.scheduler,3.2.100.v20080404,org.eclipse.update.scheduler,1248935644281
-started,bundle,org.eclipse.epp.usagedata.ui,1.0.1.R200809220400,org.eclipse.epp.usagedata.ui,1248935645343
-deactivated,workbench,org.eclipse.ui.workbench,3.4.2.M20090127-1700,,1248935645875
