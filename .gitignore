@@ -13,3 +13,5 @@ ccb2lr/*.gv
 ccb2lr/*.gv.svg
 target/**
 */target/**
+/bin/
+products/com.ibm.safr.we.product/target/**
