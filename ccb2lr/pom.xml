@@ -14,7 +14,7 @@
   <parent>
     <version>4.50.0</version>
     <groupId>org.genevaers</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>wb</artifactId>
   </parent>
 
   <properties>
