@@ -1,0 +1,60 @@
+Manifest-Version: 1.0
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Built-By: genie.technology.nebula
+Bundle-SymbolicName: org.eclipse.nebula.widgets.tablecombo
+Require-Bundle: org.eclipse.swt,org.eclipse.jface;resolution:=optional
+Export-Package: org.eclipse.nebula.jface.tablecomboviewer,org.eclipse.
+ nebula.widgets.tablecombo
+Bundle-Version: 1.0.0.201311251846
+Build-Jdk: 1.6.0_45
+Bundle-Vendor: Eclipse.org
+Bundle-Name: Nebula TableCombo Plugin
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Bundle-ManifestVersion: 2
+
+Name: META-INF/maven/org.eclipse.nebula/org.eclipse.nebula.widgets.tab
+ lecombo/pom.xml
+SHA1-Digest: gKQU7g0zY7DWKIucxBxVfaMiT/g=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$1.class
+SHA1-Digest: A6PARRUHWcPi+bJPnadPORog6Uc=
+
+Name: META-INF/maven/org.eclipse.nebula/org.eclipse.nebula.widgets.tab
+ lecombo/pom.properties
+SHA1-Digest: 2x72L8sPVw2V/yhBER8vJT4km1M=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$2.class
+SHA1-Digest: HiYTsU/kbMp+mdHqe8Y4KwMp130=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$3.class
+SHA1-Digest: mvrpwNZVw+DjHvet0hrLJijPNIc=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$4.class
+SHA1-Digest: jqN3EEOryLS+4FSyn13061mat5c=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$5.class
+SHA1-Digest: Nk0rfU2qnKraEuWNtclo7sjsK3Q=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$6.class
+SHA1-Digest: Ot9ztNeaP0Lo56zVirQt6mbGzSI=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$7.class
+SHA1-Digest: QLjFEgcbmlmR68VGoDpUqCLTO3U=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$8.class
+SHA1-Digest: sfyFpy6Sftl2DnN2WmALJHvaK2g=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo$9.class
+SHA1-Digest: V44FJHNUcQDTGODtvwzb55WNVDI=
+
+Name: org/eclipse/nebula/jface/tablecomboviewer/TableComboViewer.class
+SHA1-Digest: rLkp2CdlYkz//a2Ljb36AdfvOIo=
+
+Name: org/eclipse/nebula/jface/tablecomboviewer/TableComboViewerRow.cl
+ ass
+SHA1-Digest: ptEmkxbQJYSFa1G4MeKTn3NfLfg=
+
+Name: org/eclipse/nebula/widgets/tablecombo/TableCombo.class
+SHA1-Digest: +W3RHSxvHOqbx446b91mx0Bcecg=
+
