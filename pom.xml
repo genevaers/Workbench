@@ -26,6 +26,8 @@ Contributors:
 	 </properties>
 
 	<modules>
+		<module>sycadas</module>
+		<module>ccb2lr</module>
 		<module>plugins</module>
 		<module>products</module>
 		<module>releng</module>
