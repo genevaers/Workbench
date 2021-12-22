@@ -19,7 +19,7 @@
 
    <splash
       location="GenevaERS" />
-   <launcher name="RunYaBugger">
+   <launcher name="GenevaERS">
       <win useIco="false">
          <bmp/>
       </win>
