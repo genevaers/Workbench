@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: ccb2lr
 Bundle-SymbolicName: ccb2lr
 Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Export-Package: org.genevaers.ccb2lr
 Automatic-Module-Name: ccb2lr
-Export-Package: org.genevaers.ccb2lr,
- org.genevaers.ccb2lr.grammar
+Bundle-RequiredExecutionEnvironment: JavaSE-11

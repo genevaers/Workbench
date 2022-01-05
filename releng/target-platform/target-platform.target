@@ -22,21 +22,5 @@
 		    <unit id="org.eclipse.gef" version="0.0.0"/>
 		    <unit id="com.google.guava" version="0.0.0"/>
 	    </location>
-	    <location includeDependencyScope="compile" includeSource="false" missingManifest="generate" type="Maven">
-		    <dependencies>
-			    <dependency>
-				    <groupId>org.genevaers</groupId>
-				    <artifactId>sycadas</artifactId>
-				    <version>1.0-SNAPSHOT</version>
-				    <type>jar</type>
-			    </dependency>
-			    <dependency>
-				    <groupId>org.genevaers</groupId>
-				    <artifactId>ccb2lr</artifactId>
-				    <version>1.0-SNAPSHOT</version>
-				    <type>jar</type>
-			    </dependency>
-		    </dependencies>
-	    </location>
     </locations>
 </target>

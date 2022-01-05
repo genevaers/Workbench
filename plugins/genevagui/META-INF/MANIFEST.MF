@@ -5,13 +5,13 @@ Bundle-SymbolicName: GenevaERS;singleton:=true
 Bundle-Version: 4.50.0
 Bundle-ClassPath: lib/postgresql-42.2.16.jar,
  .,
- lib/sycadas-1.0-SNAPSHOT.jar,
+ lib/sycadas-1.0.0-SNAPSHOT.jar,
  lib/antlr4-runtime-4.5.jar,
  lib/jackson-annotations-2.13.0.jar,
  lib/jackson-core-2.13.0.jar,
  lib/jackson-databind-2.13.0.jar,
  lib/jackson-dataformat-yaml-2.13.0.jar,
- lib/ccb2lr-1.0-SNAPSHOT.jar
+ lib/ccb2lr-1.0.0-SNAPSHOT.jar
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.help;bundle-version="3.3.101",
  org.eclipse.help.base;bundle-version="3.3.101",
@@ -34,8 +34,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.views.log;bundle-version="1.0.500",
  org.eclipse.ui.views.properties.tabbed;bundle-version="3.6.0",
  org.eclipse.debug.ui;bundle-version="3.10.2",
- org.eclipse.swt,
- com.fasterxml.jackson.core.jackson-databind
+ org.eclipse.swt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: com.ibm.safr.we,
  com.ibm.safr.we.constants;uses:="com.ibm.safr.we.security",
@@ -332,5 +331,5 @@ Export-Package: com.ibm.safr.we,
    org.eclipse.nebula.widgets.tablecombo,
    com.ibm.safr.we.ui.utilities,
    org.eclipse.ui.part"
-Import-Package: org.genevaers.ccb2lr,
- org.genevaers.sycadas
+
+
