@@ -245,6 +245,12 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/decimals.cpy");
 		ccb2lr.processCopybook(testPath);
 		assertFalse(ccb2lr.hasErrors());
+		CobolField snines = ccb2lr.getRecordField().getField("SNINES-WITH-V");
+		assertEquals(5, snines.getNunberOfDecimalPlaces());
+		assertEquals(11, snines.getLength());
+		CobolField sbracketed = ccb2lr.getRecordField().getField("SBRACKETED-NINES");
+		assertEquals(3, sbracketed.getNunberOfDecimalPlaces());
+		assertEquals(8, sbracketed.getLength());
 		CobolField nines = ccb2lr.getRecordField().getField("NINES-WITH-V");
 		assertEquals(5, nines.getNunberOfDecimalPlaces());
 		assertEquals(11, nines.getLength());

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.genevaers</groupId>
+  <artifactId>sycadas</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>Syntax Checker and Dependency Analysis</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://org.genevaers</url>
+
+  <parent>
+    <version>4.50.0</version>
+    <groupId>org.genevaers</groupId>
+    <artifactId>wb</artifactId>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>4.5</version>
+        <configuration>
+          <libDirectory>src/main/antlr4/org/genevaers/sycadas/grammar</libDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-sources/antlr4/org/genevaers/sycadas/grammar</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.genevaers</groupId>
+                  <artifactId>sycadas</artifactId>
+                  <version>1.0.0-SNAPSHOT</version>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/../../plugins/genevagui/lib</outputDirectory>
+                 </artifactItem>
+                 <artifactItem>
+                  <groupId>org.antlr</groupId>
+                  <artifactId>antlr4-runtime</artifactId>
+                  <version>4.5</version>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/../../plugins/genevagui/lib</outputDirectory>
+                 </artifactItem>
+                 <artifactItem>
+                  <groupId>org.postgresql</groupId>
+                  <artifactId>postgresql</artifactId>
+                  <version>42.2.16</version>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/../../plugins/genevagui/lib</outputDirectory>
+                 </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>    
+    </plugins>
+  </build>
+</project>

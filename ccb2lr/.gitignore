@@ -10,3 +10,5 @@ bin
 .settings
 .project
 src/main/antlr/org/genevaers/sycadas/grammar/.antlr
+target/**
+

@@ -9,7 +9,7 @@ public class BinaryField extends CobolField {
 
     @Override
     public int getLength() {
-        int len = fieldLength;
+        int len = super.getLength();
         // For Binary the field length implies the width
         // At least in some circumstances.
         // No single byte - see https://www.ibm.com/docs/en/i/7.4?topic=clause-computational-5-comp-5-phrase-binary
