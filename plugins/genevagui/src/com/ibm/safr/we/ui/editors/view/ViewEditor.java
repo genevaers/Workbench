@@ -73,6 +73,7 @@ import com.ibm.safr.we.constants.EditRights;
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.OutputPhase;
 import com.ibm.safr.we.constants.Permissions;
+import com.ibm.safr.we.constants.SortType;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -85,6 +86,7 @@ import com.ibm.safr.we.model.associations.FileAssociation;
 import com.ibm.safr.we.model.associations.SAFRAssociationFactory;
 import com.ibm.safr.we.model.base.SAFRComponent;
 import com.ibm.safr.we.model.base.SAFREnvironmentalComponent;
+import com.ibm.safr.we.model.query.ControlRecordQueryBean;
 import com.ibm.safr.we.model.query.EnvironmentalQueryBean;
 import com.ibm.safr.we.model.query.LogicalFileQueryBean;
 import com.ibm.safr.we.model.query.SAFRQuery;
@@ -231,6 +233,12 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	@Override
 	public void createPartControl(Composite parent) {
 	    mediator.setViewEditor(this);
+	    List<ControlRecordQueryBean> allrec = SAFRQuery.queryAllControlRecords(view.getEnvironmentId(), SortType.SORT_BY_ID);
+        if(allrec.isEmpty()) {
+        	MessageDialog.openError(mediator.getSite().getShell(),
+                    "No CR is present.","A Control Record is required before creating a View"); 
+        	closeEditor();
+        }
 		toolkit = new FormToolkit(parent.getDisplay());
 		safrToolkit = new SAFRGUIToolkit(toolkit);
 		safrToolkit.setReadOnly(viewInput.getEditRights() == EditRights.Read);
