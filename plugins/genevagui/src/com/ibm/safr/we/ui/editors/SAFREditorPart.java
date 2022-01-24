@@ -37,7 +37,10 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IMessageManager;
 import org.eclipse.ui.part.EditorPart;
 
@@ -503,6 +506,12 @@ public abstract class SAFREditorPart extends EditorPart implements
 		sData = sData.replace(' ', '_');
 		textName.setText(sData);
 		textName.setSelection(caret);
+	}
+	
+	protected void closeEditor(){
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    	IWorkbenchPage page = workbenchWindow.getActivePage();
+    	page.closeEditor(this,true);
 	}
 	
 }
