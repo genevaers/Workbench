@@ -2,47 +2,74 @@
 To build  
 :gear:  
 
-## Hardware and software requirements on Windows systems  
+## Hardware and software requirements
 
-The original code was developed via... 
+In order to build the Workbench you need the following.
 
-[An install of **AdoptOpenJDK Java 8 for 32-bit**](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=openj9)
+A Java 11 or greater JDK for your platform. For instance from [here](https://adoptopenjdk.net/)
 
-[An install of **Gradle v6.6.1**](https://gradle.org/releases/)
+An up to date install of [Maven](https://maven.apache.org/download.cgi) - latest at time of writing is Apache Maven 3.8.4.
 
-[An install of the latest **PostgreSQL**](https://www.postgresql.org/download/)
-
-[An install of **Eclipse Luna IDE for Java Developers 32-bit**](https://www.eclipse.org/downloads/packages/release/luna/sr2)
-
-Any JDK Java 8 will do and any subsequent Eclipse will also suffice. Although we have seen some SWT issues with the latest release.
-The code is not limited to 32 bit.
-
-Clone the GenevaERS-WorkBench repository from github somewhere on your machine. We Cloned it under *youruser*  
-directory in Windows.     
+An installation of Postgres. [See](https://www.postgresql.org/download/)
 
 
-## Installation, configuration and Build on Windows
-Instructions for installation and configuration of software and building of GenevaERS-WorkBench.
 
+## Build, Installation, configuration
 
-### AdoptOpenJDK 
-Download the .zip file NOT the .msi.  
-Extract the downloaded zip somewhere onto you machine.  
-Add PATH entry to point to the bin directory of the unzipped JDK. 
+Clone the GenevaERS-WorkBench repository from github somewhere on your machine.
 
+Use GitBash or something similar and change to the directory where you cloned the repository.
 
-### Gradle 
-Download the complete file NOT the binary-only.
-Extract the downloaded zip somewhere onto you machine.  
+Before building ensure that a Java JDK and Maven are installed.
+Enter the commands below and you should see something similar.
 
+    $ java --version
+    openjdk 11.0.10 2021-01-19
+    OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.10+9)
+    Eclipse OpenJ9 VM AdoptOpenJDK (build openj9-0.24.0, JRE 11 Windows 10 amd64-64-Bit Compressed References 20210120_899 (JIT enabled, AOT enabled)
+    OpenJ9   - 345e1b09e
+    OMR      - 741e94ea8
+    JCL      - 0a86953833 based on jdk-11.0.10+9)
+
+    $ mvn -version
+    Apache Maven 3.8.4 (9b656c72d54e5bacbed989b64718c159fe39b537)
+    Maven home: C:\maven\apache-maven-3.8.4
+    Java version: 11.0.10, vendor: AdoptOpenJDK, runtime: C:\adoptOpenJDK\jdk-11.0.10+9
+    Default locale: en_AU, platform encoding: Cp1252
+    OS name: "windows 10", version: "10.0", arch: "amd64", family: "windows"
 
 ### GenevaERS-WorkBench
-Open a git Bash window and run commands where you have Cloned the GenevaERS-WorkBench to ...  
 
-    cd WorkBench\sycadas  
-    gradle buildAndCopySycadas 
-    gradle eclipse 
+To build the workbench for your platform (Linux not tested yet!) enter
 
+    mvn install
+
+Maven will then download the various libraries needed to build the workbench.
+This may take some time for the first build. Subsequent builds will be faster.
+
+On completion you should see.
+
+    [INFO] Reactor Summary:
+    [INFO]
+    [INFO] GenevaERS Workbench 4.50.0 ......................... SUCCESS [  0.688 s]
+    [INFO] Syntax Checker and Dependency Analysis 1.0.0-SNAPSHOT SUCCESS [ 27.539 s]
+    [INFO] COBOL Copybook to LR Converter 1.0.0-SNAPSHOT ...... SUCCESS [  4.388 s]
+    [INFO] [aggregator] plugins 4.50.0 ........................ SUCCESS [  0.028 s]
+    [INFO] [bundle] Nebula Grid 1.0.0.201311251846 ............ SUCCESS [  5.188 s]
+    [INFO] [bundle] Nebula TableCombo Plugin 1.0.0.201311251846 SUCCESS [  0.413 s]
+    [INFO] [bundle] GenevaERS Plug-in 4.50.0 .................. SUCCESS [ 13.006 s]
+    [INFO] [aggregator] products 4.50.0 ....................... SUCCESS [  0.024 s]
+    [INFO] [product] GenevaERS 4.50 ........................... SUCCESS [ 39.977 s]
+    [INFO] [aggregator] releng 4.50.0 ......................... SUCCESS [  0.034 s]
+    [INFO] [target] target-platform.target 4.50.0 ............. SUCCESS [  0.043 s]
+    [INFO] ------------------------------------------------------------------------
+    [INFO] BUILD SUCCESS
+    [INFO] ------------------------------------------------------------------------
+    [INFO] Total time:  02:34 min
+    [INFO] Finished at: 2022-01-26T14:38:29+08:00
+    [INFO] ------------------------------------------------------------------------
+
+Many thanks to Christoph over at the [Eclipse/Tycho Project](https://github.com/eclipse/tycho) without whose help this build would not exist.
 
 :thinking:  
 
@@ -52,16 +79,23 @@ Install PostgreSQL as per its instructions ...
 	Add Environment variable PATH values for both PostgreSQL directories for bin and lib  
 
 Note the admin username and password you create as part of the install to be used later. We used the user *postgres*  
-and the password *postgres*.   
+and the password *postgres*.  The database is intended to be a locally run only.
+If you are sharing it then apply some more rigourous security measures :-)
 
-Open a command prompt and run the following...  
+Open a command prompt and run the following to ensure that Postgres and the associated psql are installed.
 
-C:\Users\youruser> cd WorkBench\Java_GUI\resources  
-C:\Users\youruser\WorkBench\Java_GUI\resources> psql -h localhost -p 5432 -U postgres -v dbname=genevaers -v schemaV=gendev -f runall.sql
+    $ psql --version
+    psql (PostgreSQL) 12.4
+
+The from the cloned directort change to the SQL resources as below.
+And run psql to create and populate your database. 
+
+    cd plugins/genevagui/resources/
+    psql -h localhost -p 5432 -U postgres -v dbname=genevaers -v schemaV=gendev -f runall.sql
 
 
     Explanation... 
-        Psql is the postgres command line app  
+        psql is the postgres command line app  
         -h the host ip address  
         -p the port number. 5432 is the default at the install  
         -U postgres is the name of the postgres admin user you created at install. Change the name if you chose something different when you installed PostgreSQL.  
@@ -72,30 +106,32 @@ C:\Users\youruser\WorkBench\Java_GUI\resources> psql -h localhost -p 5432 -U pos
 
 
 
-### Eclipse
-The workbench is an Eclipse RCP Application.  
+## Run the GenevaERS WorkBench
 
-Extract the Eclipse Luna IDE for Java Developers 32-bit somewhere onto your machine. We unzipped it under *youruser*  
-directory in Windows.     
+The runable execuable generated by the build will be in the directory
 
-Open Eclipse and create a new workspace.  
-Import the projects under the Cloned “Workbench” directory you put on your machine...    
+    products/com.ibm.safr.we.product/target/products/wb
 
-	File>Import  
-	Select General>“Existing Projects into Workspace” press NEXT.  
-	Press Browse for Select Root Directory and find the Cloned "WorkBench" directory and select it.  
-	Select Option "Search for nested projects".  
-	Press Finish.  
+For Windows continue to 
 
-    If you have any errors in the Problems tab. Select all the Package and run Project>Clean to rebuild all projects.
-   
+    win32/win32/x86_64/GenevaERS.exe
 
-:confused:  
+For Mac continue to 
+
+    macosx/cocoa/x86_64/Eclipse.app
+
+Run the executable to start the splash screen 
+
+<img src ="plugins/genevagui/splash.bmp">
 
 
-## Run the GenevaERS WorkBench from Eclipse
-Select the GenevaERS Package from the Package Explorer tab and right click on it and select "Run As> Eclpise Application".  
-You will get a window that says **OPEN MAINFRAME PROJECT GenevaERS - The Single-Pass Optimization Engine** <img src ="Java_GUI/splash.bmp">  with a popup **GenevaERS Login window**.
+
+After a few seconds on the first run the connection manager dialog will appear. Note subsquent runs will go straight to the login dialog.
+
+<img src="docs/images/connection.png">
+
+
+
 In the GenevaERS Login you need to fill out information to connect to the postgres DB you installed...  
 ```  
     -    Connection Name is anything you want it to be.
@@ -104,7 +140,23 @@ In the GenevaERS Login you need to fill out information to connect to the postgr
          -	    Server is *localhost*
          -	    Port is *5432*  
     -    Schema Name *gendev* is what we just created.  
-    -    User id to connect to the database is *postgres* and password *postgres* or whatever you used when installing the PostgreSQL database.  
     -    Press Save.  
 ```
-You will now have a window to put the WorkBench Login User ID. The default ID at installation is *ADMIN* with NO password. Enter these and press the Login button.
+
+
+
+You will now have the WorkBench Login Dialog. 
+
+The User ID and password are postgres and postgres (If that is what you chose above). 
+
+
+<img src="docs/images/password.png">
+
+
+Press the Login button to move to the logged in state. 
+
+
+<img src="docs/images/login.png">
+
+
+Press OK and the delights of the Workbench will be yours to savour.
