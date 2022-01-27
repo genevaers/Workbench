@@ -883,10 +883,20 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
         comboComponentType.add(ComponentType.CobolCopyBook.getLabel());
         comboComponentType.setData(String.valueOf(i++), ComponentType.CobolCopyBook);
+        
+        comboComponentType.addSelectionListener(makeComponentListener());
 
-        comboComponentType.addFocusListener(new FocusAdapter() {
+		return labelComponentType;
+	}
+	
+	private SelectionListener makeComponentListener() {
+		return new SelectionListener() {
 
-			public void focusLost(FocusEvent e) {
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // no op
+            }
+
+            public void widgetSelected(SelectionEvent e) {
 				if (comboComponentType.getSelectionIndex() != selectedComponentType) {
 					componentType = (ComponentType)comboComponentType.getData(String.valueOf(comboComponentType.getSelectionIndex()));
 
@@ -909,11 +919,10 @@ public class ImportUtilityEditor extends SAFREditorPart {
 					selectedComponentType = comboComponentType
 							.getSelectionIndex();
 				}
-			}
-
-		});
-		return labelComponentType;
+            }
+        };
 	}
+	
 
 	private Label addEnvironmentCombo() {
 		Label labelEnvironment = safrGuiToolkit.createLabel(
@@ -957,9 +966,20 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		}
 
 		comboEnvironmentViewer.setInput(envList);
+		
+		comboEnvironment.addSelectionListener(makeEnvSelectListener());
 
-		comboEnvironment.addFocusListener(new FocusAdapter() {
-			public void focusLost(FocusEvent e) {
+		return labelEnvironment;
+	}
+
+    private SelectionListener makeEnvSelectListener() {
+		return new SelectionListener() {
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+                // no op
+            }
+
+            public void widgetSelected(SelectionEvent e) {
 				if (comboEnvironment.getSelectionIndex() != selectedEnvironment) {
 					EnvironmentQueryBean environmentQueryBean = (EnvironmentQueryBean) comboEnvironment
 							.getTable().getSelection()[0].getData();
@@ -1004,13 +1024,11 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 					selectedEnvironment = comboEnvironment.getSelectionIndex();
 				}
-			}
-
-		});
-		return labelEnvironment;
+            }
+        };
 	}
 
-    private void addEnvOpenEditorMenu()
+	private void addEnvOpenEditorMenu()
     {
         Text text = comboEnvironment.getTextControl();
         Menu menu = text.getMenu();

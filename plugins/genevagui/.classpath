@@ -29,13 +29,13 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/antlr4-runtime-4.5.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/ccb2lr-1.0.0-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/jackson-annotations-2.13.0.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/jackson-core-2.13.0.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/jackson-databind-2.13.0.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/jackson-dataformat-yaml-2.13.0.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/postgresql-42.2.16.jar"/>
-	<classpathentry kind="lib" path="/Users/hammy/git/wb/plugins/genevagui/lib/sycadas-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/antlr4-runtime-4.5.jar"/>
+	<classpathentry kind="lib" path="lib/ccb2lr-1.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.13.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.13.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.13.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-dataformat-yaml-2.13.0.jar"/>
+	<classpathentry kind="lib" path="lib/postgresql-42.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/sycadas-1.0.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
