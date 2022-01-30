@@ -16,9 +16,11 @@ public abstract class CobolField {
     protected String picCode;
     protected int position = 0;
     protected String redefinedName;
+    protected CobolField redefinedField;
     protected boolean redefines;
     private String[] decBits;
     protected int picLength;
+    protected int fieldLength;
     private int mantissaLen;
     private boolean signed;
     private boolean nines;
@@ -57,7 +59,11 @@ public abstract class CobolField {
     public abstract FieldType getType();
 
     public int getLength() {
-        return picLength;
+        if(redefines && redefinedField != null) {
+            return redefinedField.getLength();
+        } else {
+            return picLength;
+        }
     }
 
     public int getFieldLength() {
@@ -72,7 +78,7 @@ public abstract class CobolField {
         return len;
     }
 
-    protected int resolvePicLength() {
+    protected void resolvePicLength() {
         resolveSign();
         if(picHasAVirtualDecimal()) {
             int unitLen = getUnitLength();
@@ -83,9 +89,8 @@ public abstract class CobolField {
             }
         } else {
             picLength =  getPicTermLength(picCode);
-            picLength =  getLength();
+            fieldLength =  getLength();
         }
-        return picLength;
     }
 
     private void resolveSign() {
@@ -138,7 +143,7 @@ public abstract class CobolField {
             position = pos;  
         }
         resolvePicLength();
-        return pos + picLength;
+        return pos + fieldLength;
     }
 
     public void setParent(CobolField parent) {
@@ -245,6 +250,10 @@ public abstract class CobolField {
 
     public int getNunberOfDecimalPlaces() {
         return mantissaLen;
+    }
+
+    public void setRedefinedField(CobolField redefinedField) {
+        this.redefinedField = redefinedField;
     }
 
 }

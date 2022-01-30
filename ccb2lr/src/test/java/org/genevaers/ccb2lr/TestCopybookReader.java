@@ -86,6 +86,7 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simplePackedBinary.cpy");
 		ccb2lr.processCopybook(testPath);
+		CCB2Dot.write(ccb2lr.getCobolCollection(), Paths.get("simplePackedBinary.gv"));
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
 		assertEquals(75, ccb2lr.getRecordField().getLength());
@@ -257,6 +258,28 @@ public class TestCopybookReader {
 		CobolField bracketed = ccb2lr.getRecordField().getField("BRACKETED-NINES");
 		assertEquals(3, bracketed.getNunberOfDecimalPlaces());
 		assertEquals(8, bracketed.getLength());
+	}
+
+	@Test
+	public void testCCB2LRRedefineMS1() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/COPYBOOK01.CPY");
+		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedCOPYBOOK01.gv"));
+		//assertEquals(77, ccb2lr.getRecordField().getLength());
+		//assertEquals(12,ccb2lr.getNumberOfCobolFields());
+	}
+
+	@Test
+	public void testCCB2LRRedefineMS2() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/COPYBOOK02cleaned.CPY");
+		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedgroupRedefineMS2.gv"));
+		//assertEquals(77, ccb2lr.getRecordField().getLength());
+		//assertEquals(12,ccb2lr.getNumberOfCobolFields());
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {
