@@ -7,8 +7,6 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog
-      </programArgs>
       <vmArgs>-Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts

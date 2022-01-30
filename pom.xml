@@ -26,6 +26,8 @@ Contributors:
 	 </properties>
 
 	<modules>
+		<module>sycadas</module>
+		<module>ccb2lr</module>
 		<module>plugins</module>
 		<module>products</module>
 		<module>releng</module>
@@ -149,11 +151,11 @@ Contributors:
 							<ws>win32</ws>
 							<arch>x86_64</arch>
 						</environment>
-<!--						<environment>
+						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
 							<arch>x86_64</arch>
-						</environment>-->
+						</environment>
 					</environments>
 				</configuration>
 			</plugin>
