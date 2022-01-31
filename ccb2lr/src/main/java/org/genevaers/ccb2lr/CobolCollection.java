@@ -11,49 +11,56 @@ public class CobolCollection {
 	private Map<String, CobolField> fields = new HashMap<>();
 	private Map<String, CobolField> redefinedFields = new LinkedHashMap<>();
 	private CobolField currentField;
+	private CobolField currentRedefineField;
 	private GroupField recordGroup;
 	private int expansionsRequired = 0;
 
     public void addCobolField(CobolField newField) {
 		if(currentField == null) {
 			recordGroup = (GroupField) newField;
+			currentField = newField;
 		} else {
 			if(newField.isRedefines()) {
 				insertRedefines(newField);
+				currentRedefineField = newField;
 			} else {
 				insert(newField);
+				currentField = newField;
 			}
 		}
-		currentField = newField;
 	}
 
 	private void insertRedefines(CobolField newField) {
-		if(currentField.isRedefines() && newField.getType() != FieldType.GROUP) { //redefined groups float
-			addChildOrSibling(newField);
+		if(currentRedefineField == null) {
+			currentRedefineField = newField;
 		}
+		if(currentRedefineField.isRedefines() && newField.getType() != FieldType.GROUP) { //redefined groups float
+			addChildOrSiblingTo(newField, currentRedefineField);
+		}
+		newField.setRedefinedField(fields.get(newField.getRedefinedName()));
 		redefinedFields.put(newField.getName(), newField);
 	}
 
 	private void insert(CobolField newField) {
-		addChildOrSibling(newField);
+		addChildOrSiblingTo(newField, currentField);
 		fields.put(newField.getName(), newField);
 	}
 
-	private void addChildOrSibling(CobolField newField) {
-		if(newField.getSection() == currentField.getSection()) {
-			currentField.addSibling(newField);
-		} else if ( newField.getSection() > currentField.getSection()) {
-			currentField.addChild(newField);
+	private void addChildOrSiblingTo(CobolField newField, CobolField srcField)  {
+		if(newField.getSection() == srcField.getSection()) {
+			srcField.addSibling(newField);
+		} else if ( newField.getSection() > srcField.getSection()) {
+			srcField.addChild(newField);
 		} else {
-			CobolField s = findSibling(newField);
+			CobolField s = findSiblingOf(newField, srcField);
 			if(s != null) {
 				s.addSibling(newField);
 			}
 		}
 	}
 
-	private CobolField findSibling(CobolField newField) {
-		CobolField prnt = currentField.getParent();
+	private CobolField findSiblingOf(CobolField newField, CobolField srcField) {
+		CobolField prnt = srcField.getParent();
 		while(prnt != null && prnt.getSection() != newField.getSection() ) {
 			prnt = prnt.getParent();
 		}
@@ -231,4 +238,8 @@ public class CobolCollection {
     public  Iterator<CobolField> getRedifinesIterator() {
 		return redefinedFields.values().iterator();
     }
+
+	public Collection<CobolField> getRedefines() {
+		return redefinedFields.values();
+	}
 }

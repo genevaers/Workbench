@@ -68,6 +68,7 @@ public class CCB2Dot {
         try {
             fw = new FileWriter(dest.toFile());
             writeRecord(cobolCollection.getRecordGroup());
+            addRedeines(cobolCollection.getRedefines());
             fw.write("}\n");
             fw.close();
         } catch (IOException e) {
@@ -189,10 +190,18 @@ public class CCB2Dot {
             default:
             wtf(f);
                 break;
-                }
+            }
+            checkRedefine(f);
         }
         fw.write(idString + "[label=\"" + label + "\" " + "color=" + colour + " shape=" + shape
         + " style=filled]\n");
+    }
+
+    private static void checkRedefine(CobolField f) {
+        if(f.isRedefines()) {
+            shape = "hexagon";
+            label += "\n [" + f.redefinedName + "]";
+        }
     }
 
     private static void dotPacked(CobolField f) {
