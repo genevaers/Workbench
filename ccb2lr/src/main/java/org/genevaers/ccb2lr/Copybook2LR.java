@@ -45,6 +45,8 @@ public class Copybook2LR {
         if (errorListener.getErrors().isEmpty()) {
             ccbListener.getCollection().expandOccursGroupsIfNeeded();
             ccbListener.getCollection().resolvePositions();
+        } else {
+            errorListener.addErrorMessage("Please ensure the copybook compiles via IBM Enterprise COBOL for z/OS");
         }
     }
 

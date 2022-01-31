@@ -41,14 +41,18 @@ public class ParseErrorListener extends BaseErrorListener {
         Collections.reverse(stack);
         String err;
         if(e != null) {
-            err = line + ":" + charPositionInLine + msg + " see " + e.getOffendingToken().getText();
+            err = line + ":" + charPositionInLine + " see " + e.getOffendingToken().getText();
         } else {
-            err = line + ":" + charPositionInLine + msg;
+            err = line + ":" + charPositionInLine;
         }
         errors.add(err);
     }
     
     public List<String> getErrors() {
     	return errors;
+    }
+
+    public void addErrorMessage(String msg) {
+        errors.add(msg);
     }
 }
