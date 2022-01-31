@@ -1,4 +1,4 @@
-      01  GVBRH-HEADER-RECORD.
+IGNORE 01  GVBRH-HEADER-RECORD.
            05  RH-FILE-ID                       PIC S9(08) COMP.
            05  RH-LR-ID                         PIC S9(08) COMP.
            05  RH-RECORD-CNT                    PIC S9(08) COMP.

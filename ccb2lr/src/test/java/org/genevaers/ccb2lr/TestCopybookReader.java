@@ -42,6 +42,7 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/simple.cpy");
 		ccb2lr.processCopybook(testPath);
+		assertFalse(ccb2lr.hasErrors());
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("cbrec.gv"));
 		assertEquals("CUSTOMER-RECORD", ccb2lr.getRecordField().getName());
 		assertEquals(7, ccb2lr.getRecordField().getNumberOfCobolFields());
@@ -267,19 +268,14 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		assertFalse(ccb2lr.hasErrors());
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedCOPYBOOK01.gv"));
-		//assertEquals(77, ccb2lr.getRecordField().getLength());
-		//assertEquals(12,ccb2lr.getNumberOfCobolFields());
 	}
 
 	@Test
 	public void testCCB2LRRedefineMS2() throws IOException {
 		Copybook2LR ccb2lr = new Copybook2LR();
-		Path testPath = Paths.get("src/test/resources/COPYBOOK02cleaned.CPY");
+		Path testPath = Paths.get("src/test/resources/COPYBOOK02.CPY");
 		ccb2lr.processCopybook(testPath);
 		assertFalse(ccb2lr.hasErrors());
-		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedgroupRedefineMS2.gv"));
-		//assertEquals(77, ccb2lr.getRecordField().getLength());
-		//assertEquals(12,ccb2lr.getNumberOfCobolFields());
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {
