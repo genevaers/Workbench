@@ -179,11 +179,11 @@ public class SAFRValidator {
 			int generalId = dataType.getGeneralId().intValue();
 			switch (generalId) {
 			case Codes.ZONED_DECIMAL:
-				if ((length < 1) || (length > 16)) {
+				if ((length < 1) || (length > 31)) {
 					validationException
 							.setErrorMessage(
 									Property.DATATYPE,
-									"Data type errors: Zoned Decimal must have minimum length of 1 and maximum length of 16(inclusive).");
+									"Data type errors: Zoned Decimal must have minimum length of 1 and maximum length of 31(inclusive).");
 
 				}
 				break;

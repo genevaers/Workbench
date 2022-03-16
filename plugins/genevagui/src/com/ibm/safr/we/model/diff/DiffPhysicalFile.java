@@ -79,8 +79,7 @@ public class DiffPhysicalFile extends DiffNodeComp {
         // process SQL information
         Integer lhsAccess = lhs.getAccessMethodCode().getGeneralId();
         Integer rhsAccess = rhs.getAccessMethodCode().getGeneralId();
-        if ((lhsAccess == Codes.DB2VIASQL || lhsAccess == Codes.DB2VIAVSAM) ||
-            (rhsAccess == Codes.DB2VIASQL || rhsAccess == Codes.DB2VIAVSAM)) {
+        if (lhsAccess == Codes.DB2VIASQL || rhsAccess == Codes.DB2VIASQL) {
             sql = new DiffNodeSection();        
             sql.setName("SQL"); 
             sql.setParent(this);
@@ -159,8 +158,7 @@ public class DiffPhysicalFile extends DiffNodeComp {
         // process Dataset information
         Integer lhsAccess = lhs.getAccessMethodCode().getGeneralId();
         Integer rhsAccess = rhs.getAccessMethodCode().getGeneralId();
-        if ((lhsAccess != Codes.DB2VIASQL && lhsAccess != Codes.DB2VIAVSAM) ||
-            (rhsAccess != Codes.DB2VIASQL && rhsAccess != Codes.DB2VIAVSAM)) {
+        if (lhsAccess != Codes.DB2VIASQL || rhsAccess != Codes.DB2VIASQL) {
             dataset = new DiffNodeSection();        
             dataset.setName("Dataset"); 
             dataset.setParent(this);

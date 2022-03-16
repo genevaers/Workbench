@@ -168,8 +168,4 @@ public class PhysicalFileMediator {
         physicalFileDatabaseEditor.enableSQL();
     }
 
-    public void enableVSAM() {
-        physicalFileDatabaseEditor.enableVSAM();
-    }
-
 }
