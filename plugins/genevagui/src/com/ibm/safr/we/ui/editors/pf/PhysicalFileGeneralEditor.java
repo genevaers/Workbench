@@ -549,8 +549,7 @@ public class PhysicalFileGeneralEditor {
         int selectIdx = 0;
         int idx = 0;
         for (Code code : codeList) {
-            if (code.getGeneralId().equals(Codes.DB2VIASQL) ||
-                code.getGeneralId().equals(Codes.DB2VIAVSAM)) {
+            if (code.getGeneralId().equals(Codes.DB2VIASQL)) {
                 comboGeneralAccessMethod.add(code.getDescription());
                 comboGeneralAccessMethod.setData(Integer.toString(idx), code);
                 if (code.equals(physicalFile.getAccessMethodCode())) {

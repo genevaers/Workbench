@@ -61,12 +61,7 @@ public class PhysicalFileDatabaseEditor {
     private Text textSQL;
     private Text textSQLDDName;
     
-    private Section sectionVSAM;
-    private Composite compositeVSAM;
-    private Text textVSAMSchema;
-    private Text textVSAMTable;
-    private Combo comboVSAMRowFormat;
-    private Button checkVSAMNull;
+    
     
     private String selectedRowFormat = "";
     
@@ -112,7 +107,6 @@ public class PhysicalFileDatabaseEditor {
         });
         
         createSectionSQL();
-  //      createSectionVSAM();
         
         return compositeDB2;
         
@@ -183,119 +177,6 @@ public class PhysicalFileDatabaseEditor {
         });
         
     }
-
-    private void createSectionVSAM() {
-        sectionVSAM = mediator.getSAFRToolkit().createSection(compositeDB2, Section.TITLE_BAR, "DB2 via VSAM");
-        sectionVSAM.setLayout(new FormLayout());
-        FormData dataSectionDetails = new FormData();
-        dataSectionDetails.top = new FormAttachment(sectionSQL, 10);
-        dataSectionDetails.bottom = new FormAttachment(100, 0);
-        sectionVSAM.setLayoutData(dataSectionDetails);        
-        
-        compositeVSAM = mediator.getSAFRToolkit().createComposite(sectionVSAM, SWT.NONE);
-        compositeVSAM.setLayout(new FormLayout());
-        sectionVSAM.setClient(compositeVSAM);   
-        
-        Label labelSchema = mediator.getSAFRToolkit().createLabel(compositeVSAM,SWT.NONE, "&Schema:");
-        FormData labelSchemaData = new FormData();
-        labelSchemaData.top = new FormAttachment(0, 10);
-        labelSchemaData.left = new FormAttachment(0, 20);
-        labelSchema.setLayoutData(labelSchemaData);
-        
-        textVSAMSchema = mediator.getSAFRToolkit().createTextBox(compositeVSAM, SWT.NONE);
-        textVSAMSchema.setData(SAFRLogger.USER, "DB2 Schema"); 
-        FormData textVSAMSchemaData = new FormData();
-        textVSAMSchemaData.top = new FormAttachment(0, 10);
-        textVSAMSchemaData.left = new FormAttachment(labelSchema, 110);
-        textVSAMSchemaData.width = 300;
-        textVSAMSchema.setLayoutData(textVSAMSchemaData);
-        textVSAMSchema.setTextLimit(MAXSCHEMA);
-        textVSAMSchema.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                
-                Code accessMethod = physicalFile.getAccessMethodCode();
-                if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM) && 
-                    !UIUtilities.isEqualString(pfSql.getSchema(), textVSAMSchema.getText())) {
-                    mediator.setDirty(true);
-                    pfSql.setSchema(textVSAMSchema.getText());
-                }
-            }
-        });
-
-        Label labelTable = mediator.getSAFRToolkit().createLabel(compositeVSAM,SWT.NONE, "&Table Name:");
-        FormData labelTableData = new FormData();
-        labelTableData.top = new FormAttachment(labelSchema, 10);
-        labelTableData.left = new FormAttachment(0, 20);
-        labelTable.setLayoutData(labelTableData);
-        
-        textVSAMTable = mediator.getSAFRToolkit().createTextBox(compositeVSAM, SWT.NONE);
-        textVSAMTable.setData(SAFRLogger.USER, "DB2 Table"); 
-        FormData textVSAMTableData = new FormData();
-        textVSAMTableData.top = new FormAttachment(labelSchema, 10);
-        textVSAMTableData.left = new FormAttachment(labelSchema, 110);
-        textVSAMTableData.width = 300;
-        textVSAMTable.setLayoutData(textVSAMTableData);
-        textVSAMTable.setTextLimit(MAXTABLENAME);
-        textVSAMTable.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                
-                Code accessMethod = physicalFile.getAccessMethodCode();
-                if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM) && 
-                    !UIUtilities.isEqualString(pfSql.getTableName(), textVSAMTable.getText())) {
-                    mediator.setDirty(true);
-                    pfSql.setTableName(textVSAMTable.getText());
-                }
-            }
-        });
-        
-        Label labelSQLRowFormat = mediator.getSAFRToolkit().createLabel(compositeVSAM, SWT.NONE, "Row &Format:");
-        FormData labelSQLRowFormatData = new FormData();
-        labelSQLRowFormatData.top = new FormAttachment(labelTable, 10);
-        labelSQLRowFormatData.left = new FormAttachment(0, 20);
-        labelSQLRowFormat.setLayoutData(labelSQLRowFormatData);
-        
-        comboVSAMRowFormat = mediator.getSAFRToolkit().createComboBox(compositeVSAM, SWT.READ_ONLY, "");
-        comboVSAMRowFormat.setData(SAFRLogger.USER, "SQL Row Format");
-        FormData comboVSAMRowFormatData = new FormData();
-        comboVSAMRowFormatData.top = new FormAttachment(labelTable, 10);
-        comboVSAMRowFormatData.left = new FormAttachment(labelSchema, 110);
-        comboVSAMRowFormat.setLayoutData(comboVSAMRowFormatData);
-        UIUtilities.populateComboBox(comboVSAMRowFormat, CodeCategories.DBMSROWFMT,-1, true);
-        comboVSAMRowFormat.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Code accessMethod = physicalFile.getAccessMethodCode();
-                if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM) && 
-                    !(comboVSAMRowFormat.getText().equals(selectedRowFormat))) {
-                    mediator.setDirty(true);
-                    selectedRowFormat = comboVSAMRowFormat.getText();
-                    Code rowFormat = UIUtilities.getCodeFromCombo(comboVSAMRowFormat);
-                    if (rowFormat != null) {
-                        pfSql.setRowFormatCode(rowFormat);
-                    }
-                }
-            }
-        });
-        
-        checkVSAMNull = mediator.getSAFRToolkit().createCheckBox(compositeVSAM, "Return N&ull Ind");
-        checkVSAMNull.setData(SAFRLogger.USER, "SQL Return Null Ind");            
-        FormData checkVSAMNullData = new FormData();
-        checkVSAMNullData.top = new FormAttachment(labelTable, 10);
-        checkVSAMNullData.left = new FormAttachment(comboVSAMRowFormat, 10);
-        checkVSAMNull.setLayoutData(checkVSAMNullData);
-        checkVSAMNull.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                Code accessMethod = physicalFile.getAccessMethodCode();
-                if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM)) { 
-                    pfSql.setIncludeNullIndicators(checkVSAMNull.getSelection());
-                    mediator.setDirty(true);
-                }
-            }
-        });
-    }    
     
     protected void doRefreshControls() {        
         UIUtilities.checkNullText(textSubsystem, pfSql.getSubSystem());
@@ -309,20 +190,7 @@ public class PhysicalFileDatabaseEditor {
 //            comboVSAMRowFormat.setText("");
             selectedRowFormat = "";
 //            checkVSAMNull.setSelection(false);           
-        } else if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM)) {
-            textSQLDDName.setText("");
-            textSQL.setText("");
-            UIUtilities.checkNullText(textVSAMSchema, pfSql.getSchema());
-            UIUtilities.checkNullText(textVSAMTable, pfSql.getTableName());
-            UIUtilities.checkNullCombo(comboVSAMRowFormat, pfSql.getRowFormatCode());
-            if (pfSql.getRowFormatCode() != null) {
-                comboVSAMRowFormat.setText(pfSql.getRowFormatCode().getDescription());
-            } else {
-                comboVSAMRowFormat.setText("");
-            }            
-            selectedRowFormat = comboVSAMRowFormat.getText();
-            checkVSAMNull.setSelection(pfSql.isIncludeNullIndicators());
-        }
+        } 
     }
 
 
@@ -335,14 +203,5 @@ public class PhysicalFileDatabaseEditor {
 //        checkVSAMNull.setEnabled(false);        
     }
 
-    protected void enableVSAM() {
-        textSQLDDName.setEnabled(false);
-        textSQL.setEnabled(false);
-        textVSAMSchema.setEnabled(true);
-        textVSAMTable.setEnabled(true);
-        comboVSAMRowFormat.setEnabled(true);
-        checkVSAMNull.setEnabled(true);        
-        
-    }
     
 }

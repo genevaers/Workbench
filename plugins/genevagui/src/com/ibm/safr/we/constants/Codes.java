@@ -47,9 +47,6 @@ public class Codes {
 	public static final int VSAM_ORDERED = 3;
 	/** ACCMETHOD of type DB2 via SQL. */
 	public static final int DB2VIASQL = 6;
-	/** ACCMETHOD of type DB2 via VSAM. */
-	public static final int DB2VIAVSAM = 7;
-
 	/** DATATYPE of type Alphanumeric. */
 	public static final int ALPHANUMERIC = 1;
 	/** DATATYPE of type Zoned Decimal. */
@@ -521,12 +518,6 @@ public class Codes {
         db2sq.setCodeDescription("DB2 via SQL");
         db2sq.setCodeValue("DB2SQ");
         transfers.add(db2sq);
-
-        CodeTransfer db2vs = new CodeTransfer();
-        db2vs.setGeneralId(DB2VIAVSAM);
-        db2vs.setCodeDescription("DB2 via VSAM");
-        db2vs.setCodeValue("DB2VS");
-        transfers.add(db2vs);
         
         return new CodeSet(CodeCategories.ACCMETHOD, transfers);        
     }
