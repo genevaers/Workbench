@@ -970,10 +970,12 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
     public void partHidden(IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
-				public void run() {					
-		            IViewPart logicView = getSite().getPage().findView(LogicTextView.ID);
-		            getSite().getPage().hideView(logicView);
-	                closeValidationLog();		        			            
+				public void run() {		
+					if(getSite().getPage()!=null) {
+						IViewPart logicView = getSite().getPage().findView(LogicTextView.ID);
+			            getSite().getPage().hideView(logicView);
+		                closeValidationLog();
+					}		        			            
 				}
         	});        	
         }        

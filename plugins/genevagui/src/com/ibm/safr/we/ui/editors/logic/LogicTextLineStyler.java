@@ -173,13 +173,23 @@ public class LogicTextLineStyler implements LineStyleListener, ExtendedModifyLis
 				// word is logical operator and and is not in proper case.
 				if ((commentCntr == 0) && (quoteCntr % 2 == 0)
 						&& parser.isLogicalOperator(word)
-						&& (!word.matches("(And|Or|Not)"))) {
+						&& (!word.matches("(AND|OR|NOT)"))) {
 					// convert 1st character of the logical operator to
 					// upper case.
-					word = word.toLowerCase();
+					word = word.toUpperCase();
 					char[] charArray = word.toCharArray();
 					charArray[0] = Character.toUpperCase(charArray[0]);
 					word = new String(charArray);
+					sText.replaceTextRange(start, word.length(), word);
+					continue;
+				}
+				if ((commentCntr == 0) && (quoteCntr % 2 == 0) && !word.startsWith("\"")) {					
+					// convert 1st character of the logical operator to
+					// upper case.
+					word = word.toUpperCase();
+					char[] charArray = word.toCharArray();
+					word = new String(charArray);
+					word.toUpperCase();
 					sText.replaceTextRange(start, word.length(), word);
 					continue;
 				}

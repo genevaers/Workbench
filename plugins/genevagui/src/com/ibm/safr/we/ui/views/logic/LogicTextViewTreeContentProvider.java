@@ -814,6 +814,9 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
         LogicTextViewTreeNode castOperatorsExtractFilter = 
             addCastOperators(keywordsMenu);
 
+        LogicTextViewTreeNode stringOperatorsExtractFilter =
+        	addStringOperators(keywordsMenu);
+        
         // Keywords Menu children list
         List<LogicTextViewTreeNode> keywordsMenuChildren = new ArrayList<LogicTextViewTreeNode>();
         keywordsMenuChildren.add(langConstructsExtractRecordFilter);
@@ -822,6 +825,7 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
         keywordsMenuChildren.add(arithmeticOperators);
         keywordsMenuChildren.add(comparisonOperatorsExtractRecordFilter);
         keywordsMenuChildren.add(castOperatorsExtractFilter);
+        keywordsMenuChildren.add(stringOperatorsExtractFilter);
         keywordsMenu.setChildren(keywordsMenuChildren);
         
 		// Root
@@ -839,6 +843,17 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
     protected void addExtractFiltFunctions(LogicTextViewTreeNode functions) {
         SAFRPreferences preferences = new SAFRPreferences();
         
+        LogicTextViewTreeNode substr = new LogicTextViewTreeNode(
+        		TreeItemId.SUBSTR, "SUBSTR()", functions, "SUBSTR()", 7,
+        		"SUBSTR({FieldName} | {LookupPathName},integer,integer)", null);
+        
+        LogicTextViewTreeNode left = new LogicTextViewTreeNode(
+        		TreeItemId.LEFT, "LEFT()", functions, "LEFT()", 5,
+        		"LEFT({FieldName},integer)", null);
+        
+        LogicTextViewTreeNode right = new LogicTextViewTreeNode(
+        		TreeItemId.RIGHT, "RIGHT()", functions, "RIGHT()", 6,
+        		"RIGHT({FieldName},integer)", null);
         // functions
 		LogicTextViewTreeNode all = new LogicTextViewTreeNode(
 				TreeItemId.ALL, "ALL()", functions, "ALL()", 4,
@@ -1011,6 +1026,9 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		
 		// Functions Children List
 		List<LogicTextViewTreeNode> functionsChildren = new ArrayList<LogicTextViewTreeNode>();
+		functionsChildren.add(substr);
+		functionsChildren.add(left);
+		functionsChildren.add(right);
 		functionsChildren.add(all);
 		functionsChildren.add(current);
 		functionsChildren.add(prior);
@@ -1128,6 +1146,8 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
         LogicTextViewTreeNode castOperatorsExtractColumnAss = 
             addCastOperators(keywordsMenu);
 
+        LogicTextViewTreeNode stringOperatorsExtractColumnAss =
+        	addStringOperators(keywordsMenu);
         // Keywords Menu children list
         List<LogicTextViewTreeNode> keywordsMenuChildren = new ArrayList<LogicTextViewTreeNode>();
         keywordsMenuChildren.add(languageConstructsExtractColumnAss);
@@ -1136,6 +1156,7 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
         keywordsMenuChildren.add(arithmeticOperators);
         keywordsMenuChildren.add(comparisonOperatorsExtractColumnAss);
         keywordsMenuChildren.add(castOperatorsExtractColumnAss);
+        keywordsMenuChildren.add(stringOperatorsExtractColumnAss);
         keywordsMenu.setChildren(keywordsMenuChildren);
         
 		// Root
@@ -1153,6 +1174,15 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
         SAFRPreferences preferences = new SAFRPreferences();
         
         // functions
+        LogicTextViewTreeNode substr = new LogicTextViewTreeNode(
+        		TreeItemId.SUBSTR, "SUBSTR()", functions, "SUBSTR()", 7,
+        		"SUBSTR({FieldName} | {LookupPathName},integer,integer)", null);
+        LogicTextViewTreeNode left = new LogicTextViewTreeNode(
+        		TreeItemId.LEFT, "LEFT()", functions, "LEFT()", 5,
+        		"LEFT({FieldName},integer)", null);
+        LogicTextViewTreeNode right = new LogicTextViewTreeNode(
+        		TreeItemId.RIGHT, "RIGHT()", functions, "RIGHT()", 6,
+        		"RIGHT({FieldName},integer)", null);
 		LogicTextViewTreeNode all = new LogicTextViewTreeNode(
 				TreeItemId.ALL, "ALL()", functions, "ALL()", 4,
 				"ALL([hex])", null);
@@ -1330,6 +1360,9 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		// Functions Children List
 		List<LogicTextViewTreeNode> functionsChildren = new ArrayList<LogicTextViewTreeNode>();
 		functionsChildren.add(all);
+		functionsChildren.add(substr);
+		functionsChildren.add(left);
+		functionsChildren.add(right);
 		functionsChildren.add(current);
 		functionsChildren.add(prior);
 		functionsChildren.add(date);
@@ -1458,6 +1491,20 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		return comparisonOperatorsExtractColumnAss;
     }
 
+    protected LogicTextViewTreeNode addStringOperators(LogicTextViewTreeNode keywordsMenu){
+    	LogicTextViewTreeNode stringOperatorsExtractColumnAss = new LogicTextViewTreeNode(
+    	TreeItemId.STRINGOPERATORS,"STRING OPERATORS", keywordsMenu, null, 0, null, null);
+    	
+    	LogicTextViewTreeNode stringOpAnd = new LogicTextViewTreeNode(
+    	TreeItemId.ANDOP, "&", stringOperatorsExtractColumnAss, " & ", 0,
+    	"(Expression) && (Expression): String Operator", null);
+  
+    	List<LogicTextViewTreeNode> stringOperatorsChildren = new ArrayList<LogicTextViewTreeNode>();
+    	stringOperatorsChildren.add(stringOpAnd);
+    	stringOperatorsExtractColumnAss.setChildren(stringOperatorsChildren);
+    	return stringOperatorsExtractColumnAss;
+    }
+    
     protected LogicTextViewTreeNode addCastOperators(LogicTextViewTreeNode keywordsMenu) {
         // Cast Children List
         LogicTextViewTreeNode castOperatorsExtractColumnAss = new LogicTextViewTreeNode(
@@ -1537,15 +1584,15 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 				TreeItemId.COMPARISIONOPR, "COMPARISON OPERATORS",
 				keywordsMenu, null, 0, null, null);
 
+		
+		
 		// Keywords Menu children list
 		List<LogicTextViewTreeNode> keywordsMenuChildren = new ArrayList<LogicTextViewTreeNode>();
 		keywordsMenuChildren.add(langConstructsFormatPhaseCalculation);
 		keywordsMenuChildren.add(logicalOperators);
 		keywordsMenuChildren.add(arithmeticOperators);
-		keywordsMenuChildren
-				.add(comparisonOperatorsFormatPhaseCalculation);
+		keywordsMenuChildren.add(comparisonOperatorsFormatPhaseCalculation);
 		keywordsMenu.setChildren(keywordsMenuChildren);
-
 		// Language Constructs for Format Phase Calculation
 		LogicTextViewTreeNode colDot = new LogicTextViewTreeNode(
 				TreeItemId.COLDOT,
@@ -1644,13 +1691,17 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		LogicTextViewTreeNode comparisonOperatorsFormatRecordFilter = new LogicTextViewTreeNode(
 				TreeItemId.COMPARISIONOPR, "COMPARISON OPERATORS",
 				keywordsMenu, null, 0, null, null);
-
+		LogicTextViewTreeNode stringOperatorsFormatRecordFilter = new LogicTextViewTreeNode(
+				TreeItemId.STRINGOPERATORS, "STRING OPERATORS",
+				keywordsMenu, null, 0, null, null);
+		
 		// Keywords Menu children list
 		List<LogicTextViewTreeNode> keywordsMenuChildren = new ArrayList<LogicTextViewTreeNode>();
 		keywordsMenuChildren.add(langConstructsFormatRecordFilter);
 		keywordsMenuChildren.add(logicalOperators);
 		keywordsMenuChildren.add(arithmeticOperators);
 		keywordsMenuChildren.add(comparisonOperatorsFormatRecordFilter);
+		keywordsMenuChildren.add(stringOperatorsFormatRecordFilter);
 		keywordsMenu.setChildren(keywordsMenuChildren);
 
 		// Language Constructs for Format Record filter
@@ -1742,7 +1793,10 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 			LogicTextViewTreeNode arithmeticOperators = new LogicTextViewTreeNode(
 					TreeItemId.ARITHMETICOPR, "ARITHMETIC OPERATORS",
 					keywordsMenu, null, 0, null, null);
-
+			LogicTextViewTreeNode stringOperators = new LogicTextViewTreeNode(
+					TreeItemId.STRINGOPERATORS, "STRING OPERATORS",
+					keywordsMenu, null, 0, null, null);
+			
 			// Logical Operators
 			LogicTextViewTreeNode and = new LogicTextViewTreeNode(
 					TreeItemId.AND, "AND", logicalOperators, " And ", 0,
@@ -1760,7 +1814,14 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 			logicalOperatorsChildren.add(not);
 			logicalOperatorsChildren.add(or);
 			logicalOperators.setChildren(logicalOperatorsChildren);
-
+			 
+			//String Operators
+			LogicTextViewTreeNode andop = new LogicTextViewTreeNode(
+			TreeItemId.ANDOP, "&", stringOperators, " & ", 0,"(Expression) && (Expression): String Operator", null);
+			 
+			List<LogicTextViewTreeNode> stringOperatorsChildren = new ArrayList<LogicTextViewTreeNode>();
+			stringOperatorsChildren.add(andop);
+			stringOperators.setChildren(stringOperatorsChildren);
 			// Arithmetic Operators
 			LogicTextViewTreeNode add = new LogicTextViewTreeNode(
 					TreeItemId.ADD, "+", arithmeticOperators, " + ", 0,

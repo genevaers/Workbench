@@ -2311,7 +2311,7 @@ public class ViewColumnEditor {
      *            the type of property view to close.
      */
     protected void closePropertyView(PropertyViewType viewType) {
-        if (fromViewType != null && fromViewType != viewType) {
+        if (fromViewType != null && fromViewType != viewType && mediator.getSite().getPage()!=null) {
             IViewPart viewPart = mediator.getSite().getPage().findView(fromViewType.getViewId());
             if (viewPart != null) {
                 // stop editing on our cell
@@ -2336,12 +2336,11 @@ public class ViewColumnEditor {
         }
         if (sortView == false) {
             // close the sort key title view too
-        	IWorkbenchPage page = mediator.getSite().getPage();
-        	if(page != null) {
-	            IViewPart viewPartTitle = page.findView(SortKeyTitleView.ID);
-	            if (viewPartTitle != null) {
-		            mediator.getSite().getPage().hideView(viewPartTitle);
-	            }
+        	if(mediator.getSite().getPage()!=null) {
+        		IViewPart viewPartTitle = mediator.getSite().getPage().findView(SortKeyTitleView.ID);
+                if (viewPartTitle != null) {
+    	            mediator.getSite().getPage().hideView(viewPartTitle);
+                }
         	}
         }
         
