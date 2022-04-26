@@ -17,7 +17,6 @@ package com.ibm.safr.we.model;
  * under the License.
  */
 
-
 import java.util.List;
 
 import com.ibm.safr.we.SAFRUtilities;
@@ -26,6 +25,7 @@ import com.ibm.safr.we.constants.SAFRValidationType;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.data.transfer.DependentComponentTransfer;
+import com.ibm.safr.we.data.transfer.FileAssociationTransfer;
 import com.ibm.safr.we.data.transfer.LookupPathStepTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -48,7 +48,7 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 	private ComponentAssociation targetLRLFAssociation;
 	private LogicalRecord targetLR;
 	private SAFRList<LookupPathSourceField> sourceFields = new SAFRList<LookupPathSourceField>();
-
+	
 	/**
 	 * Use this Ctor to load an existing step from database.
 	 * 
@@ -230,10 +230,12 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 	 *             source fields.
 	 * @throws DAOException
 	 */
-	void setSourceLR(LogicalRecord logicalRecord) throws SAFRException,
+	public void setSourceLR(LogicalRecord logicalRecord) throws SAFRException,
 			DAOException {
+		
 		if (getSourceLR() != null) {
 			// first check the usage of this source LR in source fields.
+
 			parentLookupPath.checkSourceLRUsage(this);
 		}
 		// source LR is not used.
@@ -249,10 +251,11 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 
 	public void setSourceLR(LogicalRecord logicalRecord, int intValue) {
 		// TODO Auto-generated method stub
-		if (getSourceLR() != null && intValue==1) {
+		if (getSourceLR() != null && intValue==1 && parentLookupPath!=null) {
 			// first check the usage of this source LR in source fields.
-			
-			parentLookupPath.checkSourceLRUsage(this);
+//			if(!LookupPathEditor.entrystr.equals(logicalRecord.getName())) {
+				parentLookupPath.checkSourceLRUsage(this);
+//			}
 		}
 		// source LR is not used.
 		this.sourceLR = logicalRecord;
@@ -386,6 +389,7 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 		if (this.sourceLRLFAssociation != null) {
 			// first check the usage of this source LR/LF Association in source
 			// fields.
+
 			parentLookupPath.checkSourceLRUsage(this);
 		}
 		this.sourceLRLFAssociation = sourceLRLFAssociation;
@@ -618,9 +622,10 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
             safrValidationException.setSafrValidationToken(token);            
             safrValidationException.setErrorMessage(Property.STEP,dependencyMessage);
         }       
-        if(!isForImport() && !isForMigration() && isTargetLFisToken()) {
+        
+        if(isTargetLFisToken()) {
             safrValidationException.setErrorMessage(Property.TARGETLF,
-                "    Target LF cannot be a token.");
+                "    Target LF cannot be a token or pipe.");
         }
         
 		
@@ -628,10 +633,15 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 		List<LookupPathSourceField> activeSourceFields = this.getSourceFields().getActiveItems();
 		String errorMessage = "";
 		
-		// source LR must be set
-		if (getSourceLR() == null) {
-			safrValidationException.setErrorMessage(Property.SOURCE_FIELDS,
-			    "    Source Logical Record cannot be empty.");
+		for (int i = 0; i < activeSourceFields.size(); i++) {
+			LookupPathSourceField activeSourceField = activeSourceFields.get(i);
+			if(!activeSourceField.getSourceFieldType().equals(LookupPathSourceFieldType.CONSTANT) 
+		       && !activeSourceField.getSourceFieldType().equals(LookupPathSourceFieldType.SYMBOL)) {
+				if (getSourceLR() == null ) {
+				safrValidationException.setErrorMessage(Property.SOURCE_FIELDS,
+				    "    Source Logical Record cannot be empty.");
+				}
+			}
 		}
 		
 		// target LR-LF must be set
@@ -681,14 +691,17 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 	    ComponentAssociation lrlfAssoc = getTargetLRLFAssociation();
         if (lrlfAssoc != null) {
             Integer targetLF = lrlfAssoc.getAssociatedComponentIdNum();
-            LogicalFile LF = SAFRApplication.getSAFRFactory().getLogicalFile(targetLF, this.getEnvironment().getId());
-            SAFRList<FileAssociation> pfAssocs = LF.getPhysicalFileAssociations();
-            for(FileAssociation lfpfAssoc : pfAssocs){
+            //try{
+            List<FileAssociationTransfer> stf = DAOFactoryHolder.getDAOFactory()
+    				.getLogicalFileDAO()
+    				.getAssociatedPhysicalFiles(targetLF, this.getEnvironmentId());
+            
+            for(FileAssociationTransfer lfpfAssoc : stf){
                 if(token == false)
                 {
-                    PhysicalFile pf = SAFRApplication.getSAFRFactory().getPhysicalFile(lfpfAssoc.getAssociatedComponentIdNum(), this.getEnvironment().getId());
+                    PhysicalFile pf = SAFRApplication.getSAFRFactory().getPhysicalFile(lfpfAssoc.getAssociatedComponentId(), this.getEnvironment().getId());
                     Code pfType = pf.getFileTypeCode();
-                    if(pfType.getDescription().equals("Token")) {
+                    if(pfType.getDescription().equals("Token") || pfType.getDescription().equals("Pipe")) {
                         token = true;
                     }
                 }
@@ -703,5 +716,7 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

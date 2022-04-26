@@ -17,7 +17,6 @@ package com.ibm.safr.we.model;
  * under the License.
  */
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -107,6 +106,15 @@ public class LookupPath extends SAFRActivatedComponent {
 	 * 
 	 * @return true if the lookup path is valid.
 	 */
+	
+	public LogicalRecord getLR(){
+		return sourceLR;
+	}
+	
+	public void setLR(LogicalRecord lr){
+		this.sourceLR = lr;
+	}
+	
 	public Boolean isValid() {
 		return validInd;
 	}
@@ -124,6 +132,14 @@ public class LookupPath extends SAFRActivatedComponent {
             markActivated();	        
 	    }
 		this.validInd = validInd;
+	}
+
+	public Integer getSourceLRId() {
+		return sourceLRId;
+	}
+
+	public void setSourceLRId(Integer sourceLRId) {
+		this.sourceLRId = sourceLRId;
 	}
 
 	/**
@@ -198,20 +214,11 @@ public class LookupPath extends SAFRActivatedComponent {
 	 */
 	public void setSourceLR(LogicalRecord logicalRecord) throws SAFRException,
 			DAOException {
-		// first attempt to change the source LR of first step.
 		LookupPathStep firstStep = (LookupPathStep) lookupPathSteps
 				.getActiveItems().get(0);
 		// this will throw SAFRValidationException if the current Source LR is
 		// used in subsequent steps in source fields.
 		firstStep.setSourceLR(logicalRecord);
-
-		this.sourceLR = logicalRecord;
-		if (sourceLR == null) {
-			this.sourceLRId = 0;
-		} else {
-			this.sourceLRId = sourceLR.getId();
-		}
-		markModified();
 	}
 	
 	
@@ -219,18 +226,18 @@ public class LookupPath extends SAFRActivatedComponent {
 		// TODO Auto-generated method stub
 		
 		LookupPathStep firstStep = (LookupPathStep) lookupPathSteps
-				.getActiveItems().get(0);
+				.getActiveItems().get(currentStep.getSequenceNumber()-1);
 		// this will throw SAFRValidationException if the current Source LR is
 		// used in subsequent steps in source fields.
 		firstStep.setSourceLR(logicalRecord,currentStep.getSequenceNumber().intValue());
-
-		this.sourceLR = logicalRecord;
-		if (sourceLR == null) {
-			this.sourceLRId = 0;
-		} else {
-			this.sourceLRId = sourceLR.getId();
+		if(currentStep.getSequenceNumber()==1) {
+			this.sourceLR = logicalRecord;
+			if (sourceLR == null) {
+				this.sourceLRId = 0;
+			} else {
+				this.sourceLRId = sourceLR.getId();
+			}
 		}
-		markModified();
 	}
 
 	/**
@@ -384,13 +391,16 @@ public class LookupPath extends SAFRActivatedComponent {
 		// source LR and source LR/LF association is used in any of the Source
 		// Field's of these steps.
 		for (int i = seqno - 1; i < activeSteps.size(); i++) {
+			
 			LookupPathStep nextStep = activeSteps.get(i);
+
 			List<LookupPathSourceField> nextStepSourceFields = nextStep
 					.getSourceFields().getActiveItems();
 			for (int j = 0; j < nextStepSourceFields.size(); j++) {
 				LookupPathSourceField nextStepSourceField = nextStepSourceFields
 						.get(j);
 				// Check only if the type is LRField. Other types don't matter.
+				
 				if (nextStepSourceField.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD) {
 					nextStepSourceFieldSourceLR = nextStepSourceField
 							.getSourceFieldSourceLR();
@@ -418,8 +428,11 @@ public class LookupPath extends SAFRActivatedComponent {
 		for (int stepNo : sourceFieldMap.keySet()) {
 			String message = "Step : " + stepNo + SAFRUtilities.LINEBREAK;
 			for (LookupPathSourceField srcFld : sourceFieldMap.get(stepNo)) {
-				message += "    Field: " + srcFld.getSourceLRField().getName()
-						+ SAFRUtilities.LINEBREAK;
+				if(srcFld!=null && srcFld.getSourceLRField()!=null){
+					message += "    Field: " + srcFld.getSourceLRField().getName()
+							+ SAFRUtilities.LINEBREAK;
+				}
+				
 			}
 			safrValidationException
 					.setErrorMessage(Property.SOURCE_LR, message);
@@ -476,7 +489,6 @@ public class LookupPath extends SAFRActivatedComponent {
                 }
             }
         }
-		
 		List<SAFRPersistentObject> savedObjs = new ArrayList<SAFRPersistentObject>();
 
 		// Save the Lookup Path
@@ -507,7 +519,6 @@ public class LookupPath extends SAFRActivatedComponent {
 
 					
 					// Save Lookup Path Steps
-					
                     // CQ10021 Store its source Fields in list so we can save in one operation.
 					// Breaking encapsulation here for the performance improvement.
                     List<LookupPathSourceFieldTransfer> sourceFieldsTransfer = new ArrayList<LookupPathSourceFieldTransfer>();
@@ -641,12 +652,18 @@ public class LookupPath extends SAFRActivatedComponent {
 		    (token != null && 
 		     token.getValidationFailureType() != SAFRValidationType.DEPENDENCY_LOOKUP_WARNING && 
 		     token.getValidationFailureType() != SAFRValidationType.WARNING)) {
-
+			
+			//check source LR 
+			if(getSourceLRId() == null || getSourceLRId() ==0){
+				safrValidationException.setErrorMessage(Property.SOURCE_LR,
+					"Lookup Path source LR cannot be empty.");
+			}
 			// check Lookup's name
 			if (getName() == null || getName() == "") {
 				safrValidationException.setErrorMessage(Property.NAME,
 						"Lookup Path name cannot be empty.");
-			} else {
+			} 
+			else {
 				if (this.getName().length() > ModelUtilities.MAX_NAME_LENGTH) {
 					safrValidationException.setErrorMessage(Property.NAME,
 							"The length of Lookup Path name "
@@ -776,17 +793,17 @@ public class LookupPath extends SAFRActivatedComponent {
             	   
     		LookupPath lookupPathCopy = SAFRApplication.getSAFRFactory()
     				.createLookupPath();
+    		
     		lookupPathCopy.setName(newName);
     		lookupPathCopy.setValid(this.isValid());
-    		lookupPathCopy.setComment(this.getComment());
-    
+    		lookupPathCopy.setSourceLRId(this.sourceLRId);
     		// First step of the original LookupPath.
     		LookupPathStep firstStep = this.getLookupPathSteps().get(0);
     
     		// Setting the soruceLR of the first which is created when a new
     		// LookupPath is created for the subsequent steps we have to create a
     		// step and set the SourceLR.
-    		lookupPathCopy.setSourceLR(firstStep.getSourceLR());
+    		lookupPathCopy.setLR(firstStep.getSourceLR());
     		List<LookupPathStep> steps = (List<LookupPathStep>) this
     				.getLookupPathSteps().getActiveItems();
     
@@ -797,6 +814,8 @@ public class LookupPath extends SAFRActivatedComponent {
     			// step and set the SourceLR of that step.
     			if (lookupStep.getSequenceNumber().equals(1)) {
     				lukpStepCopy = lookupPathCopy.getLookupPathSteps().get(0);
+    				lukpStepCopy.setSourceLR(lookupStep.getSourceLR());
+
     			} else {
     				lukpStepCopy = lookupPathCopy.createStep();
     				lukpStepCopy.setSourceLR(lookupStep.getSourceLR());
@@ -819,7 +838,6 @@ public class LookupPath extends SAFRActivatedComponent {
     				// other properties.
     				srcField.setSourceLRField(lookupPathSourceField
     						.getSourceLRField());
-    
     				srcField.setDataTypeCode(lookupPathSourceField
     						.getDataTypeCode());
     				srcField.setLength(lookupPathSourceField.getLength());
@@ -857,9 +875,8 @@ public class LookupPath extends SAFRActivatedComponent {
     
     		}
     
-    		lookupPathCopy.validate();
+    		lookupPathCopy.validate();	
     		lookupPathCopy.store();
-    
     		return lookupPathCopy;
         }
         else {
@@ -874,5 +891,7 @@ public class LookupPath extends SAFRActivatedComponent {
     public Set<Integer> getDeactivatedViews() {
         return deactivatedViewList;        
     }
+
+	
 
 }
