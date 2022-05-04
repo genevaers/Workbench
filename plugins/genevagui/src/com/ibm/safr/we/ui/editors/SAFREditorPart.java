@@ -476,6 +476,9 @@ public abstract class SAFREditorPart extends EditorPart implements
 		}
 	}
 	
+	public void removeDecorate(SAFRValidationException e){
+		msgManager.removeAllMessages();
+	}
 	/**
 	 * Declared here to allow the base to call derived class methods
 	 * in decorateEditor

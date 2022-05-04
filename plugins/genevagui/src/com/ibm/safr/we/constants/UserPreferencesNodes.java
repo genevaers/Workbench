@@ -25,6 +25,7 @@ package com.ibm.safr.we.constants;
  */
 public class UserPreferencesNodes {
 
+	public static final String HELP_URL="Help-URL";
 	public static final String LAST_CONNECTION = "Last-Connection";
 	public static final String SAVED_CONNECTION = "Saved-Connection";
 	public static final String DATABASETYPE = "Database-Type";
