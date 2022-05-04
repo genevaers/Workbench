@@ -704,7 +704,10 @@ public class PGLookupDAO implements LookupDAO {
 		List<DependentComponentTransfer> dependentViews = new ArrayList<DependentComponentTransfer>();
 		try {
 
-			String placeholders = generator.getPlaceholders(exceptionList.size());
+			String placeholders = "";
+			if(exceptionList != null) {
+				placeholders = generator.getPlaceholders(exceptionList.size());
+			}
 
 			String schema = params.getSchema();
 			// CQ 8056. Nikita. 16/07/2010. Show location in dependency error
@@ -715,7 +718,7 @@ public class PGLookupDAO implements LookupDAO {
 					+ schema + ".VIEW A , "
 					+ schema + ".VIEWCOLUMNSOURCE B, "
 					+ schema + ".VIEWCOLUMN C ";
-			if(exceptionList.size() > 0) {
+			if(placeholders.length() > 0) {
 				selectString += "WHERE A.VIEWID NOT IN ( " + placeholders + ") AND ";
 			} else {
 				selectString += "WHERE ";
@@ -731,7 +734,7 @@ public class PGLookupDAO implements LookupDAO {
 				try {
 					pst = con.prepareStatement(selectString);
 					int ndx = 1;
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						Iterator<Integer> ei = exceptionList.iterator();
 						while(ei.hasNext()) {
 							Integer e = ei.next();
@@ -779,7 +782,7 @@ public class PGLookupDAO implements LookupDAO {
 					+ schema + ".VIEW A , "
 					+ schema + ".VIEWCOLUMNSOURCE B, "
 					+ schema + ".VIEWCOLUMN C ";
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						selectString += "WHERE A.VIEWID NOT IN ( " + placeholders + ") AND ";
 					} else {
 						selectString += "WHERE ";
@@ -796,7 +799,7 @@ public class PGLookupDAO implements LookupDAO {
 				try {
 					pst = con.prepareStatement(selectString);
 					int ndx = 1;
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						Iterator<Integer> ei = exceptionList.iterator();
 						while(ei.hasNext()) {
 							Integer e = ei.next();
@@ -844,7 +847,7 @@ public class PGLookupDAO implements LookupDAO {
 					+ schema + ".VIEWLOGICDEPEND B,"
 					+ schema + ".VIEWCOLUMN C,"
 					+ schema + ".VIEWCOLUMNSOURCE D ";
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						selectString += "WHERE A.VIEWID NOT IN ( " + placeholders + ") AND ";
 					} else {
 						selectString += "WHERE ";
@@ -863,7 +866,7 @@ public class PGLookupDAO implements LookupDAO {
 				try {
 					pst = con.prepareStatement(selectString);
 					int ndx = 1;
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						Iterator<Integer> ei = exceptionList.iterator();
 						while(ei.hasNext()) {
 							Integer e = ei.next();
@@ -908,7 +911,7 @@ public class PGLookupDAO implements LookupDAO {
 					+ schema + ".VIEW A, "
 					+ schema + ".VIEWLOGICDEPEND B,"
 					+ schema + ".VIEWSOURCE C ";
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						selectString += "WHERE A.VIEWID NOT IN ( " + placeholders + ") AND ";
 					} else {
 						selectString += "WHERE ";
@@ -927,7 +930,7 @@ public class PGLookupDAO implements LookupDAO {
 				try {
 					pst = con.prepareStatement(selectString);
 					int ndx = 1;
-					if(exceptionList.size() > 0) {
+					if(placeholders.length() > 0) {
 						Iterator<Integer> ei = exceptionList.iterator();
 						while(ei.hasNext()) {
 							Integer e = ei.next();
