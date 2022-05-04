@@ -17,6 +17,7 @@ package com.ibm.safr.we.ui.editors;
  * under the License.
  */
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -263,10 +264,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
     private MenuItem opEdSourceFldItem = null;
     private MenuItem depChkSourceFldItem = null;
 	private MenuItem opEdSourceLRItem = null;
-	private MenuItem opEdSourceLRGeneralItem = null;
     private MenuItem depChkSourceLRItem = null;
-    private MenuItem depChkSourceLRGeneralItem = null;
-
     private MenuItem opEdTargetLRItem = null;
     private MenuItem depChkTargetLRItem = null;
     private MenuItem opEdTargetLFItem = null;
@@ -371,8 +369,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		textID.setEnabled(false);
 		FormData dataTextId = new FormData();
 		dataTextId.top = new FormAttachment(0, 10);
-		dataTextId.left = new FormAttachment(dummmyLabel, 80);
-		dataTextId.width = 530;
+		dataTextId.left = new FormAttachment(dummmyLabel, 10);
+		dataTextId.width = 300;
 		textID.setLayoutData(dataTextId);
 
 		Label labelName = safrGuiToolkit.createLabel(compositeGeneral,
@@ -412,15 +410,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		dataTextSLR.width = 535;
 		comboSourceLRGeneral.setLayoutData(dataTextSLR);	
 		comboSourceLRGeneral.setVisible(true);
-<<<<<<< HEAD
-<<<<<<< HEAD
-		addSourceLRGeneralOpenEditorMenu();
-=======
 //		addSourceLROpenEditorMenu();
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
-=======
-//		addSourceLROpenEditorMenu();
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 		
 		comboSourceLRGeneral.addFocusListener(new FocusListener() {
 
@@ -612,10 +602,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
         dataLabelActivatedValue.width = 200;
         labelActivatedValue.setLayoutData(dataLabelActivatedValue);
         populateLogicalRecord(comboSourceLRGeneral);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 	}
 
 	private void populateLogicalRecord(TableCombo comboSourceLR) throws DAOException {
@@ -636,31 +622,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 	}
 
-<<<<<<< HEAD
-=======
-	}
-
-	private void populateLogicalRecord(TableCombo comboSourceLR) throws DAOException {
-		Integer counter = 0;
-
-		comboSourceLRGeneral.getTable().removeAll();
-
-		List<LogicalRecordQueryBean> logicalRecordList = SAFRQuery
-				.queryAllActiveLogicalRecords(UIUtilities
-						.getCurrentEnvironmentID(), SortType.SORT_BY_NAME);
-		List<LogicalRecordQueryBean> listWithoutDuplicates = new ArrayList<>(new HashSet<>(logicalRecordList));
-
-		comboSourceLRViewerGeneral.setInput(listWithoutDuplicates);
-		comboSourceLRViewerGeneral.refresh();
-		for (LogicalRecordQueryBean logicalRecordBean : listWithoutDuplicates) {
-			comboSourceLRGeneral.setData(Integer.toString(counter), logicalRecordBean);
-			counter++;
-		}
-	}
-
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
-=======
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 
 	private void createCompositeDefinition() throws DAOException {
 		compositeDefinition = safrGuiToolkit.createComposite(tabFolder,
@@ -678,6 +639,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
 		createSectionTarget(compositeDefinition);
 		createSectionSource(compositeDefinition);
+
 		// populates combos for both, target and source LR, at once
 		populateLogicalRecord(comboTargetLR, comboSourceLR);
 
@@ -1010,17 +972,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 	    {
 	        public void handleEvent(Event event)
 	        {
-	        	try{
-	        	List<SAFRPersistentObject> list = (List<SAFRPersistentObject>) comboLRField.getTable().getSelection()[0].getData();
-                if (list != null) {   
-    				LRField field = (LRField) list.get(2);            	
-                    EditorOpener.open(field.getLogicalRecord().getId(), ComponentType.LogicalRecord);                        
-                } 
-	        	}
-	        	catch(Exception exception1){
-	        		
-	        	}
-                            
+                LogicalRecordQueryBean bean = (LogicalRecordQueryBean)((StructuredSelection) comboSourceLRViewer
+                        .getSelection()).getFirstElement();
+                if (bean != null) {   
+                    EditorOpener.open(bean.getId(), ComponentType.LogicalRecord);                        
+                }                
 	        }
 	    });
 	    
@@ -1030,19 +986,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
         {
             public void handleEvent(Event event)
             {
-            	try{
-            	List<SAFRPersistentObject> list = (List<SAFRPersistentObject>) comboLRField.getTable().getSelection()[0].getData();
-                if (list != null) {   
-    				LRField field = (LRField) list.get(2);            	
-    				LogicalRecordQueryBean bean = new LogicalRecordQueryBean(field.getEnvironmentId(), field.getLogicalRecord().getId(), field.getLogicalRecord().getName(), null, null, null, null, null, null, null, null, null, null, null);
-    				if (bean != null && bean.getId() != 0) {
-                        DepCheckOpener.open(bean);
-                    }                   
-                }
-            	}
-            	catch(Exception exception2){
-            		
-            	}
+                LogicalRecordQueryBean bean = (LogicalRecordQueryBean)((StructuredSelection) comboSourceLRViewer
+                    .getSelection()).getFirstElement();
+                if (bean != null && bean.getId() != 0) {
+                    DepCheckOpener.open(bean);
+                }                
             }
         });
 	    
@@ -1051,24 +999,15 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
             public void mouseDown(MouseEvent e) {
                 if (e.button == 3)
                 {
-                	try{
-                	List<SAFRPersistentObject> list = (List<SAFRPersistentObject>) comboLRField.getTable().getSelection()[0].getData();
-                	LRField field = null;
-                    if (list != null) {   
-        				field = (LRField) list.get(2);            	
-                    } 
-                    if (field.getLogicalRecord() != null) {   
+                    LogicalRecordQueryBean bean = (LogicalRecordQueryBean) ((StructuredSelection) comboSourceLRViewer.getSelection()).getFirstElement();
+                    if (bean != null) {   
                         opEdSourceLRItem.setEnabled(true); 
                         depChkSourceLRItem.setEnabled(true);
                     }
                     else {
                         opEdSourceLRItem.setEnabled(false);
                         depChkSourceLRItem.setEnabled(false);
-                    }  
-                	}
-                	catch(Exception exception3){
-                		
-                	}
+                    }                    
                 }
             }
 
@@ -1080,59 +1019,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 	    });
 	}    	
 
-	private void addSourceLRGeneralOpenEditorMenu()
-	{
-        Text text = comboSourceLRGeneral.getTextControl();
-	    Menu menu = text.getMenu();
-	    opEdSourceLRGeneralItem = new MenuItem(menu, SWT.PUSH);
-	    opEdSourceLRGeneralItem.setText("Open Editor");
-	    opEdSourceLRGeneralItem.addListener(SWT.Selection, new Listener()
-	    {
-	        public void handleEvent(Event event)
-	        {	        	
-	        	LogicalRecordQueryBean bean = (LogicalRecordQueryBean)((StructuredSelection) comboSourceLRViewerGeneral
-                        .getSelection()).getFirstElement();
-                if (bean != null) {   
-                    EditorOpener.open(bean.getId(), ComponentType.LogicalRecord);                        
-                }      
-	        }
-	    });
-	    
-	    depChkSourceLRGeneralItem = new MenuItem(menu, SWT.PUSH);
-	    depChkSourceLRGeneralItem.setText("Dependency Checker");
-	    depChkSourceLRGeneralItem.addListener(SWT.Selection, new Listener()
-        {
-            public void handleEvent(Event event)
-            {
-            	LogicalRecordQueryBean bean = (LogicalRecordQueryBean)((StructuredSelection) comboSourceLRViewerGeneral
-                        .getSelection()).getFirstElement();
-                    if (bean != null && bean.getId() != 0) {
-                        DepCheckOpener.open(bean);
-                    }             
-            }
-        });
-	    
-	    comboSourceLRGeneral.addMouseListener(new MouseListener() {
-
-            public void mouseDown(MouseEvent e) {
-            	LogicalRecordQueryBean bean = (LogicalRecordQueryBean) ((StructuredSelection) comboSourceLRViewerGeneral.getSelection()).getFirstElement();
-                if (bean != null) {   
-                	opEdSourceLRGeneralItem.setEnabled(true); 
-                    depChkSourceLRGeneralItem.setEnabled(true);
-                }
-                else {
-                	opEdSourceLRGeneralItem.setEnabled(false);
-                    depChkSourceLRGeneralItem.setEnabled(false);
-                }                 }
-
-            public void mouseUp(MouseEvent e) {
-            }
-
-            public void mouseDoubleClick(MouseEvent e) {
-            }
-	    });
-	}    	
-	
     private void addTargetLROpenEditorMenu()
     {
         Text text = comboTargetLR.getTextControl();
@@ -1435,7 +1321,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 									selectedTargetLF = "";
 									 comboTargetLFViewer.refresh();
 									refreshTargetTable(currentStep);
-									
 									tableViewerStepsList.refresh();
 									setDirty(true);
 								} catch (SAFRValidationException sve) {
@@ -1655,6 +1540,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 					}
 				}
 			}
+
 		});
 		
 		comboSourceLRViewer = safrGuiToolkit.createTableComboForComponents(
@@ -1662,7 +1548,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		comboSourceLR = comboSourceLRViewer.getTableCombo();
 		comboSourceLR.setData(SAFRLogger.USER, "Source Logical Record");        		
 		FormData dataComboSourceLR = new FormData();
-		dataComboSourceLR.left = new FormAttachment(labelSourceLR, 65);
+		dataComboSourceLR.left = new FormAttachment(labelSourceLR, 80);
 		dataComboSourceLR.top = new FormAttachment(radiofield, 5);
 		dataComboSourceLR.width = 305;
 		comboSourceLR.setLayoutData(dataComboSourceLR);	
@@ -1713,7 +1599,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 					}
 					if (comboLRField.getSelectionIndex() >= 0) {
 
-						
 						LookupPathSourceField sourceField = (LookupPathSourceField) currentStep
 								.getSourceFields().getActiveItems().get(
 										tableSource.getSelectionIndex());
@@ -1801,7 +1686,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 								if(comboSourceLR!=null && step1lr!=null) {
 									comboSourceLR.setText(UIUtilities.getComboString(step1lrname,step1lrid));
 								}
-								
 							}
 
 						} catch (SAFRException e1) {
@@ -2106,7 +1990,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			public void mouseDown(MouseEvent e) {
                 if (e.button == 3)
                 {
-                	try{
                 	List<SAFRPersistentObject> list = (List<SAFRPersistentObject>) comboLRField
     						.getTable().getSelection()[0].getData();
                     if (list != null) {   
@@ -2117,10 +2000,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
                         opEdSourceFldItem.setEnabled(false);
                         depChkSourceFldItem.setEnabled(false);
                     }                    
-                    }
-                	catch(Exception except){
-                		
-                	}
                 }
             }
 
@@ -2597,17 +2476,10 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			logicalRecordList = SAFRQuery
 					.queryAllActiveLogicalRecords(UIUtilities
 							.getCurrentEnvironmentID(), SortType.SORT_BY_NAME);
+			comboSourceLRViewer.setInput(logicalRecordList);
 		}
 		else{
-<<<<<<< HEAD
-<<<<<<< HEAD
-			for (int i = 0; i < numberOfSteps-1; i++) {
-=======
 			for (int i = 0; i < numberOfSteps; i++) {
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
-=======
-			for (int i = 0; i < numberOfSteps; i++) {
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 				
 				step = (LookupPathStep) lookupPath.getLookupPathSteps().getActiveItems().get(i);
 				LogicalRecord sourceLR = step.getSourceLR();
@@ -2628,21 +2500,12 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				
 		}
 		}
-<<<<<<< HEAD
-<<<<<<< HEAD
-			if(numberOfSteps==1) {
-=======
 			if(step.getSequenceNumber()==1) {
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
-=======
-			if(step.getSequenceNumber()==1) {
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 				comboSourceLRViewer.setInput(logicalRecordList);
 			}else {
 				comboSourceLRViewer.setInput(list2);
 			}
 	}
-	
 	
 	private void populateLogicalFile(TableCombo comboBox,
 			LogicalRecord logicalRecord) {
@@ -3058,7 +2921,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
 	private void loadSourceFieldDefinition(LookupPathSourceField field)
 			throws SAFRException {
-
 		if (field.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD) {
 			radiofield.setSelection(true);
 			radioConstant.setSelection(false);
@@ -3126,7 +2988,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		selectedSrcFieldDataType = comboDataType.getText();
 		selectedSrcFieldDateTimeFormat = comboDateTimeFormat.getText();
 		selectedSrcFieldNumericMask = comboNumericMask.getText();
-		
 	}
 
 	private void populateLRField(LookupPathStep step, String selectedStep) {
@@ -3172,13 +3033,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 								lrFieldComboInputList.add(list);
 							}
 						}
-						
 					}
 				}
 //QA219_Premium_Account_Element
 //QA219_Premium_Account_Element				
 			}
-			
 			comboLRFieldViewer.setInput(lrFieldComboInputList);
 			comboLRFieldViewer.refresh();
 		} catch (SAFRException e) {
@@ -3256,12 +3115,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 	
 	private String getSourceFieldName(LookupPathSourceField sourceField)
 			throws SAFRException {
-		
+
 		String result = "";
 		String sourceValue = "";
 		String symbolicName = "";
 		if (sourceField.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD && sourceField!=null) {
-			
 			if(sourceField.getSourceFieldSourceLR()!=null){
 				result = sourceField.getSourceFieldSourceLR().getName()+"."+
 						getFieldString(sourceField.getSourceFieldSourceLR(),
@@ -3659,7 +3517,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				UIUtilities.handleWEExceptions(e,"Unexpected error occurred while retrieving target Logical Record.",null);
 			}
 			return step.getSourceFields().getActiveItems().toArray();
-
 		}
 
 		public void dispose() {
@@ -3687,23 +3544,16 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				try {
 					if(sourceField!=null){
 						result = getSourceFieldName(sourceField).toString();
-<<<<<<< HEAD
 					}
 					if(result=="") {
 						result=step1lrname;
 					}
-=======
-					}
-					if(result=="") {
-						result=step1lrname;
-					}
->>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 					
 				} catch (SAFRException se) {
 					UIUtilities.handleWEExceptions(se);
 				}
-
 				break;
+
 			case 1:
 				result = Integer.toString(sourceField.getLength());
 				break;
