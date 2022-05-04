@@ -41,8 +41,6 @@ public class Codes {
     
 	/** ACCMETHOD of type Sequential - Standard. */
 	public static final int SEQUENTIAL_STANDARD = 1;
-	/** ACCMETHOD of type VSAM - Unordered. */
-	public static final int VSAM_UNORDERED = 2;
 	/** ACCMETHOD of type VSAM - Ordered. */
 	public static final int VSAM_ORDERED = 3;
 	/** ACCMETHOD of type DB2 via SQL. */
@@ -501,11 +499,6 @@ public class Codes {
         seqin.setCodeValue("SEQIN");
         transfers.add(seqin);
 
-        CodeTransfer vsam = new CodeTransfer();
-        vsam.setGeneralId(VSAM_UNORDERED);
-        vsam.setCodeDescription("VSAM - Unordered");
-        vsam.setCodeValue("VSAM");
-        transfers.add(vsam);
 
         CodeTransfer ksds = new CodeTransfer();
         ksds.setGeneralId(VSAM_ORDERED);
@@ -515,7 +508,7 @@ public class Codes {
 
         CodeTransfer db2sq = new CodeTransfer();
         db2sq.setGeneralId(DB2VIASQL);
-        db2sq.setCodeDescription("DB2 via SQL");
+        db2sq.setCodeDescription("Db2 via SQL");
         db2sq.setCodeValue("DB2SQ");
         transfers.add(db2sq);
         

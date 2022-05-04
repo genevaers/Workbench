@@ -635,9 +635,9 @@ public class SAFRLogin extends TitleAreaDialog {
 		try {
 			// to avoid null pointer exception when group not selected.
 			if (grp != "") {
-				selectedGroupId = grpMap.get(grp);
-				currentGroup = SAFRApplication.getSAFRFactory().getGroup(
-						selectedGroupId);
+				//selectedGroupId = grpMap.get(grp);
+				//currentGroup = SAFRApplication.getSAFRFactory().getGroup(
+				//		selectedGroupId);
 			}
 
 			Environment currentEnv = SAFRApplication.getSAFRFactory()
@@ -656,7 +656,7 @@ public class SAFRLogin extends TitleAreaDialog {
 			if (currentUser.isSystemAdmin()) {
 				buffer.append(SAFRUtilities.LINEBREAK+ "Group        [not applicable]");
 			} else {
-				buffer.append(SAFRUtilities.LINEBREAK + "Group        "+ currentGroup.getDescriptor());
+				//buffer.append(SAFRUtilities.LINEBREAK + "Group        "+ currentGroup.getDescriptor());
 			}
 			if (currentUser.isSystemAdmin()) {
 				buffer.append(SAFRUtilities.LINEBREAK + "Authority    System administrator");

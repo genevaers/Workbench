@@ -29,6 +29,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private CobolCollection collection = new CobolCollection();
 	private List<String> errors = new ArrayList<>();
 	private int section;
+	private int groupSection;
 	private String name;
 	private String usage;
 	private String picType;
@@ -37,6 +38,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private boolean redefines;
 	private boolean groupRedefines;
 	private String redefinedName;
+	private int fillCount;
 	
 	public boolean hasErrors() {
 		return errors.size() > 0;
@@ -53,12 +55,11 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	@Override 
 	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
-		name = ctx.identifier().getText();	
-		section = Integer.parseInt(ctx.section().getText());
+		groupSection = Integer.parseInt(ctx.section().getText());
 
 		GroupField newGroup = CobolFieldFactory.makeNewGroup(times);
 		newGroup.setName(name);
-		newGroup.setSection(section);
+		newGroup.setSection(groupSection);
 
 		if(times > 1) { 
 			((OccursGroup)newGroup).setTimes(times);
@@ -94,15 +95,28 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	}
 
 	@Override public void enterIdentifier(CobolCopybookParser.IdentifierContext ctx) { 
+		String ctxName = fillerFix(ctx.getText());
 		if(redefines) {
-			redefinedName = ctx.getText();
+			redefinedName = ctxName;
 		} else {
-			name = ctx.getText();
+			name = ctxName;
 		}
+	}
+
+	private String fillerFix(String cn) {
+		String ctxName = cn;
+		if(ctxName.equalsIgnoreCase("FILLER")) {
+			fillCount++;
+			ctxName += String.format("_%02d", fillCount);
+		}
+		return ctxName;
 	}
 
 	@Override public void enterSection(CobolCopybookParser.SectionContext ctx) { 
 		section = Integer.parseInt(ctx.getText());	
+		if(section == groupSection) {
+			groupRedefines = false;
+		}
 	}
 
 	@Override public void enterUsage(CobolCopybookParser.UsageContext ctx) { 

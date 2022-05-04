@@ -412,7 +412,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		dataTextSLR.width = 535;
 		comboSourceLRGeneral.setLayoutData(dataTextSLR);	
 		comboSourceLRGeneral.setVisible(true);
+<<<<<<< HEAD
 		addSourceLRGeneralOpenEditorMenu();
+=======
+//		addSourceLROpenEditorMenu();
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 		
 		comboSourceLRGeneral.addFocusListener(new FocusListener() {
 
@@ -604,6 +608,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
         dataLabelActivatedValue.width = 200;
         labelActivatedValue.setLayoutData(dataLabelActivatedValue);
         populateLogicalRecord(comboSourceLRGeneral);
+<<<<<<< HEAD
 	}
 
 	private void populateLogicalRecord(TableCombo comboSourceLR) throws DAOException {
@@ -624,6 +629,28 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 	}
 
+=======
+	}
+
+	private void populateLogicalRecord(TableCombo comboSourceLR) throws DAOException {
+		Integer counter = 0;
+
+		comboSourceLRGeneral.getTable().removeAll();
+
+		List<LogicalRecordQueryBean> logicalRecordList = SAFRQuery
+				.queryAllActiveLogicalRecords(UIUtilities
+						.getCurrentEnvironmentID(), SortType.SORT_BY_NAME);
+		List<LogicalRecordQueryBean> listWithoutDuplicates = new ArrayList<>(new HashSet<>(logicalRecordList));
+
+		comboSourceLRViewerGeneral.setInput(listWithoutDuplicates);
+		comboSourceLRViewerGeneral.refresh();
+		for (LogicalRecordQueryBean logicalRecordBean : listWithoutDuplicates) {
+			comboSourceLRGeneral.setData(Integer.toString(counter), logicalRecordBean);
+			counter++;
+		}
+	}
+
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 
 	private void createCompositeDefinition() throws DAOException {
 		compositeDefinition = safrGuiToolkit.createComposite(tabFolder,
@@ -2562,7 +2589,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 							.getCurrentEnvironmentID(), SortType.SORT_BY_NAME);
 		}
 		else{
+<<<<<<< HEAD
 			for (int i = 0; i < numberOfSteps-1; i++) {
+=======
+			for (int i = 0; i < numberOfSteps; i++) {
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 				
 				step = (LookupPathStep) lookupPath.getLookupPathSteps().getActiveItems().get(i);
 				LogicalRecord sourceLR = step.getSourceLR();
@@ -2583,7 +2614,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				
 		}
 		}
+<<<<<<< HEAD
 			if(numberOfSteps==1) {
+=======
+			if(step.getSequenceNumber()==1) {
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 				comboSourceLRViewer.setInput(logicalRecordList);
 			}else {
 				comboSourceLRViewer.setInput(list2);
@@ -3164,8 +3199,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			}
 		} else if (field instanceof LRField) {
 			if (field.getName() != null && field.getLength() != null) {
-				result += field.getName() + " ("
-						+ Integer.toString(field.getLength()) + ")";
+				result += field.getName() + " ["
+						+ Integer.toString(field.getLength()) + "]";
 			}
 		}
 		return result;

@@ -2731,7 +2731,7 @@ public class View extends SAFRActivatedComponent {
             viewCopy.setHeaderRow(this.headerRow);
             viewCopy.setWriteExit(this.getWriteExit());
             viewCopy.setWriteExitParams(this.getWriteExitParams());
-            if (this.outputLRId > 0) {
+            if (this.outputLRId != null && this.outputLRId > 0) {
                 viewCopy.setOutputLRId(this.outputLRId);
             }
 
@@ -2774,9 +2774,9 @@ public class View extends SAFRActivatedComponent {
                     }
                     newViewColumnSource.setSourceValue(viewColumnSource
                             .getSourceValue());
-                    newViewColumnSource
-                            .setEffectiveDateLRField(viewColumnSource
-                                    .getEffectiveDateLRField());
+                    if(viewColumnSource.getEffectiveDateLRField() != null) {
+                    	newViewColumnSource.setEffectiveDateLRField(viewColumnSource.getEffectiveDateLRField());
+                    }
                     newViewColumnSource
                             .setEffectiveDateTypeCode(viewColumnSource
                                     .getEffectiveDateTypeCode());
@@ -2793,16 +2793,16 @@ public class View extends SAFRActivatedComponent {
                     newViewColumnSource
                             .setSortKeyTitleLogicalRecordQueryBean(viewColumnSource
                                     .getSortKeyTitleLogicalRecordQueryBean());
-                    newViewColumnSource
-                            .setSortKeyTitleLookupPathQueryBean(viewColumnSource
-                                    .getSortKeyTitleLookupPathQueryBean());
-                    newViewColumnSource.setSortKeyTitleLRField(viewColumnSource
-                            .getSortKeyTitleLRField());
+                    LookupQueryBean lqb =viewColumnSource.getSortKeyTitleLookupPathQueryBean();
+                    if(lqb != null) {
+                    	newViewColumnSource.setSortKeyTitleLookupPathQueryBean(lqb);
+                    }
+                    if(viewColumnSource.getSortKeyTitleLRField() != null) {
+                        newViewColumnSource.setSortKeyTitleLRField(viewColumnSource.getSortKeyTitleLRField());
+                    }
 
                 }
 
-                // mustufa;copy column output props after view column sources
-                // are copied.
                 vwColumn.setColumnNo(viewColumn.getColumnNo());
                 vwColumn.setDataAlignmentCode(viewColumn.getDataAlignmentCode());
                 vwColumn.setDataTypeCode(viewColumn.getDataTypeCode());
