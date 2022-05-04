@@ -1537,7 +1537,6 @@ public class UIUtilities {
         String versionDetails = "Version ";
 
         try {
-            logger.log(Level.INFO, "Looking for bundle GenevaERS");
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
             	versionDetails += bundle.getVersion().toString();

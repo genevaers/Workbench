@@ -527,7 +527,6 @@ public class PhysicalFileGeneralEditor {
         int idx = 0;
         for (Code code : codeList) {
             if (code.getGeneralId().equals(Codes.SEQUENTIAL_STANDARD) ||
-                code.getGeneralId().equals(Codes.VSAM_UNORDERED) ||
                 code.getGeneralId().equals(Codes.VSAM_ORDERED)) {
                 comboGeneralAccessMethod.add(code.getDescription());
                 comboGeneralAccessMethod.setData(Integer.toString(idx), code);
