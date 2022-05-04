@@ -413,7 +413,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		comboSourceLRGeneral.setLayoutData(dataTextSLR);	
 		comboSourceLRGeneral.setVisible(true);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		addSourceLRGeneralOpenEditorMenu();
+=======
+//		addSourceLROpenEditorMenu();
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 =======
 //		addSourceLROpenEditorMenu();
 >>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
@@ -609,6 +613,9 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
         labelActivatedValue.setLayoutData(dataLabelActivatedValue);
         populateLogicalRecord(comboSourceLRGeneral);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 	}
 
 	private void populateLogicalRecord(TableCombo comboSourceLR) throws DAOException {
@@ -629,6 +636,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 	}
 
+<<<<<<< HEAD
 =======
 	}
 
@@ -650,6 +658,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 	}
 
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
+=======
 >>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 
 	private void createCompositeDefinition() throws DAOException {
@@ -2590,7 +2600,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 		else{
 <<<<<<< HEAD
+<<<<<<< HEAD
 			for (int i = 0; i < numberOfSteps-1; i++) {
+=======
+			for (int i = 0; i < numberOfSteps; i++) {
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 =======
 			for (int i = 0; i < numberOfSteps; i++) {
 >>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
@@ -2615,7 +2629,11 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		}
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 			if(numberOfSteps==1) {
+=======
+			if(step.getSequenceNumber()==1) {
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 =======
 			if(step.getSequenceNumber()==1) {
 >>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
@@ -3669,10 +3687,17 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				try {
 					if(sourceField!=null){
 						result = getSourceFieldName(sourceField).toString();
+<<<<<<< HEAD
 					}
 					if(result=="") {
 						result=step1lrname;
 					}
+=======
+					}
+					if(result=="") {
+						result=step1lrname;
+					}
+>>>>>>> 05c3e5029b8d9a71d8163f79314eabb654d5022a
 					
 				} catch (SAFRException se) {
 					UIUtilities.handleWEExceptions(se);
