@@ -1070,9 +1070,8 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 	
 	public void closeActivationLog() {
-		IWorkbenchPage page = getSite().getPage();
-		if(page != null) {
-		ActivationLogViewNew logView = (ActivationLogViewNew)page.findView(ActivationLogViewNew.ID);
+		if(getSite().getPage() != null) {
+			ActivationLogViewNew logView = (ActivationLogViewNew)getSite().getPage().findView(ActivationLogViewNew.ID);
 			if (logView != null && logView.isViewEditor()) {
 				if (viewActivationMessageExistsNew()) {
 					expandsNew = logView.getExpands();
@@ -1082,6 +1081,7 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				}
 				getSite().getPage().hideView(logView);
 			}		
+		
 	        ActivationLogViewOld logView2 = (ActivationLogViewOld)getSite().getPage().findView(ActivationLogViewOld.ID);
 	        if (logView2 != null && logView2.isViewEditor()) {
 	            if (viewActivationMessageExistsOld()) {
