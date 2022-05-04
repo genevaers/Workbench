@@ -796,14 +796,16 @@ public class ActivateViewsViews {
     }
     
     public void closeActivationLog() {
-        ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
-        if (logView != null) {
-            mediator.getSite().getPage().hideView(logView);
-        }       
-        ActivationLogViewOld logView2 = (ActivationLogViewOld)mediator.getSite().getPage().findView(ActivationLogViewOld.ID);
-        if (logView2 != null) {
-            mediator.getSite().getPage().hideView(logView2);
-        }       
+        if(mediator.getSite().getPage() != null) {
+            ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
+            if (logView != null) {
+                mediator.getSite().getPage().hideView(logView);
+            }       
+            ActivationLogViewOld logView2 = (ActivationLogViewOld)mediator.getSite().getPage().findView(ActivationLogViewOld.ID);
+            if (logView2 != null) {
+                mediator.getSite().getPage().hideView(logView2);
+            }       
+        }
     }
 
     public boolean isActivationLogOpen() {
