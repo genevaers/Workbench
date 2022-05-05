@@ -45,6 +45,7 @@ public class Codes {
 	public static final int VSAM_ORDERED = 3;
 	/** ACCMETHOD of type DB2 via SQL. */
 	public static final int DB2VIASQL = 6;
+
 	/** DATATYPE of type Alphanumeric. */
 	public static final int ALPHANUMERIC = 1;
 	/** DATATYPE of type Zoned Decimal. */
