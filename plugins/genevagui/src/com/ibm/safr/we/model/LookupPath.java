@@ -215,7 +215,6 @@ public class LookupPath extends SAFRActivatedComponent {
 	 */
 	public void setSourceLR(LogicalRecord logicalRecord) throws SAFRException,
 			DAOException {
-		// first attempt to change the source LR of first step.
 		LookupPathStep firstStep = (LookupPathStep) lookupPathSteps
 				.getActiveItems().get(0);
 		// this will throw SAFRValidationException if the current Source LR is
