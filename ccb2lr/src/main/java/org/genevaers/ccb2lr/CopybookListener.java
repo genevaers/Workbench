@@ -21,6 +21,7 @@ package org.genevaers.ccb2lr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 
@@ -39,24 +40,31 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private boolean groupRedefines;
 	private String redefinedName;
 	private int fillCount;
+	private boolean level01ErrorEnabled = true;
+	private boolean noGroupErrorEnabled = true;
 	
 	public boolean hasErrors() {
-		return errors.size() > 0;
+		return errors.isEmpty() == false;
 	}
 	
 	public List<String> getErrors() {
 		return errors;
 	}
 
+
 	@Override 
 	public void enterGroup(CobolCopybookParser.GroupContext ctx) { 
 		groupRedefines = false;
+		name = "";
 	}
 
 	@Override 
 	public void exitGroup(CobolCopybookParser.GroupContext ctx) { 
 		groupSection = Integer.parseInt(ctx.section().getText());
-
+		if(level01ErrorEnabled && groupSection > 1) {
+			errors.add("No level 01 group defined");
+		}
+		level01ErrorEnabled = false;
 		GroupField newGroup = CobolFieldFactory.makeNewGroup(times);
 		newGroup.setName(name);
 		newGroup.setSection(groupSection);
@@ -73,23 +81,44 @@ public class CopybookListener extends CobolCopybookBaseListener {
 			redefines = false;
 		}
 
-		collection.addCobolField(newGroup);
+		if(errors.isEmpty()) {
+			collection.addCobolField(newGroup);
+		}
 	}
 
 	@Override public void enterPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
 		usage = null;
+		name = "";
 	}
 
-	@Override public void exitPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
-		CobolField cbf = CobolFieldFactory.makeField(usage, picType);
-		cbf.setName(name);
-		cbf.setSection(section);
-		cbf.setPicType(picType);
-		cbf.setPicCode(picCode);
-		cbf.setRedefines(redefines || groupRedefines);
-		cbf.setRedefinedName(redefinedName);
 
-		collection.addCobolField(cbf);
+
+	@Override public void exitPrimitive(CobolCopybookParser.PrimitiveContext ctx) { 
+		if(level01ErrorEnabled && section > 1) {
+			errors.add("No level 01 group defined");
+			level01ErrorEnabled = false;
+		}
+		if(collection.getRecordGroup() != null) {
+			CobolField cbf = CobolFieldFactory.makeField(usage, picType);
+			if(name.isEmpty()) {
+				name = fillerFix("FILLER");
+			}
+			cbf.setName(name);
+			cbf.setSection(section);
+			cbf.setPicType(picType);
+			cbf.setPicCode(picCode);
+			cbf.setRedefines(redefines || groupRedefines);
+			cbf.setRedefinedName(redefinedName);
+
+			if(errors.isEmpty()) {
+				collection.addCobolField(cbf);
+			}
+		} else {
+			if(noGroupErrorEnabled) {
+				errors.add("No record group defined (missing a terminator?)");
+				noGroupErrorEnabled = false;
+			}
+		}
 		redefinedName = "";
 		redefines = false;
 	}
@@ -105,7 +134,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 
 	private String fillerFix(String cn) {
 		String ctxName = cn;
-		if(ctxName.equalsIgnoreCase("FILLER")) {
+		if(cn.equalsIgnoreCase("FILLER")) {
 			fillCount++;
 			ctxName += String.format("_%02d", fillCount);
 		}
@@ -120,7 +149,8 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	}
 
 	@Override public void enterUsage(CobolCopybookParser.UsageContext ctx) { 
-		usage = ctx.getText();
+		int numChildNodes = ctx.getChildCount();
+		usage = ctx.getChild(numChildNodes - 1).getText();;
 	}
 
 

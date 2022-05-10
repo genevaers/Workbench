@@ -42,12 +42,30 @@ public class Copybook2LR {
         parser.addErrorListener(errorListener); // add ours
         tree = parser.goal(); // parse
         generateData();
-        if (errorListener.getErrors().isEmpty()) {
-            ccbListener.getCollection().expandOccursGroupsIfNeeded();
-            ccbListener.getCollection().resolvePositions();
+        if (noParserErrors()) {
+            if(noGenerationErrors()) {
+                ccbListener.getCollection().expandOccursGroupsIfNeeded();
+                ccbListener.getCollection().resolvePositions();
+            } else {
+                addToErrorListener();
+            }
         } else {
             errorListener.addErrorMessage("Please ensure the copybook compiles via IBM Enterprise COBOL for z/OS");
         }
+    }
+
+    private void addToErrorListener() {
+        for(String err : ccbListener.getErrors()) {
+            errorListener.addErrorMessage(err);
+        }
+    }
+
+    private boolean noGenerationErrors() {
+        return ccbListener.getErrors().isEmpty();
+    }
+
+    private boolean noParserErrors() {
+        return errorListener.getErrors().isEmpty();
     }
 
     private StringReader getReformattedInput(Path fp) throws FileNotFoundException, IOException {
@@ -58,7 +76,12 @@ public class Copybook2LR {
             String line = bufferedReader.readLine();
             while (line != null) {
                 if (line.length() > 7) {
-                    String addMe = line.substring(6);
+                    String addMe;
+                    if(line.length() > 72) {
+                        addMe = line.substring(6, 72);
+                    } else {
+                        addMe = line.substring(6);
+                    }
                     data.append(addMe + "\n");
                 }
                 line = bufferedReader.readLine();
@@ -70,12 +93,12 @@ public class Copybook2LR {
 	public void generateData() {
 		ccbListener = new CopybookListener();
         ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
-        walker.walk(ccbListener, tree); // initiate walk of tree with listener		
+        walker.walk(ccbListener, tree); // initiate walk of tree with listener
 	}
 
 
     public boolean hasErrors() {
-        return !errorListener.getErrors().isEmpty();
+        return !noParserErrors();
     }
 
     public List<String> getErrors() {

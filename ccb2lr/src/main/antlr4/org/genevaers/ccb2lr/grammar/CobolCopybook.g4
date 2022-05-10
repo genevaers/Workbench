@@ -174,7 +174,7 @@ group:
     ;
 
 primitive:
-    section identifier
+    section identifier?
     (justified | occurs | pic | redefines | usage | values | separate_sign)*
     (BLANK WHEN? ZERO)?
     term
