@@ -150,7 +150,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	private Table tableXmlFiles;
 	private CheckboxTableViewer tableViewerXmlFiles;
 	public static String[] componentColumnHeaders = { "Select", "Result",
-			"XML Files" };
+			"File Name" };
 	public static int[] componentColumnWidths = { 75, 80, 310 };
 	private TableComboViewer comboEnvironmentViewer;
 	private List<EnvironmentQueryBean> envList;
@@ -414,7 +414,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 	private void loadComponentFiles() {
 		if(componentType == ComponentType.CobolCopyBook) {
-			loadFiles(".cpy");					
+			loadFiles("");					
 		} else {
 			loadFiles(".xml");
 		}
