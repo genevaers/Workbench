@@ -624,25 +624,25 @@ public class ExportUtility extends SAFRObject {
 						// check for cdata
 						if (tableRecord.isCdata()) {
 							// write this table record inside the above <Record> element.
-							xmlStream.write(openCdataElement(tableRecord.getName(), true, false).getBytes());
+							xmlStream.write(openCdataElement(tableRecord.getName().toUpperCase(), true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// normalize line endings
 								String cdstr =  FileUtils.fixCdataLineEndings(tableRecord.getValue());
 								xmlStream.write(cdstr.getBytes());
 							}
-							xmlStream.write(closeCdataElement(tableRecord.getName(), false, true).getBytes());							
+							xmlStream.write(closeCdataElement(tableRecord.getName().toUpperCase(), false, true).getBytes());							
 						}
 						else {
 							// write this table record inside the above <Record>
 							// element.
-							xmlStream.write(openElement(tableRecord.getName(),
+							xmlStream.write(openElement(tableRecord.getName().toUpperCase(),
 									true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// handle special characters and write the data
 								xmlStream.write(handleSpecialChars(
 										tableRecord.getValue()).getBytes());
 							}
-							xmlStream.write(closeElement(tableRecord.getName(),
+							xmlStream.write(closeElement(tableRecord.getName().toUpperCase(),
 									false, true).getBytes());
 						}
 					}
