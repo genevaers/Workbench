@@ -919,13 +919,13 @@ public class PGLRFieldDAO implements LRFieldDAO {
 						pst2.setInt(2, environmentId);
 						pst2.execute();
 
-						pst.setInt(1, fieldId);
-						pst.setInt(2, environmentId);
-						pst.execute();
-
 						pst1.setInt(1, fieldId);
 						pst1.setInt(2, environmentId);
 						pst1.execute();
+
+						pst.setInt(1, fieldId);
+						pst.setInt(2, environmentId);
+						pst.execute();
 					}
 					break;
 				} catch (SQLException se) {
