@@ -17,7 +17,6 @@ package com.ibm.safr.we.model.logic;
  * under the License.
  */
 
-
 import java.util.Arrays;
 
 import com.ibm.safr.we.constants.LogicTextType;
@@ -32,7 +31,7 @@ public class LogicTextParserExtractFilter extends LogicTextParser {
 
     private void initializeKeywordArray() {
         String[] arr  = new String[] { "SELECTIF", "SKIPIF", "SELECT", "SKIP",
-            "IF", "THEN", "ELSE", "ENDIF", "ALL", "TIMESTAMP", "BATCHDATE",
+            "IF", "THEN", "ELSE", "ENDIF", "ALL", "TIMESTAMP", "BATCHDATE","SUBSTR","LEFT","RIGHT",
             "FISCALDAY", "FISCALMONTH", "FISCALYEAR", 
             "CURRENT", "PRIOR",  "DATE", 
             "DAYSBETWEEN", "MONTHSBETWEEN", "YEARSBETWEEN",                 
@@ -43,3 +42,4 @@ public class LogicTextParserExtractFilter extends LogicTextParser {
     }
     
 }
+

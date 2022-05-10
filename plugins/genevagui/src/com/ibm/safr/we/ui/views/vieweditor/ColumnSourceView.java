@@ -2243,15 +2243,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
                 return comboString;
             }
         } else if (sourceType.getGeneralId() == Codes.FORMULA) {
-            if (viewColumnSource.getExtractColumnAssignment() != null &&
-                viewColumnSource.getExtractColumnAssignment().length() > UIUtilities.TABLECELLLIMIT)
-            {
-                return (viewColumnSource.getExtractColumnAssignment().substring(0, UIUtilities.TABLECELLLIMIT-3) + "...");
-            }
-            else
-            {
-                return viewColumnSource.getExtractColumnAssignment();
-            }
+            return viewColumnSource.getExtractColumnAssignment();
         }
         return "";
     }

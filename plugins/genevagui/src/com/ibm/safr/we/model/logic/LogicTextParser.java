@@ -61,7 +61,7 @@ public class LogicTextParser {
        return null;
     }
     
-    protected static String[] logicalOperatorKeywords = { "Or", "And", "Not" };
+    protected static String[] logicalOperatorKeywords = { "OR", "AND", "NOT" };
     
     protected LogicTextType logicType;
     

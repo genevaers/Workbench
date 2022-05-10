@@ -28,8 +28,10 @@ import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.constants.ComponentType;
 import com.ibm.safr.we.constants.EditRights;
+import com.ibm.safr.we.constants.SortType;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
+import com.ibm.safr.we.data.transfer.FileAssociationTransfer;
 import com.ibm.safr.we.data.transfer.PhysicalFileTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -39,6 +41,7 @@ import com.ibm.safr.we.model.associations.FileAssociation;
 import com.ibm.safr.we.model.associations.SAFRAssociationFactory;
 import com.ibm.safr.we.model.base.SAFRComponent;
 import com.ibm.safr.we.model.base.SAFREnvironmentalComponent;
+import com.ibm.safr.we.model.query.LookupQueryBean;
 
 /**
  * Describes characteristics of physical data source, such as a file or
@@ -273,19 +276,29 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
     }
 	
 
-	protected void setTransferData(SAFRTransfer safrTrans) {
+    protected void setTransferData(SAFRTransfer safrTrans) throws SAFRException{
 		super.setTransferData(safrTrans);
 		PhysicalFileTransfer trans = (PhysicalFileTransfer) safrTrans;
-
+	
 		// set common attributes
 
 		// mandatory (non-null) Code fields
 		trans.setFileTypeCode(getTransFileTypeString(fileTypeCode));
+		List<FileAssociationTransfer> fileAssociationTransfer = DAOFactoryHolder.getDAOFactory().getPhysicalFileDAO().getAssociatedLogicalFiles(trans.getId(), trans.getEnvironmentId());
+		List<String> allLogicalFiles = new ArrayList<String>();
+		for(FileAssociationTransfer transfer : fileAssociationTransfer){
+			allLogicalFiles.add(transfer.getAssociatedComponentName());
+		}
+		List<LookupQueryBean> lookups = DAOFactoryHolder.getDAOFactory().getLookupDAO().queryAllLookups(getEnvironmentId(), SortType.SORT_BY_NAME);
+		for(LookupQueryBean bean : lookups){
+			if(allLogicalFiles.contains(bean.getTargetLF()) && fileTypeCode.getDescription().equals("Token")){
+				throw new SAFRException(
+						"Physical File cant be made token as it is being used in Lookups.");
+			}
+		}
         trans.setDiskFileTypeCode(getTransDiskFileTypeString(fileTypeCode));
 		trans.setAccessMethodCode(accessMethodCode.getKey());
 
-		if(readExitId != null && readExitId == 0)
-			readExitId = null;
 		trans.setReadExitId(readExitId);
 		trans.setReadExitParams(readExitParams);
 
@@ -303,12 +316,15 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
 		// set SQL data attributes
         trans.setSubSystem(subSystem);
         CodeSet accMethods = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.ACCMETHOD);
-        trans.setSqlStatement(sqlStatement);            
+        Code db2vsql = accMethods.getCode(Codes.DB2VIASQL);
+        if (accessMethodCode.equals(db2vsql)) {
+            trans.setSqlStatement(sqlStatement);
+        } 
 		trans.setTableName(tableName);
 		trans.setRowFormatCode(rowFormatCode == null ? null : rowFormatCode.getKey());
 		trans.setIncludeNullIndicators(includeNullIndicators);
-
 	}
+
 
 	/**
 	 * Get FileTypeCode of the PhysicalFile.

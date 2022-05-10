@@ -17,7 +17,6 @@ package com.ibm.safr.we.model;
  * under the License.
  */
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -220,14 +219,6 @@ public class LookupPath extends SAFRActivatedComponent {
 		// this will throw SAFRValidationException if the current Source LR is
 		// used in subsequent steps in source fields.
 		firstStep.setSourceLR(logicalRecord);
-
-		this.sourceLR = logicalRecord;
-		if (sourceLR == null) {
-			this.sourceLRId = 0;
-		} else {
-			this.sourceLRId = sourceLR.getId();
-		}
-		markModified();
 	}
 	
 	
@@ -400,13 +391,16 @@ public class LookupPath extends SAFRActivatedComponent {
 		// source LR and source LR/LF association is used in any of the Source
 		// Field's of these steps.
 		for (int i = seqno - 1; i < activeSteps.size(); i++) {
+			
 			LookupPathStep nextStep = activeSteps.get(i);
+
 			List<LookupPathSourceField> nextStepSourceFields = nextStep
 					.getSourceFields().getActiveItems();
 			for (int j = 0; j < nextStepSourceFields.size(); j++) {
 				LookupPathSourceField nextStepSourceField = nextStepSourceFields
 						.get(j);
 				// Check only if the type is LRField. Other types don't matter.
+				
 				if (nextStepSourceField.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD) {
 					nextStepSourceFieldSourceLR = nextStepSourceField
 							.getSourceFieldSourceLR();
@@ -495,7 +489,6 @@ public class LookupPath extends SAFRActivatedComponent {
                 }
             }
         }
-		
 		List<SAFRPersistentObject> savedObjs = new ArrayList<SAFRPersistentObject>();
 
 		// Save the Lookup Path
@@ -526,7 +519,6 @@ public class LookupPath extends SAFRActivatedComponent {
 
 					
 					// Save Lookup Path Steps
-					
                     // CQ10021 Store its source Fields in list so we can save in one operation.
 					// Breaking encapsulation here for the performance improvement.
                     List<LookupPathSourceFieldTransfer> sourceFieldsTransfer = new ArrayList<LookupPathSourceFieldTransfer>();
@@ -801,6 +793,7 @@ public class LookupPath extends SAFRActivatedComponent {
             	   
     		LookupPath lookupPathCopy = SAFRApplication.getSAFRFactory()
     				.createLookupPath();
+    		
     		lookupPathCopy.setName(newName);
     		lookupPathCopy.setValid(this.isValid());
     		lookupPathCopy.setSourceLRId(this.sourceLRId);
@@ -845,7 +838,6 @@ public class LookupPath extends SAFRActivatedComponent {
     				// other properties.
     				srcField.setSourceLRField(lookupPathSourceField
     						.getSourceLRField());
-    
     				srcField.setDataTypeCode(lookupPathSourceField
     						.getDataTypeCode());
     				srcField.setLength(lookupPathSourceField.getLength());
@@ -883,9 +875,8 @@ public class LookupPath extends SAFRActivatedComponent {
     
     		}
     
-    		lookupPathCopy.validate();
+    		lookupPathCopy.validate();	
     		lookupPathCopy.store();
-    
     		return lookupPathCopy;
         }
         else {
@@ -900,5 +891,7 @@ public class LookupPath extends SAFRActivatedComponent {
     public Set<Integer> getDeactivatedViews() {
         return deactivatedViewList;        
     }
+
+	
 
 }
