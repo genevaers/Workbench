@@ -202,7 +202,7 @@ public class SAFRValidator {
 
 				}
 
-				if ((length < 1) || (length > 256)) {
+				if ((length < 1) || (length > 32767)) {
 
 					validationException
 							.setErrorMessage(Property.DATATYPE,

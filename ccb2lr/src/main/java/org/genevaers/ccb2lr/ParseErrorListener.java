@@ -43,7 +43,7 @@ public class ParseErrorListener extends BaseErrorListener {
         if(e != null) {
             err = line + ":" + charPositionInLine + " see " + e.getOffendingToken().getText();
         } else {
-            err = line + ":" + charPositionInLine;
+            err = line + ":" + charPositionInLine + " " + msg;
         }
         errors.add(err);
     }

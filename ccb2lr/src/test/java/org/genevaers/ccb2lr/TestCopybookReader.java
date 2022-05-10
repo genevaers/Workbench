@@ -18,6 +18,7 @@ package org.genevaers.ccb2lr;
  */
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -266,6 +267,7 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/COPYBOOK01.CPY");
 		ccb2lr.processCopybook(testPath);
+		assertEquals(80, ccb2lr.getRecordField().getLength());
 		assertFalse(ccb2lr.hasErrors());
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedCOPYBOOK01.gv"));
 	}
@@ -276,6 +278,63 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/COPYBOOK02.CPY");
 		ccb2lr.processCopybook(testPath);
 		assertFalse(ccb2lr.hasErrors());
+		assertEquals(100, ccb2lr.getRecordField().getLength());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedCOPYBOOK02.gv"));
+	}
+
+	@Test
+	public void testCCB2LRBlankId() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/BlankField.cpy");
+		ccb2lr.processCopybook(testPath);
+		CobolField fill1 = ccb2lr.getRecordField().getField("FILLER_01");
+		assertNotNull(fill1);
+		CobolField fill2 = ccb2lr.getRecordField().getField("FILLER_02");
+		assertNotNull(fill2);
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedBlankId.gv"));
+	}
+
+	@Test
+	public void testCCB2LRNoSection01() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/NoSection01.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertTrue(ccb2lr.hasErrors());
+	}
+
+	@Test
+	public void testCCB2LRUsage() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/Usage.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertEquals(35, ccb2lr.getRecordField().getLength());
+		assertFalse(ccb2lr.hasErrors());
+		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedUsage.gv"));
+	}
+
+	@Test
+	public void testCCB2LRNoGroups() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/noGroups.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertTrue(ccb2lr.hasErrors());
+	}
+
+	@Test
+	public void testCCB2LRNoTerminator() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/noTerminator.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertTrue(ccb2lr.hasErrors());
+	}
+
+	@Test
+	public void testCCB2LRNoInternalTerminator() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/NoInternalTerminator.cpy");
+		ccb2lr.processCopybook(testPath);
+		assertTrue(ccb2lr.hasErrors());
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {
