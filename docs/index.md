@@ -1,10 +1,10 @@
 ---
 layout: home
-title: Home (Workbench doco)
+title: Home
 nav_order: 1
 ---
 
-# Home - GenevaERS Workbench documentation
+# GenevaERS Workbench documentation
 
 ## Workbench topics
 
