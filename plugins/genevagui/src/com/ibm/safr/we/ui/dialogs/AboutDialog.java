@@ -17,6 +17,9 @@ package com.ibm.safr.we.ui.dialogs;
  * under the License.
  */
 
+import org.genevaers.ccb2lr.Copybook2LR;
+
+import java.time.LocalDate;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -25,6 +28,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -121,12 +125,15 @@ public class AboutDialog extends Dialog {
 		final int xposition = 5;
 		label.setImage(image);
 		GC gc = new GC(image);
+		Rectangle bounds = image.getBounds();
 		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
-		int y = 450;
-		for (String line : getAboutVersionDetails().split("\n")) {
-			gc.drawString(line, 20,
-					y += gc.getFontMetrics().getHeight() + 3);
-		}
+		int y = 50;
+		LocalDate today = LocalDate.now();
+		String line = getAboutVersionDetails() + " : " + today.toString();
+		gc.drawString(line, 15,	bounds.height - gc.getFontMetrics().getHeight()*2 - 3);
+		Copybook2LR ccb2lr = new Copybook2LR();
+		gc.drawString(ccb2lr.getVersion(), 15,	bounds.height - gc.getFontMetrics().getHeight() -3);
+		
 		gc.dispose(); // this is needed.
 		GridLayout layout = new GridLayout();
 		composite.setLayout(layout);

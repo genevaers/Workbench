@@ -1634,10 +1634,10 @@ public class LogicalRecord extends SAFRActivatedComponent {
 					safrValidationException.setErrorMessage(Property.LR_FIELD, 
 					    "There should be at least one LR Field.");
 				}
-//				if (getLogicalFileAssociations().getActiveItems().isEmpty()) {
-//					safrValidationException.setErrorMessage(Property.LF_ASSOCIATION, 
-//					    "There must be at least one corresponding file.");
-//				}
+				if (getLogicalFileAssociations().getActiveItems().isEmpty() && lrStatusCode.getGeneralId() == Codes.ACTIVE) {
+					safrValidationException.setErrorMessage(Property.LF_ASSOCIATION, 
+					    "There must be at least one corresponding file.");
+				}
 				if (!isPrimaryKeyFieldValid()) {
 					safrValidationException.setErrorMessage(Property.LR_FIELD,
 					    "A field with a primary key is required before a field with an alternate key is created.");

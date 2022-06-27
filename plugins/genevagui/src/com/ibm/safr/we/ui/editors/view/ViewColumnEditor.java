@@ -2312,12 +2312,14 @@ public class ViewColumnEditor {
      */
     protected void closePropertyView(PropertyViewType viewType) {
         if (fromViewType != null && fromViewType != viewType) {
-            IViewPart viewPart = mediator.getSite().getPage().findView(fromViewType.getViewId());
-            if (viewPart != null) {
-                // stop editing on our cell
-                viewEditorGrid.cancelEditing();
-            	mediator.getSite().getPage().hideView(viewPart);
-            }
+        	if(mediator.getSite().getPage() != null) {
+	            IViewPart viewPart = mediator.getSite().getPage().findView(fromViewType.getViewId());
+	            if (viewPart != null) {
+	                // stop editing on our cell
+	                viewEditorGrid.cancelEditing();
+	            	mediator.getSite().getPage().hideView(viewPart);
+	            }
+        	}
         }        
         
         boolean sortView = false;

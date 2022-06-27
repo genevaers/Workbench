@@ -23,7 +23,8 @@ public abstract class CobolField {
     protected int fieldLength;
     private int mantissaLen;
     private boolean signed;
-    private boolean nines;
+    private boolean nines = false;
+    private boolean noBrackets  = true;
 
     public int getSection() {
         return section;
@@ -84,13 +85,13 @@ public abstract class CobolField {
             int unitLen = getUnitLength();
             mantissaLen = getMantissaLength();
             picLength = unitLen + mantissaLen;
-            if(signed && nines) {
+            if(signed && nines && noBrackets) { //length -1 if all nines. No bracketed terms?
                 picLength--;
             }
         } else {
             picLength =  getPicTermLength(picCode);
-            fieldLength =  getLength();
         }
+        fieldLength =  getLength();
     }
 
     private void resolveSign() {
@@ -110,6 +111,7 @@ public abstract class CobolField {
         int bStart = getBracketStart(term);
         if(bStart != -1) {
             len = getBracketedLength(bStart, term);
+            noBrackets = false;
         } else {
             nines = true;
             len = term.length();
@@ -248,7 +250,7 @@ public abstract class CobolField {
         return redefines;
     }
 
-    public int getNunberOfDecimalPlaces() {
+    public int getNumberOfDecimalPlaces() {
         return mantissaLen;
     }
 

@@ -9,7 +9,7 @@ public class PackedField extends CobolField{
 
     @Override
     public int getLength() {
-        return (picLength+1)/2;
+        return (picLength/2 + 1);
     }
     
 }

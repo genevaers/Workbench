@@ -34,6 +34,7 @@ public class UserPreferencesNodes {
 	public static final String PORT = "Port";
 	public static final String SCHEMA = "Schema";
 	public static final String USERID = "UserID";
+	public static final String PD = "Password";
 	public static final String RECENT_VIEWS = "Recent-Views";
 	public static final String LAST_USER = "last-user";
 	public static final String IGNORE_IMPORT_WARNINGS = "Ignore-Import-Warnings";

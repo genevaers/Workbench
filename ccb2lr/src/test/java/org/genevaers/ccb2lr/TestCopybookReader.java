@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -249,17 +250,23 @@ public class TestCopybookReader {
 		ccb2lr.processCopybook(testPath);
 		assertFalse(ccb2lr.hasErrors());
 		CobolField snines = ccb2lr.getRecordField().getField("SNINES-WITH-V");
-		assertEquals(5, snines.getNunberOfDecimalPlaces());
+		assertEquals(5, snines.getNumberOfDecimalPlaces());
 		assertEquals(11, snines.getLength());
 		CobolField sbracketed = ccb2lr.getRecordField().getField("SBRACKETED-NINES");
-		assertEquals(3, sbracketed.getNunberOfDecimalPlaces());
+		assertEquals(3, sbracketed.getNumberOfDecimalPlaces());
 		assertEquals(8, sbracketed.getLength());
 		CobolField nines = ccb2lr.getRecordField().getField("NINES-WITH-V");
-		assertEquals(5, nines.getNunberOfDecimalPlaces());
+		assertEquals(5, nines.getNumberOfDecimalPlaces());
 		assertEquals(11, nines.getLength());
 		CobolField bracketed = ccb2lr.getRecordField().getField("BRACKETED-NINES");
-		assertEquals(3, bracketed.getNunberOfDecimalPlaces());
+		assertEquals(3, bracketed.getNumberOfDecimalPlaces());
 		assertEquals(8, bracketed.getLength());
+		CobolField bv9 = ccb2lr.getRecordField().getField("BRACKET-V-NINES");
+		assertEquals(2, bv9.getNumberOfDecimalPlaces());
+		assertEquals(6, bv9.getLength());
+		CobolField s9v3 = ccb2lr.getRecordField().getField("SNINES-WITH-V-C3");
+		assertEquals(5, s9v3.getNumberOfDecimalPlaces());
+		assertEquals(6, s9v3.getLength());
 	}
 
 	@Test
@@ -287,9 +294,9 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/BlankField.cpy");
 		ccb2lr.processCopybook(testPath);
-		CobolField fill1 = ccb2lr.getRecordField().getField("FILLER_01");
+		CobolField fill1 = ccb2lr.getRecordField().getField("GFILLER_01");
 		assertNotNull(fill1);
-		CobolField fill2 = ccb2lr.getRecordField().getField("FILLER_02");
+		CobolField fill2 = ccb2lr.getRecordField().getField("GFILLER_02");
 		assertNotNull(fill2);
 		assertFalse(ccb2lr.hasErrors());
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedBlankId.gv"));
@@ -308,7 +315,7 @@ public class TestCopybookReader {
 		Copybook2LR ccb2lr = new Copybook2LR();
 		Path testPath = Paths.get("src/test/resources/Usage.cpy");
 		ccb2lr.processCopybook(testPath);
-		assertEquals(35, ccb2lr.getRecordField().getLength());
+		assertEquals(36, ccb2lr.getRecordField().getLength());
 		assertFalse(ccb2lr.hasErrors());
 		CCB2Dot.writeFromRecord(ccb2lr.getCobolCollection(), Paths.get("expandedUsage.gv"));
 	}
@@ -335,6 +342,28 @@ public class TestCopybookReader {
 		Path testPath = Paths.get("src/test/resources/NoInternalTerminator.cpy");
 		ccb2lr.processCopybook(testPath);
 		assertTrue(ccb2lr.hasErrors());
+	}
+
+	@Test
+	public void testGetVersion() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		String ver = ccb2lr.getVersion();
+		assertTrue(ver.length() > 0);
+	}
+
+	@Test
+	public void testLeaveFiller() throws IOException {
+		Copybook2LR ccb2lr = new Copybook2LR();
+		Path testPath = Paths.get("src/test/resources/RTC22777.cpy");
+		ccb2lr.processCopybook(testPath);
+		CobolField fill1 = ccb2lr.getRecordField().getField("GFILLER_01");
+		assertNotNull(fill1);
+		CobolField fill2 = ccb2lr.getRecordField().getField("GFILLER_02");
+		assertNotNull(fill2);
+		CobolField fill3 = ccb2lr.getRecordField().getField("FILLER-03");
+		assertNotNull(fill3);
+		CobolField fill4 = ccb2lr.getRecordField().getField("GFILLER_03");
+		assertNotNull(fill4);
 	}
 
 	private void checkFieldPositions(GroupField rf, int[] positions) {
