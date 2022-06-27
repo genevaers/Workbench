@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -163,7 +165,7 @@ public class Copybook2LR {
         fieldObj.put("datatypeCode", f.getType().getCode());
         fieldObj.put("position", f.getPosition());
         fieldObj.put("length", f.getLength());
-        fieldObj.put("decimalPlaces", f.getNunberOfDecimalPlaces());
+        fieldObj.put("decimalPlaces", f.getNumberOfDecimalPlaces());
         fieldObj.put("signed", f.isSigned());
         fieldsArray.add(fieldObj);
     }
@@ -174,5 +176,18 @@ public class Copybook2LR {
 
     public int getNumberOfCobolFields() {
         return ccbListener.getCollection().getNumberOfFields();
+    }
+
+	public String getVersion() {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Properties properties = new Properties();
+        String ver = "";
+		try (InputStream resourceStream = loader.getResourceAsStream("library.properties")) {
+			properties.load(resourceStream);
+            ver = properties.getProperty("library.name") + ": " + properties.getProperty("build.version");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return ver;
     }
 }

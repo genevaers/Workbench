@@ -44,7 +44,7 @@ public class CopybookListener extends CobolCopybookBaseListener {
 	private boolean noGroupErrorEnabled = true;
 	
 	public boolean hasErrors() {
-		return errors.isEmpty() == false;
+		return errors.size() > 0;
 	}
 	
 	public List<String> getErrors() {
@@ -132,13 +132,17 @@ public class CopybookListener extends CobolCopybookBaseListener {
 		}
 	}
 
+	/*
+	 * Use our own GFILLER
+	 * to avoid clashes with predefined copybookd FILLER-0n entries
+	 */
 	private String fillerFix(String cn) {
-		String ctxName = cn;
 		if(cn.equalsIgnoreCase("FILLER")) {
 			fillCount++;
-			ctxName += String.format("_%02d", fillCount);
+			return String.format("GFILLER_%02d", fillCount);
+		} else {
+			return cn;
 		}
-		return ctxName;
 	}
 
 	@Override public void enterSection(CobolCopybookParser.SectionContext ctx) { 
