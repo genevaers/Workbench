@@ -8,10 +8,10 @@ Bundle-ClassPath: lib/postgresql-42.2.16.jar,
  lib/sycadas-1.0.0-SNAPSHOT.jar,
  lib/antlr4-runtime-4.5.jar,
  lib/jackson-annotations-2.13.0.jar,
- lib/jackson-core-2.13.0.jar,
- lib/jackson-databind-2.13.0.jar,
+ lib/jackson-core-2.13.2.jar,
+ lib/jackson-databind-2.13.2.2.jar,
  lib/jackson-dataformat-yaml-2.13.0.jar,
- lib/ccb2lr-1.0.0-SNAPSHOT.jar
+ lib/ccb2lr.jar
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.help;bundle-version="3.3.101",
  org.eclipse.help.base;bundle-version="3.3.101",

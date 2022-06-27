@@ -56,6 +56,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -970,10 +971,12 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
     public void partHidden(IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
-				public void run() {					
-		            IViewPart logicView = getSite().getPage().findView(LogicTextView.ID);
-		            getSite().getPage().hideView(logicView);
-	                closeValidationLog();		        			            
+				public void run() {			
+					if(getSite().getPage() != null) {
+			            IViewPart logicView = getSite().getPage().findView(LogicTextView.ID);
+			            getSite().getPage().hideView(logicView);
+		                closeValidationLog();
+					}
 				}
         	});        	
         }        

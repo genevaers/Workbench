@@ -19,7 +19,10 @@ package com.ibm.safr.we.ui.editors;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -62,6 +65,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -94,6 +98,7 @@ import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.export.ExportComponent;
 import com.ibm.safr.we.model.utilities.export.ExportUtility;
+import com.ibm.safr.we.model.utilities.importer.ViewRecordParser;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.preferences.SortOrderPrefs;
 import com.ibm.safr.we.preferences.SortOrderPrefs.Order;
@@ -106,7 +111,7 @@ import com.ibm.safr.we.utilities.SAFRLogger;
 public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePart {
 
 	public static String ID = "SAFRWE.ExportMetadataComponents";
-	
+	public static Shell shell;
     private static final String SORT_CATEGORY = "Export";
     private static final String SORT_TABLE = "Components";
 	
@@ -331,11 +336,16 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
         public Color getForeground(Object element) {
             ExportComponent expComp = (ExportComponent) element;
             if (colIndex == 1) {
-                if (expComp.getResult() == ActivityResult.FAIL) {
+            	if (expComp.getResult() == ActivityResult.CANCEL) {
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+                } 
+            	else if (expComp.getResult() == ActivityResult.FAIL) {
                     return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
                 } else if (expComp.getResult() == ActivityResult.LOADERRORS) {
                     return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-                } else {
+                }
+                
+                else {
                     return null;
                 }
             } else {
@@ -364,7 +374,11 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
                     return FAIL;
                 } else if (expComp.getResult() == ActivityResult.LOADERRORS) {
                     return LOADERROR;
-                } else {
+                } 
+                else if (expComp.getResult() == ActivityResult.CANCEL) {
+                    return CANCEL;
+                } 
+                else {
                     return "";
                 }
             case 2:
@@ -418,8 +432,6 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
     private Combo comboComponentType;
     private Table tableComponents;
     private CheckboxTableViewer tableViewerComponents;
-
-
     private Button buttonSelectAll;
     private Button buttonDeSelectAll;
     private Button buttonRefresh;  
@@ -454,8 +466,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 	final private String PASS = "Pass";
 	final private String FAIL = "Error";
 	final private String LOADERROR = "Security Error";
-
-	// private List componentList;
+	final private String CANCEL = "Cancelled";
 	ExportUtility exportUtility;
     private int prevSelection = 0;
 	
@@ -498,31 +509,117 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 		compositeComponents.setLayout(new FormLayout());
 		compositeComponents.setLayoutData(new FormData());
 
-		Label labelEnvironment = safrGuiToolkit.createLabel(
+		Label labelComponentType = safrGuiToolkit.createLabel(
+				compositeComponents, SWT.NONE, "Component &Type:");
+		FormData dataLabelComponentType = new FormData();
+		dataLabelComponentType.width = SWT.DEFAULT;
+		dataLabelComponentType.top = new FormAttachment(0, 18);
+		dataLabelComponentType.left = new FormAttachment(0, 5);
+		labelComponentType.setLayoutData(dataLabelComponentType);
+		
+		
+
+		comboComponentType = safrGuiToolkit.createComboBox(compositeComponents,
+				SWT.READ_ONLY, "");
+		comboComponentType.setData(SAFRLogger.USER, "Component Type");                              		
+		FormData dataComboComponentType = new FormData();
+		dataComboComponentType.left = new FormAttachment(labelComponentType, 10);
+		dataComboComponentType.top = new FormAttachment(0, 10);
+		dataComboComponentType.width = 350;
+		comboComponentType.setLayoutData(dataComboComponentType);
+		int i = 0;
+		
+		comboComponentType.add("View");
+		comboComponentType.setData(String.valueOf(i++), 
+		    ComponentType.View);
+        comboComponentType.add("View Folder");
+        comboComponentType.setData(String.valueOf(i++), 
+            ComponentType.ViewFolder);
+
+        
+        comboComponentType.addFocusListener(new FocusAdapter() {
+
+            public void focusLost(FocusEvent e) {      
+                ApplicationMediator.getAppMediator().waitCursor();
+                if (comboComponentType.getSelectionIndex() != selectedComponentType) {
+                    ComponentType oldType = componentType;                    
+                    componentType = (ComponentType) comboComponentType.getData(
+                        String.valueOf(comboComponentType.getSelectionIndex()));
+                    String select = componentType.getLabel();
+                    componentselected = select;
+                    String oldLocDef = ExportUtility.getDefaultLocation(oldType);
+                    if (oldLocDef.equals(textLocation.getText())) {
+                        // change to the new location
+                        textLocation.setText(ExportUtility.getDefaultLocation(componentType));
+                    }
+                    setRadioGroup();
+                    filter.setStatus(null);
+                    if (currentEnvID > 0l) {
+                        populateComponentTable();
+                        buttonSelectAll.setEnabled(true);
+                        buttonDeSelectAll.setEnabled(true);
+                        buttonRefresh.setEnabled(true);
+                        tableViewerComponents.refresh();
+                    }
+                    // CQ8807;Mustufa;clear errors if comp type changes.
+                    showSectionErrors(false);
+                    selectedComponentType = comboComponentType.getSelectionIndex();
+                    componentselection(componentselected);
+                }
+                ApplicationMediator.getAppMediator().normalCursor();   
+            }
+
+			private void componentselection(String componentselected) {
+				if(componentselected.equals("View") && formatvid.getSelection() ) {
+					
+					formatfid.setVisible(false);
+					formatfnamefid.setVisible(false);
+					formatvid.setVisible(true);
+					formatvnamevid.setVisible(true);
+					
+					formatvid.setEnabled(true);
+					formatvid.setSelection(false);
+					formatvnamevid.setEnabled(true);
+					formatvnamevid.setSelection(false);
+					textFilename.setEnabled(true);
+
+				}
+				if(componentselected.equals("View")) {
+					formatvid.setVisible(true);
+					formatvnamevid.setVisible(true);
+					formatfid.setVisible(false);
+					formatfnamefid.setVisible(false);
+				}
+				if(componentselected.equals("View Folder")) {
+					formatvid.setVisible(false);
+					formatvnamevid.setVisible(false);
+					formatfid.setVisible(true);
+					formatfnamefid.setVisible(true);
+					textFilename.setText("");
+				}
+
+			}
+        });
+
+        Label labelEnvironment = safrGuiToolkit.createLabel(
 				compositeComponents, SWT.NONE, "&Environment:");
 
 		FormData dataLabelEnvironment = new FormData();
 		dataLabelEnvironment.width = SWT.DEFAULT;
 		dataLabelEnvironment.left = new FormAttachment(0, 5);
-		dataLabelEnvironment.top = new FormAttachment(0, 10);
+		dataLabelEnvironment.top = new FormAttachment(labelComponentType, 10);
 		labelEnvironment.setLayoutData(dataLabelEnvironment);
-
+		
 		comboEnvironmentViewer = safrGuiToolkit.createTableComboForComponents(
 				compositeComponents, ComponentType.Environment);
 		comboEnvironment = comboEnvironmentViewer.getTableCombo();
 		comboEnvironment.setData(SAFRLogger.USER, "Environment");                              
 
-		Label labelComponentType = safrGuiToolkit.createLabel(
-				compositeComponents, SWT.NONE, "Component &Type:");
-		FormData dataLabelComponentType = new FormData();
-		dataLabelComponentType.width = SWT.DEFAULT;
-		dataLabelComponentType.top = new FormAttachment(labelEnvironment, 18);
-		dataLabelComponentType.left = new FormAttachment(0, 5);
-		labelComponentType.setLayoutData(dataLabelComponentType);
+		
 
 		FormData dataComboEnvironment = new FormData();
 		dataComboEnvironment.left = new FormAttachment(labelComponentType, 10);
-		dataComboEnvironment.top = new FormAttachment(0, 10);
+		dataComboEnvironment.top = new FormAttachment(labelComponentType, 10);
 		dataComboEnvironment.width = 375;
 		comboEnvironment.setLayoutData(dataComboEnvironment);
 
@@ -555,8 +652,6 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 					
 				}
 			}
-
-
 		});
 
 		// load the data
@@ -579,94 +674,11 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 		}
 
 		comboEnvironmentViewer.setInput(envList);
-
-		comboComponentType = safrGuiToolkit.createComboBox(compositeComponents,
-				SWT.READ_ONLY, "");
-		comboComponentType.setData(SAFRLogger.USER, "Component Type");                              		
-		FormData dataComboComponentType = new FormData();
-		dataComboComponentType.left = new FormAttachment(labelComponentType, 10);
-		dataComboComponentType.top = new FormAttachment(comboEnvironment, 10);
-		dataComboComponentType.width = 350;
-		comboComponentType.setLayoutData(dataComboComponentType);
-		int i = 0;
-		
-		comboComponentType.add("View");
-		comboComponentType.setData(String.valueOf(i++), 
-		    ComponentType.View);
-        comboComponentType.add("View Folder");
-        comboComponentType.setData(String.valueOf(i++), 
-            ComponentType.ViewFolder);
-		
-        comboComponentType.addFocusListener(new FocusAdapter() {
-
-            public void focusLost(FocusEvent e) {      
-                ApplicationMediator.getAppMediator().waitCursor();
-                if (comboComponentType.getSelectionIndex() != selectedComponentType) {
-                    ComponentType oldType = componentType;                    
-                    componentType = (ComponentType) comboComponentType.getData(
-                        String.valueOf(comboComponentType.getSelectionIndex()));
-
-                    String select = componentType.getLabel();
-                    componentselected = select;
-
-                    String oldLocDef = ExportUtility.getDefaultLocation(oldType);
-                    if (oldLocDef.equals(textLocation.getText())) {
-                        // change to the new location
-                        textLocation.setText(ExportUtility.getDefaultLocation(componentType));
-                    }
-                    setRadioGroup();
-                    filter.setStatus(null);
-                    if (currentEnvID > 0l) {
-                        populateComponentTable();
-                        buttonSelectAll.setEnabled(true);
-                        buttonDeSelectAll.setEnabled(true);
-                        buttonRefresh.setEnabled(true);
-                        tableViewerComponents.refresh();
-                    }
-                    // CQ8807;Mustufa;clear errors if comp type changes.
-                    showSectionErrors(false);
-                    selectedComponentType = comboComponentType.getSelectionIndex();
-                    componentselection(componentselected);
-                }
-                ApplicationMediator.getAppMediator().normalCursor();                
-            }
-
-			private void componentselection(String componentselected) {
-				if(componentselected.equals("View") && formatvid.getSelection() ) {
-					
-					formatfid.setVisible(false);
-					formatfnamefid.setVisible(false);
-					formatvid.setVisible(true);
-					formatvnamevid.setVisible(true);
-					
-					formatvid.setEnabled(true);
-					formatvid.setSelection(false);
-					formatvnamevid.setEnabled(true);
-					formatvnamevid.setSelection(false);
-					textFilename.setEnabled(true);
-
-				}
-				if(componentselected.equals("View")) {
-					formatvid.setVisible(true);
-					formatvnamevid.setVisible(true);
-					formatfid.setVisible(false);
-					formatfnamefid.setVisible(false);
-				}
-				if(componentselected.equals("View Folder")) {
-					formatvid.setVisible(false);
-					formatvnamevid.setVisible(false);
-					formatfid.setVisible(true);
-					formatfnamefid.setVisible(true);
-					textFilename.setText("");
-				}
-			}
-        });
-
 		Label labelComponents = safrGuiToolkit.createLabel(compositeComponents,
 				SWT.NONE, "Com&ponent(s):");
 		FormData dataLabelComponents = new FormData();
 		dataLabelComponents.width = SWT.DEFAULT;
-		dataLabelComponents.top = new FormAttachment(labelComponentType, 18);
+		dataLabelComponents.top = new FormAttachment(labelEnvironment, 18);
 		dataLabelComponents.left = new FormAttachment(0, 5);
 		labelComponents.setLayoutData(dataLabelComponents);
 
@@ -691,7 +703,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 	
 		FormData dataTableComponents = new FormData();
 		dataTableComponents.left = new FormAttachment(labelComponentType, 10);
-		dataTableComponents.top = new FormAttachment(comboComponentType, 10);
+		dataTableComponents.top = new FormAttachment(comboEnvironment, 10);
 		dataTableComponents.height = 210;
 		dataTableComponents.width = 700;
 
@@ -798,12 +810,16 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+
 				if (tableViewerComponents.getCheckedElements().length > 0) {
 					buttonExport.setEnabled(true);
+
 				} else {
 					buttonExport.setEnabled(false);
 				}
 			}
+			
+			
 
 		});
 		
@@ -813,7 +829,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 
 				ExportComponent currModel = (ExportComponent) ((IStructuredSelection) event
 						.getSelection()).getFirstElement();
-
+				
 				if (currModel != null) {
 					if (currModel.getErrors().isEmpty()) {
 						showSectionErrors(false);
@@ -881,11 +897,11 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 				if (modelList == null || modelList.size() == 0) {
 					return;
 				}
-
 				List<ExportComponent> selectedComps = new ArrayList<ExportComponent>();
 				for (ExportComponent eComponent : modelList) {
 					eComponent.setSelected(true);
 					selectedComps.add(eComponent);
+					
 				}
 				tableViewerComponents.setCheckedElements(selectedComps.toArray());
 				buttonExport.setEnabled(true);
@@ -1147,6 +1163,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 				checkedElements = tableViewerComponents.getCheckedElements();
 				List<ExportComponent> list = new ArrayList<ExportComponent>();
 				for (Object item : checkedElements) {
+
 					modelItem = (ExportComponent) item;
 					list.add(modelItem);
 				}
@@ -1154,11 +1171,10 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 				if(formatvid.getSelection() || formatvnamevid.getSelection() || formatfid.getSelection() || formatfnamefid.getSelection() ) {
 					multiple=true;
 				}
-				System.out.println(textLocation.getText());
-				System.out.println(textFilename.getText());
+
+				shell = getSite().getShell();
 				exportUtility = new ExportUtility(currentEnvironment,
 						textLocation.getText(), textFilename.getText(), componentType, formatvid.getSelection() ,formatvnamevid.getSelection(), formatfid.getSelection(), formatfnamefid.getSelection(), multiple);
-				System.out.println(textFilename.getText());
 				
 				try {
 				    ApplicationMediator.getAppMediator().waitCursor();
@@ -1184,7 +1200,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 			}
 		});
 		buttonExport.setEnabled(false);
-		
+
 	}
 
     public void populateComponentTable() {
@@ -1359,8 +1375,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 
 	@Override
 	public void setFocus() {
-		comboEnvironment.setFocus();
-
+		comboComponentType.setFocus();
 	}
 
 	@Override
@@ -1453,7 +1468,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 	}
 
     protected String generateFileName(List<ExportComponent> exportComponents, ComponentType componentType) {
-        String fileName = "";
+    	String fileName = "";
         if (exportComponents.size() == 0) {
             return "";
         }
@@ -1516,11 +1531,9 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
         if (formatvid.getSelection() || formatvnamevid.getSelection() || formatfid.getSelection() || formatfnamefid.getSelection()) {
             textFilename.setText("");
             textFilename.setEnabled(false);
-
         }
         else {
             textFilename.setEnabled(true);
-
             Object[] checkedElements = tableViewerComponents.getCheckedElements();
             List<ExportComponent> list = new ArrayList<ExportComponent>();
             for (Object item : checkedElements) {
