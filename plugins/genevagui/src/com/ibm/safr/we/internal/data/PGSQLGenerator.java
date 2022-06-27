@@ -710,12 +710,14 @@ public class PGSQLGenerator {
 
 	public String getPlaceholders(int size) {
 			StringBuilder builder = new StringBuilder();
-			if (size > 1) {
-				for (int i = 1; i < size; i++) {
-					builder.append("?,");
+			if(size != 0) {
+				if (size > 1) {
+					for (int i = 1; i < size; i++) {
+						builder.append("?,");
+					}
 				}
+				builder.append("?");
 			}
-			builder.append("?");
 			return builder.toString();
 	}
 
