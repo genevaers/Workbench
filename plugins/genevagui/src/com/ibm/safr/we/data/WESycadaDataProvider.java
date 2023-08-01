@@ -1,5 +1,7 @@
 package com.ibm.safr.we.data;
 
+import java.util.Map;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -36,24 +38,8 @@ public class WESycadaDataProvider implements SycadaDataProvider {
 	}
 	
 	@Override
-	public Integer findExitID(String exitName) {
-		return DAOFact.getUserExitRoutineDAO().getUserExitRoutine(exitName, environID);
-	}
-
-	@Override
-	public Integer findLRFieldID(String fieldName) {
-		return DAOFact.getLRFieldDAO().getLRField(environID, sourceLRID, fieldName);
-	}
-
-	@Override
-	public Integer findLookupFieldID(int lookupid, String targetFieldName) {
-		// TODO Auto-generated method stub
-		return DAOFact.getLRFieldDAO().getLookupLRField(environID, lookupid, targetFieldName);
-	}
-
-	@Override
-	public Integer findLookupID(String name) {
-		return DAOFact.getLookupDAO().getLookupPath(name, environID);
+	public Integer findExitID(String name, boolean procedure) {
+		return DAOFact.getUserExitRoutineDAO().getUserExitRoutine(name, environID, procedure);
 	}
 
 	@Override
@@ -61,12 +47,34 @@ public class WESycadaDataProvider implements SycadaDataProvider {
 		return DAOFact.getLogicalFileDAO().getLFPFAssocID(environID, lfName, pfName);
 	}
 
-	public void setEnvironmentID(Integer environmentId) {
-		environID = environmentId;		
+	@Override
+	public Map<String, Integer> getFieldsFromLr(int lrid) {
+		return DAOFact.getLRFieldDAO().getFields(lrid, environID);
 	}
 
-	public void setSourceLRID(Integer id) {
-		sourceLRID = id;		
+	@Override
+	public Map<String, Integer> getLookupTargetFields(String name) {
+		return DAOFact.getLookupDAO().getTargetFields(name, environID);
+	}
+
+	@Override
+	public int getEnvironmentID() {
+		return environID;
+	}
+
+	@Override
+	public int getLogicalRecordID() {
+		return sourceLRID;
+	}
+
+	@Override
+	public void setEnvironmentID(int e) {
+		environID = e;
+	}
+
+	@Override
+	public void setLogicalRecordID(int lrid) {
+		sourceLRID = lrid;
 	}
 
 }

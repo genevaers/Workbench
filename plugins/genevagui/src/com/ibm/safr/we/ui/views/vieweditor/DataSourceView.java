@@ -1063,7 +1063,7 @@ public class DataSourceView extends ViewPart {
                     Integer index = 0;
                     if (exits != null) {
                         for (EnvironmentalQueryBean exitBean : exits) {                        
-                            editorCombo.add(((UserExitRoutineQueryBean)exitBean).getDescriptor());
+                            editorCombo.add(((UserExitRoutineQueryBean)exitBean).getComboString());
                             editorCombo.setData(index.toString(), exitBean);
                             index++;
                         }
@@ -1425,5 +1425,12 @@ public class DataSourceView extends ViewPart {
         }
         return purple;
     }
+
+    @Override
+	public void dispose() {
+    	if(boldFont != null) {
+    		boldFont.dispose();
+    	}
+	}
     
 }

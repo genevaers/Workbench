@@ -1030,13 +1030,16 @@ public class PGUserExitRoutineDAO implements UserExitRoutineDAO {
     }
 
 	@Override
-	public Integer getUserExitRoutine(String exitName,
-			Integer environmentId) {
+	public Integer getUserExitRoutine(String name, Integer environmentId, boolean procedure) {
 
 		Integer result = null;
 		try {
 			List<String> idNames = new ArrayList<String>();
-			idNames.add(COL_NAME);
+			if(procedure) {
+				idNames.add(COL_EXECUTABLE);				
+			} else {
+				idNames.add(COL_NAME);
+			}
 			idNames.add(COL_ENVID);
 
 			String selectString = generator.getSelectStatement(params
@@ -1046,7 +1049,7 @@ public class PGUserExitRoutineDAO implements UserExitRoutineDAO {
 			while (true) {
 				try {
 					pst = con.prepareStatement(selectString);
-					pst.setString(1, exitName);
+					pst.setString(1, name);
 					pst.setInt(2, environmentId);
 					rs = pst.executeQuery();
 					break;
@@ -1062,12 +1065,12 @@ public class PGUserExitRoutineDAO implements UserExitRoutineDAO {
 			if (rs.next()) {
 				result = rs.getInt(2);
 			} else {
-				logger.info("No such User Exit Routine in Env " + environmentId + " with ID : " + exitName);
+				logger.info("No such User Exit Routine in Env " + environmentId + " with name : " + name);
 			}
 			pst.close();
 			rs.close();
 		} catch (SQLException e) {
-			throw DataUtilities.createDAOException("Database error occurred while retrieving the User Exit Routine ["+ exitName + "]", e);
+			throw DataUtilities.createDAOException("Database error occurred while retrieving the User Exit Routine ["+ name + "]", e);
 		}
 		return result;
 	}

@@ -43,8 +43,10 @@ public class OptionsHandler extends AbstractHandler implements IHandler {
 
         IWorkbenchSite site = HandlerUtil.getActiveSite(event);
         SAFRPreferences preferences = new SAFRPreferences();
-        optionsDialog = new OptionsDialog(HandlerUtil.getActiveShell(event),
-            SAFRLogger.getLogPath(), preferences.isIgnoreMigrateWarnings(), preferences.isIgnoreImportWarnings());
+		optionsDialog = new OptionsDialog(HandlerUtil.getActiveShell(event), SAFRLogger.getLogPath(),
+				preferences.getReportsPath(),
+				preferences.isIgnoreMigrateWarnings(),
+				preferences.isIgnoreImportWarnings());
         optionsDialog.open();
         if (optionsDialog.getReturnCode() == IDialogConstants.OK_ID) {
             try {
@@ -60,12 +62,12 @@ public class OptionsHandler extends AbstractHandler implements IHandler {
                 try {
                     SAFRLogger.changeLogPath(newLogPath);
                 } catch (SAFRException e) {
-                    UIUtilities.handleWEExceptions(e,
-                        "Error occurred while changing log path", "Change Log Path");
+					UIUtilities.handleWEExceptions(e, "Error occurred while changing log path", "Change Log Path");
                 }
                 
                 preferences.setIgnoreMigrateWarnings(optionsDialog.isIgnoreMigrateWarnings());
                 preferences.setIgnoreImportWarnings(optionsDialog.isIgnoreImportWarnings());
+                preferences.setReportsPath(optionsDialog.getReportsPath());
 
                 // close all open View editors
                 site.getPage().closeAllEditors(false);

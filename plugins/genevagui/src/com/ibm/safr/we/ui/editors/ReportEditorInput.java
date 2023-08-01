@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.editors;
 
+import java.nio.file.Path;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -16,7 +18,6 @@ package com.ibm.safr.we.ui.editors;
  * specific language governing permissions and limitations
  * under the License.
  */
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +36,16 @@ import com.ibm.safr.we.model.base.SAFRPersistentObject;
 import com.ibm.safr.we.model.utilities.DependencyChecker;
 import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.ui.reports.DependencyCheckerReportData;
-import com.ibm.safr.we.ui.reports.EnvironmentSecurityReportData;
-import com.ibm.safr.we.ui.reports.IReportData;
+import com.ibm.safr.we.ui.reports.EnvironmentSecurityReportGenerator;
+import com.ibm.safr.we.ui.reports.HelpReport;
+import com.ibm.safr.we.ui.reports.IReportGenerator;
 import com.ibm.safr.we.ui.reports.LRReportData;
-import com.ibm.safr.we.ui.reports.LookupPathReportData;
-import com.ibm.safr.we.ui.reports.ViewColumnPICReport;
+import com.ibm.safr.we.ui.reports.LogicalRecordReportGenerator;
+import com.ibm.safr.we.ui.reports.LookupPathReportGenerator;
+import com.ibm.safr.we.ui.reports.UserGroupsReportGenerator;
+import com.ibm.safr.we.ui.reports.ViewColumnPICReportGenerator;
 import com.ibm.safr.we.ui.reports.ViewColumnReport;
-import com.ibm.safr.we.ui.reports.ViewPropertiesReportData;
+import com.ibm.safr.we.ui.reports.ViewPropertiesReportGenerator;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 
 public class ReportEditorInput implements IEditorInput {
@@ -49,90 +53,43 @@ public class ReportEditorInput implements IEditorInput {
 	List<Integer> reportParams = new ArrayList<Integer>();
 	String dpReportParam;
 	ReportType reportType;
-	IReportData reportDataObject;
+	IReportGenerator reportGenerator;
 
-	public ReportEditorInput(List<Integer> reportParams, ReportType reportType,
-			SAFRPersistentObject model) {
+	public ReportEditorInput(List<Integer> reportParams, ReportType reportType) {
 		this.reportParams = reportParams;
 		this.reportType = reportType;
 
+		// I don't think the model can ever be null
+		// calling function checks this
 		try {
 			if (reportType.equals(ReportType.ViewProperties)) {
-				if (model == null) {
-					reportDataObject = new ViewPropertiesReportData(
-							reportParams);
-				} else {
-					reportDataObject = new ViewPropertiesReportData(
-							(View) model);
-					reportParams.add(((View) model).getId());
-				}
+					reportGenerator = new ViewPropertiesReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.LogicalRecord)) {
-				if (model == null) {
-					reportDataObject = new LRReportData(reportParams);
-				} else {
-					reportDataObject = new LRReportData((LogicalRecord) model);
-					reportParams.add(((LogicalRecord) model).getId());
-				}
-
+					reportGenerator = new LogicalRecordReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.LookupPath)) {
-				if (model == null) {
-					reportDataObject = new LookupPathReportData(reportParams);
-				} else {
-					reportDataObject = new LookupPathReportData(
-							(LookupPath) model);
-					reportParams.add(((LookupPath) model).getId());
-				}
-
-			} else if (reportType.equals(ReportType.ViewColumnReport)) {
-				if (model == null) {
-					reportDataObject = new ViewColumnReport(reportParams);
-				} else {
-					reportDataObject = new ViewColumnReport((View) model);
-					reportParams.add(((View) model).getId());
-				}
-
+					reportGenerator = new LookupPathReportGenerator(reportParams);
+			} else if (reportType.equals(ReportType.HelpReport)) {
+					reportGenerator = new HelpReport(reportParams);
 			} else if (reportType.equals(ReportType.ViewColumnPICReport)) {
-				if (model == null) {
-					reportDataObject = new ViewColumnPICReport(reportParams);
-				} else {
-					reportDataObject = new ViewColumnPICReport((View) model);
-					reportParams.add(((View) model).getId());
-				}
+					reportGenerator = new ViewColumnPICReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.EnvironmentSecurityById)) {
-				if (model == null) {
-					reportDataObject = new EnvironmentSecurityReportData(
-							reportParams, SortType.SORT_BY_ID);
-				} else {
-					reportDataObject = new EnvironmentSecurityReportData(
-							(Environment) model, SortType.SORT_BY_ID);
-					reportParams.add(((Environment) model).getId());
-				}
-
+					reportGenerator = new EnvironmentSecurityReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.EnvironmentSecurityByName)) {
-				if (model == null) {
-					reportDataObject = new EnvironmentSecurityReportData(
-							reportParams, SortType.SORT_BY_NAME);
-				} else {
-					reportDataObject = new EnvironmentSecurityReportData(
-							(Environment) model, SortType.SORT_BY_NAME);
-					reportParams.add(((Environment) model).getId());
-				}
-
+					reportGenerator = new UserGroupsReportGenerator();
 			}
 		} catch (SAFRException se) {
 			UIUtilities.handleWEExceptions(se);
 		}
 	}
 
-	public ReportEditorInput(String dpReportParam, ReportType reportType,
-			Object reportDataObject) {
+	public ReportEditorInput(String dpReportParam, ReportType reportType, Object reportDataObject) {
 		super();
 		this.dpReportParam = dpReportParam;
 		this.reportType = reportType;
 
 		if (reportType == ReportType.DependencyChecker) {
-			this.reportDataObject = new DependencyCheckerReportData(
-					dpReportParam, (DependencyChecker) reportDataObject);
+			this.reportGenerator = new DependencyCheckerReportData(dpReportParam,
+					(DependencyChecker) reportDataObject);
 		}
 	}
 
@@ -169,8 +126,8 @@ public class ReportEditorInput implements IEditorInput {
 		return reportType;
 	}
 
-	public IReportData getReportDataObject() {
-		return reportDataObject;
+	public IReportGenerator getReportDataObject() {
+		return reportGenerator;
 	}
 
 	public boolean equals(Object obj) {
@@ -187,14 +144,11 @@ public class ReportEditorInput implements IEditorInput {
 			// If the report is of type Dependency Checker, check if the report
 			// has been requested on the same combination of Environment,
 			// Component Type and Component.
-			DependencyCheckerReportData thisData = (DependencyCheckerReportData) this.reportDataObject;
-			DependencyCheckerReportData thatData = (DependencyCheckerReportData) thatInput.reportDataObject;
-			if (thisData.getEnvironmentName().equals(
-					thatData.getEnvironmentName())
-					&& thisData.getComponentType().equals(
-							thatData.getComponentType())
-					&& thisData.getComponentName().equals(
-							thatData.getComponentName())) {
+			DependencyCheckerReportData thisData = (DependencyCheckerReportData) this.reportGenerator;
+			DependencyCheckerReportData thatData = (DependencyCheckerReportData) thatInput.reportGenerator;
+			if (thisData.getEnvironmentName().equals(thatData.getEnvironmentName())
+					&& thisData.getComponentType().equals(thatData.getComponentType())
+					&& thisData.getComponentName().equals(thatData.getComponentName())) {
 				return true;
 			} else {
 				return false;
@@ -213,6 +167,14 @@ public class ReportEditorInput implements IEditorInput {
 				return false;
 			}
 		}
+	}
+
+	public void writeReportFiles(Path path) {
+		reportGenerator.writeReportFiles(path, reportType.getOutputFile());
+	}
+
+	public String getHtmlReportUrl() {
+		return reportGenerator.getHtmlUrl();
 	}
 
 }

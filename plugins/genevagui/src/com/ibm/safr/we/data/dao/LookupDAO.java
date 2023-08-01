@@ -20,6 +20,7 @@ package com.ibm.safr.we.data.dao;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.safr.we.constants.SortType;
@@ -212,5 +213,7 @@ public interface LookupDAO {
          throws DAOException;
 
 	Integer getLookupPath(String name, Integer environID);
+
+	Map<String, Integer> getTargetFields(String name, Integer environID);
 	
 }

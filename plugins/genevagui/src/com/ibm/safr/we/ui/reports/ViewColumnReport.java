@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.reports;
 
+import java.nio.file.Path;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -40,7 +42,7 @@ import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewColumnSource;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 
-public class ViewColumnReport implements IReportData {
+public class ViewColumnReport implements IReportGenerator {
     static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.reports.ViewColumnReport");
     
 	Map<Integer, ViewInfoRD> viewInfoMap = new HashMap<Integer, ViewInfoRD>();
@@ -397,5 +399,17 @@ public class ViewColumnReport implements IReportData {
 		return errorMsgList;
 	}
 	/************************************************************************************************************************/
+
+	@Override
+	public String getHtmlUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void writeReportFiles(Path path, String bsseName) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

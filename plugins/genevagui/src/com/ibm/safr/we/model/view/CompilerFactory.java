@@ -249,8 +249,6 @@ public class CompilerFactory {
         } else if (type == LogicTextType.Format_Column_Calculation) {
             safrCompilerErrorType = SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION;
         }
-        initializeOldCompiler(type, view, currentSource);
-        
     }
 
     private static void processViewColumnsFormat(View view,
@@ -267,7 +265,7 @@ public class CompilerFactory {
                 // Collect the error in SAFRCompilerException and throw
                 // back.
                 for (String error : sve.getErrorMessages()) {
-                    sva.addActivationErrorNew(new ViewActivationError(
+                    sva.addActivationError(new ViewActivationError(
                                     currentSource,
                                     col,
                                     SAFRCompilerErrorType.VIEW_PROPERTIES,
@@ -288,26 +286,6 @@ public class CompilerFactory {
 
             String modifiedDefaultVal = col.getDefaultValue() == null ? null
                     : col.getDefaultValue().trim();
-
-//            try {
-//                compiler.setColumnData(col.getColumnNo(), col
-//                        .getId(), modifiedDefaultVal, colType, col
-//                        .getDataTypeCode(), col.isSigned(), col
-//                        .getLength(), col.getDecimals(), col
-//                        .getDateTimeFormatCode(), col.getScaling(),
-//                        col.getDataAlignmentCode(), col
-//                                .getNumericMaskCode(), col
-//                                .getStartPosition(), col
-//                                .getOrdinalPosition(), null, null,
-//                        null, null, null);
-//            } catch (SAFRCompilerException ce) {
-//                sva.addActivationErrorNew(new ViewActivationError(
-//                                currentSource, col,
-//                                safrCompilerErrorType,
-//                                "ERROR: Error sending column information to compiler. "
-//                                        + ce.getMessage()));
-//                throw sva;
-//            }
             if (col == icol) {
                 break;
             }            
@@ -330,7 +308,7 @@ public class CompilerFactory {
                 // Collect the error in SAFRCompilerException and throw
                 // back.
                 for (String error : sve.getErrorMessages()) {
-                    sva.addActivationErrorNew(new ViewActivationError(
+                    sva.addActivationError(new ViewActivationError(
                                     currentSource,
                                     col,
                                     SAFRCompilerErrorType.VIEW_PROPERTIES,
@@ -356,39 +334,6 @@ public class CompilerFactory {
             // assignment.
             ViewColumnSource colSource = col.getViewColumnSources()
                     .get(currentSource.getSequenceNo() - 1);
-            if (col.isSortKey()) {
-                // send sort title info too
-//                try {
-//                    compiler.setColumnData(
-//                                    col.getColumnNo(),
-//                                    col.getId(),
-//                                    modifiedDefaultVal,
-//                                    colType,
-//                                    col.getDataTypeCode(),
-//                                    col.isSigned(),
-//                                    col.getLength(),
-//                                    col.getDecimals(),
-//                                    col.getDateTimeFormatCode(),
-//                                    col.getScaling(),
-//                                    col.getDataAlignmentCode(),
-//                                    col.getNumericMaskCode(),
-//                                    col.getStartPosition(),
-//                                    col.getOrdinalPosition(),
-//                                    colSource.getSortKeyTitleLookupPathQueryBean(),
-//                                    colSource.getSortKeyTitleLRField(),
-//                                    colSource.getEffectiveDateTypeCode(),
-//                                    colSource.getEffectiveDateValue(),
-//                                    null);
-//                } catch (SAFRCompilerUnexpectedException ce) {
-//                    sva.addActivationErrorNew(new ViewActivationError(
-//                                    currentSource, col,
-//                                    safrCompilerErrorType,
-//                                    "ERROR: Error sending column information to compiler. "
-//                                            + ce.getMessage()));
-//                    throw sva;
-//                }
-
-            } else {
                 if (col.getSubtotalTypeCode() != null) {
                     colType = Codes.CT_AREA;
                 }
@@ -399,106 +344,9 @@ public class CompilerFactory {
                     col.setExtractAreaPosition(positionDT);
                     positionDT += col.getLength();
                 }
-//                try {
-//                    compiler.setColumnData(col.getColumnNo(), col
-//                            .getId(), modifiedDefaultVal, colType,
-//                            col.getDataTypeCode(), col.isSigned(),
-//                            col.getLength(), col.getDecimals(), col
-//                                    .getDateTimeFormatCode(), col
-//                                    .getScaling(), col
-//                                    .getDataAlignmentCode(), col
-//                                    .getNumericMaskCode(), col
-//                                    .getExtractAreaPosition(), col
-//                                    .getOrdinalPosition(), null,
-//                            null, null, null, null);
-//                } catch (SAFRCompilerUnexpectedException ce) {
-//                    sva.addActivationErrorNew(new ViewActivationError(
-//                                    currentSource, col,
-//                                    safrCompilerErrorType,
-//                                    "ERROR: Error sending column information to compiler. "
-//                                            + ce.getMessage()));
-//                    throw sva;
-//                }
-            }// sort key check
         }// columns loop
     }
     
-    /**
-     * Initializes the SAFRCompiler based on the type of logic text. This
-     * includes passing information of view, view columns and view source.
-     * 
-     * @param type
-     *            the type of logic text.
-     * @param view
-     *            the View containing logic text.
-     * @param currentSource
-     *            the View source containing logic text.
-     * @throws DAOException
-     * @throws SAFRException
-     *             {@link SAFRValidationException} is thrown if any of the view
-     *             columns has invalid data attributes.
-     */
-    private static void initializeOldCompiler(LogicTextType type, View view,
-            ViewSource currentSource) throws DAOException, SAFRException {
-        SAFRCompilerErrorType safrCompilerErrorType = null;
-        if (type == LogicTextType.Format_Record_Filter) {
-            safrCompilerErrorType = SAFRCompilerErrorType.FORMAT_RECORD_FILTER;
-        } else if (type == LogicTextType.Extract_Column_Assignment) {
-            safrCompilerErrorType = SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT;
-        } else if (type == LogicTextType.Extract_Record_Filter) {
-            safrCompilerErrorType = SAFRCompilerErrorType.EXTRACT_RECORD_FILTER;
-        } else if (type == LogicTextType.Format_Column_Calculation) {
-            safrCompilerErrorType = SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION;
-        }
-
-        // If the view is not yet saved (from view wizard), pass a dummy View
-        // Id=1
-       
-        
-        // send view columns to oldComp if its not Extract record filter
-        if (type != LogicTextType.Extract_Record_Filter) {
-            int positionDT = 1;
-            int positionCT = 1;
-            int colType;
-            for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-                // send only new and modified columns if the columns were
-                // already sent last time.
-                try {
-                    // validate the view column first.
-                    col.validate();
-                } catch (SAFRValidationException sve) {
-                    // Collect the error in SAFRCompilerException and throw
-                    // back.
-                    for (String error : sve.getErrorMessages()) {
-                        sva.addActivationErrorOld(new ViewActivationError(
-                                        currentSource,
-                                        col,
-                                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                                        error));
-                    }
-                    throw sva; // cannot continue.
-                }
-
-                // calculate the type of extract area.
-                if (col.isSortKey()) {
-                    colType = Codes.SORTKEY;
-                } else {
-                    colType = Codes.DT_AREA;
-                }
-                col.setExtractAreaCode(SAFRApplication.getSAFRFactory()
-                        .getCodeSet(CodeCategories.EXTRACT)
-                        .getCode(colType));
-
-                String modifiedDefaultVal = col.getDefaultValue() == null ? null
-                        : col.getDefaultValue().trim();
-                
-
-                // send column info to oldComp
-                
-                   
-                }// logic text type check
-            }// columns loop
-        }       
     }
     
 

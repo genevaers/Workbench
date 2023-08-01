@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.eclipse.core.databinding.observable.DisposeEvent;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -32,6 +33,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.FontDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CellLabelProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerEditor;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationEvent;
 import org.eclipse.jface.viewers.ColumnViewerEditorActivationStrategy;
@@ -41,6 +43,7 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
+import org.eclipse.jface.viewers.ViewerColumn;
 import org.eclipse.nebula.jface.gridviewer.GridTableViewer;
 import org.eclipse.nebula.jface.gridviewer.GridViewerColumn;
 import org.eclipse.nebula.jface.gridviewer.GridViewerEditor;
@@ -167,8 +170,6 @@ public class LogicalRecordFieldEditor {
             return flds.toArray();
         }
 
-        public void dispose() {
-        }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
@@ -178,7 +179,7 @@ public class LogicalRecordFieldEditor {
 
         public LRFieldLabelProvider(Grid table) {
         }
-
+        
         @Override
         public void update(ViewerCell cell) {
             LRField lrField = (LRField) cell.getElement();
@@ -355,7 +356,7 @@ public class LogicalRecordFieldEditor {
     private Label labelFieldCount;
     
     // lrfields
-    private GridTableViewer tableViewerLRFields;
+    public static GridTableViewer tableViewerLRFields;
     private LRFieldLabelProvider labelProvider;
     private CellEditor currentCellEditor;
     private LRFieldCellEditor dateTimeFormatEditor = null;
@@ -378,7 +379,11 @@ public class LogicalRecordFieldEditor {
         this.expandState = new LRFieldsExpandState(logicalRecord.getLRFields().getActiveItems());
     }
 
-    protected void create() {
+    public void dispose() {
+      	itFont.dispose();
+    }
+
+   protected void create() {
 
         clipboard = new Clipboard(mediator.getSite().getShell().getDisplay());
         compositeLRFields = mediator.getGUIToolKit().createComposite(tabFolder, SWT.NONE);
@@ -770,7 +775,11 @@ public class LogicalRecordFieldEditor {
                 }
             }
         });
+        
+        
+        
     }
+    
 
     /**
      * /** This function is used to create columns for table.
@@ -1426,5 +1435,13 @@ public class LogicalRecordFieldEditor {
         expandState.collapseAll();
         tableViewerLRFields.refresh();
     }
+
+    public GridTableViewer getTableViewerLRFields() {
+		return tableViewerLRFields;
+	}
+
+	public void setTableViewerLRFields(GridTableViewer tableViewerLRFields) {
+		this.tableViewerLRFields = tableViewerLRFields;
+	}
 
 }

@@ -33,8 +33,7 @@ DELETE FROM :schemaV.CODE;
 
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','SEQIN',1,
                               'Sequential');
---INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','VSAM', 2,
---                              'VSAM - Unordered');
+
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','KSDS', 3,
                               'VSAM - Ordered');
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','DB2SQ',6,
@@ -74,8 +73,6 @@ INSERT INTO :schemaV.CODE VALUES ('DATATYPE','EDNUM',10,
                               
 INSERT INTO :schemaV.CODE VALUES ('DBMSROWFMT','SQL',1,
                               'SQL Standard');
-INSERT INTO :schemaV.CODE VALUES ('DBMSROWFMT','DB2',2,
-                              'DB2 Internal');
 
 INSERT INTO :schemaV.CODE VALUES ('DSORG','PS', 1,
                               'Physical Sequential');
@@ -505,14 +502,8 @@ INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','HCOPY',1,
                               'Hardcopy');
 INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','FILE', 3,
                               'File');
-INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','EXEIF',4,
-                              'Drill Down');
-INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','EXCEL',5,
-                              'Spreadsheet');
 INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','DELIM',7,
                               'Delimited');
-INSERT INTO :schemaV.CODE VALUES ('OUTPUTMED','EXEIC',8,
-                              'Drill Down: Comma-Delimited Fields');
 
 INSERT INTO :schemaV.CODE VALUES ('PAGEBRK','SAMEP',1,
                               'Same Page');
@@ -667,17 +658,6 @@ INSERT INTO :schemaV.CODE VALUES('SUBTOT','DFRST',12,
                            'Detail First');
 INSERT INTO :schemaV.CODE VALUES('SUBTOT','DLAST',13,
                    'Detail Last');
-
-INSERT INTO :schemaV.CODE VALUES ('VIEWFREQ','D',1,
-                              'Daily');
-INSERT INTO :schemaV.CODE VALUES ('VIEWFREQ','W',2,
-                              'Weekly');
-INSERT INTO :schemaV.CODE VALUES ('VIEWFREQ','M',3,
-                              'Monthly');
-INSERT INTO :schemaV.CODE VALUES ('VIEWFREQ','A',4,
-                              'Annually');
-INSERT INTO :schemaV.CODE VALUES ('VIEWFREQ','Q',5,
-                              'Quarterly');
 
 INSERT INTO :schemaV.CODE VALUES ('VIEWSTATUS','ACTVE',1,
                               'Active');

@@ -140,4 +140,5 @@ public interface ControlRecordDAO {
 	List<DependentComponentTransfer> getControlRecordViewDependencies(
 			Integer environmentId, Integer controlRecordId) throws DAOException;
 
+	void deleteAllControlRecordsFromEnvironment(Integer environmentId) throws DAOException;
 }

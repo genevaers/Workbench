@@ -57,18 +57,20 @@ public class OptionsDialog extends TitleAreaDialog {
     private Button importWarnings;
     private boolean isIgnoreMigrateWarnings = false;
     private boolean isIgnoreImportWarnings = false;
+
+	private Text reportPath;
+
+	private String reportsPathStr;
     
-    public OptionsDialog(Shell parentShell,
-        String logPathStr,
-        boolean isIgnoreMigrateWarnings,
-        boolean isIgnoreImportWarnings) {
-        super(parentShell);
-        safrGUIToolkit = new SAFRGUIToolkit();
-        this.parentShell = parentShell;
-        this.logPathStr = logPathStr;
-        this.isIgnoreMigrateWarnings = isIgnoreMigrateWarnings;
-        this.isIgnoreImportWarnings = isIgnoreImportWarnings;
-    }
+	public OptionsDialog(Shell parentShell, String logPathStr, String reportsPath, boolean isIgnoreMigrateWarnings, boolean isIgnoreImportWarnings) {
+		super(parentShell);
+		safrGUIToolkit = new SAFRGUIToolkit();
+		this.parentShell = parentShell;
+		this.logPathStr = logPathStr;
+		this.isIgnoreMigrateWarnings = isIgnoreMigrateWarnings;
+		this.isIgnoreImportWarnings = isIgnoreImportWarnings;
+		this.reportsPathStr = reportsPath;
+	}
 
     @Override
     protected Point getInitialSize() {
@@ -79,8 +81,8 @@ public class OptionsDialog extends TitleAreaDialog {
     @Override
     protected Control createContents(Composite parent) {
         Control contents = super.createContents(parent);
-        getShell().setText("SAFR Options");
-        setTitle("SAFR Options");
+        getShell().setText("GenevaERS Options");
+        setTitle("GenevaERS Options");
         return contents;
     }
     
@@ -96,7 +98,40 @@ public class OptionsDialog extends TitleAreaDialog {
         compositeTopLevel.setLayout(layout);
 
         
-        Label logPathLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "&Log Path:   ");
+        addLogPath();
+        addReportPath();
+
+        Label migrateWarningsLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "Enable &Migrate Messages:   ");
+        migrateWarningsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));        
+        migrateWarnings = safrGUIToolkit.createCheckBox(compositeTopLevel, "");
+        GridData migrateWarningsData = new GridData(SWT.NONE, SWT.CENTER, false, false);
+        migrateWarningsData.horizontalSpan = 2;
+        migrateWarnings.setLayoutData(migrateWarningsData);
+        migrateWarnings.setSelection(!isIgnoreMigrateWarnings);
+        migrateWarnings.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                isIgnoreMigrateWarnings = !migrateWarnings.getSelection();                                        
+            }
+        });
+
+        Label importWarningsLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "Enable &Import Messages:   ");
+        importWarningsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));        
+        importWarnings = safrGUIToolkit.createCheckBox(compositeTopLevel, "");
+        GridData importWarningsData = new GridData(SWT.NONE, SWT.CENTER, false, false);
+        importWarningsData.horizontalSpan = 2;
+        importWarnings.setLayoutData(importWarningsData);
+        importWarnings.setSelection(!isIgnoreImportWarnings);
+        importWarnings.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                isIgnoreImportWarnings = !importWarnings.getSelection();                                        
+            }
+        });
+        
+        return parent;
+    }
+
+	private void addLogPath() {
+		Label logPathLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "&Log Path:   ");
         logPathLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
         logPath = safrGUIToolkit.createTextBox(compositeTopLevel, SWT.BORDER);
         GridData logPathData = new GridData(SWT.NONE, SWT.CENTER, true, false);
@@ -135,36 +170,49 @@ public class OptionsDialog extends TitleAreaDialog {
             }
             
         });
+	}
 
-        Label migrateWarningsLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "Enable &Migrate Messages:   ");
-        migrateWarningsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));        
-        migrateWarnings = safrGUIToolkit.createCheckBox(compositeTopLevel, "");
-        GridData migrateWarningsData = new GridData(SWT.NONE, SWT.CENTER, false, false);
-        migrateWarningsData.horizontalSpan = 2;
-        migrateWarnings.setLayoutData(migrateWarningsData);
-        migrateWarnings.setSelection(!isIgnoreMigrateWarnings);
-        migrateWarnings.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-                isIgnoreMigrateWarnings = !migrateWarnings.getSelection();                                        
+	private void addReportPath() {
+		Label reportPathLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "&Report Path:   ");
+        reportPathLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+        reportPath = safrGUIToolkit.createTextBox(compositeTopLevel, SWT.BORDER);
+        GridData reportPathData = new GridData(SWT.NONE, SWT.CENTER, true, false);
+        reportPathData.widthHint = 450;
+        reportPath.setLayoutData(reportPathData);
+        reportPath.setText(reportsPathStr);
+        reportPath.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+            	reportsPathStr = ((Text)e.getSource()).getText();
             }
+            
         });
+        Button changeLogPath = safrGUIToolkit.createButton(compositeTopLevel, SWT.PUSH, " ... ");
+        changeLogPath.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
+        changeLogPath.addSelectionListener(new SelectionListener() {
 
-        Label importWarningsLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "Enable &Import Messages:   ");
-        importWarningsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));        
-        importWarnings = safrGUIToolkit.createCheckBox(compositeTopLevel, "");
-        GridData importWarningsData = new GridData(SWT.NONE, SWT.CENTER, false, false);
-        importWarningsData.horizontalSpan = 2;
-        importWarnings.setLayoutData(importWarningsData);
-        importWarnings.setSelection(!isIgnoreImportWarnings);
-        importWarnings.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
-                isIgnoreImportWarnings = !importWarnings.getSelection();                                        
+                DirectoryDialog dialog = new DirectoryDialog(parentShell);
+                String reportPathStr = SAFRLogger.getLogPath();
+                dialog.setFilterPath(reportPathStr);
+                dialog.setMessage("Select a new destination for report files");
+                String newReportPath = dialog.open();
+                if (newReportPath == null || newReportPath.length() == 0) {
+                    // if cancelled
+                }
+                else {
+                	reportPath.setText(newReportPath);
+                }
             }
-        });
-        
-        return parent;
-    }
 
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+            
+        });
+	}
     @Override
     protected void createButtonsForButtonBar(Composite parent) {
         createButton(parent, IDialogConstants.OK_ID, "&OK", true);
@@ -182,5 +230,9 @@ public class OptionsDialog extends TitleAreaDialog {
     public boolean isIgnoreImportWarnings() {
         return isIgnoreImportWarnings;
     }
+
+	public String getReportsPath() {
+		return reportsPathStr;
+	}
     
 }

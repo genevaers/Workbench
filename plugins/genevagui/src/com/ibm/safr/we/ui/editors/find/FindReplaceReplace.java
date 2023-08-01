@@ -178,7 +178,7 @@ public class FindReplaceReplace {
                         + "' in the selected views." + SAFRUtilities.LINEBREAK + "This operation cannot be undone and the affected views will be made inactive.";
                 try {
                     MessageDialog dialog = new MessageDialog(Display
-                            .getCurrent().getActiveShell(), "SAFR Workbench",
+                            .getCurrent().getActiveShell(), "GenevaERS Workbench",
                             null, messageString, MessageDialog.WARNING,
                             new String[] { "&OK", "&Cancel" }, 0);
                     int openConfirm = dialog.open();

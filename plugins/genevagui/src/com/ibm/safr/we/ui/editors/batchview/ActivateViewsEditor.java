@@ -68,11 +68,7 @@ public class ActivateViewsEditor extends SAFREditorPart implements
 
 		createSectionCriteria(form.getBody());
 		createSectionViews(form.getBody());
-		createSectionErrors(form.getBody());
-		// Used to load the context sensitive help
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-				"com.ibm.safr.we.help.BatchActivateViewsEditor");
-		
+		createSectionErrors(form.getBody());	
         getSite().getPage().addPartListener(this);
 	}
 

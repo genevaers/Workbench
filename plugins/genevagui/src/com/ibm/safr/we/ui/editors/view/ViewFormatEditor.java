@@ -108,7 +108,9 @@ public class ViewFormatEditor {
     private Button radioFStopProcessing;
     private Text textFStopProcessing;
     private Section sectionFRecordFilter;
+    private Text textFormatRecordFilter;
     private Button buttonFRecordFilter;
+    private Button buttonRefreshFRecordFilter;
     private Button checkboxFRecordSuppression;
 
     // menu
@@ -160,8 +162,7 @@ public class ViewFormatEditor {
         dataComposite.bottom = new FormAttachment(100, 0);
         compositeFormat.setLayoutData(dataComposite);
 
-        Composite compositeFormatGroupsLeft = mediator.getGUIToolKit().createComposite(
-                compositeFormat, SWT.NONE);
+        Composite compositeFormatGroupsLeft = mediator.getGUIToolKit().createComposite(compositeFormat, SWT.NONE);
         compositeFormatGroupsLeft.setLayout(new FormLayout());
 
         FormData dataCompositeFormatGroups = new FormData();
@@ -172,8 +173,7 @@ public class ViewFormatEditor {
         /*
          * section Output File
          */
-        sectionFOutputFile = mediator.getGUIToolKit().createSection(
-                compositeFormatGroupsLeft, Section.TITLE_BAR, "Output File");
+        sectionFOutputFile = mediator.getGUIToolKit().createSection(compositeFormatGroupsLeft, Section.TITLE_BAR, "Output File");
         FormData dataSectionFOutputFile = new FormData();
         dataSectionFOutputFile.top = new FormAttachment(0, 10);
         dataSectionFOutputFile.left = new FormAttachment(0, 10);
@@ -201,8 +201,7 @@ public class ViewFormatEditor {
             }
         });
 
-        comboFLogicalFileViewer = mediator.getGUIToolKit().createTableComboForComponents(
-                compositeFOutputFile, ComponentType.LogicalFile);
+        comboFLogicalFileViewer = mediator.getGUIToolKit().createTableComboForComponents(compositeFOutputFile, ComponentType.LogicalFile);
         comboFLogicalFile = comboFLogicalFileViewer.getTableCombo();
         comboFLogicalFile.setData(SAFRLogger.USER, "Format Logical File");        
         addFLFOpenEditorMenu();
@@ -531,8 +530,7 @@ public class ViewFormatEditor {
         FormData dataTextFStopProcessing = new FormData();
         dataTextFStopProcessing.top = new FormAttachment(
                 radioFWriteEligibleRecords, 10);
-        dataTextFStopProcessing.left = new FormAttachment(radioFStopProcessing,
-                0);
+        dataTextFStopProcessing.left = new FormAttachment(radioFStopProcessing,0);
         dataTextFStopProcessing.bottom = new FormAttachment(100, -10);
         dataTextFStopProcessing.width = 60;
         textFStopProcessing.setLayoutData(dataTextFStopProcessing);
@@ -563,10 +561,8 @@ public class ViewFormatEditor {
         Label labelFStopProcessing = mediator.getGUIToolKit().createLabel(
                 compositeFOutputLimit, SWT.NONE, "record(s) are written");
         FormData dataLabelFStopProcessing = new FormData();
-        dataLabelFStopProcessing.top = new FormAttachment(
-                radioFWriteEligibleRecords, 10);
-        dataLabelFStopProcessing.left = new FormAttachment(textFStopProcessing,
-                10);
+        dataLabelFStopProcessing.top = new FormAttachment(radioFWriteEligibleRecords, 10);
+        dataLabelFStopProcessing.left = new FormAttachment(textFStopProcessing, 10);
         dataLabelFStopProcessing.right = new FormAttachment(100, -10);
         dataLabelFStopProcessing.bottom = new FormAttachment(100, -10);
         labelFStopProcessing.setLayoutData(dataLabelFStopProcessing);
@@ -576,15 +572,12 @@ public class ViewFormatEditor {
          * End of section Format-Phase Output Limit
          */
 
-        Composite compositeFormatGroupsRight = mediator.getGUIToolKit().createComposite(
-                compositeFormat, SWT.NONE);
+        Composite compositeFormatGroupsRight = mediator.getGUIToolKit().createComposite(compositeFormat, SWT.NONE);
         compositeFormatGroupsRight.setLayout(new FormLayout());
         FormData dataCompositeFormatGroupsRight = new FormData();
-        dataCompositeFormatGroupsRight.left = new FormAttachment(
-                compositeFormatGroupsLeft, 50);
+        dataCompositeFormatGroupsRight.left = new FormAttachment(compositeFormatGroupsLeft, 50);
         dataCompositeFormatGroupsRight.right = new FormAttachment(100, -20);
-        compositeFormatGroupsRight
-                .setLayoutData(dataCompositeFormatGroupsRight);
+        compositeFormatGroupsRight.setLayoutData(dataCompositeFormatGroupsRight);
 
         /*
          * section Format-Phase Record Filter
@@ -598,14 +591,24 @@ public class ViewFormatEditor {
         dataSectionFRecordFilter.right = new FormAttachment(100, 0);
         sectionFRecordFilter.setLayoutData(dataSectionFRecordFilter);
 
-        Composite compositeFRecordFilter = mediator.getGUIToolKit().createComposite(
-                sectionFRecordFilter, SWT.NONE);
+        Composite compositeFRecordFilter = mediator.getGUIToolKit().createComposite(sectionFRecordFilter, SWT.NONE);
         compositeFRecordFilter.setLayout(new FormLayout());
 
         sectionFRecordFilter.setClient(compositeFRecordFilter);
+        
+        textFormatRecordFilter = mediator.getGUIToolKit().createTextBox(compositeFRecordFilter, SWT.BORDER);
+        textFormatRecordFilter.setText(view.getFormatRecordFilter() != null ? view.getFormatRecordFilter() : "");
+        textFormatRecordFilter.setEditable(false);
+        textFormatRecordFilter.setEnabled(false);
+        FormData textRecordFilterData = new FormData();
+        textRecordFilterData.top = new FormAttachment(sectionFRecordFilter, 10);
+        textRecordFilterData.left = new FormAttachment(0, 10);
+        textRecordFilterData.width = 280 ;
+        textRecordFilterData.height =50 ;
+        
+        textFormatRecordFilter.setLayoutData(textRecordFilterData);
 
-        buttonFRecordFilter = mediator.getGUIToolKit().createButton(compositeFRecordFilter,
-                SWT.PUSH, "&Create");
+        buttonFRecordFilter = mediator.getGUIToolKit().createButton(compositeFRecordFilter, SWT.PUSH, "&Create");
         buttonFRecordFilter.setData(SAFRLogger.USER, "Format Record Filter Create");                              
         
         buttonFRecordFilter.addTraverseListener(new TraverseListener() {
@@ -621,7 +624,7 @@ public class ViewFormatEditor {
 
         });
         FormData dataButtonFCreateRecordFilter = new FormData();
-        dataButtonFCreateRecordFilter.top = new FormAttachment(0, 10);
+        dataButtonFCreateRecordFilter.top = new FormAttachment(textFormatRecordFilter, 10);
         dataButtonFCreateRecordFilter.left = new FormAttachment(0, 10);
         dataButtonFCreateRecordFilter.width = 75;
         buttonFRecordFilter.setLayoutData(dataButtonFCreateRecordFilter);
@@ -631,15 +634,31 @@ public class ViewFormatEditor {
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
                 // Load format record filter.
-                LogicTextEditorInput input = new LogicTextEditorInput(view,
-                        mediator.getEditor(), mediator.getEditorInput().getEditRights());
+                LogicTextEditorInput input = new LogicTextEditorInput(view, mediator.getEditor(), mediator.getEditorInput().getEditRights());
                 try {
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                            .getActivePage().openEditor(input,
-                                    LogicTextEditor.ID);
+                    textFormatRecordFilter.setText("Please Refresh Me");
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,LogicTextEditor.ID);
                 } catch (PartInitException pie) {
                     UIUtilities.handleWEExceptions(pie,"Unexpected error occurred while opening logic text editor.",null);
                 }
+            }
+
+        });
+
+        buttonRefreshFRecordFilter = mediator.getGUIToolKit().createButton(compositeFRecordFilter, SWT.PUSH, "&Refresh");
+        buttonRefreshFRecordFilter.setData(SAFRLogger.USER, "Format Record Filter Create");                              
+        
+        FormData dataButtonRFCreateRecordFilter = new FormData();
+        dataButtonRFCreateRecordFilter.top = new FormAttachment(textFormatRecordFilter, 10);
+        dataButtonRFCreateRecordFilter.left = new FormAttachment(buttonFRecordFilter, 10);
+        dataButtonRFCreateRecordFilter.width = 75;
+        buttonRefreshFRecordFilter.setLayoutData(dataButtonRFCreateRecordFilter);
+        buttonRefreshFRecordFilter.addSelectionListener(new SelectionAdapter() {
+        	
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                super.widgetSelected(e);
+                textFormatRecordFilter.setText(view.getFormatRecordFilter());
             }
 
         });
@@ -648,8 +667,7 @@ public class ViewFormatEditor {
                 compositeFRecordFilter, "&Zero-Value Record Suppression");
         checkboxFRecordSuppression.setData(SAFRLogger.USER, "Zero-Value Record Suppression");                                     
         FormData dataCheckboxFRecordSuppression = new FormData();
-        dataCheckboxFRecordSuppression.top = new FormAttachment(
-                buttonFRecordFilter, 10);
+        dataCheckboxFRecordSuppression.top = new FormAttachment(buttonRefreshFRecordFilter, 10);
         dataCheckboxFRecordSuppression.left = new FormAttachment(0, 10);
         dataCheckboxFRecordSuppression.bottom = new FormAttachment(100, -10);
         checkboxFRecordSuppression.setLayoutData(dataCheckboxFRecordSuppression);
@@ -679,14 +697,12 @@ public class ViewFormatEditor {
         dataSectionFOutputUserExit.right = new FormAttachment(100, 0);
         sectionFOutputUserExit.setLayoutData(dataSectionFOutputUserExit);
 
-        Composite compositeFOutputUserExit = mediator.getGUIToolKit().createComposite(
-                sectionFOutputUserExit, SWT.NONE);
+        Composite compositeFOutputUserExit = mediator.getGUIToolKit().createComposite(sectionFOutputUserExit, SWT.NONE);
         compositeFOutputUserExit.setLayout(new FormLayout());
 
         sectionFOutputUserExit.setClient(compositeFOutputUserExit);
 
-        Label labelFUserExitName = mediator.getGUIToolKit().createLabel(
-                compositeFOutputUserExit, SWT.NONE, "Na&me: ");
+        Label labelFUserExitName = mediator.getGUIToolKit().createLabel(compositeFOutputUserExit, SWT.NONE, "Na&me: ");
         labelFUserExitName.addTraverseListener(new TraverseListener() {
 
             public void keyTraversed(TraverseEvent e) {
@@ -700,8 +716,7 @@ public class ViewFormatEditor {
 
         });
 
-        comboFUserExitNameViewer = mediator.getGUIToolKit().createTableComboForExits(
-                compositeFOutputUserExit, ComponentType.UserExitRoutine);
+        comboFUserExitNameViewer = mediator.getGUIToolKit().createTableComboForExits(compositeFOutputUserExit, ComponentType.UserExitRoutine);
         comboFUserExitName = comboFUserExitNameViewer.getTableCombo();
         comboFUserExitName.setData(SAFRLogger.USER, "Format User-Exit Routine");      
         
@@ -710,8 +725,7 @@ public class ViewFormatEditor {
         Label labelFUserExitParameters = mediator.getGUIToolKit().createLabel(
                 compositeFOutputUserExit, SWT.NONE, "Parame&ters: ");
 
-        textFUserExitParameters = mediator.getGUIToolKit().createTextBox(
-                compositeFOutputUserExit, SWT.NONE);
+        textFUserExitParameters = mediator.getGUIToolKit().createTextBox(compositeFOutputUserExit, SWT.NONE);
         textFUserExitParameters.setData(SAFRLogger.USER, "Format User-Exit Param");               
 
         FormData dataLabelFName = new FormData();
@@ -724,16 +738,12 @@ public class ViewFormatEditor {
         dataComboFName.left = new FormAttachment(labelFUserExitParameters, 10);
         dataComboFName.right = new FormAttachment(100, -10);
         comboFUserExitName.setLayoutData(dataComboFName);
-        // CQ 8459. Nikita. 26/08/2010.
-        // To resolve issues with enabling/disabling and focus of UXR parameter
-        // text-box
         comboFUserExitName.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
-                enableUserExitRoutineParams(comboFUserExitName,
-                        textFUserExitParameters);
+                enableUserExitRoutineParams(comboFUserExitName, textFUserExitParameters);
             }
 
         });
@@ -746,16 +756,12 @@ public class ViewFormatEditor {
                 if (!comboFUserExitName.getText().equals(selectedFUserExit)) {
                     UserExitRoutineQueryBean bean = null;
                     if (comboFUserExitName.getTable().getSelectionCount() > 0) {
-                        bean = (UserExitRoutineQueryBean) comboFUserExitName
-                                .getTable().getSelection()[0].getData();
+                        bean = (UserExitRoutineQueryBean) comboFUserExitName.getTable().getSelection()[0].getData();
                         prevFUXR = bean;
-                        disableUserExitRoutineParams(comboFUserExitName,
-                                textFUserExitParameters);
+                        disableUserExitRoutineParams(comboFUserExitName, textFUserExitParameters);
                     } else {
                         if (prevFUXR != null) {
-                            comboFUserExitName.setText(UIUtilities
-                                    .getComboString(prevFUXR.getName(),
-                                            prevFUXR.getId()));
+                            comboFUserExitName.setText(UIUtilities.getComboString(prevFUXR.getName(), prevFUXR.getId()));
                         } else {
                             if (selectedFUserExit.equals("")) {
                                 comboFUserExitName.setText("");
@@ -1121,10 +1127,8 @@ public class ViewFormatEditor {
      */
     protected void loadFormatPhase() throws SAFRException {
         // for format.
-        mediator.populateViewCombos(ComponentType.LogicalFile, comboFLogicalFile,
-                comboFLogicalFileViewer, true);
-        mediator.populateViewCombos(ComponentType.FormatUserExitRoutine,
-                comboFUserExitName, comboFUserExitNameViewer, true);
+        mediator.populateViewCombos(ComponentType.LogicalFile, comboFLogicalFile, comboFLogicalFileViewer, true);
+        mediator.populateViewCombos(ComponentType.FormatUserExitRoutine, comboFUserExitName, comboFUserExitNameViewer, true);
 
         FileAssociation fileAssociation = view.getExtractFileAssociation();
         if (fileAssociation != null) {
@@ -1133,8 +1137,7 @@ public class ViewFormatEditor {
                     .getAssociatingComponentId(), comboFLogicalFile);
             selectedFLogicalFile = comboFLogicalFile.getText();
 
-            mediator.populatePhysicalFileCombo(comboFLogicalFile, comboFPhysicalFile,
-                    comboFPhysicalFileViewer);
+            mediator.populatePhysicalFileCombo(comboFLogicalFile, comboFPhysicalFile, comboFPhysicalFileViewer);
             selectPhysicalFileInCombo(comboFPhysicalFile);
             selectedFPhysicalFile = comboFPhysicalFile.getText();
         } else {
@@ -1155,16 +1158,17 @@ public class ViewFormatEditor {
 	                                    + "] referred to by this View in the format phase does not exist. Please select another User Exit Routine if required.");
 	            comboFUserExitName.setText("[" + snfe.getComponentId() + "]");
 	        }
-	        selectedFUserExit = comboFUserExitName.getText();
-	
+	        if(view.getFormatExit() != null) {
+ 	        	selectedFUserExit = view.getFormatExit().getComboString();
+ 	        } else {
+ 	        	selectedFUserExit = "";
+ 	        }
+ 	        comboFUserExitName.setText(selectedFUserExit);
 	        if (!comboFUserExitName.getText().equals("")) {
-	            UIUtilities.checkNullText(textFUserExitParameters, view
-	                    .getFormatExitParams());
-	            enableUserExitRoutineParams(comboFUserExitName,
-	                    textFUserExitParameters);
+	            UIUtilities.checkNullText(textFUserExitParameters, view.getFormatExitParams());
+	            enableUserExitRoutineParams(comboFUserExitName, textFUserExitParameters);
 	        } else {
-	            disableUserExitRoutineParams(comboFUserExitName,
-	                    textFUserExitParameters);
+	            disableUserExitRoutineParams(comboFUserExitName, textFUserExitParameters);
 	        }
         }
 
@@ -1183,8 +1187,7 @@ public class ViewFormatEditor {
                 radioFWriteEligibleRecords.setSelection(false);
                 radioFStopProcessing.setSelection(true);
                 textFStopProcessing.setEnabled(!mediator.getGUIToolKit().isReadOnly());
-                UIUtilities.checkNullText(textFStopProcessing, Integer
-                        .toString(view.getOutputMaxRecCount()));
+                UIUtilities.checkNullText(textFStopProcessing, Integer.toString(view.getOutputMaxRecCount()));
             } else {
                 radioFWriteEligibleRecords.setSelection(true);
                 radioFStopProcessing.setSelection(false);

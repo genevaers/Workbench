@@ -80,23 +80,6 @@ public class AboutDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 
-		pluginDetails = createButton(parent, IDialogConstants.OPEN_ID,
-				"&Plug-in Details", true);
-
-		pluginDetails.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Bundle b = FrameworkUtil.getBundle(Application.class);
-				if(b.getBundleContext() != null) {
-					new AboutPluginsDialog(getShell(), SAFREnvProp.DEV,
-						FrameworkUtil.getBundle(Application.class)
-								.getBundleContext().getBundles(),
-						"Plug-in Details", "Installed plug-ins.", "").open();
-				} else {
-					System.out.println("Note no bundle context");
-				}
-			}
-		});
 		okay = createButton(parent, IDialogConstants.OK_ID, "&OK", true);
 		okay.setBounds(10, 10, 100, 100);
 
@@ -128,8 +111,7 @@ public class AboutDialog extends Dialog {
 		Rectangle bounds = image.getBounds();
 		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		int y = 50;
-		LocalDate today = LocalDate.now();
-		String line = getAboutVersionDetails() + " : " + today.toString();
+		String line = UIUtilities.getVersion();
 		gc.drawString(line, 15,	bounds.height - gc.getFontMetrics().getHeight()*2 - 3);
 		Copybook2LR ccb2lr = new Copybook2LR();
 		gc.drawString(ccb2lr.getVersion(), 15,	bounds.height - gc.getFontMetrics().getHeight() -3);
@@ -146,25 +128,4 @@ public class AboutDialog extends Dialog {
 
 	}
 	
-    public static String getAboutVersionDetails() {
-        // reads the first line of version.txt
-        String versionDetails = UIUtilities.getVersion();
-
-//        String helpVersion = UIUtilities.getHelpVersion();
-//        versionDetails += SAFRUtilities.LINEBREAK + "(IC " + helpVersion;
-//        
-//        String compilerVersion = "Sycada"; //ViewActivator.getAllCompilerVersion(); TODO sort
-//        versionDetails += ", " + compilerVersion;
-//
-//        String storedProcVersion = SAFRApplication.getStoredProcedureVersion().replace("SD", "SD ");
-//        versionDetails += ", " + storedProcVersion + ")";
-//        
-//        versionDetails += SAFRUtilities.LINEBREAK + "IP Asset Family Component ID 6949-17P";
-//        versionDetails += SAFRUtilities.LINEBREAK + "(C) Copyright IBM Corporation 1998, 2011.";
-//        versionDetails += SAFRUtilities.LINEBREAK + "All Rights Reserved.";
-
-        return versionDetails;
-    }
-    
-	
-}
+ }

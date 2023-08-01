@@ -85,14 +85,6 @@ public class GroupEditor extends SAFREditorPart {
 		createCompositeValues(form.getBody());
 		refreshControls();
 		dirty = false;
-		// Used to load the context sensitive help
-		if (group.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.GroupEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewGroup");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}

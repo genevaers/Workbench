@@ -71,6 +71,7 @@ import com.ibm.safr.we.constants.MetadataSearchCriteria;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.data.DAOUOWInterruptedException;
+import com.ibm.safr.we.data.DBType;
 import com.ibm.safr.we.exceptions.SAFRDependencyException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
@@ -2150,7 +2151,7 @@ public class MetadataView extends ViewPart implements ISelectionListener,
 	 */
 	public int getDialogBox(String messageString) {
 		MessageDialog dialog = new MessageDialog(Display.getCurrent()
-				.getActiveShell(), "SAFR Workbench", null, messageString,
+				.getActiveShell(), "GenevaERS Workbench", null, messageString,
 				MessageDialog.WARNING, new String[] { "&OK", "&Cancel" }, 0);
 		int returnVal = dialog.open();
 		return returnVal;
@@ -2661,7 +2662,13 @@ public class MetadataView extends ViewPart implements ISelectionListener,
     }
 
     public void openDepChecker() {
-        EnvironmentalQueryBean bean = (EnvironmentalQueryBean) selectedMetadataComponent.getFirstElement();
+		if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType().equals(DBType.PostgresQL)) {
+			MessageDialog.openInformation(getSite().getShell(),
+					"Dependency Checker", "Dependency Checker not available via a Postgres database connection");
+			return;
+		}
+       EnvironmentalQueryBean bean = (EnvironmentalQueryBean) selectedMetadataComponent.getFirstElement();
+        
         DepCheckOpener.open(bean);        
     }
 

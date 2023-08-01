@@ -88,7 +88,6 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIConfirmWarningStrategy.SAFRGUIContext
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ActivateViewsViews {
@@ -772,16 +771,6 @@ public class ActivateViewsViews {
             (currModel.getResult() == ActivityResult.FAIL || 
              currModel.getResult() == ActivityResult.WARNING) ) {
             SAFRViewActivationException actException = (SAFRViewActivationException)currModel.getException();
-            if (!actException.getActivationLogOld().isEmpty()) {     
-                try {
-                    ActivationLogViewOld eView = (ActivationLogViewOld) mediator.getSite()
-                            .getPage().showView(ActivationLogViewOld.ID);
-                    eView.showGridForCurrentEditor(mediator.getActivateViewsEditor());
-                } catch (PartInitException e1) {
-                    UIUtilities.handleWEExceptions(
-                        e1,"Unexpected error occurred while opening old activation errors view.",null);
-                }
-            }
             if (!actException.getActivationLogNew().isEmpty()) {     
                 try {
                     ActivationLogViewNew eView = (ActivationLogViewNew) mediator.getSite()
@@ -801,10 +790,6 @@ public class ActivateViewsViews {
             if (logView != null) {
                 mediator.getSite().getPage().hideView(logView);
             }       
-            ActivationLogViewOld logView2 = (ActivationLogViewOld)mediator.getSite().getPage().findView(ActivationLogViewOld.ID);
-            if (logView2 != null) {
-                mediator.getSite().getPage().hideView(logView2);
-            }       
         }
     }
 
@@ -812,10 +797,6 @@ public class ActivateViewsViews {
         boolean open = false;
         ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
         if (logView != null) {
-            open = true;
-        }       
-        ActivationLogViewOld logView2 = (ActivationLogViewOld)mediator.getSite().getPage().findView(ActivationLogViewOld.ID);
-        if (logView2 != null) {
             open = true;
         }       
         return open;

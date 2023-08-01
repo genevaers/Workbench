@@ -49,6 +49,7 @@ public class Environment extends SAFRComponent {
 	private InitializationParameters initParams;
 	private SAFRAssociationList<GroupEnvironmentAssociation> associatedGroups;
 	private List<Group> associatedGroupsList;
+	private boolean crRequired;
 
 	/*
 	 * Holds initialization parameters for a SAFR Environment. These are set
@@ -140,7 +141,11 @@ public class Environment extends SAFRComponent {
 			try {
 				trans = DAOFactoryHolder.getDAOFactory().getEnvironmentDAO()
 						.persistEnvironment(trans);
-				setObjectData(trans);
+				setObjectData(trans);				
+				if(!crRequired){
+					DAOFactoryHolder.getDAOFactory().getControlRecordDAO().deleteAllControlRecordsFromEnvironment(trans.getId());
+				}
+
 			} catch (SAFRNotFoundException snfe) {
 				snfe.printStackTrace();
 				throw new SAFRException("The environment with id "+ this.getId()+ 
@@ -433,5 +438,10 @@ public class Environment extends SAFRComponent {
 
 	public void setAssociatedGroupsList(List<Group> associatedGroupsList) {
 		this.associatedGroupsList = associatedGroupsList;
+	}
+
+	public void setCrRequired(boolean selection) {
+		crRequired = selection;
+		
 	}
 }

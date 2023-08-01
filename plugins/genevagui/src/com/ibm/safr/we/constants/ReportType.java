@@ -17,57 +17,30 @@ package com.ibm.safr.we.constants;
  * under the License.
  */
 
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.ibm.safr.we.utilities.ProfileLocation;
-
 public enum ReportType {
-	ViewProperties("ViewPropertiesReportDesign.rptdesign",
-			"View Properties Report", "ViewProperties"), ViewColumnPICReport(
-			"ViewColumnPICReportDesign.rptdesign", "View Column PIC Report",
-			"ViewColumnPIC"), LogicalRecord(
-			"LRPropertiesReportDesign.rptdesign", "Logical Record Report",
-			"LogicalRecord"), LookupPath("LookupPathReportDesign.rptdesign",
-			"Lookup Path Report", "LookupPath"), ViewColumnReport(
-			"ViewColumnReportDesign.rptdesign", "View Column Report",
-			"ViewColumn"), EnvironmentSecurityById(
-			"EnvironmentSecurityReportDesign.rptdesign",
-			"Environment Security Report by ID", "EnvironmentSecurity"), EnvironmentSecurityByName(
-			"EnvironmentSecurityReportDesign.rptdesign",
-			"Environment Security Report by Name", "EnvironmentSecurity"), DependencyChecker(
-			"DependencyCheckerReportDesign.rptdesign",
-			"Dependency Checker Report", "Dependency Checker");
+	ViewProperties("View Properties Report", "View"), 
+	ViewColumnPICReport("View Column PIC Report", "ViewColumnPIC"),
+	LogicalRecord("Logical Record Report", "LogicalRecord"), 
+	LookupPath("Lookup Path Report", "LookupPath"),
+	HelpReport("Help Report", "Help"),
+	EnvironmentSecurityById("Environment Security Report", "EnvironmentSecurity"),
+	EnvironmentSecurityByName("User Groups Report", "UserGroups"),
+	DependencyChecker("Dependency Checker Report", "Dependency Checker");
 
-	private String fileName;
 	private String reportName;
 	private String outputFile;
 
-	ReportType(String filePath, String reportName, String outputFileName) {
-		this.fileName = "/reportDesignFiles/" + filePath;
+	ReportType(String reportName, String outputFileName) {
 		this.reportName = reportName;
 		outputFile = outputFileName;
-	}
-
-	public String getFileName() {
-		return fileName;
 	}
 
 	public String getReportName() {
 		return reportName;
 	}
-
+	
 	public String getOutputFile() {
-		String outputPath = ProfileLocation.getProfileLocation().getLocalProfile() + "pdf\\";
-		File outputDirs = new File(outputPath);
-		if (!outputDirs.exists()) {
-			outputDirs.mkdirs();
-		}
-		Date CurrDate = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("yyMMdd_HHmmss");
-		String timeStamp = df.format(CurrDate);
-		return outputPath + outputFile + "_" + timeStamp + ".pdf";
+		return outputFile;
 	}
+
 }

@@ -9,5 +9,10 @@ target/**
 products/com.ibm.safr.we.product/target/**
 plugins/genevagui/.metadata/**
 plugins/genevagui/lib/**
-
-ccb2lr/src/main/antlr4/**
+plugins/nebulatablecombo/target/**
+ccb2lr/src/main/antlr4/org/genevaers/ccb2lr/grammar/.antlr/**
+**/.polyglot*
+**/.settings/**
+**/.classpath*
+**/workspace/.metadata
+**/*.tycho

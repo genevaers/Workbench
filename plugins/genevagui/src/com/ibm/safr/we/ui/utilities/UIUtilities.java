@@ -18,12 +18,7 @@ package com.ibm.safr.we.ui.utilities;
  */
 
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -79,8 +74,6 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.ISourceProviderService;
 import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
-
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.ComponentType;
@@ -836,15 +829,6 @@ public class UIUtilities {
 		}
 	}
 
-	public static String getHelpVersion() {
-	    Version version = Platform.getBundle("com.ibm.safr.we.help").getVersion();
-	    String verStr = "";
-	    verStr += version.getMajor() + ".";
-        verStr += String.format("%02d",version.getMinor()) + ".";
-        verStr += String.format("%03d",version.getMicro());
-	    return verStr;
-	}
-	
 	public static void disposeImages() {
 		// dispose all cached images
 		for (String key : images.keySet()) {
@@ -988,7 +972,7 @@ public class UIUtilities {
 	 *            the exception.
 	 * @param titleString
 	 *            the text to be shown as the title of the error dialog. If this
-	 *            text is blank or null, the string "SAFR Workbench" will be
+	 *            text is blank or null, the string "GenevaERS Workbench" will be
 	 *            shown as the default title of the error dialog.
 	 */
 	public static void handleWEExceptions(Exception e, String msgString,
@@ -1539,7 +1523,7 @@ public class UIUtilities {
         try {
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
-            	versionDetails += bundle.getVersion().toString();
+            	versionDetails += bundle.getVersion().toString() + " :  OS1";
             } else {
                 logger.log(Level.SEVERE, "Null getting version");            	
             }

@@ -175,14 +175,6 @@ public class UserEditor extends SAFREditorPart {
 
 		refreshControls();
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (!user.getUserid().equals("")) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.UserEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewUser");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}

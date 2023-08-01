@@ -1,7 +1,7 @@
 package com.ibm.safr.we.utilities;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,47 +34,74 @@ import java.util.Map;
  */
 public class ProfileLocation {
 
-    
+    private String localProfile;    // user local settings area
+    private String globalProfile;      // all users settings area  
     private static ProfileLocation profileLocation = null;
 	private Path genevaPath;
     
     private ProfileLocation() {
-        
-        // result variables
-        // initialise java property and env vars
-        String platform = System.getProperty("os.name");
-        Map<String, String> env = System.getenv();
-        String home = env.get("HOME");
-        String homepath = env.get("HOMEPATH");
-        String safrpart = ".genevaers";
-        Path whereToHoldStuff = null;
-        if (homepath != null) {
-        	whereToHoldStuff = Paths.get(homepath);
-        }
-        if (home != null) {
-        	whereToHoldStuff = Paths.get(home);        	
-        }
-        // create these paths
-        if(whereToHoldStuff != null) {
-        	genevaPath = whereToHoldStuff.resolve(safrpart);
-        	genevaPath.toFile().mkdirs();
+        String os = System.getProperty("os.name");
+        if(os.startsWith("Windows")) {
+        	makeWindowsPaths(System.getenv());
+        } else {
+        	makeUnixPaths(System.getenv());
         }
     }
     
+    private void makeWindowsPaths(Map<String, String> env) {
+        String userArea = env.get("USERPROFILE");
+        String allHome = env.get("ALLUSERSPROFILE");
+            
+        String safrpart = "\\SAFR\\Workbench Eclipse\\";
+
+        String local7 = "\\AppData\\Roaming" + safrpart;
+            
+        localProfile = userArea + local7;                
+        globalProfile = allHome + safrpart;
+        // create these paths
+        File allPrefPath = new File(globalProfile);
+        allPrefPath.mkdirs();
+        File localPrefPath = new File(localProfile);
+        localPrefPath.mkdirs();        	
+        
+        makeProfileDirIfDoesNotExist("logs");
+        makeProfileDirIfDoesNotExist("prefs");
+    }
+
+	private void makeProfileDirIfDoesNotExist(String d) {
+		File dir = new File(localProfile + "/" + d );
+		if(dir.exists() == false) {
+			dir.mkdirs();
+		}
+	}
+
+	private void makeUnixPaths(Map<String, String> env) {
+        String home = env.get("HOME");
+        String safrpart = ".genevaers";
+        Path whereToHoldStuff = null;
+        if (home != null) {
+            whereToHoldStuff = Paths.get(home);
+        }
+        if(whereToHoldStuff != null) {
+            genevaPath = whereToHoldStuff.resolve(safrpart);
+            genevaPath.toFile().mkdirs();
+            localProfile = genevaPath.toString();
+        }    		
+	}
+
     /**
      * @return String - the Windows local user profile
      */
     public String getLocalProfile() {
-        return genevaPath.toString();
-    }
-    
-    public Path getGenevaPath() {
-    	return genevaPath;
+        return localProfile;
     }
 
-    /**
-     * @return ProfileLocation - access to the ProfileLocation singleton
-     */        
+    
+    public String getGlobalProfile() {
+        return globalProfile;
+    }
+
+
     public static ProfileLocation getProfileLocation() {
         if (profileLocation == null) {
             profileLocation = new ProfileLocation();

@@ -49,4 +49,5 @@ public class UserPreferencesNodes {
     public static final String SORT = "Sort";    
     public static final String SORT_COLUMN = "Column";    
     public static final String SORT_ORDER = "Order";    
+	public static final String REPORTS_PATH = "Reports-Path";
 }

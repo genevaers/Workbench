@@ -1123,18 +1123,16 @@ public class SortKeyView extends ViewPart implements IPartListener2,
 	}
 
 	private void showGrid(boolean show, boolean checkPrevious) {
-		// CQ 8551. Nikita. 31/08/2010.
 		// Added extra parameter 'checkPrevious' to forcefully refresh the grid
 		// without checking if user has clicked on another sort key if output
 		// format of the View is changed
-		label.setVisible(!show);
-		sortKeyTableViewer.getGrid().setVisible(show);
-		/* CQ 7489. Nikita. 02/02/2010. */
-		// Refresh the grid only if the Sort Key has changed.
-		if (show
-				|| (checkPrevious && UIUtilities.isEqual(sortKey,
-						previousSortKey))) {
-			sortKeyTableViewer.refresh();
+		if(label.isDisposed() == false) {
+			label.setVisible(!show);
+			sortKeyTableViewer.getGrid().setVisible(show);
+			// Refresh the grid only if the Sort Key has changed.
+			if (show || (checkPrevious && UIUtilities.isEqual(sortKey, previousSortKey))) {
+				sortKeyTableViewer.refresh();
+			}
 		}
 	}
 

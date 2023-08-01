@@ -1,7 +1,7 @@
 package com.ibm.safr.we.ui.editors;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -300,15 +300,9 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			setDirty(false);
 			if (lookupPath.getId() > 0) {
 				checkAndDisplayLookupState();
-				// Used to load the context sensitive help
-				PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-				    "com.ibm.safr.we.help.LookupPathEditor");
 				
 				// Lookup up path tab
 				tabFolder.setSelection(1);				
-			} else {
-				PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(), 
-				    "com.ibm.safr.we.help.NewLookupPath");
 			}
 			ManagedForm mFrm = new ManagedForm(toolkit, form);
 			setMsgManager(mFrm.getMessageManager());
@@ -369,8 +363,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		textID.setEnabled(false);
 		FormData dataTextId = new FormData();
 		dataTextId.top = new FormAttachment(0, 10);
-		dataTextId.left = new FormAttachment(dummmyLabel, 10);
-		dataTextId.width = 300;
+		dataTextId.left = new FormAttachment(dummmyLabel, 80);
+		dataTextId.width = 530;
 		textID.setLayoutData(dataTextId);
 
 		Label labelName = safrGuiToolkit.createLabel(compositeGeneral,
@@ -445,7 +439,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 							flag = false;
 							DependencyMessageDialog.openDependencyDialog(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"You cannot change this source Logical Record as it is being used in the source fields of the current step and/or subsequent steps as indicated below:",
 								sve.getMessageString(),
 								MessageDialog.ERROR,
@@ -639,7 +633,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
 		createSectionTarget(compositeDefinition);
 		createSectionSource(compositeDefinition);
-
+		//refreshToolbar();
 		// populates combos for both, target and source LR, at once
 		populateLogicalRecord(comboTargetLR, comboSourceLR);
 
@@ -1321,12 +1315,13 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 									selectedTargetLF = "";
 									 comboTargetLFViewer.refresh();
 									refreshTargetTable(currentStep);
+									
 									tableViewerStepsList.refresh();
 									setDirty(true);
 								} catch (SAFRValidationException sve) {
 									DependencyMessageDialog.openDependencyDialog(
 										getSite().getShell(),
-										"SAFR Workbench",
+										"GenevaERS Workbench",
 										"You cannot change this target Logical Record as it is being used in the source fields of subsequent steps as indicated below:",
 										sve.getMessageString(),
 										MessageDialog.ERROR,
@@ -1349,7 +1344,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 							} else {
 
 								MessageDialog.openError(getSite().getShell(),
-								    "SAFR Workbench",
+								    "GenevaERS Workbench",
 								    "The Logical Record you have selected does not have a primary key defined.");
 
 								if ((comboTargetLR.indexOf(selectedTargetLR)) > 0) {
@@ -1419,7 +1414,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 						DependencyMessageDialog
 								.openDependencyDialog(
 										getSite().getShell(),
-										"SAFR Workbench",
+										"GenevaERS Workbench",
 										"You cannot change this target Logical File as it is being used in the source fields of subsequent steps as indicated below:",
 										sve.getMessageString(),
 										MessageDialog.ERROR,
@@ -1599,6 +1594,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 					}
 					if (comboLRField.getSelectionIndex() >= 0) {
 
+						
 						LookupPathSourceField sourceField = (LookupPathSourceField) currentStep
 								.getSourceFields().getActiveItems().get(
 										tableSource.getSelectionIndex());
@@ -1668,7 +1664,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 							flag = false;
 							DependencyMessageDialog.openDependencyDialog(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"You cannot change this source Logical Record as it is being used in the source fields of the current step and/or subsequent steps as indicated below:",
 								sve.getMessageString(),
 								MessageDialog.ERROR,
@@ -1686,6 +1682,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 								if(comboSourceLR!=null && step1lr!=null) {
 									comboSourceLR.setText(UIUtilities.getComboString(step1lrname,step1lrid));
 								}
+								
 							}
 
 						} catch (SAFRException e1) {
@@ -2415,7 +2412,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog
 						.openInformation(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"This Lookup path was active when it was saved "
 										+ "but it is inactive now because of the following reason(s):" + SAFRUtilities.LINEBREAK
 										+ sve.getMessageString());
@@ -2424,7 +2421,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			} else {
 				// show information message to user
 				MessageDialog.openInformation(getSite().getShell(),
-						"SAFR Workbench",
+						"GenevaERS Workbench",
 						"This Lookup path is inactive because of the following reason(s):" + SAFRUtilities.LINEBREAK
 								+ sve.getMessageString());
 			}
@@ -2476,7 +2473,6 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			logicalRecordList = SAFRQuery
 					.queryAllActiveLogicalRecords(UIUtilities
 							.getCurrentEnvironmentID(), SortType.SORT_BY_NAME);
-			comboSourceLRViewer.setInput(logicalRecordList);
 		}
 		else{
 			for (int i = 0; i < numberOfSteps; i++) {
@@ -2591,7 +2587,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog
 						.openError(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"The current step must have a valid Source [Logical Record] before you can proceed.");
 				return true;
 			}
@@ -2602,7 +2598,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog
 						.openError(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"The current step must have a valid Source [Logical Record/Logical File] before you can proceed.");
 				return true;
 			}
@@ -2619,7 +2615,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog
 						.openError(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"The first step must have a valid Source [Logical Record] and Target [Logical Record/Logical File] before you can proceed.");
 				return true;
 			}
@@ -2630,7 +2626,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog
 						.openError(
 								getSite().getShell(),
-								"SAFR Workbench",
+								"GenevaERS Workbench",
 								"The last step must have a valid Target [Logical Record/Logical File] before you can proceed.");
 				return true;
 			}
@@ -2688,13 +2684,13 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			// first step cannot be deleted
 			if (selectedStep == 0) {
 				MessageDialog
-						.openError(getSite().getShell(), "SAFR Workbench",
+						.openError(getSite().getShell(), "GenevaERS Workbench",
 								"You cannot delete the first step. A Lookup Path must have at least one step.");
 				return;
 			}
 
 			MessageDialog dialog = new MessageDialog(getSite().getShell(),
-					"SAFR Workbench", null,
+					"GenevaERS Workbench", null,
 					"Are you sure you want to delete step " + selection
 							+ " and all steps after that?",
 					MessageDialog.QUESTION, new String[] { "&OK", "&Cancel" },
@@ -2921,6 +2917,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
 	private void loadSourceFieldDefinition(LookupPathSourceField field)
 			throws SAFRException {
+
 		if (field.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD) {
 			radiofield.setSelection(true);
 			radioConstant.setSelection(false);
@@ -2988,6 +2985,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		selectedSrcFieldDataType = comboDataType.getText();
 		selectedSrcFieldDateTimeFormat = comboDateTimeFormat.getText();
 		selectedSrcFieldNumericMask = comboNumericMask.getText();
+		
 	}
 
 	private void populateLRField(LookupPathStep step, String selectedStep) {
@@ -3033,11 +3031,13 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 								lrFieldComboInputList.add(list);
 							}
 						}
+						
 					}
 				}
 //QA219_Premium_Account_Element
 //QA219_Premium_Account_Element				
 			}
+			
 			comboLRFieldViewer.setInput(lrFieldComboInputList);
 			comboLRFieldViewer.refresh();
 		} catch (SAFRException e) {
@@ -3115,11 +3115,12 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 	
 	private String getSourceFieldName(LookupPathSourceField sourceField)
 			throws SAFRException {
-
+		
 		String result = "";
 		String sourceValue = "";
 		String symbolicName = "";
 		if (sourceField.getSourceFieldType() == LookupPathSourceFieldType.LRFIELD && sourceField!=null) {
+			
 			if(sourceField.getSourceFieldSourceLR()!=null){
 				result = sourceField.getSourceFieldSourceLR().getName()+"."+
 						getFieldString(sourceField.getSourceFieldSourceLR(),
@@ -3517,6 +3518,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				UIUtilities.handleWEExceptions(e,"Unexpected error occurred while retrieving target Logical Record.",null);
 			}
 			return step.getSourceFields().getActiveItems().toArray();
+
 		}
 
 		public void dispose() {
@@ -3552,8 +3554,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 				} catch (SAFRException se) {
 					UIUtilities.handleWEExceptions(se);
 				}
-				break;
 
+				break;
 			case 1:
 				result = Integer.toString(sourceField.getLength());
 				break;

@@ -48,6 +48,7 @@ import com.ibm.safr.we.ui.editors.OpenEditorPopupState;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditorInput;
+import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 
 /**
  * A view for displaying logic text tree.
@@ -62,16 +63,20 @@ public class LogicTextView extends ViewPart {
 	private TreeViewer treeViewer;
 	private Label label;
 
+	private Cursor cursor;
+
 	@Override
 	public void createPartControl(Composite parent) {
 		try {
 			getSite().getShell().setCursor(
 					getSite().getShell().getDisplay().getSystemCursor(
 							SWT.CURSOR_WAIT));
+			SAFRGUIToolkit.dumpActivePage("LTV createPartControl");
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new FormLayout());
 			composite.setLayoutData(new FormData());
-			Display.getDefault().getActiveShell().setCursor(new Cursor(Display.getDefault(), SWT.CURSOR_WAIT));
+			cursor = new Cursor(Display.getDefault(), SWT.CURSOR_WAIT);
+			Display.getDefault().getActiveShell().setCursor(cursor);
 
 			label = new Label(composite, SWT.NONE);
 			label.setText("Logic Text Helper is being loaded... Please wait...");
@@ -229,6 +234,10 @@ public class LogicTextView extends ViewPart {
 	}
 
 	public void dispose() {
+		if(cursor != null) {
+			cursor.dispose();
+		}
+		System.out.println("LogicTextView dispose called");
 	}
 
     public void setFocusOn(String fldlu, LogicTextType type) {

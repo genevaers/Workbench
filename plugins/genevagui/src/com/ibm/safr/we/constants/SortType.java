@@ -19,5 +19,5 @@ package com.ibm.safr.we.constants;
 
 
 public enum SortType {
-	SORT_BY_ID, SORT_BY_NAME;
+	SORT_BY_ID, SORT_BY_NAME, MODULE_NAME;
 }

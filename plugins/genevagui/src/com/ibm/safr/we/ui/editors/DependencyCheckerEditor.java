@@ -30,7 +30,9 @@ import java.util.logging.Level;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
@@ -69,14 +71,17 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.services.ISourceProviderService;
 
 import com.ibm.safr.we.SAFRUtilities;
@@ -108,9 +113,13 @@ import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.DependencyChecker;
 import com.ibm.safr.we.model.utilities.DependencyCheckerNode;
 import com.ibm.safr.we.preferences.SAFRPreferences;
+import com.ibm.safr.we.ui.Application;
 import com.ibm.safr.we.ui.ApplicationMediator;
+import com.ibm.safr.we.ui.editors.DiffUtilityEditor.CollapseAction;
+import com.ibm.safr.we.ui.editors.DiffUtilityEditor.ExpandAction;
 import com.ibm.safr.we.ui.utilities.ColumnSelectionListenerForTableCombo;
 import com.ibm.safr.we.ui.utilities.EditorOpener;
+import com.ibm.safr.we.ui.utilities.ImageKeys;
 import com.ibm.safr.we.ui.utilities.LogicalRecordFieldTableSorter;
 import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
@@ -131,6 +140,9 @@ public class DependencyCheckerEditor extends SAFREditorPart {
 	private FormToolkit toolkit;
 	private SAFRGUIToolkit safrGuiToolkit;
 
+	CollapseAction colAct = null;
+    ExpandAction expAct = null;
+    
 	private String headerNote = "Use this utility to get dependencies for a component of specified environment.";
 
 	private Section sectionDependencyCriteria;
@@ -186,6 +198,33 @@ public class DependencyCheckerEditor extends SAFREditorPart {
 	private int csvSequence;
     private MenuItem compOpenEditorItem = null;
 	
+    public class CollapseAction extends Action {
+
+        public CollapseAction() {
+            super("Collapse All", AS_PUSH_BUTTON);
+            setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().getImageDescriptor(ISharedImages.IMG_ELCL_COLLAPSEALL));
+            setEnabled(false);
+        }
+        
+        @Override
+        public void run() {
+        	dependencyTreeViewer.collapseAll();                
+        }        
+    }
+
+    public class ExpandAction extends Action {
+
+        public ExpandAction() {
+            super("Expand All", AS_PUSH_BUTTON);
+            setImageDescriptor(AbstractUIPlugin.imageDescriptorFromPlugin(Application.PLUGIN_ID, ImageKeys.EXPANDALL));
+            setEnabled(false);
+        }
+        
+        @Override
+        public void run() {
+        	dependencyTreeViewer.expandAll();                
+        }        
+    }
 	@Override
 	public void createPartControl(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
@@ -364,6 +403,14 @@ public class DependencyCheckerEditor extends SAFREditorPart {
 
 					});
 
+			ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+		    ToolBar toolbar = toolBarManager.createControl(sectionDependencyResults);
+		    toolbar.setCursor(Display.getDefault().getSystemCursor(SWT.CURSOR_HAND));
+		    expAct = new ExpandAction();
+	        toolBarManager.add(expAct);
+		    colAct = new CollapseAction();
+		    toolBarManager.add(colAct);
+		    toolBarManager.update(true);
 			FormData dependencyTreeData = new FormData();
 			dependencyTreeData.top = new FormAttachment(0, 0);
 			dependencyTreeData.bottom = new FormAttachment(100, 0);
@@ -1565,6 +1612,10 @@ public class DependencyCheckerEditor extends SAFREditorPart {
         dependencyTreeViewer.setInput(null);
         dependencyTreeViewer.refresh();
         sectionDependencyResults.setEnabled(false);
+        if (colAct != null) {
+            colAct.setEnabled(true);
+            expAct.setEnabled(true);
+        }
         ApplicationMediator.getAppMediator().normalCursor();        
     }
 
@@ -1630,6 +1681,14 @@ public class DependencyCheckerEditor extends SAFREditorPart {
                 break;
             }
         }
+    }
+    
+    public void collapseAll() {
+        	dependencyTreeViewer.collapseAll();
+    }
+    
+    public void expandAll() {
+        	dependencyTreeViewer.expandAll();
     }
     
 }

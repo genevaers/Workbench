@@ -398,6 +398,7 @@ public class View extends SAFRActivatedComponent {
         trans.setLineSize(reportWidth != null ? reportWidth : 0);
         trans.setZeroSuppressInd(suppressZeroRecords != null ? suppressZeroRecords
                 : false);
+        trans.setHeaderRow(headerRow != null ? headerRow : false);
         trans.setExtractMaxRecCount(extractMaxRecords != null ? extractMaxRecords
                 : 0);
         trans.setExtractSummaryIndicator(aggregateBySortKey != null ? aggregateBySortKey
@@ -1999,7 +2000,7 @@ public class View extends SAFRActivatedComponent {
     }
 
     /**
-     * Invoke activation using old or new compiler based on preferences
+     * Invoke activation 
      * 
      * @throws DAOException, SAFRException
      */ 

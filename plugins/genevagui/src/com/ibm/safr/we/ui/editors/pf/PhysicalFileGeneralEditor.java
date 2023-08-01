@@ -1,7 +1,7 @@
 package com.ibm.safr.we.ui.editors.pf;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,7 +173,7 @@ public class PhysicalFileGeneralEditor {
         FormData idTextData = new FormData();
         idTextData.top = new FormAttachment(0, 10);
         idTextData.left = new FormAttachment(idLabel, 160);
-        idTextData.width = 115;
+        idTextData.width = 300;
         textGeneralID.setLayoutData(idTextData);
         
         Label labelGeneralName = mediator.getSAFRToolkit().createLabel(compositeDetails,SWT.NONE, "&Name:");
@@ -421,6 +421,8 @@ public class PhysicalFileGeneralEditor {
             comboGeneralUserExitRoutine.setEnabled(false);
             textGeneralUserExitRoutineParam.setEnabled(false);
             textGeneralComments.setEnabled(true);
+            
+            
             mediator.enableDatasetTab();
             mediator.enableDatasetName();
             mediator.doRefreshDatasetTab();
@@ -430,24 +432,21 @@ public class PhysicalFileGeneralEditor {
             if (!readOnly) {
                 comboGeneralAccessMethod.setEnabled(true);
             }
-//            mediator.enableDatabaseTab();  
-            populateAccessMethodComboDatabase();            
-            comboGeneralUserExitRoutine.setEnabled(false);
-            comboGenUserExitViewer.setInput(null);            
-            textGeneralUserExitRoutineParam.setEnabled(false);
             mediator.enableDatabaseTab();  
+            populateAccessMethodComboDatabase();          
+
+            textGeneralComments.setEnabled(true);
             mediator.doRefreshDatabaseTab();
+            
             Code accessMethod = physicalFile.getAccessMethodCode();
             if (!readOnly) {
-//                if (accessMethod.getGeneralId().equals(Codes.DB2VIAVSAM)) {
-//                    mediator.enableVSAM();                
-//                }
-//                else {
-                    mediator.enableSQL();
-//                }
+                if (accessMethod.getGeneralId().equals(Codes.DB2VIASQL)) {
+                    mediator.enableSQL();                
+                }
             }
         }
         else if (fileType.getGeneralId().equals(Codes.FILE_REXIT)) {
+
             populateAccessMethodComboNA();
             comboGeneralAccessMethod.setEnabled(false);
             if (!readOnly) {
@@ -462,7 +461,6 @@ public class PhysicalFileGeneralEditor {
             mediator.disableRecordSettings();
         }
         else if (fileType.getGeneralId().equals(Codes.FILE_PEXIT)) {
-        	System.out.println("pexit");
             populateAccessMethodComboNA();
             comboGeneralAccessMethod.setEnabled(false);
             if (!readOnly) {
@@ -470,7 +468,7 @@ public class PhysicalFileGeneralEditor {
                 comboGenUserExitViewer.setInput(userExitRoutineList);
                 textGeneralUserExitRoutineParam.setEnabled(true);
             }
-            mediator.enableDatasetTab();                    
+            mediator.enableDatasetTab();
             mediator.doRefreshDatasetTab();
             mediator.disableDatasetName();
             mediator.disableRecordSettings();

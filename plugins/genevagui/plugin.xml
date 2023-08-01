@@ -39,7 +39,7 @@ under the License.
       </command>
       <command
             id="SAFRWE.openComponent"
-            name="OpenView">
+            name="Open Component">
       </command>
       <command 
             id="SAFRWE.Environment"
@@ -357,11 +357,6 @@ under the License.
        </command>
        <command
              defaultHandler="com.ibm.safr.we.ui.commands.ShowViewHandler"
-             id="SAFRWE.ActivationLogViewOld"
-             name="View Activation Log (Old)">
-       </command>
-       <command
-             defaultHandler="com.ibm.safr.we.ui.commands.ShowViewHandler"
              id="SAFRWE.ActivationLogViewNew"
              name="View Activation Log (New)">
        </command>
@@ -512,6 +507,15 @@ under the License.
                id="SAFRWE.options"
                name="Options">
          </command>
+         <command
+               defaultHandler="com.ibm.safr.we.ui.commands.HelpHandler"
+               id="SAFRWE.helpcommand"
+               name="HelpContentsinMenu">
+         </command>
+         <command
+               id="SAFRWE.searchField"
+               name="Search">
+         </command>
       </extension>
    <extension
          id="OpenEditor"
@@ -541,6 +545,7 @@ under the License.
             name="Find Replace Open Editor">
       </command>
       <command
+            defaultHandler="com.ibm.safr.we.ui.commands.ActivateLUOpenEditor"
             id="SAFRWE.activateLUOpenEditor"
             name="Activate Lookup Paths Open Editor">
       </command>
@@ -1202,6 +1207,21 @@ under the License.
                   </with>
                </visibleWhen>
             </command>
+            <command
+                  commandId="SAFRWE.searchField"
+                  icon="icons/search_src.gif"
+                  label="Search Field"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <with
+                        variable="activeEditorId">
+                     <equals
+                           value="SAFRWE.LogicalRecordEditor">
+                     </equals>
+                  </with>
+               </visibleWhen>
+            </command>
          </menu>
          <menu
                id="actionmenu"
@@ -1291,11 +1311,6 @@ under the License.
             <command
                   commandId="SAFRWE.viewPropertiesReport"
                   label="View &amp;Properties Report"
-                  style="push">
-            </command>
-            <command
-                  commandId="SAFRWE.ViewColumnReport"
-                  label="View &amp;Column Report"
                   style="push">
             </command>
             <command
@@ -1536,13 +1551,8 @@ under the License.
                      style="push">
                </command>
                <command
-                     commandId="SAFRWE.ActivationLogViewOld"
-                     label="View &amp;Activation Log (Old)"
-                     style="push">
-               </command>
-               <command
                      commandId="SAFRWE.ActivationLogViewNew"
-                     label="View &amp;Activation Log (New)"
+                     label="View &amp;Activation Log"
                      style="push">
                </command>
                <command
@@ -1555,16 +1565,11 @@ under the License.
          <menu
                id="safrhelp"
                label="&amp;Help">
+           
             <command
-                  commandId="org.eclipse.ui.help.dynamicHelp"
+                  commandId="SAFRWE.helpcommand"
                   icon="icons/help.gif"
-                  label="&amp;Dynamic Help"
-                  style="push">
-            </command>
-            <command
-                  commandId="org.eclipse.ui.help.helpContents"
-                  icon="icons/help.gif"
-                  label="&amp;Help Content"
+                  label="&amp;Help Contents"
                   style="push">
             </command>
             <separator
@@ -1636,6 +1641,13 @@ under the License.
                label="Collapse All Fields"
                style="push"
                tooltip="Collapse All Fields">
+         </command>
+         <command
+               commandId="SAFRWE.searchField"
+               icon="icons/search_src.gif"
+               label="Search"
+               style="push"
+               tooltip="Search">
          </command>
       </menuContribution>
       <menuContribution
@@ -2398,20 +2410,6 @@ under the License.
             </visibleWhen>
          </command>
          <command
-               commandId="SAFRWE.ViewColumnReport"
-               label="View &amp;Column Report"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="com.ibm.safr.we.ui.commands.SourceProvider.ViewListMetadataView">
-                  <equals
-                        value="TRUE">
-                  </equals>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
                commandId="SAFRWE.ViewColumnPICReport"
                label="View Column P&amp;IC Report"
                style="push">
@@ -2495,20 +2493,6 @@ under the License.
          <command
                commandId="SAFRWE.viewPropertiesReport"
                label="View &amp;Properties Report"
-               style="push">
-            <visibleWhen
-                  checkEnabled="false">
-               <with
-                     variable="com.ibm.safr.we.ui.commands.SourceProvider.ViewListMetadataView">
-                  <equals
-                        value="TRUE">
-                  </equals>
-               </with>
-            </visibleWhen>
-         </command>
-         <command
-               commandId="SAFRWE.ViewColumnReport"
-               label="View &amp;Column Report"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -3921,6 +3905,10 @@ under the License.
             </with>
          </activeWhen>
       </handler>
+      <handler
+            class="com.ibm.safr.we.ui.commands.SearchField"
+            commandId="SAFRWE.searchField">
+      </handler>
    </extension>
    <extension
          id="View"
@@ -4274,14 +4262,6 @@ under the License.
                </equals>
             </with>
          </enabledWhen>
-         <activeWhen>
-            <with
-                  variable="activeFocusControlId">
-               <equals
-                     value="SourceFieldTable">
-               </equals>
-            </with>
-         </activeWhen>
       </handler>
    </extension>
    <extension
@@ -4290,14 +4270,6 @@ under the License.
       <handler
             class="com.ibm.safr.we.ui.commands.LogicTextViewOpenEditor"
             commandId="SAFRWE.logicTextViewOpenEditor">
-         <enabledWhen>
-            <with
-                  variable="com.ibm.safr.we.logictextview.enabled">
-               <equals
-                     value="ENABLED">
-               </equals>
-            </with>
-         </enabledWhen>
       </handler>
       <handler
             class="com.ibm.safr.we.ui.commands.PhysicalFileOpenEditor"
@@ -4578,12 +4550,6 @@ under the License.
              class="com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView"
              id="SAFRWE.SortKeyTitleView"
              name="Sort Key Title"
-             restorable="true">
-       </view>
-       <view
-             class="com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld"
-             id="SAFRWE.ActivationLogViewOld"
-             name="View Activation Errors (Old)"
              restorable="true">
        </view>
        <view
@@ -4925,16 +4891,10 @@ under the License.
             sequence="F6">
       </key>
       <key
-            commandId="org.eclipse.ui.help.dynamicHelp"
+            commandId="SAFRWE.helpcommand"
             contextId="org.eclipse.ui.contexts.window"
             schemeId="SAFRWE.MyScheme"
             sequence="F1">
-      </key>
-      <key
-            commandId="org.eclipse.ui.help.helpContents"
-            contextId="org.eclipse.ui.contexts.window"
-            schemeId="SAFRWE.MyScheme"
-            sequence="F2">
       </key>
       <key
             commandId="SAFRWE.deleteSortKeyTitleView"
@@ -5081,6 +5041,12 @@ under the License.
             contextId="org.eclipse.ui.contexts.window"
             schemeId="SAFRWE.MyScheme"
             sequence="M3+ARROW_UP">
+      </key>
+      <key
+            commandId="SAFRWE.searchField"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="SAFRWE.MyScheme"
+            sequence="M1+E">
       </key>
    </extension>
    <extension
@@ -5341,7 +5307,7 @@ under the License.
          point="org.eclipse.core.runtime.products">
       <product
             application="GenevaERS.application"
-            name="GenevaERS Workbench">
+            name="SAFR Workbench">
          <property
                name="appName"
                value="GenevaERS Workbench">

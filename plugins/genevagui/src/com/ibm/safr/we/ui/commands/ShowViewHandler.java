@@ -30,7 +30,6 @@ import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.navigatortree.NavigatorView;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -48,7 +47,6 @@ public class ShowViewHandler extends AbstractHandler implements IHandler {
 	private static final String SORT_KEY_VIEW = "SAFRWE.SortKeyView";
 	private static final Object DATA_SOURCE_VIEW = "SAFRWE.DataSourceView";
 	private static final Object SORT_KEY_TITLES = "SAFRWE.SortKeyTitleView";
-    private static final Object VIEW_ACTIVATION_LOG_OLD = "SAFRWE.ActivationLogViewOld";
 	private static final Object VIEW_ACTIVATION_LOG_NEW = "SAFRWE.ActivationLogViewNew";
 	private static final Object LOGIC_TEXT_HELPER = "SAFRWE.LogicTextView";;
 
@@ -75,9 +73,6 @@ public class ShowViewHandler extends AbstractHandler implements IHandler {
 			} else if (event.getCommand().getId().equals(VIEW_ACTIVATION_LOG_NEW)) {
 				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
 						.showView(ActivationLogViewNew.ID);
-            } else if (event.getCommand().getId().equals(VIEW_ACTIVATION_LOG_OLD)) {
-                HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
-                    .showView(ActivationLogViewOld.ID);
 			} else if (event.getCommand().getId().equals(LOGIC_TEXT_HELPER)) {
 				HandlerUtil.getActiveWorkbenchWindow(event).getActivePage()
 						.showView(LogicTextView.ID);

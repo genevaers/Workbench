@@ -19,6 +19,6 @@ package com.ibm.safr.we.data;
 
 
 public enum DBType {
-	DB2,
+	Db2,
 	PostgresQL
 }

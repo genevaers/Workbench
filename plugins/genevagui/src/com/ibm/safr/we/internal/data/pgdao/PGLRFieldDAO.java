@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import com.ibm.safr.we.constants.SortType;
@@ -1214,4 +1215,43 @@ public class PGLRFieldDAO implements LRFieldDAO {
 		}
 	}
 
+	@Override
+	public Map<String, Integer> getFields(int lrid, Integer environID) {
+		try {
+			Map<String, Integer> fields = new TreeMap<>();
+			String schema = params.getSchema();
+			String selectString = "Select NAME , LRFIELDID "
+					+ " From " + schema+ ".LRFIELD " 
+					+ " Where lrfield.environid = ? AND lrfield.logrecid = ? ";
+
+			PreparedStatement pst = null;
+			ResultSet rs = null;
+			while (true) {
+				try {
+					pst = con.prepareStatement(selectString);
+					int i = 1;
+					pst.setInt(i++, environID);
+					pst.setInt(i++, lrid);
+					rs = pst.executeQuery();
+					break;
+				} catch (SQLException se) {
+					if (con.isClosed()) {
+						// lost database connection, so reconnect and retry
+						con = DAOFactoryHolder.getDAOFactory().reconnect();
+					} else {
+						throw se;
+					}
+				}
+			}
+			while (rs.next()) {
+				fields.put(rs.getString(1), rs.getInt(2));
+			}
+			pst.close();
+			rs.close();
+			return fields;
+		} catch (SQLException e) {
+			String msg = "Database error occurred while retrieving LR " + lrid + " fields from Environment [" + environID + "].";
+			throw DataUtilities.createDAOException(msg, e);
+		}
+	}
 }

@@ -55,6 +55,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -82,7 +83,6 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld;
 
 /**
  * An editor for writing Logic Text.
@@ -217,13 +217,11 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         
 		toolkit = new FormToolkit(parent.getDisplay());
 		safrGuiToolkit = new SAFRGUIToolkit(toolkit);
-		safrGuiToolkit
-				.setReadOnly(viewInput.getEditRights() == EditRights.Read);
+		safrGuiToolkit.setReadOnly(viewInput.getEditRights() == EditRights.Read);
 		form = toolkit.createScrolledForm(parent);
 		form.getBody().setLayout(new GridLayout());
 		form.getBody().setLayoutData(new GridData());
-		text = new StyledText(form.getBody(), SWT.MULTI | SWT.BORDER
-				| SWT.V_SCROLL | SWT.H_SCROLL);
+		text = new StyledText(form.getBody(), SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		parser = LogicTextParser.generateParser(
 		    ((LogicTextEditorInput) getEditorInput()).getLogicTextType());		
@@ -552,8 +550,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		viewInput = (LogicTextEditorInput) getEditorInput();
 		view = viewInput.getView();
 		if (viewInput.getEditRights() != EditRights.Read) {
-			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-					.getActivePage().showView(LogicTextView.ID);
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LogicTextView.ID);
 		}
 	}
 
@@ -765,7 +762,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 				MessageDialog.openInformation(getSite().getShell(),
 						"Logic Text", "The Logic Text is Valid.");
 			}	
-			closeValidationLog();
+			closeValidationLog(getSite().getPage());
 		} catch (SAFRViewActivationException sva) {
 			// Validation error. store in local variable so that the
 			// View
@@ -780,17 +777,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 
 	public void openValidationLog() {
 	    if (validateErrors != null && validateErrors.hasErrorOrWarningOccured()) {
-	        if (!validateErrors.getActivationLogOld().isEmpty()) {
-	            try {
-	                ActivationLogViewOld eView = (ActivationLogViewOld) getSite()
-	                        .getPage().showView(ActivationLogViewOld.ID);
-                    eView.setViewEditor(false);
-	                eView.showGridForCurrentEditor(this);
-	                eView.setExpands(expandsOld);  
-	            } catch (PartInitException e1) {
-	                UIUtilities.handleWEExceptions(e1,"Unexpected error occurred while opening validation errors view.",null);
-	            }       
-	        }
 	        if (!validateErrors.getActivationLogNew().isEmpty()) {
 	            try {
 	                ActivationLogViewNew eView = (ActivationLogViewNew) getSite()
@@ -807,20 +793,10 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	        ViewEditor editor = viewInput.getViewEditor();
 	        SAFRViewActivationException aex = editor.getViewActivationException();
 	        if (aex != null && aex.hasErrorOrWarningOccured()) {
-	            if (!aex.getActivationLogOld().isEmpty()) {
-	                try {
-	                    ActivationLogViewOld eView = (ActivationLogViewOld) getSite()
-	                            .getPage().showView(ActivationLogViewOld.ID);
-	                    eView.setViewEditor(false);
-	                    eView.showGridForCurrentEditor(editor);
-	                } catch (PartInitException e1) {
-	                    UIUtilities.handleWEExceptions(e1,"Unexpected error occurred while opening validation errors view.",null);
-	                }       
-	            }
 	            if (!aex.getActivationLogNew().isEmpty()) {
 	                try {
-	                    ActivationLogViewNew eView = (ActivationLogViewNew) getSite()
-	                            .getPage().showView(ActivationLogViewNew.ID);
+	                	IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+	                    ActivationLogViewNew eView = (ActivationLogViewNew) page.showView(ActivationLogViewNew.ID);
 	                    eView.setViewEditor(false);
 	                    eView.showGridForCurrentEditor(editor);
 	                } catch (PartInitException e1) {
@@ -831,19 +807,8 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	    }
 	}
 	
-	public void closeValidationLog() {
-        ActivationLogViewOld logViewOld = (ActivationLogViewOld)getSite().getPage().findView(ActivationLogViewOld.ID);
-        if (logViewOld != null && !logViewOld.isViewEditor()) {
-            if (validateErrors != null && !validateErrors.getActivationLogOld().isEmpty()) {
-                expandsOld = logViewOld.getExpands();
-            }
-            else {
-                expandsOld = null;
-            }
-            getSite().getPage().hideView(logViewOld);
-        }       
-	    
-		ActivationLogViewNew logViewNew = (ActivationLogViewNew)getSite().getPage().findView(ActivationLogViewNew.ID);
+	public void closeValidationLog(IWorkbenchPage page) {
+		ActivationLogViewNew logViewNew = (ActivationLogViewNew)page.findView(ActivationLogViewNew.ID);
 		if (logViewNew != null && !logViewNew.isViewEditor()) {
 			if (validateErrors != null && !validateErrors.getActivationLogNew().isEmpty()) {
 				expandsNew = logViewNew.getExpands();
@@ -851,9 +816,9 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 			else {
 				expandsNew = null;
 			}
-			getSite().getPage().hideView(logViewNew);
+        	IWorkbenchPage uipage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			uipage.hideView(logViewNew);
 		}		
-		
 	}
 	
 	/**
@@ -911,11 +876,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		        !validateErrors.getActivationLogNew().isEmpty());
 	}
 
-    public boolean isLogicTextValidationMessageExistsOld() {
-        return (validateErrors != null && 
-                !validateErrors.getActivationLogOld().isEmpty());
-    }
-	
 	public SAFRViewActivationException getLogicTextValidationErrors() {
 		return validateErrors;
 	}
@@ -945,6 +905,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		this.recording = recording;
 	}
 
+	@Override
     public void partActivated(IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
             ApplicationMediator.getAppMediator().updateStatusContribution(
@@ -952,12 +913,15 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         }        
     }
 
+	@Override
     public void partBroughtToTop(IWorkbenchPartReference partRef) {
     }
 
+	@Override
     public void partClosed(IWorkbenchPartReference partRef) {
     }
 
+	@Override
     public void partDeactivated(IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
             ApplicationMediator.getAppMediator().updateStatusContribution(
@@ -965,28 +929,33 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         }        
     }
 
+	@Override
     public void partOpened(IWorkbenchPartReference partRef) {
     }
 
+	@Override
     public void partHidden(IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
 				public void run() {			
-					if(getSite().getPage() != null) {
-			            IViewPart logicView = getSite().getPage().findView(LogicTextView.ID);
-			            getSite().getPage().hideView(logicView);
-		                closeValidationLog();
+					SAFRGUIToolkit.dumpActivePage(getTitle() + " LTE partHidden");
+					if(partRef.getPage() != null) {
+			            IViewPart logicView = partRef.getPage().findView(LogicTextView.ID);
+			            partRef.getPage().hideView(logicView);
+		                closeValidationLog(partRef.getPage());
 					}
 				}
         	});        	
         }        
     }
 
+	@Override
     public void partVisible(final IWorkbenchPartReference partRef) {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
         		LogicTextEditor editor = (LogicTextEditor)partRef.getPart(false);
 				public void run() {
+					SAFRGUIToolkit.dumpActivePage(getTitle() + "LTE partVisible");
 		            if (viewInput.getEditRights() != EditRights.Read) {
 		                try {
 		                    PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -994,17 +963,23 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		                } catch (PartInitException e) {
 		                    UIUtilities.handleWEExceptions(e,"Failed to open logic text helper.", null);
 		                }
-		            }                            	
-		        	LogicTextView logicView = (LogicTextView)getSite().getPage().findView(LogicTextView.ID);
-		        	if (logicView != null) {
-		        		logicView.showContentsForCurrentEditor(editor);
-		                openValidationLog();		        	
-		        	}
+		            }  
+		            IWorkbenchPage p = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		            if( p != null) {
+			        	IViewPart logicView = p.findView(LogicTextView.ID);
+			        	if (logicView != null) {
+			        		((LogicTextView) logicView).showContentsForCurrentEditor(editor);
+			                openValidationLog();		        	
+			        	}
+		            } else {
+					    logger.log(Level.SEVERE,"Page NULL");
+		            }
 				}
         	});
         }    	
     }
 
+	@Override
     public void partInputChanged(IWorkbenchPartReference partRef) {
     }	
 }

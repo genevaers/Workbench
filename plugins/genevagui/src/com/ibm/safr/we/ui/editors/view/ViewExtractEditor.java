@@ -323,10 +323,9 @@ public class ViewExtractEditor {
                 super.widgetSelected(e);
                 if (!UIUtilities.isEqual(view.hasExtractPhaseOutputLimit(),false)) {
                     mediator.setModified(true);
-
                     view.setExtractMaxRecords(0);
                     view.setExtractPhaseOutputLimit(false);
-                    enableOutputLimitRadioButtons(radioEWriteEligibleRecords);
+                    selectExractRadioButtons();
                 }
             }
 
@@ -352,7 +351,7 @@ public class ViewExtractEditor {
                     view.setExtractMaxRecords(UIUtilities
                             .stringToInteger(textEStopProcessing.getText()));
                     view.setExtractPhaseOutputLimit(true);
-                    enableOutputLimitRadioButtons(radioEStopProcessing);
+                    selectExractRadioButtons();
                 }
             }
         });
@@ -1010,41 +1009,23 @@ public class ViewExtractEditor {
     }
     
     /**
-     * This method enables and disables, as also selects and de-selects the
-     * controls pertaining to the section 'Output Limit' in both, Extract and
-     * Format Phases, depending on the radio button passed as parameter.
-     * 
-     * @param radioButton
-     */
-    private void enableOutputLimitRadioButtons(Button radioButton) {
-        if (radioButton == radioEWriteEligibleRecords) {
-            radioEWriteEligibleRecords.setSelection(true);
-            radioEStopProcessing.setSelection(false);
-            textEStopProcessing.setEnabled(false);
-            if (view.getExtractMaxRecords() != null) {
-                textEStopProcessing.setText(Integer.toString(view
-                        .getExtractMaxRecords()));
-            }
-
-        } else if (radioButton == radioEStopProcessing) {
-            radioEStopProcessing.setSelection(true);
-            textEStopProcessing.setEnabled(!mediator.getGUIToolKit().isReadOnly());
-            if (view.getExtractMaxRecords() != null) {
-                textEStopProcessing.setText(Integer.toString(view
-                        .getExtractMaxRecords()));
-            }
-            radioEWriteEligibleRecords.setSelection(false);
-
-        } 
-    }
-    
-    /**
      * This method sets the default selection for the 'Extract-Phase Record
      * Aggregation' and 'Extract-Phase Output Limit' radio buttons
      */
-    private void selectExractRadioButtons() {
-        enableOutputLimitRadioButtons(radioEWriteEligibleRecords);
-    }
+	private void selectExractRadioButtons() {
+		Integer maxRecords = view.getExtractMaxRecords();
+		if (maxRecords != null && maxRecords > 0) {
+			radioEStopProcessing.setSelection(true);
+			textEStopProcessing.setEnabled(!mediator.getGUIToolKit().isReadOnly());
+			textEStopProcessing.setText(Integer.toString(view.getExtractMaxRecords()));
+			radioEWriteEligibleRecords.setSelection(false);
+		} else {
+			radioEWriteEligibleRecords.setSelection(true);
+			radioEStopProcessing.setSelection(false);
+			textEStopProcessing.setEnabled(false);
+			textEStopProcessing.setText("0");
+		}
+	}
 
     /**
      * The 'Extract Output File' section in the Extract Phase is used only when

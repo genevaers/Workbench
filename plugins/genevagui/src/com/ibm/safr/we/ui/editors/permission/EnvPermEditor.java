@@ -176,11 +176,10 @@ public class EnvPermEditor extends SAFREditorPart implements ISearchablePart {
     }    
     
     protected void setPopupEnabled(boolean enabled) {
-        ISourceProviderService sourceProviderService = (ISourceProviderService) PlatformUI
-        .getWorkbench().getService(ISourceProviderService.class);
-        OpenEditorPopupState service = (OpenEditorPopupState) sourceProviderService
-                .getSourceProvider(OpenEditorPopupState.ENVPERM);
+        ISourceProviderService sourceProviderService = (ISourceProviderService) PlatformUI.getWorkbench().getService(ISourceProviderService.class);
+        OpenEditorPopupState service = (OpenEditorPopupState) sourceProviderService.getSourceProvider(OpenEditorPopupState.ENVPERM);
         service.setGrpPerm(enabled);        
+        service.setEnvPerm(enabled);        
     }
     
 }

@@ -1,7 +1,7 @@
 package com.ibm.safr.we.ui.dialogs;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 	private static final int TEXT_INPUT_LENGTH = 30;
 
 	Preferences currentConnection;
-	
+
 	private Combo connectionName;
 	private String connectionName1;
 	
@@ -87,6 +87,12 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 	private Text schema;
 	String schemaText;
 
+	private Text userid;
+	String userID;
+
+	private Text pswd;
+	String password;
+
 	private Text conURL;
 	String connectionURL;
 	
@@ -95,6 +101,14 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
     private Button copyButton;
 	private Button removeButton;
 	private boolean newed = false;
+
+	public String getpassword() {
+		return password;
+	}
+
+	public String getuserid() {
+		return userID;
+	}
 
 	public String getDatabasename() {
 		return databaseName1;
@@ -176,8 +190,8 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
         Label databaseType1 = safrGuiToolkit.createLabel(composite, SWT.NONE,"Database &Type:");
         databaseType1.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false,false));
         databaseType = safrGuiToolkit.createComboBox(composite, SWT.DROP_DOWN| SWT.READ_ONLY, "");
-//        databaseType.add("DB2");
-//        databaseType.setText("DB2");
+        databaseType.add("Db2");
+        databaseType.setText("Db2");
         databaseType.add("PostgresQL");
         databaseType.setText("PostgresQL");
     
@@ -243,9 +257,31 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
         conURL.setEnabled(false);
         UIUtilities.replaceMenuText(conURL);
     
+        Label userId = safrGuiToolkit.createLabel(composite, SWT.NONE,"&User ID:");
+        userId.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+        userid = safrGuiToolkit.createTextBox(composite, SWT.BORDER);
+        GridData gridUser = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridUser.horizontalSpan = 2;
+        userid.setLayoutData(gridUser);
+        userid.setData(SAFRLogger.USER, "Enter user ID");
+        userid.setTextLimit(TEXT_INPUT_LENGTH);
+        userid.addListener(SWT.FocusIn, this);
+        userid.addListener(SWT.Modify, this);
+        
         safrGuiToolkit.createLabel(composite, SWT.NONE, ""); // col spacer
     
-   
+        Label password = safrGuiToolkit.createLabel(composite, SWT.NONE,"&Password:");
+        password.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+        pswd = safrGuiToolkit.createTextBox(composite, SWT.BORDER);
+        GridData gridPswd = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridPswd.horizontalSpan = 2;
+        pswd.setLayoutData(gridPswd);
+        pswd.setData(SAFRLogger.USER, "Password");
+        pswd.setTextLimit(TEXT_INPUT_LENGTH);
+        pswd.addListener(SWT.FocusIn, this);
+        pswd.addListener(SWT.Modify, this);
+        pswd.setEchoChar('*');
+    
         // populate Connection combo with the connection names
         for (String connName : SAFRPreferences.getConnectionNames()) {
             connectionName.add(connName);
@@ -277,11 +313,15 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 	}
 
 	private void loadConnectionParameters(Preferences connection) {
+
 		databaseType.setText(connection.get(UserPreferencesNodes.DATABASETYPE,""));
 		databaseName.setText(connection.get(UserPreferencesNodes.DATABASENAME,""));
 		server.setText(connection.get(UserPreferencesNodes.SERVER, ""));
 		port.setText(connection.get(UserPreferencesNodes.PORT, ""));
 		schema.setText(connection.get(UserPreferencesNodes.SCHEMA, ""));
+		userid.setText(connection.get(UserPreferencesNodes.USERID, ""));
+		pswd.setText(SAFRUtilities.decrypt(connection.get(UserPreferencesNodes.PD, "")));
+
 	}
 
 	private void changeConnectionTo(String connName) {
@@ -406,6 +446,14 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 			schema.setFocus();
 			setErrorMessage("Please enter schema");
 			return false;
+		} else if (userid.getText() == "") {
+			userid.setFocus();
+			setErrorMessage("Please enter userID");
+			return false;
+		} else if (pswd.getText() == "") {
+			pswd.setFocus();
+			setErrorMessage("please enter password");
+			return false;
 		}
 
 		return true;
@@ -419,6 +467,8 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 		serverText = server.getText();
 		portText = port.getText();
 		schemaText = schema.getText();
+		userID = userid.getText();
+		password = SAFRUtilities.encrypt(pswd.getText());
 
 		boolean saveIt = false;
 		if (currentConnection == null
@@ -432,7 +482,11 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 				|| !portText.equals(currentConnection.get(
 						UserPreferencesNodes.PORT, ""))
 				|| !schemaText.equals(currentConnection.get(
-						UserPreferencesNodes.SCHEMA, ""))) {
+						UserPreferencesNodes.SCHEMA, ""))
+				|| !userID.equals(currentConnection.get(
+						UserPreferencesNodes.USERID, ""))
+				|| !password.equals(currentConnection.get(
+						UserPreferencesNodes.PD, ""))) {
 			saveIt = true;
 		}
 
@@ -444,6 +498,8 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 			SAFRPreferences.getSAFRPreferences()
 					.put(UserPreferencesNodes.LAST_CONNECTION,
 							currentConnection.name());
+			SAFRPreferences.getSAFRPreferences().put(UserPreferencesNodes.HELP_URL,SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.HELP_URL, ""));
+			
 			SAFRPreferences.getSAFRPreferences().flush();
 			SAFRPreferences.getSAFRPreferences().sync();
 
@@ -456,12 +512,14 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 		close();
 	}
 
+	
 	private void saveConnectionParameters() throws BackingStoreException {
 		
 		if (currentConnection == null) {
 			// no connection prefs exist yet so create a new prefs node
 			Preferences savedConns = SAFRPreferences.getSAFRPreferences().node(UserPreferencesNodes.SAVED_CONNECTION);
 			currentConnection = savedConns.node(connectionName1);
+			
 		} else if (!connectionName1.equals(currentConnection.name())) {
 			// The connection name has been modified or a new connection has
 			// been created, so create a new preferences node with the new
@@ -483,6 +541,8 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 		currentConnection.put(UserPreferencesNodes.SERVER, serverText);
 		currentConnection.put(UserPreferencesNodes.PORT, portText);
 		currentConnection.put(UserPreferencesNodes.SCHEMA, schemaText);
+		currentConnection.put(UserPreferencesNodes.USERID, userID);
+		currentConnection.put(UserPreferencesNodes.PD, password);
 	}
 
 	public void handleEvent(Event event) {
@@ -550,6 +610,8 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 		server.setText("");
 		port.setText("5000");
 		schema.setText("");
+		userid.setText("");
+		pswd.setText("");
 		currentConnection = null;
 	}
 

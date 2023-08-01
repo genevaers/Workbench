@@ -1,9 +1,9 @@
 package org.genevaers.sycadas;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  * 
@@ -20,24 +20,18 @@ package org.genevaers.sycadas;
 
 public class SycadaFactory {
 	
-	private static SyntaxChecker ecs = new ExtractColumnSycada();
-	private static SyntaxChecker efs = new ExtractFilterSycada();
-	private static SyntaxChecker eos = new ExtractOutputSycada();
-	private static SyntaxChecker ffs = new FormatFilterSyntaxChecker();
-	private static SyntaxChecker fcs = new FormatCalculationSyntaxChecker();
-
-	public static SyntaxChecker getProcesorFor(SycadaType type) {
+	public static SyntaxChecker getProcessorFor(SycadaType type) {
 		switch(type) {
 		case EXTRACT_COLUMN:
-			return ecs;
+			return new ExtractColumnSycada();
 		case EXTRACT_FILTER:
-			return efs;
+			return new ExtractFilterSycada();
 		case EXTRACT_OUTPUT:
-			return eos;
+			return new ExtractOutputSycada();
 		case FORMAT_FILTER:
-			return ffs;
+			return new FormatFilterSyntaxChecker();
 		case FORMAT_CALCULATION:
-			return fcs;
+			return new FormatCalculationSyntaxChecker();
 		default:
 			return null;
 		}

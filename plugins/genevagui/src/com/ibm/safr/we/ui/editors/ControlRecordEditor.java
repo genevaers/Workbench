@@ -105,14 +105,6 @@ public class ControlRecordEditor extends SAFREditorPart {
 		createSectionFiscalparam(form.getBody());
 		refreshControls();
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (controlRecord.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.ControlRecordEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewControlRecord");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}

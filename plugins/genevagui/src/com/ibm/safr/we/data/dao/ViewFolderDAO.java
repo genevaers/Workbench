@@ -23,9 +23,11 @@ import java.util.List;
 import com.ibm.safr.we.constants.SortType;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.transfer.DependentComponentTransfer;
+import com.ibm.safr.we.data.transfer.ViewFolderViewAssociationTransfer;
 import com.ibm.safr.we.data.transfer.ViewFolderTransfer;
 import com.ibm.safr.we.data.transfer.ViewFolderViewAssociationTransfer;
 import com.ibm.safr.we.exceptions.SAFRNotFoundException;
+import com.ibm.safr.we.model.query.EnvironmentQueryBean;
 import com.ibm.safr.we.model.query.ViewFolderQueryBean;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 
@@ -214,4 +216,5 @@ public interface ViewFolderDAO {
      */
     void addAllViewsAssociation(Integer id, Integer environmentId);
 
+	List<ViewFolderViewAssociationTransfer> getinactiveviewinfolders(int environment, List<Integer> folderIds);
 }

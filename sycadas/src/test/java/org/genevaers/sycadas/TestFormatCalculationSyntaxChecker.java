@@ -1,7 +1,7 @@
 package org.genevaers.sycadas;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,58 @@ package org.genevaers.sycadas;
 
 import static org.junit.Assert.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 import org.junit.Test;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 public class TestFormatCalculationSyntaxChecker {
 
 
 	@Test
-    public void testCOLUMNAssign() throws IOException {
-		FormatCalculationSyntaxChecker fcsc = (FormatCalculationSyntaxChecker) SycadaFactory.getProcesorFor(SycadaType.FORMAT_CALCULATION);
+    public void testColumnAssign() throws IOException {
+		FormatCalculationSyntaxChecker fcsc = (FormatCalculationSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_CALCULATION);
 		assertNotNull(fcsc);
-		fcsc.processLogic("CoLUMN = Col.1 + 3");
+		fcsc.syntaxCheckLogic("CoLUMN = Col.1 + 3");
 		assertEquals(0, fcsc.getSyntaxErrors().size());
 		assertFalse(fcsc.hasSyntaxErrors());
+    }
+
+	@Test
+    public void testColumnMoreThanOneAssign() throws IOException {
+		FormatCalculationSyntaxChecker fcsc = (FormatCalculationSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_CALCULATION);
+		assertNotNull(fcsc);
+		fcsc.syntaxCheckLogic("CoLUMN = Col.4 + Col.7");
+		Set<Integer> crefs = fcsc.getColumnRefs();
+		assertEquals(2, crefs.size());
+		Iterator<Integer> cfr = crefs.iterator();
+		assertEquals(4, cfr.next().intValue());
+		assertEquals(7, cfr.next().intValue());
+    }
+
+
+	@Test
+    public void testFormatFilter() throws IOException {
+		FormatFilterSyntaxChecker ffsc = (FormatFilterSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_FILTER);
+		assertNotNull(ffsc);
+		ffsc.syntaxCheckLogic("SELECTIF(Col.3 > 0)");
+		Set<Integer> crefs = ffsc.getColumnRefs();
+		assertEquals(1, crefs.size());
+		Iterator<Integer> cfr = crefs.iterator();
+		assertEquals(3, cfr.next().intValue());
+    }
+
+	@Test
+    public void testTwoColumnFormatFilter() throws IOException {
+		FormatFilterSyntaxChecker ffsc = (FormatFilterSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_FILTER);
+		assertNotNull(ffsc);
+		ffsc.syntaxCheckLogic("SELECTIF(Col.3 + COL.9 > 0)");
+		Set<Integer> crefs = ffsc.getColumnRefs();
+		assertEquals(2, crefs.size());
+		Iterator<Integer> cfr = crefs.iterator();
+		assertEquals(3, cfr.next().intValue());
+		assertEquals(9, cfr.next().intValue());
     }
 
 }

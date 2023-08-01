@@ -35,8 +35,9 @@ public class OpenLogFile extends AbstractHandler {
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Event e = (Event) event.getTrigger();
 		String fileClicked = ((MenuItem) e.widget).getText();
+		String prefix = '\u2022' + " &";
 		// open the file in notepad
-		if(fileClicked.startsWith("•")){
+		if(fileClicked.startsWith(prefix)){
 			//remove the extra prefixed chars
 			fileClicked=fileClicked.substring(3);
 		}

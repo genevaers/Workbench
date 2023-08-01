@@ -20,6 +20,7 @@ package com.ibm.safr.we.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -832,12 +833,9 @@ public class SAFRFactory extends SAFRObject {
 	 * @return a list of LR fields whose parent LR is specified.
 	 * @throws SAFRException
 	 */
-	public List<LRField> getLRFields(Integer logicalRecordId)
-			throws SAFRException {
+	public List<LRField> getLRFields(Integer logicalRecordId) throws SAFRException {
 		List<LRField> lrfs = new ArrayList<LRField>();
-		List<LRFieldTransfer> lrfts = DAOFactoryHolder.getDAOFactory()
-				.getLRFieldDAO().getLRFields(getCurrentEnvironmentId(),
-						logicalRecordId);
+		List<LRFieldTransfer> lrfts = DAOFactoryHolder.getDAOFactory().getLRFieldDAO().getLRFields(getCurrentEnvironmentId(), logicalRecordId);
 		for (LRFieldTransfer lrft : lrfts) {
 			LRField lrf = new LRField(lrft);
 			lrfs.add(lrf);
@@ -1426,7 +1424,7 @@ public class SAFRFactory extends SAFRObject {
 		
     		List<DependentComponentTransfer> viewDependencies = DAOFactoryHolder
     				.getDAOFactory().getLookupDAO().getLookupPathViewDependencies(
-    						getCurrentEnvironmentId(), lookupPathId, null);
+    						getCurrentEnvironmentId(), lookupPathId, new HashSet<>());
     		if (viewDependencies.size() > 0) {
     			Map<ComponentType, List<DependentComponentTransfer>> dependencies = 
     			    new HashMap<ComponentType, List<DependentComponentTransfer>>();

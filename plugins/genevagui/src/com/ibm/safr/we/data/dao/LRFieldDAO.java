@@ -19,6 +19,7 @@ package com.ibm.safr.we.data.dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 import com.ibm.safr.we.constants.SortType;
 import com.ibm.safr.we.data.DAOException;
@@ -143,5 +144,7 @@ public interface LRFieldDAO {
 
 	Integer getLookupLRField(Integer environID, int lookupid,
 			String targetFieldName);
+
+	Map<String, Integer> getFields(int lrid, Integer environID);
 
 }

@@ -21,7 +21,6 @@ package org.genevaers.ccb2lr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.genevaers.ccb2lr.grammar.CobolCopybookBaseListener;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 

@@ -523,4 +523,36 @@ public class PGControlRecordDAO implements ControlRecordDAO {
 
 	}
 
+	@Override
+	public void deleteAllControlRecordsFromEnvironment(Integer environmentId) throws DAOException {
+		try {
+			List<String> idNames = new ArrayList<String>();
+			idNames.add(COL_ENVID);
+
+			String statement = generator.getDeleteStatement(params.getSchema(),
+					TABLE_NAME, idNames);
+			PreparedStatement pst = null;
+			while (true) {
+				try {
+					pst = con.prepareStatement(statement);
+					pst.setInt(1, environmentId);
+					pst.execute();
+					break;
+				} catch (SQLException se) {
+					if (con.isClosed()) {
+						// lost database connection, so reconnect and retry
+						con = DAOFactoryHolder.getDAOFactory().reconnect();
+					} else {
+						throw se;
+					}
+				}
+			}
+
+			pst.close();
+
+		} catch (SQLException e) {
+			throw DataUtilities.createDAOException("Database error occurred while deleting the Control Record.",e);
+		}
+	}
+
 }

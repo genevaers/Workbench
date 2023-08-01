@@ -456,7 +456,7 @@ public class LogicalRecord extends SAFRActivatedComponent {
 	}
 
 	public String getLookupExitParams() {
-		return this.lookupExitParams;
+		return this.lookupExitParams == null ? "" : this.lookupExitParams;
 	}
 
 	public void setLookupExitParams(String lookupExitParams) {

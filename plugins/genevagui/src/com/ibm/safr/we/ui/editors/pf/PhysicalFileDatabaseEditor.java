@@ -1,7 +1,7 @@
 package com.ibm.safr.we.ui.editors.pf;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,8 +61,6 @@ public class PhysicalFileDatabaseEditor {
     private Text textSQL;
     private Text textSQLDDName;
     
-    
-    
     private String selectedRowFormat = "";
     
     public PhysicalFileDatabaseEditor(PhysicalFileMediator mediator,
@@ -93,7 +91,7 @@ public class PhysicalFileDatabaseEditor {
         FormData textSubsystemData = new FormData();
         textSubsystemData.top = new FormAttachment(0, 10);
         textSubsystemData.left = new FormAttachment(labelSubSystem, 70);
-        textSubsystemData.width = 140;
+        textSubsystemData.width = 300;
         textSubsystem.setLayoutData(textSubsystemData);
         textSubsystem.setTextLimit(MAXSUBSYSTEM);
         textSubsystem.addModifyListener(new ModifyListener() {
@@ -130,11 +128,11 @@ public class PhysicalFileDatabaseEditor {
         labelDDName.setLayoutData(labelDDNameData);
         
         textSQLDDName = mediator.getSAFRToolkit().createTextBox(compositeSQL, SWT.NONE);
-        textSQLDDName.setData(SAFRLogger.USER, "DB2 DD Name"); 
+        textSQLDDName.setData(SAFRLogger.USER, "Db2 DD Name"); 
         FormData textSQLDDNameData = new FormData();
         textSQLDDNameData.top = new FormAttachment(0, 10);
         textSQLDDNameData.left = new FormAttachment(labelDDName, 100);
-        textSQLDDNameData.width = 100;
+        textSQLDDNameData.width = 300;
         textSQLDDName.setLayoutData(textSQLDDNameData);
         textSQLDDName.setTextLimit(MAXDDNAME);
         textSQLDDName.addModifyListener(new ModifyListener() {
@@ -177,6 +175,7 @@ public class PhysicalFileDatabaseEditor {
         });
         
     }
+
     
     protected void doRefreshControls() {        
         UIUtilities.checkNullText(textSubsystem, pfSql.getSubSystem());
@@ -185,23 +184,14 @@ public class PhysicalFileDatabaseEditor {
         if (accessMethod.getGeneralId().equals(Codes.DB2VIASQL)) {
             UIUtilities.checkNullText(textSQLDDName, pfSql.getInputDDName());
             UIUtilities.checkNullText(textSQL, pfSql.getSqlStatement());
-//            textVSAMSchema.setText("");
-//            textVSAMTable.setText("");
-//            comboVSAMRowFormat.setText("");
             selectedRowFormat = "";
-//            checkVSAMNull.setSelection(false);           
         } 
     }
 
 
     protected void enableSQL() {
         textSQLDDName.setEnabled(true);
-        textSQL.setEnabled(true);
-//        textVSAMSchema.setEnabled(false);
-//        textVSAMTable.setEnabled(false);
-//        comboVSAMRowFormat.setEnabled(false);
-//        checkVSAMNull.setEnabled(false);        
+        textSQL.setEnabled(true);           
     }
-
     
 }

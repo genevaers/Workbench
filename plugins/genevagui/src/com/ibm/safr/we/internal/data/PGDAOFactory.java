@@ -41,6 +41,7 @@ import com.ibm.safr.we.data.dao.MigrateDAO;
 import com.ibm.safr.we.data.dao.NextKeyDAO;
 import com.ibm.safr.we.data.dao.OldCompilerDAO;
 import com.ibm.safr.we.data.dao.PhysicalFileDAO;
+import com.ibm.safr.we.data.dao.ReportsDAO;
 import com.ibm.safr.we.data.dao.StoredProcedureDAO;
 import com.ibm.safr.we.data.dao.UserDAO;
 import com.ibm.safr.we.data.dao.UserExitRoutineDAO;
@@ -51,6 +52,7 @@ import com.ibm.safr.we.data.dao.ViewFolderDAO;
 import com.ibm.safr.we.data.dao.ViewLogicDependencyDAO;
 import com.ibm.safr.we.data.dao.ViewSortKeyDAO;
 import com.ibm.safr.we.data.dao.ViewSourceDAO;
+import com.ibm.safr.we.internal.data.dao.DB2ReportsDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGCodeSetDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGControlRecordDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGDependencyCheckerDAO;
@@ -67,6 +69,7 @@ import com.ibm.safr.we.internal.data.pgdao.PGMigrateDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGNextKeyDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGOldCompilerDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGPhysicalFileDAO;
+import com.ibm.safr.we.internal.data.pgdao.PGReportsDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGStoredProcedureDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGUserDAO;
 import com.ibm.safr.we.internal.data.pgdao.PGUserExitRoutineDAO;
@@ -263,6 +266,11 @@ public class PGDAOFactory implements DAOFactory {
 			_uow = new PGDAOUOW();
 		}
 		return _uow;
+	}
+
+	@Override
+	public ReportsDAO getReportsDAO() {
+		return new PGReportsDAO(_conFact.getConnection(), _conFact.getParams(), _safrLogin);
 	}
 
 }

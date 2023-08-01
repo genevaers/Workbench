@@ -280,9 +280,6 @@ public class PGViewColumnSourceDAO implements ViewColumnSourceDAO {
         if(srcFld.getLookupPathId() != null && srcFld.getLookupPathId() > 0) {
             appendElementToBuffer(buf, "LOOKUPID", srcFld.getLookupPathId());
         }
-        else {
-            System.out.println("Lookup " + srcFld.getLookupPathId());
-        }
         if(srcFld.getSourceLRFieldId() != null && srcFld.getSourceLRFieldId() > 0) {
             appendElementToBuffer(buf, "LRFIELDID", srcFld.getSourceLRFieldId());
         }

@@ -85,9 +85,6 @@ public class FindReplaceTextEditor extends SAFREditorPart {
 		
 		mediator.create(form.getBody());
 		
-		// Used to load the context sensitive help
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-				"com.ibm.safr.we.help.FindReplaceLTEditor");
 		form.reflow(true);
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());

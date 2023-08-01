@@ -700,6 +700,64 @@ public class PGViewFolderDAO implements ViewFolderDAO {
             throw DataUtilities.createDAOException("Database error occurred while deleting associated Views of View Folder.",e);
         }        
     }
+    
+    public List<ViewFolderViewAssociationTransfer> getinactiveviewinfolders(int environmentId, List<Integer> folderIds) {
+   
+		List<ViewFolderViewAssociationTransfer> result = new ArrayList<ViewFolderViewAssociationTransfer>();
+    	String placeHolders = generator.getPlaceholders(folderIds.size());       
+    	try {
+    		
+    		if (folderIds.isEmpty()) {
+    			folderIds.add(0);
+    		}
+            String inactiveviews = 
+                "Select A.VIEWFOLDERID, F.NAME AS VFNAME, A.VIEWID, V.NAME AS VIEWNAME, A.VFVASSOCID FROM " + params.getSchema() + ".VFVASSOC AS A JOIN " +
+                params.getSchema() + ".VIEW AS V ON A.VIEWID = V.VIEWID AND A.ENVIRONID = V.ENVIRONID JOIN " +
+                params.getSchema() + ".VIEWFOLDER AS F ON A.VIEWFOLDERID = F.VIEWFOLDERID AND A.ENVIRONID = F.ENVIRONID "
+                + "WHERE A.ENVIRONID = ? AND"
+                + " V.VIEWSTATUSCD = 'INACT' AND"
+                + " A.VIEWFOLDERID IN ( " + placeHolders + " )"
+                + " ORDER BY VIEWFOLDERID, VIEWID" ;
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+
+            while (true) {
+                try {
+                    pst = con.prepareStatement(inactiveviews);
+                    pst.setInt(1, environmentId);
+                    int ndx = 2;
+                    for( int i = 0 ; i < folderIds.size(); i++ ) {
+                     pst.setInt(ndx++, folderIds.get(i));
+                    }
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            while (rs.next()) {
+                ViewFolderViewAssociationTransfer vfvAssociationTransfer = new ViewFolderViewAssociationTransfer();
+                vfvAssociationTransfer.setEnvironmentId(environmentId);
+                vfvAssociationTransfer.setAssociatingComponentId(rs.getInt("VIEWFOLDERID"));
+                vfvAssociationTransfer.setAssociatingComponentName(
+                    DataUtilities.trimString(rs.getString("VFNAME")));
+                vfvAssociationTransfer.setAssociatedComponentId(rs.getInt("VIEWID"));
+                vfvAssociationTransfer.setAssociatedComponentName(
+                    DataUtilities.trimString(rs.getString("VIEWNAME")));
+                vfvAssociationTransfer.setAssociationId(rs.getInt("VFVASSOCID"));                          
+                result.add(vfvAssociationTransfer);
+            }
+            pst.close();
+            return result;
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException("Database error occurred while deleting associated Views of View Folder.",e);
+        }        
+    }
 
     public void persistAssociatedViews(
         List<ViewFolderViewAssociationTransfer> componentAssociationTransfers) throws DAOException {
@@ -1040,16 +1098,15 @@ public class PGViewFolderDAO implements ViewFolderDAO {
         try {
             boolean admin = SAFRApplication.getUserSession().isSystemAdministrator(); 
             
-            if (notInParam.isEmpty()) 
-                notInParam.add(0);
-
             String selectString;
             if (admin) {
                 selectString = "Select VIEWID, NAME From "
                         + params.getSchema() + ".VIEW"
-                        + " Where ENVIRONID = ? " 
-                        + " AND VIEWID > 0" + " AND VIEWID NOT IN ( " + placeHolders + " )"
-                        + " Order By VIEWID";
+                        + " Where ENVIRONID = ?  AND VIEWID > 0"; //Can't really be 0?
+                if(placeHolders.length() > 0) {
+                	selectString +=  " AND VIEWID NOT IN ( " + placeHolders + " )";
+                }
+                selectString += " Order By VIEWID";
             } else {
                 selectString = "Select A.VIEWID, A.NAME,L.RIGHTS From "
                         + params.getSchema()

@@ -54,7 +54,7 @@ public interface UserExitRoutineDAO {
 	 */
 	UserExitRoutineTransfer getUserExitRoutine(Integer id, Integer environmentId)
 			throws DAOException;
-	Integer getUserExitRoutine(String exitName, Integer environmentId);
+	Integer getUserExitRoutine(String exitName, Integer environmentId, boolean procedure);
 
 	/**
 	 * This method is used to retrieve all the User-Exit Routines from

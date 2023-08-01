@@ -1,7 +1,7 @@
 package org.genevaers.sycadas;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,27 +22,25 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
-import org.genevaers.sycadas.grammar.FormatCalculationLexer;
-import org.genevaers.sycadas.grammar.FormatCalculationParser;
-import org.genevaers.sycadas.grammar.FormatFilterLexer;
-import org.genevaers.sycadas.grammar.FormatFilterParser;
-import org.genevaers.sycadas.grammar.FormatFilterParser.GoalContext;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.genevaers.grammar.FormatFilterLexer;
+import org.genevaers.grammar.FormatFilterParser;
+import org.genevaers.grammar.FormatFilterParser.GoalContext;
 
 public class FormatFilterSyntaxChecker implements SyntaxChecker {
 
 	private ParseErrorListener errorListener;
 	private GoalContext tree;
 
+	private FormatFilterListener filterListener = new FormatFilterListener();
+
 	@Override
-	public void processLogic(String logicText) {
-		System.out.println(logicText);
+	public void syntaxCheckLogic(String logicText) {
         InputStream is = new ByteArrayInputStream(logicText.getBytes());
         @SuppressWarnings("deprecation")
 		ANTLRInputStream input;
@@ -80,5 +78,11 @@ public class FormatFilterSyntaxChecker implements SyntaxChecker {
 	public boolean hasSyntaxErrors() {
 		return errorListener.getErrors().size() > 0;
 	}
+
+    public Set<Integer> getColumnRefs() {
+       	ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
+       	walker.walk(filterListener, tree); // initiate walk of tree with listener		
+		return filterListener.getColumnRefs();
+    }
 
 }

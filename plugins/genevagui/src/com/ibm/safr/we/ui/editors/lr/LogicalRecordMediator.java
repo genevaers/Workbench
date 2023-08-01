@@ -48,6 +48,10 @@ public class LogicalRecordMediator {
         this.logicalRecordFieldEditor = logicalRecordFieldEditor;
     }
     
+    public LogicalRecordFieldEditor getLogicalRecordFieldEditor() {
+		return logicalRecordFieldEditor;
+	}
+    
     public void setLogicalRecordGeneralEditor(LogicalRecordGeneralEditor logicalRecordGeneralEditor) {
         this.logicalRecordGeneralEditor = logicalRecordGeneralEditor;
     }

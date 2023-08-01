@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.reports;
 
+import java.nio.file.Path;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -23,7 +25,7 @@ import java.util.List;
 import com.ibm.safr.we.model.utilities.DependencyChecker;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 
-public class DependencyCheckerReportData implements IReportData {
+public class DependencyCheckerReportData implements IReportGenerator {
 	private String treeString;
 	private DependencyChecker dpChecker;
 
@@ -59,6 +61,18 @@ public class DependencyCheckerReportData implements IReportData {
 
 	public boolean hasData() {
 		return false;
+	}
+
+	@Override
+	public String getHtmlUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void writeReportFiles(Path path, String bsseName) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
