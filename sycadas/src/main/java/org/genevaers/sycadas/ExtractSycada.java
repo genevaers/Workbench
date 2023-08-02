@@ -23,18 +23,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
-import java.util.Properties;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 import org.genevaers.grammar.GenevaERSLexer;
 import org.genevaers.grammar.GenevaERSParser;
 import org.genevaers.grammar.GenevaERSParser.GoalContext;
+import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 
 
 public class ExtractSycada implements SyntaxChecker, DependencyAnalyser {
@@ -119,6 +119,10 @@ public class ExtractSycada implements SyntaxChecker, DependencyAnalyser {
 
 	public void clearErrors() {
 		dependencyAnalyser.getErrors().clear();
+	}
+
+	public void clearDependencies() {
+		dependencyAnalyser.clear();
 	}
 
 	public String getDependenciesAsString() {

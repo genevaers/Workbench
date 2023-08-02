@@ -20,19 +20,18 @@ package org.genevaers.sycadas;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 import org.genevaers.grammar.GenevaERSBaseListener;
 import org.genevaers.grammar.GenevaERSParser;
 import org.genevaers.grammar.GenevaERSParser.LookupContext;
 import org.genevaers.grammar.GenevaERSParser.LrFieldContext;
+import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 
 
 public class ExtractDependencyAnalyser extends GenevaERSBaseListener {
@@ -274,6 +273,13 @@ public class ExtractDependencyAnalyser extends GenevaERSBaseListener {
 	//Call this as soon as we get an Lookup name
 	public void preloadCacheFromLookup(String name){
 
+	}
+
+	public void clear() {
+		pfsByName.clear();
+		fieldsByName.clear();
+		lookupsByName.clear();
+		writeExits.clear();
 	}
 
 }

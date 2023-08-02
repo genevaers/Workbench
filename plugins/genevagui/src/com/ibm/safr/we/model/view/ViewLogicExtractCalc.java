@@ -85,6 +85,7 @@ public class ViewLogicExtractCalc {
 		extractColumnSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             processExtractCalculation(source, col);
+            extractColumnSycada.clearDependencies();
         }
     }
     
