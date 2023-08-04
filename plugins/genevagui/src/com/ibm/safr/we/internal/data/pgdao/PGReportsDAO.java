@@ -96,7 +96,7 @@ public class PGReportsDAO implements ReportsDAO {
 	            		+ "L.NAME AS LFNAME,"
 	            		+ "P.NAME AS PFNAME "
 	            		+ "FROM " + params.getSchema() + ".VIEW V "
-	            		+ "JOIN " + params.getSchema() + ".CONTROLREC C "
+	            		+ "LEFT JOIN " + params.getSchema() + ".CONTROLREC C "
 	            		+ "ON C.ENVIRONID=V.ENVIRONID AND C.CONTROLRECID=V.CONTROLRECID "
 	            		+ "LEFT JOIN " + params.getSchema() + ".EXIT E "
 	            		+ "ON E.ENVIRONID=V.ENVIRONID AND E.EXITID=V.FORMATEXITID "
@@ -183,7 +183,7 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "		O.LOGFILEID AS LOFID,"
             		+ "		O.PHYFILEID,"
             		+ "		LO.NAME AS LONAME,"
-            		+ "		P.NAME,"
+            		+ "		P.NAME AS PFNAME,"
             		+ "		E.NAME AS WRITEEXIT "
             		+ "FROM " + params.getSchema() + ".VIEW V "
             		+ "JOIN " + params.getSchema() + ".VIEWSOURCE S "
@@ -192,13 +192,13 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "ON I.ENVIRONID=S.ENVIRONID AND I.LRLFASSOCID=S.INLRLFASSOCID "
             		+ "JOIN " + params.getSchema() + ".LOGREC R "
             		+ "ON R.ENVIRONID=I.ENVIRONID AND I.LOGRECID=R.LOGRECID "
-            		+ "JOIN " + params.getSchema() + ".LOGFILE L "
+            		+ "LEFT JOIN " + params.getSchema() + ".LOGFILE L "
             		+ "ON L.ENVIRONID=S.ENVIRONID AND L.LOGFILEID=I.LOGFILEID "
-            		+ "JOIN " + params.getSchema() + ".LFPFASSOC O "
+            		+ "LEFT JOIN " + params.getSchema() + ".LFPFASSOC O "
             		+ "ON O.ENVIRONID=S.ENVIRONID AND O.LFPFASSOCID=S.OUTLFPFASSOCID "
-            		+ "JOIN " + params.getSchema() + ".LOGFILE LO "
+            		+ "LEFT JOIN " + params.getSchema() + ".LOGFILE LO "
             		+ "ON LO.ENVIRONID=S.ENVIRONID AND LO.LOGFILEID=O.LOGFILEID "
-            		+ "JOIN " + params.getSchema() + ".PHYFILE P "
+            		+ "LEFT JOIN " + params.getSchema() + ".PHYFILE P "
             		+ "ON P.ENVIRONID=S.ENVIRONID AND P.PHYFILEID=O.PHYFILEID "
             		+ "LEFT JOIN " + params.getSchema() + ".EXIT E "
             		+ "ON E.ENVIRONID=S.ENVIRONID AND E.EXITID=S.WRITEEXITID "
@@ -238,9 +238,9 @@ public class PGReportsDAO implements ReportsDAO {
 								rs.getString("LRNAME"),
 								rs.getString("LFNAME"),
 								rs.getString("LOFID"),
-								rs.getString("O.PHYFILEID"),
+								rs.getString("PHYFILEID"),
 								rs.getString("LONAME"),
-								rs.getString("P.NAME"),
+								rs.getString("PFNAME"),
 								rs.getString("WRITEEXIT")
 							 ));
             }
@@ -375,9 +375,9 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "N.VISIBLE,"
             		+ "N.FORMATCALCLOGIC "
             		+ "FROM " + params.getSchema() + ".VIEWCOLUMNSOURCE C "
-            		+ "LEFT JOIN " + params.getSchema() + ".VIEWSOURCE S "
+            		+ "JOIN " + params.getSchema() + ".VIEWSOURCE S "
             		+ "ON C.ENVIRONID=S.ENVIRONID AND C.VIEWSOURCEID=S.VIEWSOURCEID "
-            		+ "LEFT JOIN " + params.getSchema() + ".VIEWCOLUMN N "
+            		+ "JOIN " + params.getSchema() + ".VIEWCOLUMN N "
             		+ "ON S.ENVIRONID=N.ENVIRONID AND C.VIEWCOLUMNID=N.VIEWCOLUMNID "
             		+ "LEFT JOIN " + params.getSchema() + ".LRFIELD F "
             		+ "ON F.ENVIRONID=N.ENVIRONID AND F.LRFIELDID=C.LRFIELDID "

@@ -98,10 +98,10 @@ public class ViewSourcesReportQueryBean {
 		return lfname + "[" + logfileid + "]";
 	}
 	public String getOutLf() {
-		return lofid.equals("0")? "" : loname + "[" + lofid+ "]";
+		return lofid == null || lofid.equals("0")? "" : loname + "[" + lofid+ "]";
 	}
 	public String getOutPF() {
-		return pfid.equals("0")? "" : pfname + "[" + pfid+ "]";
+		return pfid == null || pfid.equals("0")? "" : pfname + "[" + pfid+ "]";
 	}
 	public String getWriteExitName() {
 		return exitName != null ? exitName + "[" + writeexitid+ "]" : "";
