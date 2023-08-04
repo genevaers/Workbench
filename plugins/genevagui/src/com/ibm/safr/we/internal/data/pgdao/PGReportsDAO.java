@@ -586,9 +586,63 @@ public class PGReportsDAO implements ReportsDAO {
 	}
 
 	@Override
-	public List<ViewColumnPICQueryBean> getViewColumnPICData(Integer id, Integer environmentId) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ViewColumnPICQueryBean> getViewColumnPICData(Integer viewId, Integer environmentId) throws DAOException {
+		List<ViewColumnPICQueryBean> result = new ArrayList<>();
+        try {
+            String selectString = "SELECT C.ENVIRONID, "
+            		+ "	C.VIEWID, "
+            		+ "	V.NAME, "
+            		+ "	COLUMNNUMBER, "
+            		+ "	FLDFMTCD, "
+            		+ "	MAXLEN, "
+            		+ "	SIGNEDIND, "
+            		+ "	DECIMALCNT, "
+            		+ "	HDRLINE1, "
+            		+ "	HDRLINE2, "
+            		+ "	HDRLINE3 "
+            		+ "	FROM " + params.getSchema() + ".VIEWCOLUMN C "
+            		+ "	JOIN " + params.getSchema() + ".VIEW V "
+            		+ "	ON V.ENVIRONID=C.ENVIRONID AND V.VIEWID=C.VIEWID "
+            		+ " WHERE C.ENVIRONID=? AND C.VIEWID=? "
+            		+ "	ORDER BY C.COLUMNNUMBER;";
+            
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                	pst.setInt(1,  environmentId);
+                	pst.setInt(2,  viewId);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            while (rs.next()) {
+				result.add(new ViewColumnPICQueryBean(
+						rs.getString("ENVIRONID"),
+						rs.getString("VIEWID"), 
+						rs.getString("NAME"), 
+						rs.getString("COLUMNNUMBER"), 
+						rs.getString("FLDFMTCD"), 
+						rs.getInt("MAXLEN"),
+						rs.getBoolean("SIGNEDIND"),
+						rs.getInt("DECIMALCNT"),
+						rs.getString("HDRLINE1"),
+						rs.getString("HDRLINE2"),
+						rs.getString("HDRLINE3")
+						));
+            }
+        } catch (SQLException e) {
+			throw DataUtilities.createDAOException("Database error occurred while querying User Groups Report.", e);
+        }
+        return result;	
 	}
 
 	@Override
@@ -648,9 +702,9 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "ON KF.ENVIRONID=L.ENVIRONID AND KF.LOGFILEID=KA.LOGFILEID "
             		+ "LEFT JOIN " + params.getSchema() + ".LRFIELD AS FLD "
             		+ "ON FLD.ENVIRONID=L.ENVIRONID AND  FLD.LRFIELDID=K.LRFIELDID "
-            		+ "LEFT JOIN SAFRWBS2.EXIT E "
+            		+ "LEFT JOIN " + params.getSchema() + ".EXIT E "
             		+ "ON E.ENVIRONID=L.ENVIRONID AND E.EXITID=R.LOOKUPEXITID "
-            		+ "LEFT JOIN SAFRWBS2.LOGREC SR "
+            		+ "LEFT JOIN " + params.getSchema() + ".LOGREC SR "
             		+ "ON SR.ENVIRONID=S.ENVIRONID AND SR.LOGRECID=S.SRCLRID "
             		+ "WHERE L.ENVIRONID=? AND L.LOOKUPID=? "
             		+ "ORDER BY S.STEPSEQNBR, K.KEYSEQNBR ; ";
@@ -719,13 +773,178 @@ public class PGReportsDAO implements ReportsDAO {
 	@Override
 	public List<LookupPrimaryKeysBean> getLookupPrimaryKeysReport(Integer id, Integer environmentId)
 			throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
+		List<LookupPrimaryKeysBean> result = new ArrayList<>();
+        try {
+            String selectString = "SELECT  "
+            		+ "L.LOOKUPID,  "
+            		+ "S.STEPSEQNBR,  "
+            		+ "SA.LOGRECID, "
+            		+ "XF.LRFIELDID, "
+            		+ "XF.FLDSEQNBR, "
+            		+ "LRF.NAME AS FLDNAME, "
+            		+ "LRFA.FLDFMTCD, "
+            		+ "LRFA.MAXLEN, "
+            		+ "LRFA.DECIMALCNT, "
+            		+ "LRFA.FLDCONTENTCD "
+            		+ "FROM " + params.getSchema() + ".LOOKUP L "
+            		+ "JOIN " + params.getSchema() + ".LOOKUPSTEP S "
+            		+ "ON S.ENVIRONID=L.ENVIRONID AND S.LOOKUPID=L.LOOKUPID "
+            		+ "JOIN " + params.getSchema() + ".LRLFASSOC SA "
+            		+ "ON SA.ENVIRONID=L.ENVIRONID AND SA.LRLFASSOCID=S.LRLFASSOCID "
+            		+ "JOIN " + params.getSchema() + ".LOGREC R "
+            		+ "ON R.ENVIRONID=L.ENVIRONID AND R.LOGRECID=SA.LOGRECID "
+            		+ "JOIN " + params.getSchema() + ".LRINDEX I "
+            		+ "ON I.ENVIRONID=L.ENVIRONID AND I.LOGRECID=R.LOGRECID "
+            		+ "JOIN " + params.getSchema() + ".LRINDEXFLD XF "
+            		+ "ON XF.ENVIRONID=I.ENVIRONID AND XF.LRINDEXID=I.LRINDEXID "
+            		+ "JOIN " + params.getSchema() + ".LRFIELD LRF "
+            		+ "ON LRF.ENVIRONID=I.ENVIRONID AND LRF.LRFIELDID=XF.LRFIELDID "
+            		+ "JOIN " + params.getSchema() + ".LRFIELDATTR LRFA "
+            		+ "ON LRFA.ENVIRONID=LRF.ENVIRONID AND LRFA.LRFIELDID=LRF.LRFIELDID "
+            		+ "WHERE L.ENVIRONID=? AND L.LOOKUPID=? "
+            		+ "order by s.stepseqnbr, xf.fldseqnbr; ";
+            		            
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                	pst.setInt(1,  environmentId);
+                	pst.setInt(2,  id);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            while (rs.next()) {
+				result.add(new LookupPrimaryKeysBean(
+						rs.getInt("LOOKUPID"), 
+						rs.getInt("STEPSEQNBR"), 
+						rs.getString("LOGRECID"),
+						rs.getString("LRFIELDID"), 
+						rs.getString("FLDSEQNBR"), 
+						rs.getString("FLDNAME"),
+						rs.getString("FLDFMTCD"), 
+						rs.getString("MAXLEN"), 
+						rs.getString("DECIMALCNT"),
+						rs.getString("FLDCONTENTCD")));
+            }
+        } catch (SQLException e) {
+			throw DataUtilities.createDAOException("Database error occurred while querying User Groups Report.", e);
+        }
+        return result;	
+	}
+	
+	@Override
+	public List<LogicalRecordReportQueryBean> getLogicalRecords(Integer LRid, Integer environmentId) throws DAOException {
+		List<LogicalRecordReportQueryBean> result = new ArrayList<>();
+		
+        try {
+            String selectString = "SELECT L.ENVIRONID," 
+        	        + "L.LOGRECID," 
+        	        + "L.NAME AS LRNAME," 
+        	        + "L.LRTYPECD," 
+        	        + "L.LRSTATUSCD," 
+        	        + "L.LOOKUPEXITID,"
+        	        + "E.NAME AS EXITNAME,"
+        	        + "L.LOOKUPEXITSTARTUP,"  
+         	        + "F.LRFIELDID,"
+        	        + "F.NAME AS FIELDNAME,"
+        	        + "D.FLDSEQNBR AS PRIMARY, "
+        	        + "F.DBMSCOLNAME," 
+        	        + "F.FIXEDSTARTPOS,"
+        	        + "F.ORDINALPOS," 
+        	        + "F.REDEFINE as REDEFINEDFIELDID," 
+        	        + "A.FLDFMTCD," 
+        	        + "A.SIGNEDIND," 
+        	        + "A.MAXLEN," 
+        	        + "A.DECIMALCNT,"
+        	        + "A.ROUNDING," 
+        	        + "A.FLDCONTENTCD," 
+        	        + "A.JUSTIFYCD,"
+        	        + "A.SUBTLABEL," 
+        	        + "A.SORTKEYLABEL," 
+        	        + "A.INPUTMASK,"
+        	        + "I.EFFDATESTARTFLDID," 
+        	        + "I.EFFDATEENDFLDID," 
+        	        + "D.FLDSEQNBR "
+        	        + "FROM " + params.getSchema() + ".LOGREC L "
+        	        + "JOIN " + params.getSchema() + ".LRFIELD F "
+        	        + "ON F.ENVIRONID=L.ENVIRONID AND F.LOGRECID=L.LOGRECID "
+        	        + "JOIN " + params.getSchema() + ".LRFIELDATTR A "
+        	        + "ON A.ENVIRONID=F.ENVIRONID AND A.LRFIELDID=F.LRFIELDID "
+        	        + "LEFT OUTER JOIN " + params.getSchema() + ".LRINDEX I "
+        	        + "ON I.ENVIRONID=L.ENVIRONID AND I.LOGRECID=L.LOGRECID "
+        	        + "LEFT OUTER JOIN " + params.getSchema() + ".LRINDEXFLD D "
+          	        + "ON D.ENVIRONID=I.ENVIRONID AND D.LRINDEXID=I.LRINDEXID AND D.LRFIELDID=F.LRFIELDID "
+          	        + "LEFT JOIN " + params.getSchema() + ".EXIT E "
+          	        + "ON E.ENVIRONID=L.ENVIRONID AND E.EXITID=L.LOOKUPEXITID "
+          	        + "WHERE L.ENVIRONID=? AND L.LOGRECID=?  " 
+            		+ "ORDER BY F.FIXEDSTARTPOS;";
+           
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                	pst.setInt(1,  environmentId);
+                	pst.setInt(2,LRid);
+                	rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            while (rs.next()) {
+                result.add(new LogicalRecordReportQueryBean(
+                    DataUtilities.trimString(rs.getString("ENVIRONID")), 
+                	DataUtilities.trimString(rs.getString("LOGRECID")), 
+                	DataUtilities.trimString(rs.getString("LRNAME")), 
+                	DataUtilities.trimString(rs.getString("LRTYPECD")), 
+                	DataUtilities.trimString(rs.getString("LRSTATUSCD")), 
+                	DataUtilities.trimString(rs.getString("LOOKUPEXITID")),
+                	DataUtilities.trimString(rs.getString("EXITNAME")),
+                	DataUtilities.trimString(rs.getString("LOOKUPEXITSTARTUP")),  
+                 	DataUtilities.trimString(rs.getString("LRFIELDID")),
+                	DataUtilities.trimString(rs.getString("FIELDNAME")), 
+                	DataUtilities.trimString(rs.getString("PRIMARY")), 
+                	DataUtilities.trimString(rs.getString("DBMSCOLNAME")), 
+                	DataUtilities.trimString(rs.getString("FIXEDSTARTPOS")),
+                	DataUtilities.trimString(rs.getString("ORDINALPOS")), 
+                	DataUtilities.trimString(rs.getString("REDEFINEDFIELDID")), 
+                	DataUtilities.trimString(rs.getString("FLDFMTCD")), 
+                	DataUtilities.trimString(rs.getString("SIGNEDIND")), 
+                	DataUtilities.trimString(rs.getString("MAXLEN")), 
+                	DataUtilities.trimString(rs.getString("DECIMALCNT")),
+                	DataUtilities.trimString(rs.getString("ROUNDING")), 
+                	DataUtilities.trimString(rs.getString("FLDCONTENTCD")), 
+                	DataUtilities.trimString(rs.getString("JUSTIFYCD")),
+                	DataUtilities.trimString(rs.getString("SUBTLABEL")), 
+                	DataUtilities.trimString(rs.getString("SORTKEYLABEL")), 
+                	DataUtilities.trimString(rs.getString("INPUTMASK")),
+                	DataUtilities.trimString(rs.getString("EFFDATESTARTFLDID")), 
+                	DataUtilities.trimString(rs.getString("EFFDATEENDFLDID")), 
+                	DataUtilities.trimString(rs.getString("FLDSEQNBR"))
+                    ));
+            }
+            pst.close();
+            rs.close();
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException(
+                    "Database error occurred while querying View.", e);
+        }
+        return result;
 	}
 
-	@Override
-	public List<LogicalRecordReportQueryBean> getLogicalRecords(Integer id, Integer environmentId) throws DAOException {
-		// TODO Auto-generated method stub
-		return null;
-	}	
 }

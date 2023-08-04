@@ -840,9 +840,9 @@ public class DB2ReportsDAO implements ReportsDAO {
             		+ "ON KF.ENVIRONID=L.ENVIRONID AND KF.LOGFILEID=KA.LOGFILEID "
             		+ "LEFT JOIN " + params.getSchema() + ".LRFIELD AS FLD "
             		+ "ON FLD.ENVIRONID=L.ENVIRONID AND  FLD.LRFIELDID=K.LRFIELDID "
-            		+ "LEFT JOIN SAFRWBS2.EXIT E "
+            		+ "LEFT JOIN " + params.getSchema() + ".EXIT E "
             		+ "ON E.ENVIRONID=L.ENVIRONID AND E.EXITID=R.LOOKUPEXITID "
-            		+ "LEFT JOIN SAFRWBS2.LOGREC SR "
+            		+ "LEFT JOIN " + params.getSchema() + ".LOGREC SR "
             		+ "ON SR.ENVIRONID=S.ENVIRONID AND SR.LOGRECID=S.SRCLRID "
             		+ "WHERE L.ENVIRONID=? AND L.LOOKUPID=? "
             		+ "ORDER BY S.STEPSEQNBR, K.KEYSEQNBR ; ";
