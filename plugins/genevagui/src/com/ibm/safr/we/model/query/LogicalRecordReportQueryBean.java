@@ -109,7 +109,7 @@ public class LogicalRecordReportQueryBean {
 	}
 
 	public String getLookupexitid() {
-		return lookupexitid;
+		return lookupexitid == null ? "0" : lookupexitid;
 	}
 	
 	public String getExitName() {
