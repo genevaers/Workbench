@@ -1,5 +1,9 @@
 # Workbench 4.20
 
+The workbench is the configuration tool for [GeneavaERS](https://genevaers.org/).  
+It is a Java application that can be run on Windows or a Mac.  
+The build can easily be updated to run on a Unix system too.
+
 This version of the workbench supports both Db2 and PostgreSQL database connections.
 
 # PreRequisite
@@ -8,6 +12,10 @@ You will need to have installed Java and a version of Maven.
 The Maven version used for development was 3.9.4.
 
 Your version of Java must be higher than 1.8.  The development version was 17.0.6.
+
+The final optional step of the build adds a JRE to the distributable zip.
+To do this the build script assumes you have [7Zip](https://www.7-zip.org/download.html) installed and available on your path.
+If you want to use a different zip utiltity edit the shell script postbuild/postbuild.sh.
 
 # Environment Variables
 
