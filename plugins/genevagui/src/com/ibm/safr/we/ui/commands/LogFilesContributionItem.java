@@ -52,7 +52,7 @@ public class LogFilesContributionItem extends CompoundContributionItem {
 		List<IContributionItem> mItems = new ArrayList<IContributionItem>();
 		for (File file : logDir.listFiles()) {
 			// match WE log file pattern eg. WE.0.log or WE.0.log.1
-			if (file.getName().matches("WE\\.\\d\\.log(\\.\\d+){0,1}")) {
+			if (file.getName().matches("WE.*\\d\\.log(\\.\\d+){0,1}")) {
 				// add to list
 				if (file.getName().equals(currFile)) {
 					param.label = '\u2022' + " &" + file.getName();

@@ -108,14 +108,6 @@ public class PhysicalFileEditor extends SAFREditorPart implements
         
         createTabFolder(form.getBody());
                 
-		// Used to load the context sensitive help
-		if (physicalFile.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.PhysicalFileEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewPhysicalFile");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}

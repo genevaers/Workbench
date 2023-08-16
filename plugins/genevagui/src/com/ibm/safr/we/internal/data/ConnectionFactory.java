@@ -1,7 +1,7 @@
 package com.ibm.safr.we.internal.data;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,9 @@ package com.ibm.safr.we.internal.data;
  */
 
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.*;
-import java.util.Enumeration;
-/*import java.sql.Connection;
+import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;*/
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +36,8 @@ import com.ibm.safr.we.data.DataUtilities;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public class ConnectionFactory {
 
@@ -54,7 +52,7 @@ public class ConnectionFactory {
 		loadDriver();
 	}
 
-	Connection getConnection() throws DAOException  {
+	Connection getConnection() throws DAOException {
 		try {
 			if (_con == null) {
 				if (_params.getType() == DBType.PostgresQL) {
@@ -65,13 +63,22 @@ public class ConnectionFactory {
 							+ "&ssl=false"
 							+ "&currentSchema=" + _params.getSchema();
 						return _con  = DriverManager.getConnection(url);
-				}	else {
+				} else if(_params.getType() == DBType.Db2) {
+					String s = "Workbench Database Connection Opened" + SAFRUtilities.LINEBREAK
+							+ "URL    " +_params.getUrl() + SAFRUtilities.LINEBREAK 
+							+ "Schema " + _params.getSchema() + SAFRUtilities.LINEBREAK
+							+ "Userid " + _params.getUserName();
+						SAFRLogger.logAllSeparator(logger,Level.INFO, s);
+						_con = DriverManager.getConnection(_params.getUrl(), _params
+								.getUserName(), _params.getPassWord());
+						SAFRApplication.setDatabaseSchema(_params.getSchema());
+				} else {
 					throw new DAOException("Unknown Database type "
 							+ _params.getType());
 				}
 			}
-		return _con;
-	} catch (SQLException e) {
+			return _con;
+		} catch (SQLException e) {
 			// SQLState 28000 is ISO standard authorization error
 			if (e.getSQLState() != null && e.getSQLState().equals("28000")) {
 				throw new DAOAuthorizationException(e.getMessage(), e);
@@ -83,22 +90,21 @@ public class ConnectionFactory {
 					"Cannot connect to database.", e);
 		}
 	}
-	
+
 	void loadDriver() throws DAOException {
 		try {
-			if (_params.getType() == DBType.DB2) {
+			if (_params.getType() == DBType.Db2) {
 				// Load the DB2 JDBC Type 4 Driver with DriverManager
 				Class.forName("com.ibm.db2.jcc.DB2Driver");
-			} else if (_params.getType() == DBType.PostgresQL) {
+			} else if(_params.getType() == DBType.PostgresQL)  {
 			} else {
 				throw new DAOException("Unknown Database type "
 						+ _params.getType());
 			}
 		} catch (ClassNotFoundException e) {
-			logger.log(Level.SEVERE, "", e);
 			throw DataUtilities
 					.createDAOException(
-							"Database error occurred while loading DB2 JDBC Driver.",
+							"Database error occurred while loading Db2 JDBC Driver.",
 							e);
 		}
 	}
@@ -120,8 +126,7 @@ public class ConnectionFactory {
 				try {
 					Thread.sleep(5000l);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.severe(e.getMessage());;
 				}
 			}
 			count++;

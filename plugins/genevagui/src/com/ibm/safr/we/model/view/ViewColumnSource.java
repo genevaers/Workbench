@@ -360,7 +360,7 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	/**
 	 * @return the id of the LrField used in the sort key title.
 	 */
-	Integer getSortKeyTitleLRFieldId() {
+	public Integer getSortKeyTitleLRFieldId() {
 		return sortKeyTitleLRFieldId;
 	}
 
@@ -742,7 +742,12 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	public void setSortKeyTitleLookupPathQueryBean(
 			LookupQueryBean sortKeyTitleLookupPathQueryBean) {
 		this.sortKeyTitleLookupPathQueryBean = sortKeyTitleLookupPathQueryBean;
-		this.sortKeyTitleLookupPathId = sortKeyTitleLookupPathQueryBean.getId();
+		if (sortKeyTitleLookupPathQueryBean == null) {
+			this.sortKeyTitleLookupPathId = null;
+		} else {
+			this.sortKeyTitleLookupPathId = sortKeyTitleLookupPathQueryBean
+					.getId();
+		}
 		markModified();
 		view.makeViewInactive();
         view.markUpdated();

@@ -1,7 +1,7 @@
 package org.genevaers.sycadas;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,11 @@ package org.genevaers.sycadas;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
 
 public interface SyntaxChecker {
 
-	public void processLogic(String logicText) throws IOException;
+	public void syntaxCheckLogic(String logicText) throws IOException;
 	public List<String> getSyntaxErrors();
 	public int getNumberOfSyntaxWarningss();
 

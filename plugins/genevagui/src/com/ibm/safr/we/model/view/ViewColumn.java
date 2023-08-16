@@ -1062,6 +1062,11 @@ public class ViewColumn extends SAFRField {
 	 * @return the ViewSortKey if this column is a sort key, otherwise null
 	 */
 	public ViewSortKey getViewSortKey() {
+		
+		//No add to a map ?
+		//although a list is quick to iterate and there will only be a few.
+		//Use third part search though?
+		
 		ViewSortKey viewSortKey = null;
 		List<ViewSortKey> vsks = view.getViewSortKeys().getActiveItems();
 		for (ViewSortKey vsk : vsks) {
@@ -1111,8 +1116,7 @@ public class ViewColumn extends SAFRField {
 	void setExtractAreaPosition(Integer extractAreaPosition) {
 		// TC18596 only modify if value has changed
 		if ((this.extractAreaPosition == null && extractAreaPosition != null)
-				|| (this.extractAreaPosition != null && !this.extractAreaPosition
-						.equals(extractAreaPosition))) {
+				|| (this.extractAreaPosition != null && !this.extractAreaPosition.equals(extractAreaPosition))) {
 			this.extractAreaPosition = extractAreaPosition;
 			view.makeViewInactive();
 			markModified();

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import com.ibm.safr.we.constants.ComponentType;
@@ -1314,6 +1315,55 @@ public class PGLookupDAO implements LookupDAO {
 			throw DataUtilities.createDAOException("Database error occurred while retrieving the Lookup Path " + name, e);
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Integer> getTargetFields(String name, Integer environID) {
+		try {
+			Map<String, Integer> fields = new TreeMap<>();
+			String schema = params.getSchema();
+			String selectString = "select l.name, l.lookupid, f.LRFIELDID, f.NAME "
+					+ "from " + schema + ".lookup l "
+					+ "join " + schema + ".lrlfassoc a "
+					+ "on a.environid=l.environid and l.destlrlfassocid=a.lrlfassocid "
+					+ "join " + schema + ".LRFIELD f "
+					+ "on l.environid=f.environid and a.logrecid=f.logrecid "
+					+ "where l.name= ? and f.environid= ?" ;
+
+			PreparedStatement pst = null;
+			ResultSet rs = null;
+			while (true) {
+				try {
+					pst = con.prepareStatement(selectString);
+					int i = 1;
+					pst.setString(i++, name);
+					pst.setInt(i++, environID);
+					rs = pst.executeQuery();
+					break;
+				} catch (SQLException se) {
+					if (con.isClosed()) {
+						// lost database connection, so reconnect and retry
+						con = DAOFactoryHolder.getDAOFactory().reconnect();
+					} else {
+						throw se;
+					}
+				}
+			}
+			int row = 0;
+			while (rs.next()) {
+				if(row == 0) {
+					fields.put("Lookup_ID", rs.getInt(2));
+				}
+				fields.put(rs.getString(4), rs.getInt(3));
+				row++;
+			}
+			pst.close();
+			rs.close();
+			return fields;
+		} catch (SQLException e) {
+			String msg = "Database error occurred while retrieving Lookup " + name + " fields from Environment [" + environID + "].";
+			throw DataUtilities.createDAOException(msg, e);
+		}
 	}
 
 }

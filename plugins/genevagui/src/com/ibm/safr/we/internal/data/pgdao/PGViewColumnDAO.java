@@ -519,6 +519,11 @@ public class PGViewColumnDAO implements ViewColumnDAO {
 			while (true) {
 				try {
 					pst1 = con.prepareStatement(deleteSortKeysQuery);
+					int ndx = 1;
+					for(int i=0; i<vwColumnIds.size(); i++) {
+						pst1.setInt(ndx++, vwColumnIds.get(i));
+					}
+					pst1.setInt(ndx, environmentId);
 					pst1.executeUpdate();
 					break;
 				} catch (SQLException se) {

@@ -44,7 +44,6 @@ import com.ibm.safr.we.ui.editors.CompareTextView;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -160,8 +159,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor im
                 view.getId().equals(DataSourceView.ID) ||
                 view.getId().equals(SortKeyTitleView.ID) ||
                 view.getId().equals(CompareTextView.ID) ||
-                view.getId().equals(ActivationLogViewNew.ID) ||
-                view.getId().equals(ActivationLogViewOld.ID)) {
+                view.getId().equals(ActivationLogViewNew.ID) ) {
                 IViewPart part = (IViewPart)view.getPart(true);
                 page.hideView(part);
             }            

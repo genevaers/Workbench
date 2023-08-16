@@ -36,6 +36,7 @@ import com.ibm.safr.we.data.dao.MigrateDAO;
 import com.ibm.safr.we.data.dao.NextKeyDAO;
 import com.ibm.safr.we.data.dao.OldCompilerDAO;
 import com.ibm.safr.we.data.dao.PhysicalFileDAO;
+import com.ibm.safr.we.data.dao.ReportsDAO;
 import com.ibm.safr.we.data.dao.StoredProcedureDAO;
 import com.ibm.safr.we.data.dao.UserDAO;
 import com.ibm.safr.we.data.dao.UserExitRoutineDAO;
@@ -120,4 +121,6 @@ public interface DAOFactory {
 	DAOUOW getDAOUOW();
 
 	UserSessionParameters getSAFRLogin();
+	
+	ReportsDAO getReportsDAO();
 }

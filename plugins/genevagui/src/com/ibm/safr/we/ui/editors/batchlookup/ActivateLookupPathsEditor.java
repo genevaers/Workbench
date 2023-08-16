@@ -100,13 +100,6 @@ public class ActivateLookupPathsEditor extends SAFREditorPart implements
 		createSectionEnvironment(form.getBody());
 		createSectionLookupPaths(form.getBody());
 		createSectionErrors(form.getBody());
-		// Used to load the context sensitive help
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(form.getBody(),
-						"com.ibm.safr.we.help.BatchActivateLookupPathsEditor");
-
 	}
 
 	private void createSectionLookupPaths(Composite body) {

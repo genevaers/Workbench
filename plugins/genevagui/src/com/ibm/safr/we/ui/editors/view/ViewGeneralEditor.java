@@ -415,8 +415,8 @@ public class ViewGeneralEditor {
 
         });
     
-  //   removed Report view option  
- /*       formatReport = mediator.getGUIToolKit().createRadioButton(
+    
+        formatReport = mediator.getGUIToolKit().createRadioButton(
                 compositeOutputFormat, "Report");
         formatReport.setData(SAFRLogger.USER, "Report");
         FormData formatReportLayout = new FormData();
@@ -444,8 +444,7 @@ public class ViewGeneralEditor {
                 }
     
             }
-        });      
-        */              
+        });                    
     }
     
 

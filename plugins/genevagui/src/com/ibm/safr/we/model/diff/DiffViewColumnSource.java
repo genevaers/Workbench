@@ -78,7 +78,7 @@ public class DiffViewColumnSource extends DiffNodeComp {
         
         List<ViewLogicDependencyTransfer> rhsDeps = DAOFactoryHolder.getDAOFactory().
             getViewLogicDependencyDAO().getViewColumnSourceDependencies(
-            lhs.getEnvironmentId(), lhs.getView().getId(), lhs.getId());
+            rhs.getEnvironmentId(), rhs.getView().getId(), rhs.getId());
         
         DiffLogicDependencies deps = new DiffLogicDependencies(lhs.getEnvironmentId(), 
             rhs.getEnvironmentId(), lhsDeps, rhsDeps);

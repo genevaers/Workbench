@@ -24,6 +24,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.ibm.safr.we.ui.editors.DependencyCheckerEditor;
 import com.ibm.safr.we.ui.editors.DiffUtilityEditor;
 import com.ibm.safr.we.ui.editors.lr.LogicalRecordEditor;
 
@@ -39,7 +40,11 @@ public class CollapseAllHandler extends AbstractHandler  implements IHandler {
         else if (part instanceof LogicalRecordEditor) {
             LogicalRecordEditor ed = (LogicalRecordEditor)part;
             ed.collapseAll();
-        }                
+        }         
+        else if(part instanceof DependencyCheckerEditor) {
+        	DependencyCheckerEditor dce = (DependencyCheckerEditor)part;
+        	dce.collapseAll();
+        }
         return null;
     }
 }

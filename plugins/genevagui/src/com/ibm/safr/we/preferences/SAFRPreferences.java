@@ -1,6 +1,8 @@
 package com.ibm.safr.we.preferences;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
@@ -59,39 +61,32 @@ public class SAFRPreferences {
     public static Preferences getSAFRPreferences() {
         
         if (preferences == null) {
-        	String prefsLocation = ProfileLocation.getProfileLocation().getLocalProfile() + "/prefs/";
-        	makePrefsDirectory(prefsLocation);
-        	String allPref = prefsLocation + SAFRPreferences.SAFRWE_PREFS;
-        	String userPref;        	
-        	if (System.getProperties().get(SAFREnvProp.DEV) == null) {
-                userPref = prefsLocation + SAFRPreferences.SAFRWE_PREFS;    
+        	String userPrefs = ProfileLocation.getProfileLocation().getLocalProfile() + "\\prefs\\" + SAFRPreferences.SAFRWE_PREFS;
+        	String globalPrefs = userPrefs; //Default to the same location
+        	if(ProfileLocation.getProfileLocation().getGlobalProfile() != null) {
+        		globalPrefs =  ProfileLocation.getProfileLocation().getGlobalProfile() + "\\" + SAFRPreferences.SAFRWE_PREFS;
         	}
-        	else {
-        		String location = Platform.getInstanceLocation().getURL().getPath();
-        		userPref = location + SAFRPreferences.SAFRWE_PREFS;        		
-        	}
-            System.setProperty(OverridePreferencesFactory.BASE_PROP, allPref); 
-            System.setProperty(OverridePreferencesFactory.OVER_PROP, userPref);
+            System.setProperty(OverridePreferencesFactory.BASE_PROP, globalPrefs); 
+            System.setProperty(OverridePreferencesFactory.OVER_PROP, userPrefs);
             System.setProperty("java.util.prefs.PreferencesFactory", OverridePreferencesFactory.class.getName());
             
-            preferences = Preferences.userRoot();
-            try {
-                preferences.sync();
-            } catch (BackingStoreException e) {
-                // log and continue with preference load errors
-                // preferences will reset empty on load failure
-                logger.log(Level.WARNING, "Failed to load preferences", e);
-            }
+            syncPreferences();
         }
         return preferences;
     }
     
-    private static void makePrefsDirectory(String userPref) {
-        File upf = new File(userPref);
-        upf.mkdirs();
-	}
-
-	public static Preferences getConnectionPreferences(String connectionName) {
+    private static void syncPreferences() {       
+        preferences = Preferences.userRoot();
+        try {
+            preferences.sync();
+        } catch (BackingStoreException e) {
+            // log and continue with preference load errors
+            // preferences will reset empty on load failure
+            logger.log(Level.WARNING, "Failed to load preferences", e);
+        }
+    }
+    
+    public static Preferences getConnectionPreferences(String connectionName) {
     	Preferences connPrefs = getConnectionPreferencesMap().get(connectionName);
     	return connPrefs;
     }
@@ -234,30 +229,27 @@ public class SAFRPreferences {
     /**
      * @return whether to ignore import warnings
      */
-    public Boolean isIgnoreImportWarnings() {
-
-        String ignoreStr = getSAFRPreferences().get(
-                UserPreferencesNodes.IGNORE_IMPORT_WARNINGS, "");
-        if (ignoreStr != null && ignoreStr.equalsIgnoreCase("Y")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+	public Boolean isIgnoreImportWarnings() {
+		String ignoreStr = getSAFRPreferences().get(UserPreferencesNodes.IGNORE_IMPORT_WARNINGS, "");
+		if (ignoreStr != null && ignoreStr.equalsIgnoreCase("Y")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     /**
      * @return whether to ignore migrate warnings
      */
-    public Boolean isIgnoreMigrateWarnings() {
+	public Boolean isIgnoreMigrateWarnings() {
 
-        String ignoreStr = getSAFRPreferences().get(
-                UserPreferencesNodes.IGNORE_MIGRATE_WARNINGS, "");
-        if (ignoreStr != null && ignoreStr.equalsIgnoreCase("Y")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+		String ignoreStr = getSAFRPreferences().get(UserPreferencesNodes.IGNORE_MIGRATE_WARNINGS, "");
+		if (ignoreStr != null && ignoreStr.equalsIgnoreCase("Y")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
     /**
      * Is node in system preferences
@@ -272,4 +264,19 @@ public class SAFRPreferences {
     public static boolean isNodeUser(String path) {
         return  ((OverridePreferences)getSAFRPreferences()).isNodeinOver(path);
     }
+
+	public String getReportsPath() {
+		Path defaultPath = Paths.get(ProfileLocation.getProfileLocation().getLocalProfile());
+		return getSAFRPreferences().get(UserPreferencesNodes.REPORTS_PATH, defaultPath.toString());
+	}
+	
+	public void setReportsPath(String reps) {
+        getSAFRPreferences().put(UserPreferencesNodes.REPORTS_PATH, reps);
+        try {
+            getSAFRPreferences().flush();
+        } catch (BackingStoreException e) {
+            throw new SAFRFatalException(e);
+        }
+		
+	}
 }

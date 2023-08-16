@@ -271,7 +271,7 @@ public class EditorOpener {
                 "Cannot find lookup with ID " + id + ".");             
         } catch (Exception e) {
             UIUtilities.handleWEExceptions(
-                e,"Unexpected error occurred while opening lookup editor.",null);
+                e,"Cannot open the Lookup Path Editor because the related lookup LR is inactive.","Exception");
         }
         return null;
     }

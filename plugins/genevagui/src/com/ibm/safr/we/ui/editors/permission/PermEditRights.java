@@ -42,6 +42,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -53,11 +55,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.ibm.safr.we.constants.ComponentType;
@@ -79,6 +85,7 @@ import com.ibm.safr.we.model.query.ViewFolderQueryBean;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.preferences.SortOrderPrefs;
 import com.ibm.safr.we.preferences.SortOrderPrefs.Order;
+import com.ibm.safr.we.ui.utilities.EditorOpener;
 import com.ibm.safr.we.ui.utilities.ImageKeys;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.SAFRLogger;
@@ -108,7 +115,7 @@ public class PermEditRights {
 
         public void selectionChanged(SelectionChangedEvent event) {
             GroupEnvironmentAssociation gass = mediator.getCurrentEnvAss();              
-            if (gass != null && gass.getAssociatedComponentIdNum() == UIUtilities.getCurrentEnvironmentID()) {                                      
+            if (gass != null && gass.getAssociatedComponentIdNum().equals(UIUtilities.getCurrentEnvironmentID())) {                                      
                 GroupComponentAssociation node = (GroupComponentAssociation)((StructuredSelection) event
                         .getSelection()).getFirstElement();
                 if (node != null) {
@@ -507,6 +514,9 @@ public class PermEditRights {
     private ComponentType currentType = null;
     private boolean checkModify = true;
     private boolean checkDelete = true;
+	private MenuItem compoOpenEditorItem;
+	private Menu menu;
+	private TableViewer tableViewerRights;
     
     public PermEditRights() {
     }
@@ -964,5 +974,5 @@ public class PermEditRights {
         }
     }
     
-    
+  
 }

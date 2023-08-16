@@ -1,7 +1,7 @@
 package com.ibm.safr.we.ui.editors;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -486,10 +486,6 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 		createSectionComponent(form.getBody());
 		createSectionErrors(form.getBody());
 
-		// Used to load the context sensitive help
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-				"com.ibm.safr.we.help.ExportUtilityEditor");
-
 		form.reflow(true);
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
@@ -636,6 +632,13 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 
 						if (currentEnvironment != null) {
 							currentEnvID = currentEnvironment.getId();
+		                    if (currentEnvID > 0l) {
+		                        populateComponentTable();
+		                        buttonSelectAll.setEnabled(true);
+		                        buttonDeSelectAll.setEnabled(true);
+		                        buttonRefresh.setEnabled(true);
+		                        tableViewerComponents.refresh();
+		                    }
 						}
 						if (componentType != null) {
 							setRadioGroup();

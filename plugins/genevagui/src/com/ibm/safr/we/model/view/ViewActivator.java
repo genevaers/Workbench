@@ -27,6 +27,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.genevaers.sycadas.ExtractDependencyAnalyser;
+import org.genevaers.sycadas.ExtractFilterSycada;
+import org.genevaers.sycadas.ExtractColumnSycada;
+import org.genevaers.sycadas.ExtractOutputSycada;
+import org.genevaers.sycadas.ExtractSycada;
 import org.genevaers.sycadas.FormatCalculationSyntaxChecker;
 import org.genevaers.sycadas.FormatFilterSyntaxChecker;
 import org.genevaers.sycadas.SycadaFactory;
@@ -39,6 +44,7 @@ import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
+import com.ibm.safr.we.data.WESycadaDataProvider;
 import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
@@ -50,14 +56,14 @@ import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ViewActivator {    
       
-    static transient Logger logger = Logger
-    .getLogger("com.ibm.safr.we.model.view.ViewActivator");
+    static transient Logger logger = Logger.getLogger("com.ibm.safr.we.model.view.ViewActivator");
     
     private View view;
     private ArrayList<ViewLogicDependency> viewLogicDependencies;
     private SAFRViewActivationException vaException = new SAFRViewActivationException(view);
 
 	private Set<Integer> CTCols;
+	private WESycadaDataProvider dataProvider;
 
     public ViewActivator(View view) {
         super();
@@ -69,7 +75,7 @@ public class ViewActivator {
     }    
     
     static public String getNewCompilerVersion() {
-        return "Sycada"; //TODO sort            
+        return ExtractSycada.getVersion();          
     }
     
     static public String getCompilerVersion() {
@@ -83,7 +89,7 @@ public class ViewActivator {
     
     
     /**
-     * Invoke activation using old or new compiler based on preferences
+     * Invoke activation 
      * 
      * @throws DAOException, SAFRException
      */ 
@@ -93,7 +99,8 @@ public class ViewActivator {
         try {
             activateNew();
         } catch (SAFRViewActivationException e) {
-            logger.log(Level.SEVERE, "New Activation Exception", e);
+        	//Don't log the exception trace
+            logger.log(Level.INFO, "New Activation Exception");
         }
         
         view.setCompilerVersion(ViewActivator.getCompilerVersion());
@@ -116,7 +123,7 @@ public class ViewActivator {
 
     protected void logActivationErrors() {
         if (vaException.getActivationLogNew().size() > 0) {     
-            logActErrors("Errors/Warnings from New Compiler", vaException.getActivationLogNew());
+            logActErrors("Errors/Warnings from Compiler", vaException.getActivationLogNew());
         }
     }
 
@@ -152,13 +159,13 @@ public class ViewActivator {
     }
     
     /**
-     * Activate this view using the new compiler
+     * Activate
      * 
      * @throws DAOException, SAFRException
      */ 
     protected void activateNew() throws DAOException, SAFRException {
 
-        initialization(true);                
+        initialization();                
 
         compileFormatCalculation();
         compileViewSources();
@@ -167,36 +174,69 @@ public class ViewActivator {
         processResult();        
     }
 
-    protected void initialization(boolean newCompiler) throws SAFRException, DAOException,
+    protected void initialization() throws SAFRException, DAOException,
         SAFRViewActivationException {
-        checkActivationShowStoppers(newCompiler);        
+        checkActivationShowStoppers();        
         initViewDependencies();
         initializeViewColumns();
     }
 
-    protected void checkActivationShowStoppers(boolean newCompiler)
+    protected void checkActivationShowStoppers()
         throws SAFRException, DAOException, SAFRViewActivationException {
-        checkSavedView(newCompiler);
-        checkFormatHasSortKey(newCompiler);
-        checkHasViewSources(newCompiler);
-        checkConsistentHardcopy(newCompiler);        
-        checkDuplicateViewSource(newCompiler);        
-        checkSortKeyTitles(newCompiler);
-        if (newCompiler) {
-            if (!vaException.getActivationLogNew().isEmpty()) {
-                throw vaException; // cannot continue.                
-            }
+        checkSavedView();
+        checkFormatHasSortKey();
+        checkHasViewSources();
+        checkConsistentHardcopy();        
+        checkDuplicateViewSource();        
+        checkSortKeyTitles();
+        checkRecordAggregation();
+        checkCopyViewHasNoColumns();
+        checkNormalViewHasColumns();
+        if (!vaException.getActivationLogNew().isEmpty()) {
+            throw vaException; // cannot continue.                
         }
     }
 
-    protected void checkSavedView(boolean newCompiler) throws SAFRException {
+    private void checkNormalViewHasColumns() {
+        if (! view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
+        	if(view.getViewColumns().size() == 0) {
+                vaException.addActivationError(new ViewActivationError(null, null,
+                        SAFRCompilerErrorType.VIEW_PROPERTIES,
+                        "Only a Source Record Layout view can have no columns."));
+        	}
+        }		
+	}
+
+	private void checkCopyViewHasNoColumns() {
+        if (view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
+        	if(view.getViewColumns().size() > 0) {
+                vaException.addActivationError(new ViewActivationError(null, null,
+                        SAFRCompilerErrorType.VIEW_PROPERTIES,
+                        "A Source Record Layout view cannot have columns."));
+        	}
+        }		
+	}
+
+	private void checkRecordAggregation() {
+        if (view.isFormatPhaseInUse() && view.isFormatPhaseRecordAggregationOn()) {
+        	for(ViewColumn c : view.getViewColumns()) {
+        		if(c.isSortKey() == false && c.isNumeric() && c.getRecordAggregationCode() == null) {
+                    vaException.addActivationError(new ViewActivationError(null, c,
+                            SAFRCompilerErrorType.VIEW_PROPERTIES,
+                            "Record Aggregation cannot be blank."));
+        		}
+        	}
+        }		
+	}
+
+	protected void checkSavedView() throws SAFRException {
         if (view.getId() <= 0) {
             // if the view is not saved yet then throw error
             throw new SAFRException("A new View must be saved before activation.");
         }
     }
         
-    protected void checkFormatHasSortKey(boolean newCompiler) {
+    protected void checkFormatHasSortKey() {
         // if format phase is used, then it should have
         // atleast one sort key.
         if (view.isFormatPhaseInUse()) {
@@ -204,23 +244,23 @@ public class ViewActivator {
                 // error. The view must have at least one sort key.
                 vaException.addActivationError(new ViewActivationError(null, null,
                         SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "This View must have at least one Sort Key."), newCompiler);
+                        "This View must have at least one Sort Key."));
             }
         }
     }
     
-    protected void checkHasViewSources(boolean newCompiler) {
+    protected void checkHasViewSources() {
         // if the view doesn't have any View sources, then throw activation
         // exception.
         if (view.getViewSources().getActiveItems().isEmpty()) {
             vaException.addActivationError(new ViewActivationError(null, null,
                     SAFRCompilerErrorType.VIEW_PROPERTIES,
-                    "This View must have at least one view source."), newCompiler);
+                    "This View must have at least one view source."));
 
         }
     }
     
-    protected  void checkConsistentHardcopy(boolean newCompiler) {
+    protected  void checkConsistentHardcopy() {
         // If the last sort key of a hard copy summary view has Display Mode
         // 'Categorize' (or blank), it must have a Sort Key Footer Option
         // of 'Print'. 
@@ -228,7 +268,7 @@ public class ViewActivator {
             for (ViewSortKey key : view.getViewSortKeys().getActiveItems()) {
                 if (isCategoryModeAndLast(key) && isSuppressPrint(key)) {
                     vaException.addActivationError(new ViewActivationError(null, key.getViewColumn(), SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view."), newCompiler);
+                        "Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view."));
                     break;
                 }
             }
@@ -251,7 +291,7 @@ public class ViewActivator {
                 || key.getFooterOptionCode().getGeneralId() == Codes.SUPPRESS_PRINT;
     }
     
-    protected  void checkDuplicateViewSource(boolean newCompiler) {
+    protected  void checkDuplicateViewSource() {
         // A view should'nt have duplicate view source.
         List<ViewSource> sources = view.getViewSources().getActiveItems();
         for (ViewSource source : sources) {
@@ -266,13 +306,13 @@ public class ViewActivator {
                 // error. duplicate source found.
                 vaException.addActivationError(new ViewActivationError(null, null,
                         SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Duplicate View sources are not allowed."), newCompiler);
+                        "Duplicate View sources are not allowed."));
                 break;
             }
         }
     }
 
-    protected void checkSortKeyTitles(boolean newCompiler)
+    protected void checkSortKeyTitles()
         throws SAFRException, DAOException {
         for (ViewSortKey key : view.getViewSortKeys().getActiveItems()) {
             try {
@@ -283,7 +323,7 @@ public class ViewActivator {
                 for (String error : sve.getErrorMessages()) {
                     error = "Sort Key# " + key.getKeySequenceNo() + " " + error;
                     vaException.addActivationError(new ViewActivationError(null, null,
-                            SAFRCompilerErrorType.VIEW_PROPERTIES, error), newCompiler);
+                            SAFRCompilerErrorType.VIEW_PROPERTIES, error));
                 }
             }
         }
@@ -349,39 +389,38 @@ public class ViewActivator {
         CTCols = logCompiler.getCTCols();
     }
 
-    protected void compileViewSources() {
-        ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(
-            view, vaException, viewLogicDependencies);        
-        ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(
-            view, vaException, viewLogicDependencies);        
-        ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(
-            view, vaException, viewLogicDependencies);        
-        
-        for (ViewSource source : view.getViewSources().getActiveItems()) {  
-            compileExtractFilter(logicExtractFilter, source);            
-            compileExtractCalculation(logicExtractCalc, source, CTCols);
-            compileExtractOutput(logicExtractOutput, source);
-        }
-    }
+
+	protected void compileViewSources() {
+		dataProvider = new WESycadaDataProvider();
+		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
+		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
+		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
+
+		for (ViewSource source : view.getViewSources().getActiveItems()) {
+			dataProvider.setEnvironmentID(source.getEnvironmentId());
+			dataProvider.setLogicalRecordID(source.getLrFileAssociation().getAssociatingComponentId());
+			compileExtractFilter(logicExtractFilter, source);
+			compileExtractCalculation(logicExtractCalc, source, CTCols);
+			compileExtractOutput(logicExtractOutput, source);
+		}
+	}
     
-    protected void compileExtractFilter(ViewLogicExtractFilter logicExtract,
-        ViewSource source) {
-        try {
-			logicExtract.compile(source);
+	protected void compileExtractFilter(ViewLogicExtractFilter logicExtract, ViewSource source) {
+		try {
+			logicExtract.compile(source, dataProvider);
 		} catch (SAFRException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
     
     protected void compileExtractCalculation(ViewLogicExtractCalc logicExtract, ViewSource source, Set<Integer> cTCols) {
-        logicExtract.compile(source, cTCols);        
+        logicExtract.compile(source, cTCols, dataProvider);        
     }
 
-    protected void compileExtractOutput(ViewLogicExtractOutput logicExtract,
-        ViewSource source) {
-        logicExtract.compile(source);
-    }
+	protected void compileExtractOutput(ViewLogicExtractOutput logicExtract, ViewSource source) {
+		logicExtract.compile(source, dataProvider);
+	}
     
     protected void compileFormatFilter()
         throws SAFRException {
@@ -390,17 +429,52 @@ public class ViewActivator {
 		if (view.isFormatPhaseInUse()) {
 			if (view.getFormatRecordFilter() != null) {
 				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) SycadaFactory
-						.getProcesorFor(SycadaType.FORMAT_FILTER);
-				formatFilterChecker.processLogic(view.getFormatRecordFilter());
+						.getProcessorFor(SycadaType.FORMAT_FILTER);
+				formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
 				if (formatFilterChecker.hasSyntaxErrors()) {
 					vaException.addCompilerErrorsNew(
 							formatFilterChecker.getSyntaxErrors(), null, null,
 							SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
 				}
+	            Set<Integer> calcCols = formatFilterChecker.getColumnRefs();
+	            checkColumnDataTypes(calcCols);
+	    		CTCols.addAll(formatFilterChecker.getColumnRefs());
 			}
 		}
     }
 
+	private void checkColumnDataTypes(Set<Integer> calcCols) {
+		//Columns here are not indexed 
+		//process the other way around - crazy slow ?
+		for(ViewColumn c : view.getViewColumns()) {
+			if(calcCols.contains(c.getColumnNo())) {
+	    		if(c.isNumeric() == false) {
+	                vaException.addActivationError(new ViewActivationError(null, null,
+	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
+	                        "Column number " +c.getColumnNo() + " is alphanumeric"));
+	    		}			
+	    		if(c.isSortKey()) {
+	                vaException.addActivationError(new ViewActivationError(null, null,
+	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
+	                        "Column number " +c.getColumnNo() + " a sort key column"));
+	    		}
+			}
+		}
+		for(Integer refCol : calcCols) {
+    		if(refCol == 0) {
+                vaException.addActivationError(new ViewActivationError(null, null,
+                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
+                        "Column number must be greater than zero."));
+    		}						
+    		if(refCol > view.getViewColumns().size()) {
+                vaException.addActivationError(new ViewActivationError(null, null,
+                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
+                        "Column number " + refCol + " is greater than the number of columns " + view.getViewColumns().size()));
+    		}						
+		}
+		
+	}
+	
     protected void processResult() {
         if (!vaException.hasErrorOccured()) {
             view.setViewLogicDependencies(viewLogicDependencies);

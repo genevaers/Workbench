@@ -162,14 +162,6 @@ public class UserExitRoutineEditor extends SAFREditorPart {
 		createSectionGeneral(form.getBody());
 		refreshControls();
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (userExitRoutine.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.User-ExitRoutineEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewUser-Exit Routine");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}

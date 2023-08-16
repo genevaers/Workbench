@@ -129,14 +129,6 @@ public class ViewFolderEditor extends SAFREditorPart {
 
 		refreshControls();
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (viewFolder.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.ViewFolderEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewViewFolder");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 	}
@@ -255,7 +247,7 @@ public class ViewFolderEditor extends SAFREditorPart {
                     int stateMask=event.stateMask;                  
                     if ((stateMask & SWT.SHIFT)==SWT.SHIFT) {
                         int prevRow = prevSelection;
-                      
+                       
                         if ((stateMask & SWT.CTRL)!=SWT.CTRL) {
                             tableViewerViews.setAllChecked(false);
                         }

@@ -30,7 +30,7 @@ public class ViewColumnReportHandler extends AbstractHandler implements
 		IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ReportUtils.openReportEditor(ReportType.ViewColumnReport);
+		ReportUtils.openReportEditor(ReportType.HelpReport);
 		return null;
 	}
 

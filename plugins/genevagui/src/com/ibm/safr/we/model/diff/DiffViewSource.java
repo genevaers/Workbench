@@ -142,7 +142,7 @@ public class DiffViewSource extends DiffNodeComp {
         
         List<ViewLogicDependencyTransfer> rhsDeps = DAOFactoryHolder.getDAOFactory().
             getViewLogicDependencyDAO().getViewSourceFilterDependencies(
-            lhs.getEnvironmentId(), lhs.getView().getId(), lhs.getId());
+            rhs.getEnvironmentId(), rhs.getView().getId(), rhs.getId());
         
         DiffLogicDependencies deps = new DiffLogicDependencies(lhs.getEnvironmentId(), 
             rhs.getEnvironmentId(), lhsDeps, rhsDeps);
@@ -174,7 +174,7 @@ public class DiffViewSource extends DiffNodeComp {
         
         List<ViewLogicDependencyTransfer> rhsDeps = DAOFactoryHolder.getDAOFactory().
             getViewLogicDependencyDAO().getViewSourceOutputDependencies(
-            lhs.getEnvironmentId(), lhs.getView().getId(), lhs.getId());
+            rhs.getEnvironmentId(), rhs.getView().getId(), rhs.getId());
         
         DiffLogicDependencies deps = new DiffLogicDependencies(lhs.getEnvironmentId(), 
             rhs.getEnvironmentId(), lhsDeps, rhsDeps);

@@ -1,7 +1,7 @@
 package com.ibm.safr.we.data;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.prefs.Preferences;
 
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
+import com.ibm.safr.we.internal.data.DB2DAOFactory;
 import com.ibm.safr.we.internal.data.PGDAOFactory;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 
@@ -52,23 +53,51 @@ public class DAOFactoryHolder {
 			if (dbtype != null && dbtype.length()>0) {
 			    params.setType(DBType.valueOf(dbtype));
 			}
-			String url = "jdbc:"
-					+ connection.get(UserPreferencesNodes.DATABASETYPE, "")
-							.toLowerCase() + "://"
-					+ connection.get(UserPreferencesNodes.SERVER, "") + ":"
-					+ connection.get(UserPreferencesNodes.PORT, "") + "/"
-					+ connection.get(UserPreferencesNodes.DATABASENAME, "") + "?currentSchema="
-					+ connection.get(UserPreferencesNodes.SCHEMA, "");
+			if(params.getType() == DBType.Db2) {
+				String url = "jdbc:"
+						+ connection.get(UserPreferencesNodes.DATABASETYPE, "")
+								.toLowerCase() + "://"
+						+ connection.get(UserPreferencesNodes.SERVER, "") + ":"
+						+ connection.get(UserPreferencesNodes.PORT, "") + "/"
+						+ connection.get(UserPreferencesNodes.DATABASENAME, "");
+						// Uncomment for JDBC trace 
+	/*            		+ ":traceDirectory=c:\\temp"
+	            		+ ";traceFile=trace"
+	            		+ ";traceFileAppend=false"
+	            		+ ";traceLevel=" + com.ibm.db2.jcc.DB2BaseDataSource.TRACE_STATEMENT_CALLS + ";";*/
+	
+				params.setUrl(url);
+	
+				params.setDatabase(connection.get(
+						UserPreferencesNodes.DATABASENAME, ""));
+				params.setPort(connection.get(UserPreferencesNodes.PORT, ""));
+				params.setServer(connection.get(UserPreferencesNodes.SERVER, ""));
+	
+				params.setSchema(connection.get(UserPreferencesNodes.SCHEMA, ""));
+				params.setUserName(connection.get(UserPreferencesNodes.USERID, ""));
+				params.setPassWord(SAFRUtilities.decrypt(connection.get(UserPreferencesNodes.PD, "")));
+			} else if(params.getType() == DBType.PostgresQL) {
+				if (dbtype != null && dbtype.length()>0) {
+				    params.setType(DBType.valueOf(dbtype));
+				}
+				String url = "jdbc:"
+						+ connection.get(UserPreferencesNodes.DATABASETYPE, "")
+								.toLowerCase() + "://"
+						+ connection.get(UserPreferencesNodes.SERVER, "") + ":"
+						+ connection.get(UserPreferencesNodes.PORT, "") + "/"
+						+ connection.get(UserPreferencesNodes.DATABASENAME, "") + "?currentSchema="
+						+ connection.get(UserPreferencesNodes.SCHEMA, "");
 
-			params.setUrl(url);
+				params.setUrl(url);
 
-			params.setDatabase(connection.get(
-					UserPreferencesNodes.DATABASENAME, ""));
-			params.setPort(connection.get(UserPreferencesNodes.PORT, ""));
-			params.setServer(connection.get(UserPreferencesNodes.SERVER, ""));
+				params.setDatabase(connection.get(
+						UserPreferencesNodes.DATABASENAME, ""));
+				params.setPort(connection.get(UserPreferencesNodes.PORT, ""));
+				params.setServer(connection.get(UserPreferencesNodes.SERVER, ""));
 
-			params.setSchema(connection.get(UserPreferencesNodes.SCHEMA, ""));
-			params.setUserName(connection.get(UserPreferencesNodes.USERID, ""));
+				params.setSchema(connection.get(UserPreferencesNodes.SCHEMA, ""));
+				params.setUserName(connection.get(UserPreferencesNodes.USERID, ""));				
+			}
 			genDAOFactory(params);
 
 		} catch (IllegalStateException e) {
@@ -96,8 +125,15 @@ public class DAOFactoryHolder {
                 + ((String)prop.get("TYPE")).toLowerCase() + "://"
                 + prop.get("SERVER") + ":"
                 + prop.get("PORT") + "/"
-				+ prop.get("DATABASE") + "?currentSchema="
-				+ prop.get("SCHEMA");
+                + prop.get("DATABASE");
+            if(params.getType() == DBType.PostgresQL) {
+            	url += "?currentSchema=" + prop.get("SCHEMA");
+            }
+                // Uncomment for JDBC trace 
+/*                  + ":traceDirectory=c:\\temp"
+                + ";traceFile=trace"
+                + ";traceFileAppend=false"
+                + ";traceLevel=" + com.ibm.db2.jcc.DB2BaseDataSource.TRACE_STATEMENT_CALLS + ";";*/
 			
             params.setUrl(url);
 			genDAOFactory(params);
@@ -119,16 +155,90 @@ public class DAOFactoryHolder {
 
 	}
 
-	static void genDAOFactory(ConnectionParameters params) throws DAOException {
+    public static void initFromEnvironmeent() {
+        // Instead of using a file get the data from some environment variables
+        // That way we do not need to store passwords in the code base
+        //try {
+            ConnectionParameters params = null;
+            String dbType = System.getenv("DBTYPE");
+            if(dbType == null) { //Prerequisite
+                logger.severe("No Database type defined");
+                return;
+            }
+            if (dbType.equalsIgnoreCase("PostgresQl")) {
+                params = new ConnectionParameters();
+                params.setType(DBType.PostgresQL);
+                params.setPort(System.getenv("DBPORT") != null ? System.getenv("DBPORT") : "5432");
+                params.setUserName(System.getenv("DBUSER") != null ? System.getenv("DBUSER") : "postgres");
+                params.setPassWord(System.getenv("DBPASS") != null ? System.getenv("DBPASS") : "postgres");
+                params.setSchema(System.getenv("DBSCHEMA") != null ? System.getenv("DBSCHEMA") : "gendev");
+                params.setDatabase(System.getenv("DBNAME") != null ? System.getenv("DBNAME") : "genevaers");
+                params.setServer(System.getenv("DBSERVER") != null ? System.getenv("DBSERVER") : "localhost");
+            } else if (dbType.equalsIgnoreCase("DB2")) {
+                params = new ConnectionParameters();
+                params.setType(DBType.Db2);
+                params.setPort(System.getenv("DBPORT") != null ? System.getenv("DBPORT") : "5432");
+                params.setUserName(System.getenv("DBUSER") != null ? System.getenv("DBUSER") : "postgres");
+                params.setPassWord(System.getenv("DBPASS") != null ? System.getenv("DBPASS") : "postgres");
+                params.setSchema(System.getenv("DBSCHEMA") != null ? System.getenv("DBSCHEMA") : "gendev");
+                params.setDatabase(System.getenv("DBNAME") != null ? System.getenv("DBNAME") : "genevaers");
+                params.setServer(System.getenv("DBSERVER") != null ? System.getenv("DBSERVER") : "genevaers");
+            }
+
+            if (params == null) {
+                logger.warning("Database type invalid");
+            } else {
+
+                String url = "jdbc:"
+                        + params.getType().toString().toLowerCase() + "://"
+                        + params.getServer() + ":"
+                        + params.getPort() + "/"
+                        + params.getDatabase() ;
+                if (params.getType() == DBType.PostgresQL) {
+                    url += "?currentSchema=" + params.getSchema();
+                }
+                // Uncomment for JDBC trace
+                /*
+                 * + ":traceDirectory=c:\\temp"
+                 * + ";traceFile=trace"
+                 * + ";traceFileAppend=false"
+                 * + ";traceLevel=" +
+                 * com.ibm.db2.jcc.DB2BaseDataSource.TRACE_STATEMENT_CALLS +
+                 * ";";
+                 */
+
+                params.setUrl(url);
+                genDAOFactory(params);
+
+                String userId = System.getenv("GERSUSER") != null ? System.getenv("GERSUSER") : "postgres";
+                Integer envId = Integer.valueOf(System.getenv("GERSENV") != null ? System.getenv("GERSENV") : "1");
+                Integer groupId = Integer.valueOf(System.getenv("GERSGRP") != null ? System.getenv("GERSGRP") : "0");
+                UserSessionParameters uparams = new UserSessionParameters(userId,
+                        envId, groupId);
+                daoFactory.setSAFRLogin(uparams);
+            }
+//        } catch (IOException e) {
+//            throw new DAOException(
+//                    "Unable to load properies for the connection." + SAFRUtilities.LINEBREAK
+//                            + e.toString());
+//        }
+
+    }
+
+    static void genDAOFactory(ConnectionParameters params) throws DAOException {
 		if (daoFactory != null) {
-			if (params.getType() == DBType.PostgresQL) {
+			if (params.getType() == DBType.Db2) {
+				((DB2DAOFactory) daoFactory).reconnect();			
+			} else if (params.getType() == DBType.PostgresQL) {
 				((PGDAOFactory) daoFactory).reconnect();
 			} else {
 				logger.severe("Invalid Database type" + params.getType().toString());
 				throw new DAOException("Invalid Database type");
 			}
 		} else {
-			if (params.getType() == DBType.PostgresQL) {
+			if (params.getType() == DBType.Db2) {
+				daoFactory = new DB2DAOFactory(params);
+			}else if (params.getType() == DBType.PostgresQL) {
 				daoFactory = new PGDAOFactory(params);
 			} else {
 				logger.severe("Invalid Database type" + params.getType().toString());
@@ -148,6 +258,60 @@ public class DAOFactoryHolder {
         DAOFactoryHolder.daoFactory = daoFactory;
     }	
 
+	/**
+	 * Get the ODBC connection string for the selected database type. This
+	 * string is prepared based on the configuration done in Connection Manager.
+	 * 
+	 * @return the ODBC string for the current DB connection or null if the
+	 *         selected database type is not DB2.<br>
+	 * <br>
+	 *         Example: for DB2 server the string returned by this function
+	 *         could be:<br>
+	 *         <code>Driver={IBM DB2 ODBC DRIVER};Hostname=bmsdev2.boulder.ibm.com;Port=5050;Protocol=TCPIP;UID=kaputin;PWD=mypswd;Database=BMS2DB2Z</code>
+	 */
+	public static String getODBCConnectionString() {
+		String returnStr = null;
+		ConnectionParameters params = daoFactory.getConnectionParameters();
+		if (params.getType() == DBType.Db2) {
+			returnStr = "Driver=";
+			returnStr += "{IBM DB2 ODBC SAFR WE DRIVER};";
+			returnStr += "Hostname=" + params.getServer() + ";";
+			returnStr += "Port=" + params.getPort() + ";";
+			returnStr += "Protocol=TCPIP;";
+			returnStr += "UID=" + params.getUserName() + ";";
+			returnStr += "PWD=" + params.getPassWord() + ";";
+			returnStr += "Database=" + params.getDatabase();
+		}
+		return returnStr;
+	}
+
+	/**
+	 * Get the ODBC connection string for the selected database type for the old compiler. This
+	 * string is prepared based on the configuration done in Connection Manager.
+	 * 
+	 * @return the ODBC string for the current DB connection or null if the
+	 *         selected database type is not DB2.<br>
+	 * <br>
+	 *         Example: for DB2 server the string returned by this function
+	 *         could be:<br>
+	 *         <code>Driver={IBM DB2 ODBC SAFR WE DRIVER};Hostname=bmsdev2.boulder.ibm.com;Port=5050;Protocol=TCPIP;UID=kaputin;PWD=mypswd;Database=BMS2DB2Z</code>
+	 */
+	public static String getODBCConnectionStringOld() {
+		String returnStr = null;
+		ConnectionParameters params = daoFactory.getConnectionParameters();
+		if (params.getType() == DBType.Db2) {
+			returnStr = "Driver=";
+			returnStr += "{IBM DB2 ODBC SAFR WE DRIVER};";
+			returnStr += "Hostname=" + params.getServer() + ";";
+			returnStr += "Port=" + params.getPort() + ";";
+			returnStr += "Protocol=TCPIP;";
+			returnStr += "UID=" + params.getUserName() + ";";
+			returnStr += "PWD=" + params.getPassWord() + ";";
+			returnStr += "Database=" + params.getDatabase();
+		}
+		return returnStr;
+	}
+	
 	/**
 	 * Disconnects the active connection.
 	 * 

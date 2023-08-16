@@ -1,7 +1,7 @@
 package org.genevaers.sycadas;
 
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
+import org.antlr.v4.runtime.Token;
 
 public class ParseErrorListener extends BaseErrorListener {
 	private List<String> errors = new ArrayList<String>();
@@ -39,7 +40,10 @@ public class ParseErrorListener extends BaseErrorListener {
     {
         List<String> stack = ((Parser)recognizer).getRuleInvocationStack();
         Collections.reverse(stack);
-        String err = line + ":" + charPositionInLine + " " + msg;
+        if(msg.startsWith("mismatched") || msg.startsWith("no viable")) {
+            msg = "Invalid syntax. Symbol '" + ((Token)offendingSymbol).getText() + "'";
+        }
+        String err = msg + " at line " +line + " offset " + charPositionInLine;
         errors.add(err);
     }
     

@@ -159,14 +159,6 @@ public class LogicalFileEditor extends SAFREditorPart implements
 
 		refreshControls();
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (logicalFile.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.LogicalFileEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewLogicalFile");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());		
         setPopupEnabled(false);        		

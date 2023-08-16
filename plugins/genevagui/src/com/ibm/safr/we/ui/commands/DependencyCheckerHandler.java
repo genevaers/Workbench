@@ -22,9 +22,12 @@ import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.ibm.safr.we.data.DAOFactoryHolder;
+import com.ibm.safr.we.data.DBType;
 import com.ibm.safr.we.ui.editors.DependencyCheckerEditor;
 import com.ibm.safr.we.ui.editors.DependencyCheckerEditorInput;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
@@ -33,6 +36,11 @@ public class DependencyCheckerHandler extends AbstractHandler implements
 		IHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
+		if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType().equals(DBType.PostgresQL)) {
+			MessageDialog.openInformation(HandlerUtil.getActiveWorkbenchWindow(event).getShell(),
+					"Dependency Checker", "Dependency Checker not available via a Postgres database connection");
+			return null;
+		}
 		DependencyCheckerEditorInput input = new DependencyCheckerEditorInput();
 		try {
 			HandlerUtil.getActiveWorkbenchWindow(event).getActivePage().openEditor(input, DependencyCheckerEditor.ID);

@@ -19,6 +19,9 @@ package com.ibm.safr.we.ui.editors;
 
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -73,7 +76,7 @@ public class EnvironmentEditor extends SAFREditorPart implements IPartListener2 
 	private String defaultGroupName = "Administrators";
 	private String defaultCreated = "-";
 	private String defaultModified = "-";
-
+	public Button enableCR;
 	private ScrolledForm form;
 	private FormToolkit toolkit;
 	private SAFRGUIToolkit safrGuiToolkit;
@@ -101,14 +104,6 @@ public class EnvironmentEditor extends SAFREditorPart implements IPartListener2 
 		refreshControls();
 		setDirty(false);
 
-		// Used to load the context sensitive help
-		if (environment.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.EnvironmentEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewEnvironment");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 		getSite().getPage().addPartListener(this);
@@ -188,11 +183,26 @@ public class EnvironmentEditor extends SAFREditorPart implements IPartListener2 
 			}
 		});
 
-		Composite groupDefaultInitParams = safrGuiToolkit.createComposite(
-				sectionDefaultInitParams, SWT.NONE);
+		Composite groupDefaultInitParams = safrGuiToolkit.createComposite(sectionDefaultInitParams, SWT.NONE);
 
-		groupDefaultInitParams
-				.setLayout(UIUtilities.createTableLayout(3, true));
+		groupDefaultInitParams.setLayout(UIUtilities.createTableLayout(3, true));
+
+		enableCR = safrGuiToolkit.createCheckBox(groupDefaultInitParams,  "Generate a Control Record");
+        enableCR.setSelection(true);
+        enableCR.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {   
+            	if(enableCR.getSelection()){
+            		textControlRecordName.setEnabled(true);
+            	}
+            	else{
+            		textControlRecordName.setEnabled(false);
+            	}
+            }
+        });
+
+	    
+	    safrGuiToolkit.createTextBox(groupDefaultInitParams, SWT.NONE).setVisible(false);
+	    safrGuiToolkit.createTextBox(groupDefaultInitParams, SWT.NONE).setVisible(false);
 
 		safrGuiToolkit.createLabel(groupDefaultInitParams, SWT.NONE, "&Control Record Name:");
 
@@ -211,7 +221,8 @@ public class EnvironmentEditor extends SAFREditorPart implements IPartListener2 
 		textGroupName.setTextLimit(UIUtilities.MAXNAMECHAR);
 		textGroupName.setLayoutData(UIUtilities.textTableData(2));
 		textGroupName.addModifyListener(this);
-
+		textGroupName.setEnabled(false);
+		
 	    sectionDefaultInitParams.setClient(groupDefaultInitParams);
 	}
 
@@ -268,6 +279,7 @@ public class EnvironmentEditor extends SAFREditorPart implements IPartListener2 
 
 	@Override
 	public void storeModel() throws DAOException, SAFRException {
+		environment.setCrRequired(enableCR.getSelection());
 		environment.store();
 
 	}

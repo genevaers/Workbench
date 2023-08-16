@@ -36,10 +36,8 @@ public class SAFRViewActivationException extends SAFRException {
 
 	private static final long serialVersionUID = 1L;
 	View view;
-	boolean errorOldOccured=false;
     boolean errorNewOccured=false;
 	List<ViewActivationError> activationLogNew = new ArrayList<ViewActivationError>();
-	List<ViewActivationError> activationLogOld = new ArrayList<ViewActivationError>();
 
 
 	public SAFRViewActivationException(View view) {
@@ -54,29 +52,11 @@ public class SAFRViewActivationException extends SAFRException {
 		return activationLogNew;
 	}
 
-    public List<ViewActivationError> getActivationLogOld() {
-        return activationLogOld;
-    }
-
-    public void addActivationError(ViewActivationError error, boolean newCompiler) {
-        if (newCompiler) {
-            addActivationErrorNew(error);
-        }
-        else {
-            addActivationErrorOld(error);            
-        }
-    }
-    
-	public void addActivationErrorNew(ViewActivationError error) {
-		errorNewOccured = true;
+    public void addActivationError(ViewActivationError error) {
+ 		errorNewOccured = true;
 		activationLogNew.add(error);
 	}
 
-    public void addActivationErrorOld(ViewActivationError error) {
-        errorOldOccured = true;
-        activationLogOld.add(error);
-    }
-	
     public void addActivationWarning(ViewActivationError error) {
         activationLogNew.add(error);
     }
@@ -101,19 +81,15 @@ public class SAFRViewActivationException extends SAFRException {
 	}
 
 	public boolean hasErrorOccured() {
-		return errorOldOccured || errorNewOccured;
+		return  errorNewOccured;
 	}
-
-    public boolean hasOldErrorOccured() {
-        return errorOldOccured;
-    }
 
     public boolean hasNewErrorOccured() {
         return errorNewOccured;
     }
     
     public boolean hasErrorOrWarningOccured() {
-        return !activationLogNew.isEmpty() || !activationLogOld.isEmpty();
+        return !activationLogNew.isEmpty() ;
     }
 	
 }

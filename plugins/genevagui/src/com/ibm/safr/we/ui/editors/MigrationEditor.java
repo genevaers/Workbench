@@ -392,7 +392,7 @@ public class MigrationEditor extends SAFREditorPart {
     }
     
     private class MigCompLabelProvider extends ColumnLabelProvider implements ITableLabelProvider, ITableColorProvider {
-
+    	
         public Image getColumnImage(Object element, int columnIndex) {
             return null;
         }
@@ -423,6 +423,7 @@ public class MigrationEditor extends SAFREditorPart {
             return text;
         }
 
+        
         public void addListener(ILabelProviderListener listener) {
 
         }
@@ -438,6 +439,7 @@ public class MigrationEditor extends SAFREditorPart {
         public void removeListener(ILabelProviderListener listener) {
 
         }
+
 		@Override
 		public Color getForeground(Object element, int columnIndex) {
 			
@@ -482,19 +484,6 @@ public class MigrationEditor extends SAFREditorPart {
 
 		createSectionComponentSelection(form.getBody());
         createSectionErrors(form.getBody());
-
-		// Used to load the context sensitive help
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(form.getBody(),
-						"com.ibm.safr.we.help.ExportUtilityEditor");
-
-		// Used to load the context sensitive help
-		PlatformUI
-				.getWorkbench()
-				.getHelpSystem()
-				.setHelp(form.getBody(), "com.ibm.safr.we.help.MigrationEditor");
 
 		form.reflow(true);		
 	}

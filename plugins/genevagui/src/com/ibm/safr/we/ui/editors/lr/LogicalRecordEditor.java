@@ -164,14 +164,6 @@ public class LogicalRecordEditor extends SAFREditorPart implements
 			UIUtilities.handleWEExceptions(se);
 		}
 		setDirty(false);
-		// Used to load the context sensitive help
-		if (logicalRecord.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.LogicalRecordEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewLogicalRecord");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 		getSite().getPage().addPartListener(this);
@@ -397,6 +389,10 @@ public class LogicalRecordEditor extends SAFREditorPart implements
 			toolkit.dispose();
 		}
 		getSite().getPage().removePartListener(this);
+		LogicalRecordFieldEditor lfe = mediator.getLogicalRecordFieldEditor();
+		if(lfe != null) {
+			lfe.dispose();
+		}
 	}
 
 	protected Control getControlFromProperty(Object property) {	    

@@ -131,10 +131,6 @@ public class GroupMembershipEditor extends SAFREditorPart implements
 		try {
 			createSectionGroups(form.getBody());
 			createSectionUsers(form.getBody());
-
-			// Used to load the context sensitive help
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.groupusereditor");
 		} catch (SAFRException e) {
 			UIUtilities.handleWEExceptions(e);
 		}

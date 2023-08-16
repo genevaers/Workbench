@@ -41,7 +41,7 @@ public class ViewLogicFormatCalc {
     
     private View view;
     private SAFRViewActivationException vaException;
-	private FormatCalculationSyntaxChecker formatCalulationChecker; 
+	private FormatCalculationSyntaxChecker formatCalculationChecker; 
     private Set<Integer> CTCols = new HashSet<Integer>();
 
     
@@ -62,7 +62,6 @@ public class ViewLogicFormatCalc {
             int colType = getColumnType(col);            
             initializeColumn(col, colType);            
             validateColumn(col);            
-            sendCompilerColumnInfo(col, colType);            
             compileLogicText(col);
             
         }
@@ -72,7 +71,7 @@ public class ViewLogicFormatCalc {
         if (!isBinaryColumnAllowed() && col.getDataTypeCode() != null && 
             col.getDataTypeCode().getGeneralId() == Codes.BINARY && col.isVisible()) {
             // error. visible binary column is not allowed for this view type.
-            vaException.addActivationErrorNew(new ViewActivationError(null,col,SAFRCompilerErrorType.VIEW_PROPERTIES,
+            vaException.addActivationError(new ViewActivationError(null,col,SAFRCompilerErrorType.VIEW_PROPERTIES,
                 "ERROR: Hardcopy and Delimited outputs cannot contain Binary visible columns."));
             throw vaException;
         }
@@ -126,7 +125,7 @@ public class ViewLogicFormatCalc {
         } catch (SAFRValidationException sve) {
             // get errors from sve and attach to compiler errors.
             for (String error : sve.getErrorMessages()) {
-                vaException.addActivationErrorNew(new ViewActivationError(null, col,
+                vaException.addActivationError(new ViewActivationError(null, col,
                         SAFRCompilerErrorType.VIEW_PROPERTIES, error));
             }
         }
@@ -135,54 +134,57 @@ public class ViewLogicFormatCalc {
         }
     }
 
-    protected void sendCompilerColumnInfo(ViewColumn col, int colType) {
-        // send column info to the compiler before compile text can be
-        // executed
-//        try {
-//            compiler.setColumnData(col.getColumnNo(), col.getId(),
-//                    col.getDefaultValue(), colType, col.getDataTypeCode(),
-//                    col.isSigned(), col.getLength(), col.getDecimals(),
-//                    col.getDateTimeFormatCode(), col.getScaling(),
-//                    col.getDataAlignmentCode(), col.getNumericMaskCode(),
-//                    col.getExtractAreaPosition(), col.getOrdinalPosition(),
-//                    null, null, null, null, null);
-//        } catch (SAFRCompilerException ce) {
-//            ArrayList<String> errors = compiler.getErrors();
-//            if (errors != null && errors.size() > 0) {
-//                for (String error : errors) {
-//                    vaException.addActivationErrorNew(new ViewActivationError(null,
-//                            col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
-//                            error));
-//                }
-//            }
-//            else {
-//                vaException.addActivationErrorNew(new ViewActivationError(null, col,
-//                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
-//                        "ERROR: Exception in compiler when sent column information. See log file for details."));
-//                logger.severe("Exception in compiler when sent column information. " + ce.getMessage());
-//            }
-//            throw vaException;              
-//        }
-    }    
-    
+   
     protected void compileLogicText(ViewColumn col) {
     	//So this thing is already checking that the column is not a sortkey
     	//and is not ALPHANUMERIC - which is checked within the compiler at the moment
     	//
         if (!col.isSortKey() && view.isFormatPhaseInUse() && col.getDataTypeCode().getGeneralId() != Codes.ALPHANUMERIC) {
-    		formatCalulationChecker = (FormatCalculationSyntaxChecker) SycadaFactory.getProcesorFor(SycadaType.FORMAT_CALCULATION);
+    		formatCalculationChecker = (FormatCalculationSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_CALCULATION);
     		String calc = col.getFormatColumnCalculation();
-    		if(calc != null) {
+    		if(calc != null && calc.length() > 0) {
     			CTCols.add(col.getColumnNo());
-	    		formatCalulationChecker.processLogic(col.getFormatColumnCalculation());
-	    		if(formatCalulationChecker.hasSyntaxErrors())
-	    			vaException.addCompilerErrorsNew(formatCalulationChecker.getSyntaxErrors(), null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
-	//            if (!compiler.getWarnings().isEmpty()) {
-	//                vaException.addCompilerWarnings(compiler, null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);                  
-	//            }
+	    		formatCalculationChecker.syntaxCheckLogic(col.getFormatColumnCalculation());
+	    		if(formatCalculationChecker.hasSyntaxErrors())
+	    			vaException.addCompilerErrorsNew(formatCalculationChecker.getSyntaxErrors(), null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
+	            Set<Integer> calcCols = formatCalculationChecker.getColumnRefs();
+	            checkColumnDataTypes(col, calcCols);
+	    		CTCols.addAll(calcCols);
     		}
         }
     }    
+    
+	private void checkColumnDataTypes(ViewColumn col, Set<Integer> calcCols) {
+		//Columns here are not indexed 
+		//process the other way around - crazy slow ?
+		for(ViewColumn c : view.getViewColumns()) {
+			if(calcCols.contains(c.getColumnNo())) {
+	    		if(c.isNumeric() == false) {
+	                vaException.addActivationError(new ViewActivationError(null, col,
+	                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
+	                        "Column " + c.getColumnNo() + " is not numeric"));
+	    		}			
+	    		if(c.isSortKey()) {
+	                vaException.addActivationError(new ViewActivationError(null, col,
+	                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
+	                        "Column " + c.getColumnNo() + " is a sort key column"));
+	    		}
+			}
+		}
+		for(Integer refCol : calcCols) {
+    		if(refCol > col.getColumnNo()) {
+                vaException.addActivationError(new ViewActivationError(null, col,
+                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
+                        "Column " + refCol + " is greater than the current column number"));
+    		}			
+    		if(refCol == 0) {
+                vaException.addActivationError(new ViewActivationError(null, col,
+                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
+                        "Column number must be greater than zero"));
+    		}						
+		}
+		
+	}
     
     public Set<Integer> getCTCols() {
     	return CTCols;

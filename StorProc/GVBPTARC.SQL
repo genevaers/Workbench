@@ -1,0 +1,118 @@
+-- ******************************************************************
+--
+-- (C) COPYRIGHT IBM CORPORATION 2010, 2023.
+--     Copyright Contributors to the GenevaERS Project.
+-- SPDX-License-Identifier: Apache-2.0
+--
+-- ******************************************************************
+--
+--   Licensed under the Apache License, Version 2.0 (the "License");
+--   you may not use this file except in compliance with the License.
+--   You may obtain a copy of the License at
+--
+--      http://www.apache.org/licenses/LICENSE-2.0
+--
+--   Unless required by applicable law or agreed to in writing, software
+--   distributed under the License is distributed on an "AS IS" BASIS,
+--   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+--   or implied.
+--   See the License for the specific language governing permissions
+--   and limitations under the License.
+--
+-- ****************************************************************
+--
+
+CREATE PROCEDURE GETCOMPDEPS (IN P_ENTITYTYPE VARCHAR(32),
+                                 IN P_ENTITYID INT,
+                                 IN  P_SRCENVT INT,
+                                 IN P_GROUPID INT,
+                                 OUT P_SQLSTATE CHAR(5) )
+DYNAMIC RESULT SETS 1
+LANGUAGE SQL
+DISABLE DEBUG MODE 
+
+BEGIN
+ DECLARE SQLSTATE CHAR(5) ;
+ DECLARE V_SQLSTATE CHAR(5) DEFAULT '00000';
+ DECLARE LOC_CUR RESULT_SET_LOCATOR VARYING;
+ DECLARE V_ENTITYTYPE VARCHAR(30);
+ DECLARE V_CHILDTYPE CHAR(30);
+ DECLARE V_ENTITYID INT;
+ DECLARE V_ENTITYNAME VARCHAR(254);
+ DECLARE V_ENVIRONID INT;
+ DECLARE V_ENVIRON VARCHAR(50);
+ DECLARE V_DEFAULTFLG SMALLINT;
+ DECLARE V_DEPENDFLG CHAR(3);
+ DECLARE V_SECRIGHTS INT;
+
+ DECLARE GETARC_CUR CURSOR WITH RETURN
+  FOR SELECT *
+  FROM SESSION.TMPARCHID
+  ORDER BY ENTITYTYPE ;
+
+ DECLARE GLOBAL TEMPORARY TABLE SESSION.TMPARCHID
+  (ENTITYTYPE VARCHAR(30),
+   ENTITYNAME VARCHAR(254),
+   ENTITYID INT,
+   SECRIGHTS INT)
+ ON COMMIT DROP TABLE;
+
+ CASE UPPER(P_ENTITYTYPE)
+
+    WHEN 'VIEW' THEN
+
+      CALL GENVIEWDEPS(P_SRCENVT,P_ENTITYID,'1',P_GROUPID,0);
+
+      ASSOCIATE RESULT SET LOCATORS(LOC_CUR)
+      WITH PROCEDURE GENVIEWDEPS;
+
+    WHEN 'LOGICAL RECORD' THEN
+
+      CALL GENLRDEPS(P_SRCENVT,P_ENTITYID,'1',P_GROUPID,0);
+
+      ASSOCIATE RESULT SET LOCATORS(LOC_CUR)
+      WITH PROCEDURE GENLRDEPS;
+
+    WHEN 'JOIN' THEN
+
+      CALL GENLPDEPS(P_SRCENVT,P_ENTITYID,'1',P_GROUPID,0);
+
+      ASSOCIATE RESULT SET LOCATORS(LOC_CUR)
+      WITH PROCEDURE GENLPDEPS;
+
+    WHEN 'FILE' THEN
+
+      CALL GENLFDEPS(P_SRCENVT,P_ENTITYID,'1',P_GROUPID,0);
+
+	  ASSOCIATE RESULT SET LOCATORS(LOC_CUR)
+      WITH PROCEDURE GENLFDEPS;
+
+    WHEN 'PARTITION' THEN
+
+      CALL GENPFDEPS(P_SRCENVT,P_ENTITYID,'1',P_GROUPID,0);
+
+      ASSOCIATE RESULT SET LOCATORS(LOC_CUR)
+      WITH PROCEDURE GENPFDEPS;
+
+    END CASE ;
+
+    ALLOCATE DEP_CUR CURSOR FOR RESULT SET LOC_CUR;
+
+  WHILE (V_SQLSTATE ='00000') DO
+
+	FETCH FROM DEP_CUR INTO V_ENTITYTYPE,V_CHILDTYPE,
+	V_ENTITYID,V_ENTITYNAME,V_ENVIRONID,V_ENVIRON,V_DEFAULTFLG,
+	V_DEPENDFLG,V_SECRIGHTS;
+
+    SET V_SQLSTATE= SQLSTATE;
+
+    IF V_SQLSTATE ='00000' AND V_ENVIRONID = P_SRCENVT THEN
+     INSERT INTO SESSION.TMPARCHID
+     VALUES(V_ENTITYTYPE,V_ENTITYNAME,V_ENTITYID,V_SECRIGHTS);
+    END IF;
+
+  END WHILE;
+
+ OPEN GETARC_CUR ;
+
+END

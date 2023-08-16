@@ -1,7 +1,12 @@
 package org.genevaers.sycadas.dataprovider;
 
+import java.util.List;
+import java.util.Map;
+
+import org.stringtemplate.v4.ST;
+
 /*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+ * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +25,23 @@ package org.genevaers.sycadas.dataprovider;
 
 public interface SycadaDataProvider {
 
-	public Integer findLRFieldID(String fieldName);
-	public Integer findLookupID(String lookupName);
-	public Integer findLookupFieldID(int lkid, String fieldName);
-	public Integer findExitID(String string);
+	public class LookupTargetField {
+		public String lookupname;
+		public int lookupid;
+		public String fieldname;
+		public int fieldid;
+	}
+
+	public Integer findExitID(String string, boolean procedure);
 	public Integer findPFAssocID(String lfName, String pfName);
+	public Map<String, Integer> getFieldsFromLr(int id);
+	public Map<String, Integer> getLookupTargetFields(String name);
+
+	public void setEnvironmentID(int environmentId);
+	public int getEnvironmentID();
+
+	public void setLogicalRecordID(int lrid);
+	public int getLogicalRecordID();
+
 
 }

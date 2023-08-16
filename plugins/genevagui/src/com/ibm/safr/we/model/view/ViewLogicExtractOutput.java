@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.genevaers.sycadas.ExtractDependencyAnalyser;
 import org.genevaers.sycadas.ExtractOutputSycada;
 import org.genevaers.sycadas.SycadaFactory;
 import org.genevaers.sycadas.SycadaType;
+import org.genevaers.sycadas.SyntaxChecker;
 
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
@@ -53,81 +55,34 @@ public class ViewLogicExtractOutput {
         this.viewLogicDependencies = viewLogicDependencies;
     }
 
-    public void compile(ViewSource source) {
-        compileExtractOutput(source);
+    public void compile(ViewSource source, WESycadaDataProvider dataProvider) {
+        compileExtractOutput(source, dataProvider);
         extractLogicDependencies(source);        
     }
 
-    void compileExtractOutput(ViewSource source) {
+    void compileExtractOutput(ViewSource source, WESycadaDataProvider dataProvider) {
         try {
-    		extractOutputSycada = (ExtractOutputSycada) SycadaFactory.getProcesorFor(SycadaType.EXTRACT_OUTPUT);
+    		extractOutputSycada = (ExtractOutputSycada) SycadaFactory.getProcessorFor(SycadaType.EXTRACT_OUTPUT);
+    		extractOutputSycada.setDataProvider(dataProvider);
+    		extractOutputSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
     		try {
     			if(source.getExtractRecordOutput() != null)
-    				extractOutputSycada.processLogic(source.getExtractRecordOutput());
+    				extractOutputSycada.syntaxCheckLogic(source.getExtractRecordOutput());
     		} catch (IOException e) {
-    			// TODO Auto-generated catch block
     			e.printStackTrace();
     		}
     		if(extractOutputSycada.hasSyntaxErrors())
-    			vaException.addCompilerErrorsNew(extractOutputSycada.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-    		WESycadaDataProvider dataProvider = new WESycadaDataProvider();
-    		dataProvider.setEnvironmentID(source.getEnvironmentId());
-    		dataProvider.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
-    		extractOutputSycada.generateDependencyDataFrom(dataProvider);
+    			vaException.addCompilerErrorsNew(extractOutputSycada.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
+    		extractOutputSycada.generateDependencies();
     		if(extractOutputSycada.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractOutputSycada.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+    			vaException.addCompilerErrorsNew(extractOutputSycada.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         } catch (SAFRCompilerParseException ee) {
         } 
-//        if (!compiler.getWarnings().isEmpty()) {
-//            vaException.addCompilerWarnings(compiler, source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
-//        }
     }
 
     void extractLogicDependencies(ViewSource source) {
-        int depCounter=1;
-        for (int i : extractOutputSycada.getLFPFAssocIDs()) {
-            if (i > 0) {
-                viewLogicDependencies.add(new ViewLogicDependency(view,
-                        LogicTextType.Extract_Record_Output,
-                        source, depCounter++, null, null, null, i));
-            }
-        }
-        for (int i : extractOutputSycada.getFieldIDs()) {
-            if (i > 0) {
-                viewLogicDependencies.add(new ViewLogicDependency(view,
-                        LogicTextType.Extract_Record_Output,
-                        source, depCounter++, null, i, null, null));
-            }
-        }
-        for (int i : extractOutputSycada.getExitIDs()) {
-            if (i > 0) {
-                viewLogicDependencies.add(new ViewLogicDependency(view,
-                        LogicTextType.Extract_Record_Output,
-                        source, depCounter++, null, null, i, null));
-            }
-        }
-        Map<Integer, List<Integer>> lookupFieldMap = extractOutputSycada.getLookupIDs();
-        if (!lookupFieldMap.isEmpty()) {
-            for (int lookup : lookupFieldMap.keySet()) {
-                boolean fieldsAvailable = false;
-                List<Integer> depLookupFields = lookupFieldMap.get(lookup);
-                for (int i : depLookupFields) {
-                    if (i > 0) {
-                        viewLogicDependencies.add(new ViewLogicDependency(
-                            view,
-                            LogicTextType.Extract_Record_Output,
-                            source, depCounter++,
-                            lookup, i, null, null));
-                        fieldsAvailable = true;
-                    }
-                }
-                if (!fieldsAvailable) {
-                    viewLogicDependencies.add(new ViewLogicDependency(view,
-                            LogicTextType.Extract_Record_Output,
-                            source, depCounter++, lookup, null, null, null));
-                }
-            }
-        }        
-    }
-
+    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
+    	vle.extractDependencies(extractOutputSycada, source, LogicTextType.Extract_Record_Output);
+	}
+    
 }

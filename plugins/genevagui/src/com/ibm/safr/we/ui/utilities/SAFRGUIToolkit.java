@@ -41,6 +41,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
@@ -1019,5 +1025,24 @@ public class SAFRGUIToolkit {
 			sorter = new ViewTableSorter(colNumber, dir);
 		}
 		tableComboViewer.setSorter(sorter);
+	}
+
+	public static void dumpActivePage(String context) {
+		System.out.print("\n" + context + "\n");
+		IWorkbenchWindow aw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		if(aw != null) { 
+			IWorkbenchPage page = aw.getActivePage();
+			System.out.print("Page\n" +page.toString()+ "\n");
+			System.out.print("Editors\n");
+			IEditorReference[] erefs = page.getEditorReferences();
+			for(int i=0; i<erefs.length; i++) {
+				System.out.print(erefs[i].getName() +"\n");
+			}
+			System.out.print("Views\n");
+			IViewReference[] vrefs = page.getViewReferences();
+			for(int i=0; i<vrefs.length; i++) {
+				System.out.print(vrefs[i].getPartName() +"\n");
+			}
+		}
 	}
 }

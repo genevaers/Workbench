@@ -17,6 +17,8 @@ package com.ibm.safr.we.ui.dialogs;
  * under the License.
  */
 
+import org.genevaers.ccb2lr.Copybook2LR;
+import org.genevaers.sycadas.ExtractSycada;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.nebula.jface.tablecomboviewer.TableComboViewer;
 import org.eclipse.nebula.widgets.tablecombo.TableCombo;
@@ -42,6 +45,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
@@ -56,6 +60,7 @@ import com.ibm.safr.we.data.ConnectionParameters;
 import com.ibm.safr.we.data.DAOAuthorizationException;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
+import com.ibm.safr.we.data.DBType;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRFatalException;
 import com.ibm.safr.we.exceptions.SAFRNotFoundException;
@@ -73,16 +78,26 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
+
 /**
  * This class creates the dialog and also the controls for login
  * 
  * 
  */
 public class SAFRLogin extends TitleAreaDialog {
+	static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.dialogs.SAFRLogin");
+
+	private enum environmentSelectionEvent {
+		SYSADMIN_SELECTION_INIT,
+		ENV_SELECTION_INIT,
+		SYSADMIN_ENV_SELECETED,
+		USER_ENV_SELECTED,
+		USER_GROUP_SELECTED,
+		NO_ENV_SELECTED
+	}
 
 	private SAFRPreferences preferences = null;
 	private SAFRGUIToolkit safrGuiToolkit;
-	static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.dialogs.SAFRLogin");
 
 	public SAFRLogin(Shell parentShell) {
 		super(parentShell);
@@ -99,28 +114,28 @@ public class SAFRLogin extends TitleAreaDialog {
 		grp = group;		
 	}
 	
-	Label labelUserId;
-	Label labelPassword;
-	Label environmentLabel;
-	Label groupLabel;
-	Label connectionLab;
+	private Label labelUserId;
+	private Label labelPassword;
+	private Label environmentLabel;
+	private Label groupLabel;
+	private Label connectionLab;
 	private String currentConnectionName;
 	private Combo comboConnection;	
 	private Text userID;
-	String userId;
+	private String userId;
 	private Text pswd;
-	String password;
+	private String password;
 
 	private TableCombo comboEnvironment;
 	private Map<String, Integer> envMap = new HashMap<String, Integer>();
 	private Map<String, Integer> grpMap = new HashMap<String, Integer>();
-	String env;
+	private String env;
 	private TableCombo comboGroup;
-	String grp;
-	private Button checkEnv;
-	Boolean chckEnv;
-	private Button checkGrp;
-	Boolean chckGrp;
+	private String grp;
+	private Button envDefaultedCheckbox;
+	private Boolean chckEnv;
+	private Button groupDefaultedCheckbox;
+	private Boolean chckGrp;
 	private Group connectionGroup;
 	private Group loginGroup;
     private Group envGroup;
@@ -238,85 +253,52 @@ public class SAFRLogin extends TitleAreaDialog {
         
         environmentLabel = safrGuiToolkit.createLabel(envGroup, SWT.NONE, "   &Environment:");
         environmentLabel.setEnabled(false);
-        comboEnvViewer = safrGuiToolkit.createTableComboForComponents(
-            envGroup, ComponentType.Environment);
+        comboEnvViewer = safrGuiToolkit.createTableComboForComponents(envGroup, ComponentType.Environment);
         comboEnvironment = comboEnvViewer.getTableCombo();
         GridData gridc1 = new GridData(GridData.FILL_HORIZONTAL);
         gridc1.horizontalSpan = 2;
         comboEnvironment.setLayoutData(gridc1);
         comboEnvironment.setData(SAFRLogger.USER, "Select your environment");
-        comboEnvironment.addFocusListener(new FocusListener() {
-            public void focusGained(FocusEvent e) {
-                
-            }
-
-            public void focusLost(FocusEvent e) {
-                if ((prevEnv != null) && !(prevEnv.equals(comboEnvironment.getText()))) {
-                    if (comboGroup.isEnabled()) {
-                        try {
-                            comboGroup.select(-1);
-                            checkGrp.setEnabled(false);
-                            checkGrp.setSelection(false);
-                            populateGroup();
-                        } catch (DAOException de) {
-                            UIUtilities.handleWEExceptions(
-                                de,"Unexpected Database error occurred while populating Group list.",
-                                UIUtilities.titleStringDbException);
-                        } catch (SAFRException se) {
-                            UIUtilities.handleWEExceptions(se,"Error populating the default Group list.",null);
-                        }
-
-                        prevEnv = comboEnvironment.getText();
-                    }
-                }                            
-            }
-            
-        });
         comboEnvironment.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
-                try {
-                    if ((currentUser.getDefaultEnvironment() != null) && 
-                        (envMap.get(comboEnvironment.getText()).equals(currentUser.getDefaultEnvironment().getId()))) {
-                        checkEnv.setSelection(true);
-                    } else {
-                        checkEnv.setSelection(false);
-                    }
-                } catch (SAFRException e1) {
-                    UIUtilities.handleWEExceptions(e1,"Error getting environment", null);                    
+                logger.info("Environment selected");
+                if (currentUser.isSystemAdmin()) {
+                   	handleSysAdminEnvironmentSelectionEvent(environmentSelectionEvent.SYSADMIN_ENV_SELECETED);                	
+                } else {
+                   	handleUserSelectionEvent(environmentSelectionEvent.USER_ENV_SELECTED);
                 }
+                
                 if (!(prevEnv.equals(comboEnvironment.getText()))) {
                     comboGroup.select(-1);
-                    checkGrp.setEnabled(false);
-                    checkGrp.setSelection(false);
+                    groupDefaultedCheckbox.setEnabled(false);
+                    groupDefaultedCheckbox.setSelection(false);
                 }                
             }
             
         });
 
-        checkEnv = safrGuiToolkit.createCheckBox(envGroup,"&Set as Default");
-        checkEnv.setData(SAFRLogger.USER, "Set selected environment as default");
-        checkEnv.setToolTipText("Set selected environment as default");
-        checkEnv.addSelectionListener(new SelectionAdapter() {
+        envDefaultedCheckbox = safrGuiToolkit.createCheckBox(envGroup,"&Set as Default");
+        envDefaultedCheckbox.setData(SAFRLogger.USER, "Set selected environment as default");
+        envDefaultedCheckbox.setToolTipText("Set selected environment as default");
+        envDefaultedCheckbox.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-                if (checkEnv.getSelection() && comboGroup.getSelectionIndex() != -1) {
-                    checkGrp.setEnabled(true);
+                if (envDefaultedCheckbox.getSelection() && comboGroup.getSelectionIndex() != -1) {
+                    groupDefaultedCheckbox.setEnabled(true);
                 } else {
-                    checkGrp.setSelection(false);
-                    checkGrp.setEnabled(false);
+                    groupDefaultedCheckbox.setSelection(false);
+                    groupDefaultedCheckbox.setEnabled(false);
                 }
-
             }
 
         });
 
         groupLabel = safrGuiToolkit.createLabel(envGroup, SWT.NONE, "   &Group:");
         groupLabel.setEnabled(false);
-        comboGroupViewer = safrGuiToolkit.createTableComboForComponents(
-            envGroup, ComponentType.Group);
+        comboGroupViewer = safrGuiToolkit.createTableComboForComponents(envGroup, ComponentType.Group);
         comboGroup = comboGroupViewer.getTableCombo();
         GridData gridc2 = new GridData(GridData.FILL_HORIZONTAL);
         gridc2.horizontalSpan = 2;
@@ -324,35 +306,16 @@ public class SAFRLogin extends TitleAreaDialog {
         comboGroup.setData(SAFRLogger.USER, "Select your Group");
         comboGroup.addSelectionListener(new SelectionAdapter() {
             
-            public void widgetSelected(SelectionEvent e) {
-                if (checkEnv.getSelection()) {
-                    checkGrp.setEnabled(true);
-                }
-                Integer currentEnvId = envMap.get(comboEnvironment.getText());
-                if (!currentUser.isSystemAdmin()) {
-                    try {
-                        if ((currentUser.getDefaultGroup() != null) && 
-                            (currentEnvId.equals(currentUser.getDefaultEnvironment().getId())) && 
-                            (grpMap.get(comboGroup.getText()).equals(currentUser.getDefaultGroup().getId()))) 
-                        {
-                            checkGrp.setSelection(true);
-                        } 
-                        else 
-                        {
-                            checkGrp.setSelection(false);
-                        }
-                    } catch (SAFRException e1) {
-                        UIUtilities.handleWEExceptions(e1,"Error getting group", null);                                        
-                    }
-                }
+            public void widgetSelected(SelectionEvent e) {           	
+                	handleUserSelectionEvent(environmentSelectionEvent.USER_GROUP_SELECTED);                	
             }
             
         });
 
-        checkGrp = safrGuiToolkit.createButton(envGroup, SWT.CHECK, "");
-        checkGrp.setText("Set as De&fault");
-        checkGrp.setData(SAFRLogger.USER, "Set selected group as default");
-        checkGrp.setToolTipText("Set selected group as default");
+        groupDefaultedCheckbox = safrGuiToolkit.createButton(envGroup, SWT.CHECK, "");
+        groupDefaultedCheckbox.setText("Set as De&fault");
+        groupDefaultedCheckbox.setData(SAFRLogger.USER, "Set selected group as default");
+        groupDefaultedCheckbox.setToolTipText("Set selected group as default");
         
         enableDefaults(false);
         
@@ -369,20 +332,22 @@ public class SAFRLogin extends TitleAreaDialog {
             comboGroup.setEnabled(false);
             groupLabel.setEnabled(false);
         } else {
-            comboGroup.setEnabled(true);
-            groupLabel.setEnabled(true);
+        	if (envDefaultedCheckbox.getSelection()) {
+	            comboGroup.setEnabled(true);
+	            groupLabel.setEnabled(true);
+        	}
         }
         
-        checkEnv.setEnabled(enabled);
+        envDefaultedCheckbox.setEnabled(enabled);
         if (currentUser == null || currentUser.isSystemAdmin()) {
-            checkGrp.setEnabled(false);                        
+            groupDefaultedCheckbox.setEnabled(false);                        
         }
         else {
-            if (checkEnv.getSelection() && comboGroup.getSelectionIndex() != -1) {
-                checkGrp.setEnabled(true);
+            if (envDefaultedCheckbox.getSelection() && comboGroup.getSelectionIndex() != -1) {
+                groupDefaultedCheckbox.setEnabled(true);
             } else {
-                checkGrp.setSelection(false);
-                checkGrp.setEnabled(false);
+                groupDefaultedCheckbox.setSelection(false);
+                groupDefaultedCheckbox.setEnabled(false);
             }
         }
 	}
@@ -429,7 +394,6 @@ public class SAFRLogin extends TitleAreaDialog {
                 ApplicationMediator.getAppMediator().waitCursor();
                 if (checkUser()) {
                     login.setEnabled(false);
-                    ok.setEnabled(true);
                     labelUserId.setEnabled(false);
                     userID.setEnabled(false);
                     pswd.setEnabled(false);
@@ -442,22 +406,22 @@ public class SAFRLogin extends TitleAreaDialog {
                     manageConnections.setEnabled(false);                    
 
                     try {
-                        populateEnvironment();
+                		if(currentUser.isSystemAdmin()) {
+                			handleSysAdminEnvironmentSelectionEvent(environmentSelectionEvent.SYSADMIN_SELECTION_INIT);
+                		} else {
+                			handleUserSelectionEvent(environmentSelectionEvent.ENV_SELECTION_INIT);
+                		}
                         
                         // Store the current user id to preferences
                         preferences.setLastUser(userID.getText());
-                        comboEnvironment.setFocus();
                     } catch (DAOException de) {
                         UIUtilities.handleWEExceptions(
                             de,"Unexpected database error while populating Environment list.",UIUtilities.titleStringDbException);
                         setErrorMessage(de.getMessage());
                     } catch (SAFRException se) {
-                        UIUtilities.handleWEExceptions(
-                            se,"Unexpected error populating the list of Environments.",null);
+                        UIUtilities.handleWEExceptions(se,"Unexpected error populating the list of Environments.",null);
                         setErrorMessage(se.getMessage());
                     }
-                    
-                    ok.setFocus();
                 }
                 ApplicationMediator.getAppMediator().normalCursor();                
             }
@@ -478,18 +442,18 @@ public class SAFRLogin extends TitleAreaDialog {
                 pswd.setText("");
                 comboEnvironment.select(-1);
                 comboEnvironment.getTable().removeAll();
-                checkEnv.setSelection(false);
+                envDefaultedCheckbox.setSelection(false);
                 loginGroup.setEnabled(true);
                 comboEnvironment.setEnabled(false);
-                checkEnv.setEnabled(false);
+                envDefaultedCheckbox.setEnabled(false);
                 comboGroup.select(-1);
                 comboGroup.getTable().removeAll();
-                checkGrp.setSelection(false);
+                groupDefaultedCheckbox.setSelection(false);
 
                 environmentLabel.setEnabled(false);
                 groupLabel.setEnabled(false);
                 comboGroup.setEnabled(false);
-                checkGrp.setEnabled(false);
+                groupDefaultedCheckbox.setEnabled(false);
                 reset.setEnabled(false);
                 pswd.setFocus();
                 prevEnv = "";
@@ -500,10 +464,17 @@ public class SAFRLogin extends TitleAreaDialog {
         ok.setEnabled(false);        
         ok.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                if (validate()) {
-                    saveAndClose(IDialogConstants.PROCEED_ID);
-                }
-            }
+            	boolean proceed = true;
+            	if(!currentUser.isSystemAdmin()){
+            		if(currentUser.getAssociatedGroups().isEmpty()){
+            			createDialog();
+            			proceed = false;
+            		}
+            	}
+				if (proceed && validate()) {
+					saveAndClose(IDialogConstants.PROCEED_ID);
+				}
+			}
         });
         
         cancel = createButton(buttonBar, IDialogConstants.CANCEL_ID,"&Cancel", false);
@@ -513,6 +484,14 @@ public class SAFRLogin extends TitleAreaDialog {
         return buttonBar;
 	}
 
+	public void createDialog(){
+		MessageDialog dialog = new MessageDialog(Display.getCurrent()
+	                .getActiveShell(), "Unauthorized User", null,
+	                "User is not a system admin or part of a security group. Please contact a system admin.",
+	                MessageDialog.ERROR, new String[] { "&OK", "&Cancel" }, 0);
+		dialog.open();
+	}
+	
 	protected boolean validate() {
 		if (comboEnvironment.getSelectionIndex() == -1) {
 			setErrorMessage("Please select an Environment.");
@@ -539,11 +518,8 @@ public class SAFRLogin extends TitleAreaDialog {
 		}
 	}
 
-	protected void populateEnvironment() throws DAOException, SAFRException {
-		// Populate the combo with a list of all environments.
-		// Currently implemented for System admin only.
-		// SAFRFactory factory = SAFRApplication.getSAFRFactory();
-
+	protected boolean populateEnvironmentAndCheckDefaulted() throws DAOException, SAFRException {
+		boolean defaulted = false;
 		List<EnvironmentQueryBean> envList = new ArrayList<EnvironmentQueryBean>();
 		envList = SAFRQuery.queryAllEnvironments(SortType.SORT_BY_NAME,
 				currentUser);
@@ -568,24 +544,26 @@ public class SAFRLogin extends TitleAreaDialog {
 			envMap.put(UIUtilities.getComboString(envstr, curEnv.getId()),curEnv.getId());
 
 			if (curEnv.getId().equals(defaultenv)) {
-				comboEnvironment.select(comboEnvironment.indexOf(
-				    UIUtilities.getComboString(envstr, curEnv.getId())));
-				checkEnv.setSelection(true);
+				comboEnvironment.select(comboEnvironment.indexOf(UIUtilities.getComboString(envstr, curEnv.getId())));
+				envDefaultedCheckbox.setSelection(true);
+				defaulted= true;
 			}
 		}
+		
+		return defaulted;
 	}
 
-	protected void populateGroup() throws DAOException, SAFRException {
+	protected boolean populateGroupsAndCheckIfDefaulted() throws DAOException, SAFRException {
+		boolean defaulted = false;
 		// Populate the combo with a list of all Groups.
-		if (!currentUser.isSystemAdmin()) {
 			// clear any previous Group entries from the combo box
 			comboGroup.getTable().removeAll();
 			grpMap.clear();
-			checkGrp.setSelection(false);
+			groupDefaultedCheckbox.setSelection(false);
 
 			if (comboEnvironment.getSelectionIndex() < 0) {
 				// return if environment is not selected.
-				return;
+				return false;
 			}
 			List<GroupQueryBean> grpList = new ArrayList<GroupQueryBean>();
 			grpList = SAFRQuery.queryGroups(userID.getText(), envMap.get(comboEnvironment.getText()));
@@ -613,50 +591,52 @@ public class SAFRLogin extends TitleAreaDialog {
 				grpMap.put(UIUtilities.getComboString(grpstr, groupBean.getId()), groupBean.getId());
 
 				if (defaultGrp != 0 && groupBean.getId().equals(defaultGrp)) {
-					checkGrp.setEnabled(true);
-					checkGrp.setSelection(true);
+					groupDefaultedCheckbox.setEnabled(true);
+					groupDefaultedCheckbox.setSelection(true);
+					defaulted = true; // this is really a different state?
 					comboGroup.select(comboGroup.indexOf(UIUtilities.getComboString(grpstr, groupBean.getId())));
 				}
 			}
-		}
+			return defaulted;
 	}
 
 	protected void saveAndClose(int returnId) {
 		userId = userID.getText();
+		if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType()== DBType.Db2) {
+			userId = userId.toUpperCase();
+		}
+
 		password = pswd.getText();
 		env = comboEnvironment.getText();
 		grp = comboGroup.getText();
-		chckEnv = checkEnv.getSelection();
-		chckGrp = checkGrp.getSelection();
+		chckEnv = envDefaultedCheckbox.getSelection();
+		chckGrp = groupDefaultedCheckbox.getSelection();
 
 		Integer selectedGroupId = null;
 		com.ibm.safr.we.model.Group currentGroup = null;
 
 		try {
 			// to avoid null pointer exception when group not selected.
-			if (grp != "") {
-				//selectedGroupId = grpMap.get(grp);
-				//currentGroup = SAFRApplication.getSAFRFactory().getGroup(
-				//		selectedGroupId);
+			if (!grp.equals("")) {
+				selectedGroupId = grpMap.get(grp);
+				currentGroup = SAFRApplication.getSAFRFactory().getGroup(selectedGroupId);
 			}
 
-			Environment currentEnv = SAFRApplication.getSAFRFactory()
-					.getEnvironment(envMap.get(env));
+			Environment currentEnv = SAFRApplication.getSAFRFactory().getEnvironment(envMap.get(env));
 
-			SAFRApplication.setUserSession(new UserSession(currentUser,
-					currentEnv, currentGroup));
+			SAFRApplication.setUserSession(new UserSession(currentUser,currentEnv, currentGroup));
 			
 			// log the SAFR user, Environment and Group
 			StringBuffer buffer = new StringBuffer();
-			buffer.append("SAFR Login Details:");
-			buffer.append(SAFRUtilities.LINEBREAK + "SAFR Userid  "
+			buffer.append("GenevaERS Login Details:");
+			buffer.append(SAFRUtilities.LINEBREAK + "GenevaERS Userid  "
 					+ currentUser.getUserid());
 			buffer.append(SAFRUtilities.LINEBREAK + "Environment  "
 					+ currentEnv.getDescriptor());
 			if (currentUser.isSystemAdmin()) {
 				buffer.append(SAFRUtilities.LINEBREAK+ "Group        [not applicable]");
 			} else {
-				//buffer.append(SAFRUtilities.LINEBREAK + "Group        "+ currentGroup.getDescriptor());
+				buffer.append(SAFRUtilities.LINEBREAK + "Group        "+ currentGroup.getDescriptor());
 			}
 			if (currentUser.isSystemAdmin()) {
 				buffer.append(SAFRUtilities.LINEBREAK + "Authority    System administrator");
@@ -667,10 +647,10 @@ public class SAFRLogin extends TitleAreaDialog {
 			}
 			SAFRLogger.logAll(logger, Level.INFO, buffer.toString());
 
-			Integer currEnvId = new Integer(0);
-			Integer defEnvId = new Integer(0);
-			Integer curGrpId = new Integer(0);
-			Integer defGrpId = new Integer(0);
+			Integer currEnvId = 0;
+			Integer defEnvId = 0;
+			Integer curGrpId = 0;
+			Integer defGrpId = 0;
 
 			if (envMap.get(env) != null) {
 				currEnvId = envMap.get(env);
@@ -710,36 +690,49 @@ public class SAFRLogin extends TitleAreaDialog {
 			return;
 		} 
 
-	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is Sycada");// + ViewActivator.getCompilerVersion());
-		SAFRLogger.logEnd(logger);
+	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + ExtractSycada.getVersion());// + ViewActivator.getCompilerVersion());
+	    SAFRLogger.logAll(logger, Level.INFO, "CCB2LR version is " + Copybook2LR.getVersion());// + ViewActivator.getCompilerVersion());
 
 		setReturnCode(returnId);
 		close();
 	}
 
 	private Boolean checkUser() {
-		userID.setText(userID.getText().trim());
+		String utext = userID.getText().trim();
+		if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType()== DBType.Db2) {
+			userID.setText(utext.toUpperCase());
+		} else {
+			userID.setText(utext);			
+		}
 		if (userID.getText() == "") {
 			setErrorMessage("UserId Not Entered");
 			return false;
 		}
 		// Check if the supplied user exists and the password is correct
 		try {
-			ConnectionParameters conParms = DAOFactoryHolder.getDAOFactory().getConnectionParameters();
-			conParms.setUserName(userID.getText());
-			conParms.setPassWord(pswd.getText());
-			currentUser = SAFRApplication.getSAFRFactory().getUser(userID.getText());
+			//Basing this on the connection name is wrong
+			//We should be getting it from say the parms/Preferences?
+			if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType()== DBType.PostgresQL) {
+				ConnectionParameters conParms = DAOFactoryHolder.getDAOFactory().getConnectionParameters();
+				conParms.setUserName(userID.getText());
+				conParms.setPassWord(pswd.getText());
+				currentUser = SAFRApplication.getSAFRFactory().getUser(userID.getText());			
+			} else {
+				currentUser = SAFRApplication.getSAFRFactory().getUser(userID.getText());
+				if (!currentUser.authenticate(pswd.getText()))
+					throw new SAFRException("Password not valid.");
+			}
 		} catch (SAFRException se) {
 			setErrorMessage(se.getMessage());
 			showConnectionFailureMesssage(se);
 			SAFRLogger.logAllStamp(logger, Level.SEVERE, "Failed to connect to the database", se);
-			SAFRLogger.getUserLogger().severe("Please check that the database server is available and not blocked by a firewall.");
+			SAFRLogger.logAllStamp(logger, Level.SEVERE, "Please check that the database server is available and not blocked by a firewall.");
 			return false;
 		}
 		// sets the error message to null when it is rectified.
 		setErrorMessage(null);
-		comboEnvironment.setEnabled(true);
-		comboGroup.setEnabled(true);
+		//comboEnvironment.setEnabled(true);
+		//comboGroup.setEnabled(true);
 
 		// load all codes from codetable
 		try {
@@ -843,4 +836,84 @@ public class SAFRLogin extends TitleAreaDialog {
 		populateConnections();
 	}
 	
+	private void handleUserSelectionEvent(environmentSelectionEvent e) {
+		switch(e) {
+		case ENV_SELECTION_INIT:
+			logger.info("Init env group state machine");
+            populateEnvironmentAndCheckDefaulted();
+			comboEnvironment.setEnabled(true);
+			comboGroup.setEnabled(true);
+	        if(populateGroupsAndCheckIfDefaulted()) {
+				enableAndFocusOK();
+	        } 
+			break;
+		case NO_ENV_SELECTED:
+			break;
+		case USER_ENV_SELECTED:
+			logger.info("User selected environment");
+			userEnvSelected();
+			break;
+		case USER_GROUP_SELECTED:
+			enableAndFocusOK();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void enableAndFocusOK() {
+		ok.setEnabled(true);
+		ok.setFocus();
+	}
+
+	private void handleSysAdminEnvironmentSelectionEvent(environmentSelectionEvent e) {
+		switch(e) {
+		case SYSADMIN_SELECTION_INIT:
+            if(populateEnvironmentAndCheckDefaulted()) {
+    			enableAndFocusOK();
+           }
+			comboEnvironment.setEnabled(true);
+			break;
+		case SYSADMIN_ENV_SELECETED:
+			testAndSetDefaultEnvCheckBox();
+			enableAndFocusOK();
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void userEnvSelected() {
+		testAndSetDefaultEnvCheckBox();
+        populateGroupsAndCheckIfDefaulted();
+		if (envDefaultedCheckbox.getSelection()) {
+			groupDefaultedCheckbox.setEnabled(true);
+		}
+		Integer currentEnvId = envMap.get(comboEnvironment.getText());
+		if (!currentUser.isSystemAdmin()) {
+			try {
+				if ((currentUser.getDefaultGroup() != null) && (currentEnvId.equals(currentUser.getDefaultEnvironment().getId()))
+						&& (grpMap.get(comboGroup.getText()).equals(currentUser.getDefaultGroup().getId()))) {
+					groupDefaultedCheckbox.setSelection(true);
+				} else {
+					groupDefaultedCheckbox.setSelection(false);
+				}
+			} catch (SAFRException e1) {
+				UIUtilities.handleWEExceptions(e1, "Error getting group", null);
+			}
+		}
+	}
+
+	private void testAndSetDefaultEnvCheckBox() {
+        try {
+            if ((currentUser.getDefaultEnvironment() != null) && 
+                (envMap.get(comboEnvironment.getText()).equals(currentUser.getDefaultEnvironment().getId()))) {
+                envDefaultedCheckbox.setSelection(true);
+            } else {
+                envDefaultedCheckbox.setSelection(false);
+            }
+        } catch (SAFRException e1) {
+            UIUtilities.handleWEExceptions(e1,"Error getting environment", null);                    
+        }
+	}
 }

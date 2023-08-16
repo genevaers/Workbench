@@ -182,10 +182,20 @@ public class User extends SAFRPersistentObject {
 	 * @return password of the User.
 	 */
 	public String getPassword() {
-		return "";
+		// CQ 7824 Nikita. 23/04/2010. Decode stored pwd only when required.
+		return SAFRUtilities.decryptBase64(password);
 	}
 
-;	public void setPassword(String password) {
+	/**
+	 * Set unique password of the User.
+	 * 
+	 * @param password
+	 *            to set password of the User.
+	 */
+	public void setPassword(String password) {
+		// CQ 7824 Nikita. 23/04/2010. Encrypt pwd while setting.
+		this.password = SAFRUtilities.encryptBase64(password);
+		markModified();
 	}
 
 	/**
@@ -527,6 +537,32 @@ public class User extends SAFRPersistentObject {
 	}
 
 	/**
+	 * This method is used to authenticate the user by checking the specified
+	 * password against the user's password. The user's password is encrypted,
+	 * but will be decrypted to do the authentication.
+	 * 
+	 * @param String
+	 *            the password to check
+	 * @return boolean true if password matches this user's password, otherwise
+	 *         false
+	 */
+	public boolean authenticate(String password) {
+		this.authenticated = false;
+		if (this.password != null) {
+			// CQ 7824 Nikita. 23/04/2010. Encrypt user-entered pwd and compare
+			// with stored encrypted pwd without decoding stored pwd
+			if (this.password.equals(SAFRUtilities.encryptBase64(password))) {
+				this.authenticated = true;
+			}
+		} else {
+			if (password == null || password == "") {
+				this.authenticated = true;
+			}
+		}
+		return this.authenticated;
+	}
+
+	/**
 	 * This enum maintains the properties of a user.
 	 * 
 	 */
@@ -667,14 +703,16 @@ public class User extends SAFRPersistentObject {
 			this.userGroupAssociations = userGroupAssociationsList;
 		}
 		}
-		
+		if (userGroupAssociations == null) {
+			userGroupAssociations = new SAFRAssociationList<UserGroupAssociation>();
+		}
 		return userGroupAssociations;
 	}
 
 	public User saveAs(String newUserId, Boolean storeAsssociatedGroups)
 			throws SAFRValidationException, SAFRException {
 		User userCopy = SAFRApplication.getSAFRFactory().createUser();
-		userCopy.setUserid(newUserId);
+		userCopy.setUserid(newUserId.toUpperCase());
 		userCopy.setPassword(this.getPassword());
 		userCopy.setSystemAdmin(this.isSystemAdmin());
 		userCopy.setComment(this.getComment());

@@ -163,7 +163,7 @@ public class SplashHandler extends EclipseSplashHandler {
 	}
 
 	public boolean login(String userID, String pass, String env, String group) throws SAFRException {
-	    SAFRLogger.logAllStamp(logger, Level.INFO, "====== START SAFR WORKBENCH SESSION ======");
+	    SAFRLogger.logAllStamp(logger, Level.INFO, "====== START GenevaERS WORKBENCH SESSION ======");
 	    SAFRLogger.logAllStamp(logger, Level.INFO, "Workbench Eclipse (WE) " + UIUtilities.getVersionDetails().split("\n")[0]);
 		
 		// Check if the supplied user exists and the password is correct
@@ -189,8 +189,8 @@ public class SplashHandler extends EclipseSplashHandler {
 		
 		// log the SAFR user, Environment and Group
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("SAFR Login Details:");
-		buffer.append(SAFRUtilities.LINEBREAK + "SAFR Userid  "
+		buffer.append("GenevaERS Login Details:");
+		buffer.append(SAFRUtilities.LINEBREAK + "GenevaERS Userid  "
 				+ currentUser.getUserid());
 		buffer.append(SAFRUtilities.LINEBREAK + "Environment  "
 				+ currentEnv.getDescriptor());

@@ -74,6 +74,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -107,7 +108,9 @@ import com.ibm.safr.we.ui.utilities.IRowEditingSupportExtended;
 import com.ibm.safr.we.ui.utilities.ImageKeys;
 import com.ibm.safr.we.ui.utilities.RowEditorType;
 import com.ibm.safr.we.ui.utilities.SAFRComboBoxCellEditor;
+import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
+import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -1618,9 +1621,15 @@ public class ViewColumnEditor {
 
                                     LogicTextEditorInput input = new LogicTextEditorInput(colSource, mediator.getEditor());
                                     try {
-
-                                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                                                .openEditor(input, LogicTextEditor.ID);
+                                    	IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                                    	IViewPart ltv = ap.findView(LogicTextView.ID);
+                                    	if(ltv == null) {
+                                    		ap.openEditor(input, LogicTextEditor.ID);
+                                    	} else {
+                                    		ap.showView(LogicTextEditor.ID);
+                                    	}
+                                        //PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView();
+                                                //.openEditor;
                                     } catch (PartInitException pie) {
                                         UIUtilities.handleWEExceptions(pie,
                                                 "Unexpected error occurred while opening Logic Text editor.", null);
@@ -1848,7 +1857,7 @@ public class ViewColumnEditor {
         viewEditorGrid.getGrid().setMenu(menu);
         mediator.getSite().registerContextMenu(menuManager, viewEditorGrid);
         
-        UIUtilities.getSourceProvider().setAllowCopyViewSource(false);   
+        UIUtilities.getSourceProvider().setAllowCopyViewSource(true);   
     }
 
     private String getRowHeaderText(ViewRow m) {

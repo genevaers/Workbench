@@ -56,8 +56,10 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISaveablePart2;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
+import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.contexts.IContextActivation;
@@ -115,7 +117,6 @@ import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem.TreeItemId;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewOld;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -172,6 +173,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	public void init(IEditorSite site, IEditorInput input)
 			throws PartInitException {
 		super.init(site, input);
+		
+		SAFRGUIToolkit.dumpActivePage("View Editor init");
+		
 		viewInput = (ViewEditorInput) getEditorInput();
 		view = viewInput.getView();
 		viewEditor = this.getEditor();
@@ -232,6 +236,7 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 
 	@Override
 	public void createPartControl(Composite parent) {
+		
 	    mediator.setViewEditor(this);
 	    List<ControlRecordQueryBean> allrec = SAFRQuery.queryAllControlRecords(view.getEnvironmentId(), SortType.SORT_BY_ID);
         if(allrec.isEmpty()) {
@@ -279,14 +284,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 			
 		});
 		
-		// Used to load the context sensitive help
-		if (view.getId() > 0) {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.ViewEditor");
-		} else {
-			PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(),
-					"com.ibm.safr.we.help.NewView");
-		}
 		ManagedForm mFrm = new ManagedForm(toolkit, form);
 		setMsgManager(mFrm.getMessageManager());
 		getSite().getPage().addPartListener(this);
@@ -1055,18 +1052,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				    e1,"Unexpected error occurred while opening activation errors view.",null);
 			}
 		}
-        if (viewActivationMessageExistsOld()) {
-            try {
-                ActivationLogViewOld eView = (ActivationLogViewOld) getSite()
-                        .getPage().showView(ActivationLogViewOld.ID);
-                eView.setViewEditor(true);
-                eView.showGridForCurrentEditor(this);
-                eView.setExpands(expandsOld);
-            } catch (PartInitException e1) {
-                UIUtilities.handleWEExceptions(
-                    e1,"Unexpected error occurred while opening activation errors view.",null);
-            }
-        }		
 	}
 	
 	public void closeActivationLog() {
@@ -1081,27 +1066,12 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				}
 				getSite().getPage().hideView(logView);
 			}		
-		
-	        ActivationLogViewOld logView2 = (ActivationLogViewOld)getSite().getPage().findView(ActivationLogViewOld.ID);
-	        if (logView2 != null && logView2.isViewEditor()) {
-	            if (viewActivationMessageExistsOld()) {
-	                expandsOld = logView2.getExpands();
-	            }
-	            else {
-	                expandsOld = null;
-	            }
-	            getSite().getPage().hideView(logView2);                        
-	        }
 		}
 	}
 	
 	public boolean viewActivationMessageExistsNew() {
 		return (activateException != null && !activateException.getActivationLogNew().isEmpty());
 	}
-
-    public boolean viewActivationMessageExistsOld() {
-        return (activateException != null && !activateException.getActivationLogOld().isEmpty());
-    }
 
 	public SAFRViewActivationException getViewActivationException() {
 		return activateException;
@@ -1618,7 +1588,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 
 	public void partClosed(IWorkbenchPartReference partRef) {		
-	}
+        closeActivationLog();
+        mediator.closePropertyView(PropertyViewType.NONE);
+}
 
 	public void partDeactivated(IWorkbenchPartReference partRef) {
 		if (partRef.getPart(false).equals(this)) {

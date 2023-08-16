@@ -24,6 +24,7 @@ import org.eclipse.core.commands.IHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import com.ibm.safr.we.ui.editors.DependencyCheckerEditor;
 import com.ibm.safr.we.ui.editors.DiffUtilityEditor;
 import com.ibm.safr.we.ui.editors.lr.LogicalRecordEditor;
 
@@ -40,6 +41,10 @@ public class ExpandAllHandler extends AbstractHandler  implements IHandler {
             LogicalRecordEditor ed = (LogicalRecordEditor)part;
             ed.expandAll();
         }        
+        else if(part instanceof DependencyCheckerEditor) {
+        	DependencyCheckerEditor dce = (DependencyCheckerEditor)part;
+        	dce.expandAll();
+        }
         return null;
     }
 }

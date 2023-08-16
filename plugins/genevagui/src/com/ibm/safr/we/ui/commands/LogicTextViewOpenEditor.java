@@ -31,8 +31,10 @@ import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.associations.ComponentAssociation;
 import com.ibm.safr.we.model.associations.FileAssociation;
+import com.ibm.safr.we.model.query.EnvironmentalQueryBean;
 import com.ibm.safr.we.model.query.LogicalFileQueryBean;
 import com.ibm.safr.we.model.query.LookupQueryBean;
+import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.UserExitRoutineQueryBean;
 import com.ibm.safr.we.ui.editors.lr.LogicalRecordEditor;
 import com.ibm.safr.we.ui.editors.lr.LogicalRecordEditorInput;
@@ -69,6 +71,18 @@ public class LogicTextViewOpenEditor extends AbstractHandler implements IHandler
                         EditorOpener.open(fass.getAssociatedComponentIdNum(), ComponentType.PhysicalFile);
                         break;
                     case LOOKUPPATHS_CHILD:
+                    	LookupQueryBean lookupbean = (LookupQueryBean)node.getData();
+                        if (lookupbean == null) {
+                           break;
+                        }
+                        EditorOpener.open(lookupbean.getId() , ComponentType.LookupPath);
+                        break;
+                    case LOOKUPPATHS_CHILD_FIELD:
+                    	 LookupQueryBean bean = (LookupQueryBean)node.getData();
+                    	 String[] splitstr = node.getTitleText().split(" ");
+                    	 EnvironmentalQueryBean lkBean = SAFRQuery.queryLogicalRecordByField(Integer.parseInt(splitstr[1].substring(1,splitstr[1].length()-1)), bean.getEnvironmentId());
+                         EditorOpener.open(lkBean.getId(), ComponentType.LogicalRecord);
+                         break;
                     case LOOKUPSYMBOLS_CHILD:
                         LookupQueryBean lubean = (LookupQueryBean)node.getData();
                         if (lubean == null) {

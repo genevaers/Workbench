@@ -116,7 +116,7 @@ public class PhysicalFileDatasetEditor {
         FormData inputDDTextData = new FormData();
         inputDDTextData.top = new FormAttachment(0, 10);
         inputDDTextData.left = new FormAttachment(labelInputDDName, 120);
-        inputDDTextData.width = 100;
+        inputDDTextData.width = 300;
         textInputDDName.setLayoutData(inputDDTextData);
         textInputDDName.setTextLimit(MAXDDNAME);
         textInputDDName.addModifyListener(new ModifyListener() {
@@ -234,7 +234,7 @@ public class PhysicalFileDatasetEditor {
         FormData outputDDTextData = new FormData();
         outputDDTextData.top = new FormAttachment(0, 10);
         outputDDTextData.left = new FormAttachment(labelOutputDDName, 120);
-        outputDDTextData.width = 100;
+        outputDDTextData.width = 300;
         textOutputDDName.setLayoutData(outputDDTextData);
         textOutputDDName.setTextLimit(MAXDDNAME);
         textOutputDDName.addModifyListener(new ModifyListener() {
@@ -258,7 +258,7 @@ public class PhysicalFileDatasetEditor {
         FormData outputRECFMComboData = new FormData();
         outputRECFMComboData.top = new FormAttachment(labelOutputDDName, 10);
         outputRECFMComboData.left = new FormAttachment(labelOutputDDName, 120);
-        outputRECFMComboData.width = 100;
+        outputRECFMComboData.width = 300;
         comboOutputRECFM.setLayoutData(outputRECFMComboData);
         
         UIUtilities.populateComboBox(comboOutputRECFM, CodeCategories.RECFM,-1, true);
@@ -290,7 +290,7 @@ public class PhysicalFileDatasetEditor {
         FormData outputLRECLTextData = new FormData();
         outputLRECLTextData.top = new FormAttachment(labelOutputRECFM, 10);
         outputLRECLTextData.left = new FormAttachment(labelOutputDDName, 120);
-        outputLRECLTextData.width = 100;
+        outputLRECLTextData.width = 300;
         textOutputLRECL.setLayoutData(outputLRECLTextData);
         textOutputLRECL.addModifyListener(new ModifyListener() {
             @Override
