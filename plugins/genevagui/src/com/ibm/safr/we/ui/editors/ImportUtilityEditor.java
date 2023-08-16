@@ -839,11 +839,11 @@ public class ImportUtilityEditor extends SAFREditorPart {
 				String path = dialogLocation.open();
 				if (path != null) {
 					textPath.setText(path);
+					importFromDir = new File(path);
 				}
 
 				//Dir is wrong
 				//And we need to set extension based on component type?
-				importFromDir = new File(path);
 				loadComponentFiles();
 				tableViewerXmlFiles.refresh();
 				showSectionErrors(false);
