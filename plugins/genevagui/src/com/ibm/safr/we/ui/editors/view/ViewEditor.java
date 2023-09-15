@@ -1042,11 +1042,13 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 		// view.
 		if (viewActivationMessageExistsNew()) {
 			try {
-				ActivationLogViewNew eView = (ActivationLogViewNew) getSite()
-						.getPage().showView(ActivationLogViewNew.ID);
-                eView.setViewEditor(true);
-				eView.showGridForCurrentEditor(this);
-				eView.setExpands(expandsNew);
+				IWorkbenchPage page = getSite().getPage();
+				if(page != null) {
+					ActivationLogViewNew eView = (ActivationLogViewNew) page.showView(ActivationLogViewNew.ID);
+					eView.setViewEditor(true);
+					eView.showGridForCurrentEditor(this);
+					eView.setExpands(expandsNew);
+				}
 			} catch (PartInitException e1) {
 				UIUtilities.handleWEExceptions(
 				    e1,"Unexpected error occurred while opening activation errors view.",null);
@@ -1644,14 +1646,16 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	private void initActivationState() {
 		if (activateException == null) {
 			// check for activation state in batch activator
-			for (IEditorReference ref : getSite().getPage().getEditorReferences()) {
-				IEditorPart editor = ref.getEditor(false);
-				if (editor instanceof ActivateViewsEditor) {
- 				    ActivateViewsEditor vEditor = (ActivateViewsEditor)editor;
- 				    activateException = vEditor.getViewActivationState(view.getId());
- 				    break;
+			IWorkbenchPage page = getSite().getPage();
+			if(page != null) {
+				for (IEditorReference ref : page.getEditorReferences()) {
+					IEditorPart editor = ref.getEditor(false);
+					if (editor instanceof ActivateViewsEditor) {
+						ActivateViewsEditor vEditor = (ActivateViewsEditor)editor;
+						activateException = vEditor.getViewActivationState(view.getId());
+						break;
+					}
 				}
-					
 			}
 		}		
 	}
