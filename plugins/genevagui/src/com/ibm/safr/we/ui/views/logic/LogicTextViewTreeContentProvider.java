@@ -628,9 +628,13 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		LogicTextViewTreeNode sourceinput = 	new LogicTextViewTreeNode(TreeItemId.SOURCEINPUT, "SOURCE=INPUT", write, "SOURCE = INPUT ", 15, "Causes a record read from the event file to be written.", null);
 		LogicTextViewTreeNode sourceview = 		new LogicTextViewTreeNode(TreeItemId.SOURCEVIEW, "SOURCE=VIEW", write, "SOURCE = VIEW ", 14, "Means the extract record constructed to that point is written in Standard Extract File Format.", null);
 		LogicTextViewTreeNode sourcedata = 		new LogicTextViewTreeNode(TreeItemId.SOURCEDATA, "SOURCE=DATA", write, "SOURCE = DATA ", 14, "Writes the extract record constructed to that point.", null);
+		LogicTextViewTreeNode destinationextract = new LogicTextViewTreeNode(TreeItemId.DESTINATIONEXTRACT, "DESTINATION=EXTRACT", write, "DESTINATION = EXTRACT = ", 25, "The Extract File number that the data should be written to.", null);
+		LogicTextViewTreeNode destinationdefault = new LogicTextViewTreeNode(TreeItemId.DESTINATIONDEFAULT, "DESTINATION=DEFAULT", write, "DESTINATION = DEFAULT ", 22, "Default the file that is written to.", null);
 		LogicTextViewTreeNode destinationfile = new LogicTextViewTreeNode(TreeItemId.DESTINATIONFILE, "DESTINATION=FILE", write, "DESTINATION = FILE ", 19, "A standard extract file.", null);
 		// write Children List
 		List<LogicTextViewTreeNode> writeChildren = new ArrayList<LogicTextViewTreeNode>();
+		writeChildren.add(destinationextract);
+		writeChildren.add(destinationdefault);
 		writeChildren.add(destinationfile);
 		writeChildren.add(procedure);
 		writeChildren.add(sourcedata);
