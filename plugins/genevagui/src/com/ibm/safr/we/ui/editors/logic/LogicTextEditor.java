@@ -304,12 +304,21 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                 // have found the field so highlight it
                 text.setSelection(text.getOffsetAtLine(lineIndex)+left, 
                         text.getOffsetAtLine(lineIndex)+right);
-                String fldlu = line.substring(left, right);                
-                LogicTextView lTView = (LogicTextView) getSite()
-                .getPage().findView(LogicTextView.ID);
+                String selectedField = line.substring(left, right);                
+                LogicTextView lTView = (LogicTextView) getSite().getPage().findView(LogicTextView.ID);
+                
                 LogicTextType logicTextType = viewInput.getLogicTextType();
                 if (lTView != null) {
-                    lTView.setFocusOn(fldlu, logicTextType);
+                    lTView.setFocusOn(selectedField, logicTextType);
+                } else {
+                	//To reopen here we need the context of the column source editor
+                	//Need to send it an event instead?
+                    try {
+						getSite().getPage().openEditor(viewInput, LogicTextEditor.ID);
+					} catch (PartInitException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
                 }
 			}
 
