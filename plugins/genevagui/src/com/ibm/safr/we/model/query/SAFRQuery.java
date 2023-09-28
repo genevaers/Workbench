@@ -474,6 +474,7 @@ public class SAFRQuery {
 		List<Integer> notInParam = new ArrayList<>(); 
 		List<ComponentAssociation> associatedLFs = logicalRecord
 				.getLogicalFileAssociations().getActiveItems();
+		notInParam.add(0);
 		for (ComponentAssociation association : associatedLFs) {
 			ComponentAssociation assoc = association;
 			notInParam.add(assoc.getAssociatedComponentIdNum());
