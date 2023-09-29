@@ -100,6 +100,10 @@ public class ViewGenMediator {
     public int numberColumnsFromSelection() {
         return viewGenColumn.numberColumnsFromSelection();
     }
+    
+    public void refreshDialog() {
+    	//viewGenDialog.refresh();
+    }
 
 
 

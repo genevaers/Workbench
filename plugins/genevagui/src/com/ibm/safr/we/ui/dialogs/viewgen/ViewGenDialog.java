@@ -146,4 +146,8 @@ public class ViewGenDialog extends TitleAreaDialog {
         return fontRegistry.get("viewgenb");
     }
     
+    public void refresh() {
+    	this.refresh();
+    }
+    
 }

@@ -19,8 +19,13 @@ package com.ibm.safr.we.ui.dialogs.viewgen;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -52,6 +57,27 @@ import com.ibm.safr.we.ui.dialogs.viewgen.FieldTreeNode.FieldNodeType;
 import com.ibm.safr.we.ui.dialogs.viewgen.ViewGenCriteria.EditMode;
 
 public class ViewGenField {
+    static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.dialogs.viewgen.ViewGenField");
+	
+	private class FieldComparator implements Comparator<LRField> {
+
+		@Override
+		public int compare(LRField f1, LRField f2) {
+			 
+			return f1.getName().compareTo(f2.getName());
+		}
+		
+	}
+    
+	private class FieldPositionComparator implements Comparator<LRField> {
+
+		@Override
+		public int compare(LRField f1, LRField f2) {
+			 
+			return f1.getPosition().compareTo(f2.getPosition());
+		}
+		
+	}
     
     public class FieldColumnTypeProvider extends ColumnLabelProvider
     {
@@ -134,8 +160,10 @@ public class ViewGenField {
     
     public class FieldTreeContentProvider implements ITreeContentProvider {
 
+    	Map<Integer, LogicalRecord> localLRsById = new HashMap<>();
+        private boolean sortByName;
 
-        @Override
+		@Override
         public void dispose() {
         }
 
@@ -152,29 +180,59 @@ public class ViewGenField {
         @Override
         public Object[] getChildren(Object element) {
             FieldTreeNode node = (FieldTreeNode)element;
-            if (node.getType().equals(FieldNodeType.LR) && node.getChildren().size() <= 1) {
-                FieldTreeNodeLR nodeLR = (FieldTreeNodeLR)node;
-                
-                LogicalRecord logicalRecord = SAFRApplication.getSAFRFactory().getLogicalRecord(nodeLR.getLrBean().getId());
-                for (LRField field : logicalRecord.getLRFields()) {
-                    FieldTreeNodeLeaf fieldLeaf = new FieldTreeNodeLeaf(nodeLR,FieldNodeType.LPFIELD,field.getDescriptor(),field);
-                    nodeLR.getChildren().add(fieldLeaf);
-                }
+            if (node.getType().equals(FieldNodeType.LR)) { // && node.getChildren().size() <= 1) {
+                populateLookupPathLRNodes(node);
             } else if (node.getType().equals(FieldNodeType.LP) && node.getChildren().size() <= 0) {
                 FieldTreeNodeLP nodeLP = (FieldTreeNodeLP)node;
                 LookupQueryBean lpBean = nodeLP.getLPBean();
-                Integer targLRID = source.getTargetLR(lpBean.getId());
-                LogicalRecordQueryBean lrBean = SAFRQuery.queryLogicalRecord(targLRID, source.getEnvironmentId());
                 
-                FieldTreeNodeLR lrNode = new FieldTreeNodeLR(nodeLP, FieldNodeType.LR, lrBean.getDescriptor(), lrBean);
-                nodeLP.getChildren().add(lrNode);
-                
-                FieldTreeNode lpfieldHeader = new FieldTreeNode(lrNode,FieldNodeType.LPFIELDHEADER,"Name");
-                lrNode.getChildren().add(lpfieldHeader);
+                LogicalRecordQueryBean lrBean = nodeLP.getLrBean();
+                if(lrBean == null) {                
+	                Integer targLRID = source.getTargetLR(lpBean.getId());
+	                lrBean = SAFRQuery.queryLogicalRecord(targLRID, source.getEnvironmentId());
+	                nodeLP.addLrBean(lrBean);
+	                
+	                FieldTreeNodeLR lrNode = new FieldTreeNodeLR(nodeLP, FieldNodeType.LR, lrBean.getDescriptor(), lrBean);
+	                nodeLP.getChildren().add(lrNode);
+	                
+	                FieldTreeNode lpfieldHeader = new FieldTreeNode(lrNode,FieldNodeType.LPFIELDHEADER,"Name");
+	                lrNode.getChildren().add(lpfieldHeader);
+                }
                 
             }
             return node.getChildren().toArray();
         }
+
+		private void populateLookupPathLRNodes(FieldTreeNode node) {
+			FieldTreeNodeLR nodeLR = (FieldTreeNodeLR)node;
+			LogicalRecord logicalRecord = getLRFromLocalCache(nodeLR);
+			sortTheLR(logicalRecord);
+			addNodesToTheTree(nodeLR, logicalRecord);
+		}
+
+		private void addNodesToTheTree(FieldTreeNodeLR nodeLR, LogicalRecord logicalRecord) {
+			for (LRField field : logicalRecord.getLRFields()) {
+			    FieldTreeNodeLeaf fieldLeaf = new FieldTreeNodeLeaf(nodeLR,FieldNodeType.LPFIELD,field.getDescriptor(),field);
+			    nodeLR.getChildren().add(fieldLeaf);
+			}
+		}
+
+		private void sortTheLR(LogicalRecord logicalRecord) {
+			if(sortByName) {
+				Collections.sort(logicalRecord.getLRFields(), new FieldComparator());
+			} else {
+				Collections.sort(logicalRecord.getLRFields(), new FieldPositionComparator());            	
+			}
+		}
+
+		private LogicalRecord getLRFromLocalCache(FieldTreeNodeLR nodeLR) {
+			LogicalRecord logicalRecord = localLRsById.get(nodeLR.getLrBean().getId());
+			if(logicalRecord == null) {
+				logicalRecord = SAFRApplication.getSAFRFactory().getLogicalRecord(nodeLR.getLrBean().getId());
+				localLRsById.put(nodeLR.getLrBean().getId(), logicalRecord);
+			}
+			return logicalRecord;
+		}
 
         @Override
         public Object getParent(Object element) {
@@ -190,7 +248,11 @@ public class ViewGenField {
             } else {
                 return !node.getChildren().isEmpty();
             }
-        }        
+        }
+
+		public void setSortByName(boolean sortByName) {
+			this.sortByName = sortByName;
+		}        
     }
     
 
@@ -201,7 +263,11 @@ public class ViewGenField {
     private Composite compositeField;
     private TreeViewer fieldTreeViewer;
     private Button fieldAdd;
-    
+    private boolean sortByName = false;
+    private LogicalRecord logicalRecord = null;
+	private FieldTreeNode top;
+	private FieldTreeContentProvider treeDataProvider;
+
     public ViewGenField(
         ViewGenMediator mediator, 
         Composite parent,
@@ -215,16 +281,31 @@ public class ViewGenField {
         compositeField = mediator.getGUIToolKit().createComposite(parent,SWT.NONE);
         compositeField.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
         
-        GridLayout layout = new GridLayout(2, false);
+        GridLayout layout = new GridLayout(3, false);
         compositeField.setLayout(layout);
         
         // field label
-        Label fieldName = mediator.getGUIToolKit().createLabel(compositeField, SWT.NONE,"Field:");
+        Label fieldName = mediator.getGUIToolKit().createLabel(compositeField, SWT.NONE," ");
         GridData fieldData = new GridData(SWT.LEFT, SWT.TOP, false, false);
         fieldData.heightHint = 30;
         fieldData.minimumHeight = 30;
+        
         fieldName.setLayoutData(fieldData);
         
+        Button sortchk = mediator.getGUIToolKit().createCheckBox(compositeField, "Fields: Sort By Name");
+        GridData sortData = new GridData(SWT.LEFT, SWT.TOP, false, false);
+        sortData.heightHint = 30;
+        sortData.minimumHeight = 30;
+        sortchk.setLayoutData(sortData);
+        
+        sortchk.addSelectionListener(new SelectionAdapter( ) {
+            public void widgetSelected(SelectionEvent e) {
+            	sortByName = sortchk.getSelection();
+            	treeDataProvider.setSortByName(sortByName);
+                fieldTreeViewer.setInput(generateData());        
+                fieldTreeViewer.refresh();
+            }
+        });
 
         // filler label
         Label fillerName = mediator.getGUIToolKit().createLabel(compositeField, SWT.NONE,"");
@@ -233,7 +314,9 @@ public class ViewGenField {
         createFieldTree();
         
         createAddButton();
-    }
+        
+        Label filler2Name = mediator.getGUIToolKit().createLabel(compositeField, SWT.NONE,"");
+        filler2Name.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));    }
 
     protected void createFieldTree() {
         
@@ -245,8 +328,11 @@ public class ViewGenField {
         data.widthHint = 500;
         data.minimumHeight = 350;
         data.heightHint = 350;
+        data.horizontalSpan=2;
         fieldTreeViewer.getTree().setLayoutData(data);
-        fieldTreeViewer.setContentProvider(new FieldTreeContentProvider());
+        treeDataProvider = new FieldTreeContentProvider();
+        treeDataProvider.setSortByName(sortByName);
+        fieldTreeViewer.setContentProvider(treeDataProvider);
         
         TreeViewerColumn viewerColumn = new TreeViewerColumn(fieldTreeViewer, SWT.NONE);
         viewerColumn.getColumn().setWidth(370);
@@ -309,27 +395,16 @@ public class ViewGenField {
 
     
     protected FieldTreeNode generateData() {
-        FieldTreeNode top = new FieldTreeNode(null,FieldNodeType.TOP,null);
-        
-        FieldTreeNode lrfieldTop = new FieldTreeNode(top,FieldNodeType.LRFIELDTOP,"LR Fields");
+    		top = new FieldTreeNode(null,FieldNodeType.TOP,null);
+            addLRDataToTree(top);
+            addLPDataToTree(top);
+        return top;
+    }
+
+	private void addLPDataToTree(FieldTreeNode top) {
         FieldTreeNode lpfieldTop = new FieldTreeNode(top,FieldNodeType.LPFIELDTOP,"Lookup Path Target Fields");
-        top.getChildren().add(lrfieldTop);
         top.getChildren().add(lpfieldTop);
-        
-        FieldTreeNode lrfieldHeader = new FieldTreeNode(lrfieldTop,FieldNodeType.LRFIELDHEADER,"Name");
-        lrfieldTop.getChildren().add(lrfieldHeader);
-        
-        if (source.getLrFileAssociation().getAssociatingComponentId() != null) {
-            LogicalRecord logicalRecord = SAFRApplication.getSAFRFactory()
-                    .getLogicalRecord(source.getLrFileAssociation().getAssociatingComponentId());
-            
-            for (LRField field : logicalRecord.getLRFields()) {
-                FieldTreeNodeLeaf fieldLeaf = new FieldTreeNodeLeaf(lrfieldTop,FieldNodeType.LRFIELD,field.getDescriptor(),field);
-                lrfieldTop.getChildren().add(fieldLeaf);
-            }
-        }
-        
-        for (LookupQueryBean lpBean : source.getAllLookupPaths()) {
+		for (LookupQueryBean lpBean : source.getAllLookupPaths()) {
             
             Integer targLRID = source.getTargetLR(lpBean.getId());
             if (targLRID != null) {                
@@ -338,8 +413,34 @@ public class ViewGenField {
             }
                     
         }
-        return top;
-    }
+	}
+
+	private void addLRDataToTree(FieldTreeNode top) {
+		
+		FieldTreeNode lrfieldTop = new FieldTreeNode(top,FieldNodeType.LRFIELDTOP,"LR Fields");
+        top.getChildren().add(lrfieldTop);
+        
+        FieldTreeNode lrfieldHeader = new FieldTreeNode(lrfieldTop,FieldNodeType.LRFIELDHEADER,"Name");
+        lrfieldTop.getChildren().add(lrfieldHeader);
+        
+        if (source.getLrFileAssociation().getAssociatingComponentId() != null) {
+        	logger.info("Add LR data to tree for " + source.getLrFileAssociation().getAssociatingComponentId());
+            if(logicalRecord == null) {
+            	logger.info("Query LR data to tree for " + source.getLrFileAssociation().getAssociatingComponentId());
+            	logicalRecord= SAFRApplication.getSAFRFactory().getLogicalRecord(source.getLrFileAssociation().getAssociatingComponentId());
+            }
+            if(sortByName) {
+            	Collections.sort(logicalRecord.getLRFields(), new FieldComparator());
+            } else {
+            	Collections.sort(logicalRecord.getLRFields(), new FieldPositionComparator());            	
+            }
+            
+            for (LRField field : logicalRecord.getLRFields()) {
+                FieldTreeNodeLeaf fieldLeaf = new FieldTreeNodeLeaf(lrfieldTop,FieldNodeType.LRFIELD,field.getDescriptor(),field);
+                lrfieldTop.getChildren().add(fieldLeaf);
+            }
+        }
+	}
 
     public void refreshAddButtonState() {
         boolean leafSelected = false;

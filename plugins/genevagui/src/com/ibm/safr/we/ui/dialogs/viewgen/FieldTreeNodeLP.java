@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.dialogs.viewgen;
 
+import com.ibm.safr.we.model.query.LogicalRecordQueryBean;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -24,6 +26,7 @@ import com.ibm.safr.we.model.query.LookupQueryBean;
 public class FieldTreeNodeLP extends FieldTreeNode {
 
     private LookupQueryBean lpBean;
+	private LogicalRecordQueryBean lrBean;
     
     public FieldTreeNodeLP(FieldTreeNode parent, FieldNodeType type, String name, LookupQueryBean lpBean) {
         super(parent, type, name);
@@ -32,5 +35,11 @@ public class FieldTreeNodeLP extends FieldTreeNode {
     public LookupQueryBean getLPBean() {
         return lpBean;
     }
+	public void addLrBean(LogicalRecordQueryBean lrBean) {
+		this.lrBean = lrBean;
+	}
+	public LogicalRecordQueryBean getLrBean() {
+		return lrBean;
+	}
     
 }
