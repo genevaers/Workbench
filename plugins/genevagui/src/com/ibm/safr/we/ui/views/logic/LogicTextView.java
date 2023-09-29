@@ -49,6 +49,7 @@ import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditorInput;
 import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
+import com.ibm.safr.we.ui.views.logic.LogicTextViewTreeNode.TreeItemId;
 
 /**
  * A view for displaying logic text tree.
@@ -71,7 +72,6 @@ public class LogicTextView extends ViewPart {
 			getSite().getShell().setCursor(
 					getSite().getShell().getDisplay().getSystemCursor(
 							SWT.CURSOR_WAIT));
-			SAFRGUIToolkit.dumpActivePage("LTV createPartControl");
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new FormLayout());
 			composite.setLayoutData(new FormData());
@@ -159,13 +159,9 @@ public class LogicTextView extends ViewPart {
 	        getSite().registerContextMenu(menuManager, treeViewer);
 	        
 	        setPopupEnabled(false);
-			
 		} finally {
 			getSite().getShell().setCursor(null);
 		}
-
-		// CQ 8404 Kanchan Rauthan 19/08/2010 To show Logic Text helper view
-		// contents when this view is closed and reopened again.
 		showContentsForCurrentEditor(getSite().getPage().getActiveEditor());
 	}
 
@@ -237,18 +233,17 @@ public class LogicTextView extends ViewPart {
 		if(cursor != null) {
 			cursor.dispose();
 		}
-		System.out.println("LogicTextView dispose called");
 	}
 
-    public void setFocusOn(String fldlu, LogicTextType type) {
+    public void setFocusOn(String selectedField, LogicTextType type) {
         
         if (type == LogicTextType.Extract_Column_Assignment ||
             type == LogicTextType.Extract_Record_Filter ||
             type == LogicTextType.Extract_Record_Output) {
-            setFocusOnExtract(fldlu, type);
+            setFocusOnExtract(selectedField);
         }
         else {
-            setFocusOnFormat(fldlu, type);            
+            setFocusOnFormat(selectedField);            
         }
         checkPopupEnabled();
     }
@@ -257,111 +252,109 @@ public class LogicTextView extends ViewPart {
         return (LogicTextViewTreeNode)((TreeSelection) treeViewer.getSelection()).getFirstElement();
     }
 
-    private void setFocusOnExtract(String fldlu, LogicTextType type) {
+    private void setFocusOnExtract(String selectedField) {
         Object expands[] = treeViewer.getExpandedElements();
         
         TreeItem items[] = treeViewer.getTree().getItems();        
         
         TreeItem item = null;
         
-        if (fldlu.contains(".")) {
-            
-            // expand lookups
-            treeViewer.expandToLevel(items[2].getData(), 1);                                               
-            
-            // search lookup fields 
-            item = findAssociation(items[2], fldlu, true);       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }            
-
-            // search write files parameter 
-            TreeItem write = items[3];
-            treeViewer.expandToLevel(write.getData(), 1);
-            
-            // expand files
-            treeViewer.expandToLevel(write.getItems()[2].getData(), 1);                                                                   
-            
-            item = findAssociation(write.getItems()[2], fldlu, false);       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }            
-            
+        if (selectedField.contains(".")) {
+        	TreeItem base = expandNamedBaseRelativeTo(TreeItemId.LOOKUPPATHS, treeViewer.getTree().getItems());
+        	if(expandSectionIfFieldFound(selectedField, base)){
+        		return;
+        	} else {
+            	TreeItem write = expandNamedBaseRelativeTo(TreeItemId.WRITEPARAM, treeViewer.getTree().getItems());
+            	TreeItem files = expandNamedBaseRelativeTo(TreeItemId.FILES, write.getItems());        		
+        		if(expandSectionIfFieldFound(selectedField, files)){
+               		return;
+        		}
+        	}
         }
         else {
             // expand fields
-            treeViewer.expandToLevel(items[1].getData(), TreeViewer.ALL_LEVELS);                               
-            
-            // search fields 
-            item = containsNode(items[1], "{" + fldlu + "}");       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }
-            
-            // expand lookups
-            treeViewer.expandToLevel(items[2].getData(), 1);                                                               
-            
-            // search lookups 
-            item = containsNode(items[2], "{" + fldlu + "}");       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }            
+    		TreeItem base = expandNamedBaseRelativeTo(TreeItemId.FIELDS, treeViewer.getTree().getItems());                               
+        	if(expandIfSelectionFoundInBase(selectedField, base)){
+        		return;
+        	}
+    		base = expandNamedBaseRelativeTo(TreeItemId.LOOKUPPATHS, treeViewer.getTree().getItems());                               
+    		if(expandIfSelectionFoundInBase(selectedField, base)){
+               	return;
+        	}
             
             // expand write procedures
-            TreeItem write = items[3];
-            treeViewer.expandToLevel(write.getData(), 1);
-            treeViewer.expandToLevel(write.getItems()[0].getData(), TreeViewer.ALL_LEVELS);                               
+        	TreeItem write = expandNamedBaseRelativeTo(TreeItemId.WRITEPARAM, treeViewer.getTree().getItems());
+        	TreeItem procedures = expandNamedBaseRelativeTo(TreeItemId.PROCEDURES, write.getItems());
+        	
+    		if(expandIfSelectionFoundInBase(selectedField, procedures)){
+               	return;
+        	}
             
-            // search write procedures 
-            item = containsNode(write.getItems()[0], "{" + fldlu + "}");       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }
-
             // expand write user exit
-            treeViewer.expandToLevel(write.getItems()[1].getData(), TreeViewer.ALL_LEVELS);                               
+        	TreeItem userExits = expandNamedBaseRelativeTo(TreeItemId.USEREXITROUTINES, write.getItems());
+    		if(expandIfSelectionFoundInBase(selectedField, userExits)){
+               	return;
+        	}
             
-            // search write user exit 
-            item = containsNode(write.getItems()[1], "{" + fldlu + "}");       
-            if (item != null) {
-                treeViewer.setExpandedElements(expands);
-                treeViewer.getTree().setSelection(item);
-                return;
-            }                
         }
         treeViewer.setExpandedElements(expands);                
     }
 
-    private void setFocusOnFormat(String fldlu, LogicTextType type) {
+	private boolean expandIfSelectionFoundInBase(String selectedField, TreeItem base) {
+		boolean expand = false;
+        Object expands[] = treeViewer.getExpandedElements();
+		TreeItem item;
+		
+		item = containsNode(base, "{" + selectedField + "}");       
+		if (item != null) {
+		    treeViewer.setExpandedElements(expands);
+		    treeViewer.getTree().setSelection(item);
+		    expand = true;
+		}
+		return expand;
+	}
+
+	private TreeItem expandNamedBaseRelativeTo(TreeItemId id, TreeItem[] items) {
+		TreeItem base = getBaseFromItems(items, id);
+		treeViewer.expandToLevel(base.getData(), TreeViewer.ALL_LEVELS);
+		return base;
+	}
+
+	private boolean expandSectionIfFieldFound(String fldlu, TreeItem base) {
+		boolean expand = false;
+        Object expands[] = treeViewer.getExpandedElements();
+		TreeItem item;
+		treeViewer.expandToLevel(base.getData(), 1);                                               
+		
+		item = findAssociation(base, fldlu);       
+		if (item != null) {
+		    treeViewer.setExpandedElements(expands);
+		    treeViewer.getTree().setSelection(item);
+		    expand = true;
+		}
+		return expand;
+	}
+
+    private TreeItem getBaseFromItems(TreeItem[] items, TreeItemId id) {
+    	TreeItem base = null;
+    	for (TreeItem child : items) {
+            if(((LogicTextViewTreeNode)child.getData()).getId() == id) {
+                return child;
+            }
+        }
+    	return base;
+    }
+
+	private void setFocusOnFormat(String fldlu) {
         // no curly bracket symbols in format logic
         // so do nothing
     }        
     
-    private TreeItem findAssociation(TreeItem node, String name, boolean brackets) {
-        String both[] = name.split("\\.");
-        
-        // first find parent node
-        if (brackets) {
-            both[0] = "{" + both[0] + "}";
-        }
-            
+    private TreeItem findAssociation(TreeItem node, String name) {
+        String both[] = name.split("\\.");       
         TreeItem parent = containsNode(node, both[0]);
-        
         if (parent != null) {
-            // expand at this level
-            treeViewer.expandToLevel(parent.getData(), TreeViewer.ALL_LEVELS);                                               
-            
-            // find child of this node
+            treeViewer.expandToLevel(parent.getData(), TreeViewer.ALL_LEVELS);                                                           
             return containsNode(parent, "." + both[1] + " [");
         }
         return null;
@@ -369,13 +362,11 @@ public class LogicTextView extends ViewPart {
         
     private TreeItem containsNode(TreeItem node, String name) {
         
-        // check current item
         String text = node.getText();
         if (text.toLowerCase().contains(name.toLowerCase())) {
             return node;
         }
         
-        // check all children
         for (TreeItem child : node.getItems()) {
             TreeItem fnode = this.containsNode(child, name);
             if (fnode != null) {

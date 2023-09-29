@@ -162,6 +162,7 @@ public class LogicalRecordGeneralEditor {
         comboType.setLayoutData(UIUtilities.textTableData(1));
         UIUtilities.populateComboBox(comboType, CodeCategories.LRTYPE, 0, false);
         selectedType = comboType.getText();
+        comboType.setEnabled(false);
         comboType.addFocusListener(new FocusAdapter() {
 
             public void focusLost(FocusEvent e) {

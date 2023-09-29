@@ -304,12 +304,19 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                 // have found the field so highlight it
                 text.setSelection(text.getOffsetAtLine(lineIndex)+left, 
                         text.getOffsetAtLine(lineIndex)+right);
-                String fldlu = line.substring(left, right);                
-                LogicTextView lTView = (LogicTextView) getSite()
-                .getPage().findView(LogicTextView.ID);
+                String selectedField = line.substring(left, right);                
+                LogicTextView lTView = (LogicTextView) getSite().getPage().findView(LogicTextView.ID);
+                
                 LogicTextType logicTextType = viewInput.getLogicTextType();
                 if (lTView != null) {
-                    lTView.setFocusOn(fldlu, logicTextType);
+                    lTView.setFocusOn(selectedField, logicTextType);
+                } else {
+                    try {
+                    	LogicTextView lTView2 = (LogicTextView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LogicTextView.ID);
+                        lTView2.setFocusOn(selectedField, logicTextType);
+					} catch (PartInitException e1) {
+						e1.printStackTrace();
+					}
                 }
 			}
 
@@ -938,7 +945,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
 				public void run() {			
-					SAFRGUIToolkit.dumpActivePage(getTitle() + " LTE partHidden");
 					if(partRef.getPage() != null) {
 			            IViewPart logicView = partRef.getPage().findView(LogicTextView.ID);
 			            partRef.getPage().hideView(logicView);
@@ -955,7 +961,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         	Display.getCurrent().asyncExec(new Runnable() {
         		LogicTextEditor editor = (LogicTextEditor)partRef.getPart(false);
 				public void run() {
-					SAFRGUIToolkit.dumpActivePage(getTitle() + "LTE partVisible");
 		            if (viewInput.getEditRights() != EditRights.Read) {
 		                try {
 		                    PlatformUI.getWorkbench().getActiveWorkbenchWindow()
