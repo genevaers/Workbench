@@ -57,7 +57,6 @@ import com.ibm.safr.we.ui.dialogs.viewgen.FieldTreeNode.FieldNodeType;
 import com.ibm.safr.we.ui.dialogs.viewgen.ViewGenCriteria.EditMode;
 
 public class ViewGenField {
-    static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.dialogs.viewgen.ViewGenField");
 	
 	private class FieldComparator implements Comparator<LRField> {
 
@@ -424,9 +423,7 @@ public class ViewGenField {
         lrfieldTop.getChildren().add(lrfieldHeader);
         
         if (source.getLrFileAssociation().getAssociatingComponentId() != null) {
-        	logger.info("Add LR data to tree for " + source.getLrFileAssociation().getAssociatingComponentId());
             if(logicalRecord == null) {
-            	logger.info("Query LR data to tree for " + source.getLrFileAssociation().getAssociatingComponentId());
             	logicalRecord= SAFRApplication.getSAFRFactory().getLogicalRecord(source.getLrFileAssociation().getAssociatingComponentId());
             }
             if(sortByName) {
