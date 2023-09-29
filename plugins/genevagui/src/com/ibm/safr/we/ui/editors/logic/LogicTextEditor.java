@@ -311,12 +311,10 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                 if (lTView != null) {
                     lTView.setFocusOn(selectedField, logicTextType);
                 } else {
-                	//To reopen here we need the context of the column source editor
-                	//Need to send it an event instead?
                     try {
-						getSite().getPage().openEditor(viewInput, LogicTextEditor.ID);
+                    	LogicTextView lTView2 = (LogicTextView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LogicTextView.ID);
+                        lTView2.setFocusOn(selectedField, logicTextType);
 					} catch (PartInitException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
                 }
@@ -947,7 +945,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         if (partRef.getPart(false).equals(this)) {
         	Display.getCurrent().asyncExec(new Runnable() {
 				public void run() {			
-					SAFRGUIToolkit.dumpActivePage(getTitle() + " LTE partHidden");
 					if(partRef.getPage() != null) {
 			            IViewPart logicView = partRef.getPage().findView(LogicTextView.ID);
 			            partRef.getPage().hideView(logicView);
@@ -964,7 +961,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
         	Display.getCurrent().asyncExec(new Runnable() {
         		LogicTextEditor editor = (LogicTextEditor)partRef.getPart(false);
 				public void run() {
-					SAFRGUIToolkit.dumpActivePage(getTitle() + "LTE partVisible");
 		            if (viewInput.getEditRights() != EditRights.Read) {
 		                try {
 		                    PlatformUI.getWorkbench().getActiveWorkbenchWindow()
