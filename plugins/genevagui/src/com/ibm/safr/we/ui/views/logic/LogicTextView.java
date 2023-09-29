@@ -72,7 +72,6 @@ public class LogicTextView extends ViewPart {
 			getSite().getShell().setCursor(
 					getSite().getShell().getDisplay().getSystemCursor(
 							SWT.CURSOR_WAIT));
-			SAFRGUIToolkit.dumpActivePage("LTV createPartControl");
 			Composite composite = new Composite(parent, SWT.NULL);
 			composite.setLayout(new FormLayout());
 			composite.setLayoutData(new FormData());
@@ -234,7 +233,6 @@ public class LogicTextView extends ViewPart {
 		if(cursor != null) {
 			cursor.dispose();
 		}
-		System.out.println("LogicTextView dispose called");
 	}
 
     public void setFocusOn(String selectedField, LogicTextType type) {

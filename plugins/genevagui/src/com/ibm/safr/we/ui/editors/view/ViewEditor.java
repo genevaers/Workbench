@@ -174,8 +174,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 			throws PartInitException {
 		super.init(site, input);
 		
-		SAFRGUIToolkit.dumpActivePage("View Editor init");
-		
 		viewInput = (ViewEditorInput) getEditorInput();
 		view = viewInput.getView();
 		viewEditor = this.getEditor();
