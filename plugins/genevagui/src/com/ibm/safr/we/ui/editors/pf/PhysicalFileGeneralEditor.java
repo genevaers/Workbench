@@ -736,6 +736,7 @@ public class PhysicalFileGeneralEditor {
         Code fileType = UIUtilities.getCodeFromCombo(comboGeneralFileType);
         if (fileType.getGeneralId().equals(Codes.FILE_REXIT) ||
             fileType.getGeneralId().equals(Codes.FILE_PEXIT)) {
+        	comboGeneralUserExitRoutine.setEnabled(true);
             try {
                 //We want a non standard value now
                 UserExitRoutine uer = physicalFile.getUserExitRoutine();
@@ -748,6 +749,9 @@ public class PhysicalFileGeneralEditor {
                 comboGeneralUserExitRoutine.setText("[" + snfe.getComponentId()+ "]");
             }
             selectedUserExit = comboGeneralUserExitRoutine.getText();
+        } else {
+        	comboGeneralUserExitRoutine.setEnabled(false);
+        	comboGeneralUserExitRoutine.setText("");
         }
     }
     
