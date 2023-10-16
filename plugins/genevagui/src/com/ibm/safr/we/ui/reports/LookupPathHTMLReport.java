@@ -112,6 +112,7 @@ public class LookupPathHTMLReport extends GenevaHTMLReport {
 				if(stepNumber != lk.getStepseqnbr()) {
 					stepNumber = lk.getStepseqnbr();
 					reportStep = new ReportLookupStep();
+					reportStep.number = stepNumber;
 					reportLookup.lookupSteps.put(stepNumber, reportStep);
 				}
 				reportStep.sourceKeys.add(lk);
@@ -315,6 +316,7 @@ public class LookupPathHTMLReport extends GenevaHTMLReport {
 		return tr(	
 				td(Integer.toString(stepBean.getStepseqnbr())).withClass("w3-border"),
 				td(stepBean.getSteptarglr()+ "[" + stepBean.getTarglrid() + "]").withClass("w3-border"),
+				td(stepBean.getSteptarglf()+ "[" + stepBean.getTarglfld() + "]").withClass("w3-border"),
 				td(stepBean.getExitname() != null ? stepBean.getExitname() + "[" + stepBean.getLookupexitid() + "]" : "").withClass("w3-border"),
 				td(stepBean.getLookupexitstartup()).withClass("w3-border")
 				).withClass(getStepColour(s.number));
@@ -324,6 +326,7 @@ public class LookupPathHTMLReport extends GenevaHTMLReport {
 		return tr(	
 				th("Number").withClass("w3-border"),
 				th("Target Logical Record").withClass("w3-border"),
+				th("Target Logical File").withClass("w3-border"),
 				th("Exit").withClass("w3-border"),
 				th("Parameters").withClass("w3-border")
 				);
@@ -343,6 +346,7 @@ public class LookupPathHTMLReport extends GenevaHTMLReport {
 		LookupReportQueryBean targBean = targStep.sourceKeys.get(0); 
 		return tr( 
 					td(targBean.getSteptarglr() + "[" + targBean.getTarglrid() + "]").withClass("w3-border"),
+					td(targBean.getSrclrname() + "[" + targBean.getSrclrid() + "]").withClass("w3-border"),
 					td(targBean.getExitname() != null ? targBean.getExitname() + "[" + targBean.getLookupexitid() + "]" : "").withClass("w3-border"),
 					td(targBean.getLookupexitstartup()).withClass("w3-border")
 				).withClass(getStepColour(numSteps));
@@ -351,6 +355,7 @@ public class LookupPathHTMLReport extends GenevaHTMLReport {
 	private DomContent getTargetHeader() {
 		return tr(
 				th("Target Logical Record").withClass("w3-border"),
+				th("Source Logical Record").withClass("w3-border"),
 				th("Exit").withClass("w3-border"),
 				th("Parameters").withClass("w3-border")
 			);
