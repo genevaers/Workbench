@@ -344,7 +344,8 @@ public class ApplicationMediator {
                         // refresh this view editor
                         ViewEditor editor = (ViewEditor)ref.getEditor(false);
                         editor.makeViewInactive();
-                        editor.refreshControls();
+                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                        page.closeEditor(editor, true);
                     }
                 }
             }
