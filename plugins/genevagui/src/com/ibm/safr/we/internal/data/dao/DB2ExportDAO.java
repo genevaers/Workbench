@@ -1228,11 +1228,14 @@ public class DB2ExportDAO implements ExportDAO {
             rs = null;
             pst.close();                
 
-            selectString = "SELECT * "
-                + "FROM " + params.getSchema()+ ".VFVASSOC "
-                + "WHERE VIEWFOLDERID IN ( " + placeHolders + " )"
-                + "AND ENVIRONID = ? "            
-                + "ORDER BY VIEWFOLDERID, VIEWID";            
+            selectString = "SELECT a.ENVIRONID, VFVASSOCID, VIEWFOLDERID, a.VIEWID, "
+            	+ "a.CREATEDTIMESTAMP, a.CREATEDUSERID, a.LASTMODTIMESTAMP, a.LASTMODUSERID "
+                + "FROM " + params.getSchema()+ ".VFVASSOC a "
+                + "JOIN  SAFRWBGD.VIEW v "
+                + "ON a.environid=v.environid and a.viewid=v.viewid "
+                + "WHERE VIEWFOLDERID IN ( " + placeHolders + " ) AND v.viewstatuscd='ACTVE' "
+                + "AND a.ENVIRONID = ? "            
+                + "ORDER BY VIEWFOLDERID, a.VIEWID";            
     
             while (true) {
                 try {
