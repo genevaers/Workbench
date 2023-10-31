@@ -3,9 +3,9 @@
 This is designed only for Db2 running z/OS. This README
 will guide you to define a Stored Procedure.
 
-SAFR Stored Procedures are used by the SAFR Workbench 
-to access metadata in the SAFR DB2 database. These are native
-Stored Procedures so must use DB2 Z/OS Version 9 or above.
+SAFR Stored Procedures are used by the GenevaERS Workbench 
+to access metadata in the DB2 database. These are native
+Stored Procedures so must use DB2 Z/OS Version 11 or above.
 Native stored procedures are created directly in DB2.
 
 ## this activity is performed on a z/OS system.
@@ -15,7 +15,7 @@ Native stored procedures are created directly in DB2.
    This example shows a git clone action positioning the repo
    in a USS directory
 
-   git clone git@github.ibm.com:SAFR/wb420.git 
+   git clone git@github.ibm.com:genevaers/Workbench.git 
 
 ## allocate a z/OS PDS
 
@@ -64,7 +64,7 @@ Native stored procedures are created directly in DB2.
    The second parameter to the shell script ($2) is USS directory 
    where the the GVBDDL source resides
 
-   e.g. /u/user1/wb420
+   e.g. /u/user1/Workbench
 <pre>
 #!/bin/bash  
 # 
