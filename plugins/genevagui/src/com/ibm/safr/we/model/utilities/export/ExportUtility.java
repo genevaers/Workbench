@@ -1,23 +1,5 @@
 package com.ibm.safr.we.model.utilities.export;
 
-/*
- * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-import java.awt.Component;
-import java.awt.Dialog;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,8 +14,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import com.ibm.safr.we.SAFRUtilities;
@@ -45,15 +27,19 @@ import com.ibm.safr.we.constants.SAFRValidationType;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.data.transfer.DependentComponentTransfer;
+import com.ibm.safr.we.data.transfer.ViewFolderViewAssociationTransfer;
+import com.ibm.safr.we.data.transfer.ViewTransfer;
 import com.ibm.safr.we.data.transfer.XMLTableDataTransfer;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
+import com.ibm.safr.we.model.Folder;
 import com.ibm.safr.we.model.ModelUtilities;
 import com.ibm.safr.we.model.SAFRApplication;
+import com.ibm.safr.we.model.Views;
 import com.ibm.safr.we.model.base.SAFRObject;
 import com.ibm.safr.we.model.query.EnvironmentQueryBean;
-import com.ibm.safr.we.model.query.ViewFolderQueryBean;
-import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.TaskLogger;
+import com.ibm.safr.we.ui.dialogs.ExportInactiveDialog;
+import com.ibm.safr.we.ui.editors.ExportUtilityEditor;
 import com.ibm.safr.we.utilities.FileUtils;
 import com.ibm.safr.we.utilities.ProfileLocation;
 
@@ -79,11 +65,12 @@ public class ExportUtility extends SAFRObject {
 	Map<ComponentType, List<DependentComponentTransfer>> depComponentTransferMap = new LinkedHashMap<ComponentType, List<DependentComponentTransfer>>();
 	private String encoding = null;
 	private String linebreakString = SAFRUtilities.LINEBREAK;
-	private boolean vvid;
-	private boolean vnamevid;
-	private boolean fid;
-	private boolean fnamefid;
+	private boolean viewId;
+	private boolean viewNameViewId;
+	private boolean folderId;
+	private boolean folderNameFolderId;
 	private boolean multiple;
+	public boolean result=true;
 	/**
 	 * Use this constructor to create an Export Utility object to export a
 	 * component to XML file.
@@ -104,16 +91,16 @@ public class ExportUtility extends SAFRObject {
 	 * @param b 
 	 */
 	public ExportUtility(EnvironmentQueryBean environment, String exportPath, String fileName,
-			ComponentType componentType, boolean vvid, boolean vnamevid, boolean fid, boolean fnamefid, boolean multiple) {
+			ComponentType componentType, boolean viewId, boolean viewNameViewId, boolean folderId, boolean folderNameFolderId, boolean multiple) {
 		super();
 		this.environment = environment;
 		this.exportPath = exportPath;
 		this.fileName = fileName;
 		this.componentType = componentType;
-		this.vvid = vvid;
-		this.vnamevid = vnamevid;
-		this.fid = fid;
-		this.fnamefid = fnamefid;
+		this.viewId = viewId;
+		this.viewNameViewId = viewNameViewId;
+		this.folderId = folderId;
+		this.folderNameFolderId = folderNameFolderId;
 		this.multiple = multiple;
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Environment    = " + (environment != null ? environment.getDescriptor() : NOT_SPECIFIED));
@@ -148,40 +135,37 @@ public class ExportUtility extends SAFRObject {
 	 */
 	public void export(List<ExportComponent> exportCompList,Shell shell)
 			throws SAFRValidationException {
-		boolean finalresult = true;
 		try {
 	        validateParms();
         	String totalpath="";
 	        if(this.componentType.getLabel().equals("View Folder")) {
             		 if (multiple) {
                          exportEachComponent(exportCompList,shell);
-                      
                      } else {
-     	        		validateExport(exportCompList);
-     	        		int val = checkfileexists(totalpath,shell);
-	                    if(val!=128) {
+     	        		if(checkfileexists(totalpath,shell)==true) {
+		                    if(validateExport(exportCompList)) {
 		                    exportComponents(exportCompList, fileName);
 	                    }
                      }
+	        }
 	        }
 	        else if(this.componentType.getLabel().equals("View")) {
 	        	if(multiple) {
 	        		exportEachComponent(exportCompList,shell);
 	        	}
 	        	else {
-	        		validateExport(exportCompList);
-	            		if (vvid) {
-	                         fileName ="V"+String.format("%07d",exportCompList.get(0).getComponent().getId())+".xml";
+	        		if(validateExport(exportCompList)) {
+	            		if (viewId) {
+	                         fileName ="V"+String.format("%07d",exportCompList.get(0).getComponent().getId());
 	                    }
-	                    if (vnamevid) {
+	                    if (viewNameViewId) {
 	                         fileName = exportCompList.get(0).getComponent().getName() + "[" + exportCompList.get(0).getComponent().getId() + "].xml";
 	                    }    
 	                    totalpath = exportPath.toString()  + "\\" + fileName.toString();
-	                    int val = checkfileexists(totalpath,shell);
-	                    if(val!=128) {
+	                    if(checkfileexists(totalpath,shell)==true) {
 		                    exportComponents(exportCompList, fileName);
 	                    }
-	                    
+	                }
 	                }
 	        	}
 
@@ -219,54 +203,48 @@ public class ExportUtility extends SAFRObject {
     	String totalpath="";
         for (ExportComponent component : exportCompList) {
             singleComp.add(component);
-            validateExport(singleComp);
-            if (component.getComponent().getComponentType().toString() == "View" && vvid) {
-                fileName ="V"+String.format("%07d",component.getComponent().getId())+".xml";
+            if(validateExport(singleComp)) {
+            if (component.getComponent().getComponentType().toString() == "View" && viewId) {
+                fileName ="V"+String.format("%07d",component.getComponent().getId());
                 totalpath = exportPath.toString()  + "\\" + fileName.toString();
-                int val = checkfileexists(totalpath,shell);
-                if(val!=128) {
+                if(checkfileexists(totalpath,shell)==true) {
                     exportComponents(singleComp, fileName);
                 }
                 
             }
-            if(component.getComponent().getComponentType().toString() == "ViewFolder" && fid) {
-            	fileName ="F"+String.format("%07d",component.getComponent().getId())+".xml";
+            if(component.getComponent().getComponentType().toString() == "ViewFolder" && folderId) {
+            	fileName ="F"+String.format("%07d",component.getComponent().getId());
             	totalpath = exportPath.toString()  + "\\" + fileName.toString();
-                int val = checkfileexists(totalpath,shell);
-                if(val!=128) {
+            	if(checkfileexists(totalpath,shell)==true) {
                     exportComponents(singleComp, fileName);
                 }
             }
-            if(component.getComponent().getComponentType().toString() == "ViewFolder" && fnamefid) {
+            if(component.getComponent().getComponentType().toString() == "ViewFolder" && folderNameFolderId) {
                 fileName = component.getComponent().getName() + "[" + component.getComponent().getId() + "].xml";
                 totalpath = exportPath.toString()  + "\\" + fileName.toString();
-                int val = checkfileexists(totalpath,shell);
-                if(val!=128) {
+                if(checkfileexists(totalpath,shell)==true) {
                     exportComponents(singleComp, fileName);
                 }
             }
-            if (component.getComponent().getComponentType().toString() == "View" && vnamevid) {
+            if (component.getComponent().getComponentType().toString() == "View" && viewNameViewId) {
                 fileName = component.getComponent().getName() + "[" + component.getComponent().getId() + "].xml";
                 totalpath = exportPath.toString()  + "\\" + fileName.toString();
-                int val = checkfileexists(totalpath,shell);
-                if(val!=128) {
+                if(checkfileexists(totalpath,shell)==true) {
                     exportComponents(singleComp, fileName);
                 }
             }    
+            }
             singleComp.clear();
         }
     }
    	
-    private int checkfileexists(String path,Shell shell) {
+    private boolean checkfileexists(String path,Shell shell) {
 		// TODO Auto-generated method stub
     	File f = new File(path);
-    	int result = 0;
+    	boolean result = true;
         if(f.exists()) {
-        	MessageBox dialog =
-        		    new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES| SWT.NO);
-        		dialog.setText("Confirm Save As");
-        		dialog.setMessage(f.getName() + " already exists." + "\n" + "Do you want to replace it?");
-        		result = dialog.open();
+        	result = MessageDialog.openQuestion(shell, "Confirm Save As",
+        			f.getName() + " already exists." + "\n" + "Do you want to replace it?");
         }        
         return result;
 	}
@@ -291,7 +269,14 @@ public class ExportUtility extends SAFRObject {
         
         // export each component.
         depComponentTransferMap.clear();
-        boolean canExport = true;
+        boolean canExport = false;
+        List<Integer> folderIds=new ArrayList<>();
+        for (ExportComponent exportComponent : exportCompList) {
+        	folderIds.add(exportComponent.getComponent().getId());
+            exportComponent.setResult(ActivityResult.CANCEL);
+        }
+ 	   	result = determineInactiveViewsFromFolders(environment.getId(),folderIds);
+ 	   	if(result){
         for (ExportComponent exportComponent : exportCompList) {
         	// clear the existing errors, if any, first.
         	exportComponent.getErrors().clear();
@@ -317,6 +302,7 @@ public class ExportUtility extends SAFRObject {
                     }
                     depComponentTransferMap.get(type).addAll(newDeps.get(type));			            
                 }
+	              
         		if (!SAFRApplication.getUserSession().isSystemAdministrator()) {
         			// Check user rights on export components
         			errList = checkComponentSecurity(exportComponent
@@ -328,11 +314,14 @@ public class ExportUtility extends SAFRObject {
                         // if dependency found then set the list of errors to pass
                         // to UI and set the result as Load errors.
                         exportComponent.setErrors(errList);
+	                        if(!exportComponent.getResult().equals(ActivityResult.FAIL)) {
                         exportComponent.setResult(ActivityResult.LOADERRORS);
+	                        }
                         canExport = false;
                     }						
         		}
-
+	        		exportComponent.setResult(ActivityResult.PASS);
+	                canExport = true;
         	} catch (DAOException de) {
         		storeError(exportComponent, de);
         		logStackTrace(exportComponent, de);
@@ -340,7 +329,31 @@ public class ExportUtility extends SAFRObject {
         	} 
 
         } // end check loop
+ 	   	}
         return canExport;
+ 	   	
+ 	   	}
+
+	private boolean determineInactiveViewsFromFolders(int environmentid,List<Integer> folderIds) {
+		
+
+		List<ViewFolderViewAssociationTransfer> inactiveViewInFoldersList = DAOFactoryHolder.getDAOFactory().getViewFolderDAO().getinactiveviewinfolders(environmentid, folderIds);
+		List<Views> list = new ArrayList<>();
+		for(ViewFolderViewAssociationTransfer vf : inactiveViewInFoldersList) {
+			Folder f = new Folder(vf.getAssociatingComponentId(),vf.getAssociatingComponentName());
+			list.add(new Views(f,vf.getAssociatedComponentId(),vf.getAssociatedComponentName()));
+		}
+
+		if(list.size()!=0) {
+			ExportInactiveDialog areaDialog = new ExportInactiveDialog(ExportUtilityEditor.shell, list);
+			int open = areaDialog.open();
+			if (open == Dialog.OK) {
+				result = true;
+			} else {
+				result = false;
+			}
+		}
+		return result;
     }
 
     private void exportComponents(List<ExportComponent> exportComponents, String fileName) {
@@ -356,7 +369,6 @@ public class ExportUtility extends SAFRObject {
         	
             // export generation record
         	exportGeneration();
-        	
         	List<Integer> idList = new ArrayList<Integer>();
         	for (ExportComponent exportComponent : exportComponents) {
         	    idList.add(exportComponent.getComponent().getId());
@@ -364,7 +376,6 @@ public class ExportUtility extends SAFRObject {
 
         	exportMetadata(componentType, idList, environment.getId());
         	// export dependent components.
-
             // export Views
             retrieveComponentFromMap(ComponentType.View);
         	
@@ -449,15 +460,42 @@ public class ExportUtility extends SAFRObject {
 
     private void retrieveComponentFromMap(ComponentType type)
 			throws DAOException, IOException {
+    	if(result) {
+    		retrieveComponentFromMapFilter(type);
+    	}
+    	else {
+    		List<DependentComponentTransfer> depList = depComponentTransferMap.get(type);
+    		List<Integer> idList = new ArrayList<Integer>();
+    		if (depList != null) {
+    			for (DependentComponentTransfer depComTrans : depList) {
+    				idList.add(depComTrans.getId());
+    			}
+    			exportMetadata(type, idList, environment.getId());
+    		}
+    	}
+	}
+    
+    public void retrieveComponentFromMapFilter(ComponentType type)
+			throws DAOException, IOException {
     	List<DependentComponentTransfer> depList = depComponentTransferMap.get(type);
 		List<Integer> idList = new ArrayList<Integer>();
+		ViewTransfer viewTransfer = null;
 		if (depList != null) {
 			for (DependentComponentTransfer depComTrans : depList) {
+				if(type.getLabel().equals("View")) {
+					viewTransfer = DAOFactoryHolder.getDAOFactory().getViewDAO().getView(depComTrans.getId(), this.environment.getId());
+					if(viewTransfer!=null && viewTransfer.getStatusCode().equals("ACTVE")) {
 				idList.add(depComTrans.getId());
+			}
+				}
+				else {
+					idList.add(depComTrans.getId());
+				}
 			}
 			exportMetadata(type, idList, environment.getId());
 		}
 	}
+
 
 	private void exportMetadata(ComponentType type, List<Integer> idList,
 			Integer environmentId) throws DAOException, IOException {
@@ -584,25 +622,25 @@ public class ExportUtility extends SAFRObject {
 						// check for cdata
 						if (tableRecord.isCdata()) {
 							// write this table record inside the above <Record> element.
-							xmlStream.write(openCdataElement(tableRecord.getName().toUpperCase(), true, false).getBytes());
+							xmlStream.write(openCdataElement(tableRecord.getName(), true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// normalize line endings
 								String cdstr =  FileUtils.fixCdataLineEndings(tableRecord.getValue());
 								xmlStream.write(cdstr.getBytes());
 							}
-							xmlStream.write(closeCdataElement(tableRecord.getName().toUpperCase(), false, true).getBytes());							
+							xmlStream.write(closeCdataElement(tableRecord.getName(), false, true).getBytes());							
 						}
 						else {
 							// write this table record inside the above <Record>
 							// element.
-							xmlStream.write(openElement(tableRecord.getName().toUpperCase(),
+							xmlStream.write(openElement(tableRecord.getName(),
 									true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// handle special characters and write the data
 								xmlStream.write(handleSpecialChars(
 										tableRecord.getValue()).getBytes());
 							}
-							xmlStream.write(closeElement(tableRecord.getName().toUpperCase(),
+							xmlStream.write(closeElement(tableRecord.getName(),
 									false, true).getBytes());
 						}
 					}

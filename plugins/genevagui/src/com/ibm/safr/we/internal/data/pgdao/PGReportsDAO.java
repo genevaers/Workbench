@@ -651,6 +651,7 @@ public class PGReportsDAO implements ReportsDAO {
         try {
             String selectString = "SELECT "
             		+ "L.SRCLRID, "
+            		+ "SRCLR.NAME AS SRCLRNAME, "
             		+ "L.LOOKUPID, "
             		+ "L.NAME, "
             		+ "S.STEPSEQNBR, "
@@ -684,6 +685,8 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "E.NAME AS EXITNAME, "
             		+ "R.LOOKUPEXITSTARTUP "
             		+ "FROM " + params.getSchema() + ".LOOKUP L "
+            		+ "JOIN SAFRWBS2.LOGREC SRCLR "
+            		+ "ON SRCLR.ENVIRONID=L.ENVIRONID AND SRCLR.LOGRECID=L.SRCLRID "
             		+ "JOIN " + params.getSchema() + ".LOOKUPSTEP S "
             		+ "ON S.ENVIRONID=L.ENVIRONID AND S.LOOKUPID=L.LOOKUPID "
             		+ "JOIN " + params.getSchema() + ".LOOKUPSRCKEY K "
@@ -730,6 +733,7 @@ public class PGReportsDAO implements ReportsDAO {
             while (rs.next()) {
 				result.add(new LookupReportQueryBean(
 						rs.getString("SRCLRID"),
+						rs.getString("SRCLRNAME"),
 						rs.getInt("LOOKUPID"),
 						rs.getString("NAME"),
 						rs.getInt("STEPSEQNBR"),

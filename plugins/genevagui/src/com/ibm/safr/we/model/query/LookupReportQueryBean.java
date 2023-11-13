@@ -31,6 +31,7 @@ package com.ibm.safr.we.model.query;
 public class LookupReportQueryBean {
 
     private String srclrid;
+    private String srclrname;
     private int lookupid;
     private String name;
     private int stepseqnbr;
@@ -63,7 +64,7 @@ public class LookupReportQueryBean {
     private String lookupexitid;
     private String exitname;
     private String lookupexitstartup;
-	public LookupReportQueryBean(String srclrid, int lookupid, String name, int stepseqnbr, String stepsrclrid, String stepsrclr,
+	public LookupReportQueryBean(String srclrid, String srclrname, int lookupid, String name, int stepseqnbr, String stepsrclrid, String stepsrclr,
 			int keyseqnbr, String fldtype, String steptarglr, String keylrid, String keylr, String lrfieldid, String fldname,
 			String valuefmtcd, String signed, String valuelen, String decimalcnt, String fldcontentcd, String rounding,
 			String justifycd, String symbolicname, String value, String createdtimestamp, String createduserid,
@@ -71,6 +72,7 @@ public class LookupReportQueryBean {
 			String keylf, String lookupexitid, String exitname, String lookupexitstartup) {
 		super();
 		this.srclrid = srclrid;
+		this.srclrname = srclrname;
 		this.lookupid = lookupid;
 		this.name = name;
 		this.stepseqnbr = stepseqnbr;
@@ -106,6 +108,9 @@ public class LookupReportQueryBean {
 	}
 	public String getSrclrid() {
 		return srclrid;
+	}
+	public String getSrclrname() {
+		return srclrname;
 	}
 	public int getLookupid() {
 		return lookupid;

@@ -1519,7 +1519,7 @@ public class DB2LogicalRecordDAO implements LogicalRecordDAO {
 			String selectString;
 			if (admin) {
 				selectString = "Select LOGFILEID, NAME From "
-						+ params.getSchema() + ".LOGFILE"
+						+ params.getSchema() + ".LOGFILE A"
 						+ " Where ENVIRONID = ? ";
 			} else {
 				selectString = "Select A.LOGFILEID, A.NAME,L.RIGHTS From "
@@ -1533,7 +1533,7 @@ public class DB2LogicalRecordDAO implements LogicalRecordDAO {
 						+ " Where A.ENVIRONID = ? ";
 			}
 			if(notInParam.size() > 0) {
-				selectString += " AND LOGFILEID > 0" + " AND LOGFILEID NOT IN (" + placeholders + ")";
+				selectString += " AND A.LOGFILEID > 0" + " AND A.LOGFILEID NOT IN (" + placeholders + ")";
 			}
 			selectString += " Order By LOGFILEID";
 			PreparedStatement pst = null;
@@ -3413,7 +3413,7 @@ public class DB2LogicalRecordDAO implements LogicalRecordDAO {
         Integer environmentId) {
         LogicalRecordQueryBean logicalRecordQueryBean = null;
         try {
-            String selectString = "SELECT LOGRECID, NAME FROM "
+            String selectString = "SELECT LOGRECID, NAME, LASTMODTIMESTAMP FROM "
                     + params.getSchema() + ".LOGREC  "
                     + "WHERE LOGRECID = ? "
                     + "AND ENVIRONID = ? ";
@@ -3439,7 +3439,7 @@ public class DB2LogicalRecordDAO implements LogicalRecordDAO {
                 logicalRecordQueryBean = new LogicalRecordQueryBean(
                     environmentId, rs.getInt("LOGRECID"), 
                     DataUtilities.trimString(rs.getString("NAME")), 
-                    null, null, null, null, null, null, null, null, null, null, null);
+                    null, null, null, null, null, null, null, rs.getDate("LASTMODTIMESTAMP"), null, null, null);
             }
             pst.close();
             rs.close();
