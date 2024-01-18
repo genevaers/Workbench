@@ -433,37 +433,38 @@ public class ImportUtility extends SAFRObject {
 				            		notAtStart = false;
 				            	}
 				            }
-							if (notAtStart) {
-								safrValidationException.setErrorMessage(Property.FILES,
-										"File is not a WorkBench XML file " + f.getName());
-							} else {
-								it.next();
-								it.next();
+				            it.next(); it.next();
 								String verline = it.next();
 								if (!verline.trim().equals("<XMLVERSION>3</XMLVERSION>")) {
-									safrValidationException.setErrorMessage(Property.FILES,
-											"File is the wrong xml version " + f.getName());
-								} else {
+	                            safrValidationException.setErrorMessage(Property.FILES, "File is the wrong xml version " + f.getName());				                
+				            }
+				            else {
 									String typeline = it.next();
 									if (typeline == null) {
-										safrValidationException.setErrorMessage(Property.FILES,
-												"Couldn't read type from file " + f.getName());
-									} else if (!typeline.trim().equals("<TYPE>" + getComponentString() + "</TYPE>")) {
+                                    safrValidationException.setErrorMessage(Property.FILES, "Couldn't read type from file " + f.getName());                                    
+                                }
+                                else if (!typeline.trim().equals("<TYPE>" + getComponentString() + "</TYPE>")) {
+                                   
 
 										if (!f.getName().equals("")) {
 											safrValidationException.setErrorMessage(Property.FILES,
-													"The document has type "
-															+ typeline.trim().substring(6,
-																	(typeline.trim().length() - 7))
-															+ " " + "but it should be " + getComponentString());
+                                                "The document has type " + typeline.trim().substring(6,(typeline.trim().length()-7)) + " " +
+                                                "but it should be " + getComponentString());
 										}
 
 									}
 								}
+				            it.next();
+				            it.next();
+				            String timestampline = it.next();
+				            
+                            String subtimestamp = timestampline.substring(30, 49);
+                            timestamps.add(subtimestamp);
+                            if(timestamps.size()>1) {
+    				            safrValidationException.setErrorMessage(Property.FILES, "The Generation CREATEDTIMESTAMP must match in all files being imported.");
 							}
 						} catch (IOException e) {
-							safrValidationException.setErrorMessage(Property.FILES,
-									"Couldn't read version from file " + f.getName());
+				            safrValidationException.setErrorMessage(Property.FILES, "Couldn't read version from file " + f.getName());
 						}
 					}
 				}
