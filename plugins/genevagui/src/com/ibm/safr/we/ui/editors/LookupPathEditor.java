@@ -1472,6 +1472,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		FormData dataSectionSourceFieldProperties = new FormData();
 		dataSectionSourceFieldProperties.left = new FormAttachment(
 				sectionSource, 20);
+		dataSectionSourceFieldProperties.width = 600;
 		sectionSourceFieldProperties
 				.setLayoutData(dataSectionSourceFieldProperties);
 
@@ -1482,6 +1483,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		layoutCompositeSourceFieldProperties.marginBottom = UIUtilities.BOTTOMMARGIN;
 		layoutCompositeSourceFieldProperties.marginLeft = UIUtilities.LEFTMARGIN;
 		layoutCompositeSourceFieldProperties.marginRight = UIUtilities.RIGHTMARGIN;
+		
 		compositeSourceFieldProperties
 				.setLayout(layoutCompositeSourceFieldProperties);
 
@@ -1543,7 +1545,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		comboSourceLR = comboSourceLRViewer.getTableCombo();
 		comboSourceLR.setData(SAFRLogger.USER, "Source Logical Record");        		
 		FormData dataComboSourceLR = new FormData();
-		dataComboSourceLR.left = new FormAttachment(labelSourceLR, 80);
+		dataComboSourceLR.left = new FormAttachment(labelSourceLR, 65);
 		dataComboSourceLR.top = new FormAttachment(radiofield, 5);
 		dataComboSourceLR.width = 305;
 		comboSourceLR.setLayoutData(dataComboSourceLR);	
