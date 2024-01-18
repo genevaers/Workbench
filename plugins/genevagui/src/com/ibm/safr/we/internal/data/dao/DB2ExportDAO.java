@@ -1231,7 +1231,7 @@ public class DB2ExportDAO implements ExportDAO {
             selectString = "SELECT a.ENVIRONID, VFVASSOCID, VIEWFOLDERID, a.VIEWID, "
             	+ "a.CREATEDTIMESTAMP, a.CREATEDUSERID, a.LASTMODTIMESTAMP, a.LASTMODUSERID "
                 + "FROM " + params.getSchema()+ ".VFVASSOC a "
-                + "JOIN  SAFRWBGD.VIEW v "
+                + "JOIN " + params.getSchema()+ ".VIEW v "
                 + "ON a.environid=v.environid and a.viewid=v.viewid "
                 + "WHERE VIEWFOLDERID IN ( " + placeHolders + " ) AND v.viewstatuscd='ACTVE' "
                 + "AND a.ENVIRONID = ? "            
