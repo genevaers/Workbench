@@ -50,6 +50,7 @@ public class DAOFactoryHolder {
 
 			ConnectionParameters params = new ConnectionParameters();
 			String dbtype = connection.get(UserPreferencesNodes.DATABASETYPE, "");
+			String enableSSL = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.ENABLE_SSL, "");
 			if (dbtype != null && dbtype.length()>0) {
 			    params.setType(DBType.valueOf(dbtype));
 			}
@@ -60,6 +61,10 @@ public class DAOFactoryHolder {
 						+ connection.get(UserPreferencesNodes.SERVER, "") + ":"
 						+ connection.get(UserPreferencesNodes.PORT, "") + "/"
 						+ connection.get(UserPreferencesNodes.DATABASENAME, "");
+				if(enableSSL.equalsIgnoreCase("Y")) {
+					String trustStore = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.SSL_TRUST_STORELOCATION, "");
+					url += ":sslConnection=true;sslTrustStoreLocation=" + trustStore + ";";
+				}
 						// Uncomment for JDBC trace 
 	/*            		+ ":traceDirectory=c:\\temp"
 	            		+ ";traceFile=trace"

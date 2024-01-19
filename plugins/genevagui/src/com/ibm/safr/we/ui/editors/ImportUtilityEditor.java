@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITableColorProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -57,6 +58,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -84,6 +86,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.progress.IProgressService;
 
 import com.ibm.safr.we.SAFRUtilities;
+import com.ibm.safr.we.constants.ActivityResult;
 import com.ibm.safr.we.constants.ComponentType;
 import com.ibm.safr.we.constants.SAFRValidationType;
 import com.ibm.safr.we.constants.SortType;
@@ -96,7 +99,13 @@ import com.ibm.safr.we.model.LogicalFile;
 import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.base.SAFRPersistentObject;
 import com.ibm.safr.we.model.query.EnvironmentQueryBean;
+import com.ibm.safr.we.model.query.LogicalFileQueryBean;
+import com.ibm.safr.we.model.query.LogicalRecordQueryBean;
+import com.ibm.safr.we.model.query.LookupQueryBean;
+import com.ibm.safr.we.model.query.PhysicalFileQueryBean;
 import com.ibm.safr.we.model.query.SAFRQuery;
+import com.ibm.safr.we.model.query.ViewFolderQueryBean;
+import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.importer.CopybookImporter;
 import com.ibm.safr.we.model.utilities.importer.ImportFile;
 import com.ibm.safr.we.model.utilities.importer.ImportUtility;
@@ -133,8 +142,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	private Section sectionComponents;
 
 	private Button buttonImport;
-	private Button buttonSelectAll;
-	private Button buttonDeSelectAll;
 	private Button buttonRefresh;
 
 	private ComponentType componentType;
@@ -150,7 +157,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	private Table tableXmlFiles;
 	private CheckboxTableViewer tableViewerXmlFiles;
 	public static String[] componentColumnHeaders = { "Select", "Result",
-			"XML Files" };
+			"File Name" };
 	public static int[] componentColumnWidths = { 75, 80, 310 };
 	private TableComboViewer comboEnvironmentViewer;
 	private List<EnvironmentQueryBean> envList;
@@ -164,7 +171,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	private TableViewer tableViewerErrors;
 	private Table tableErrors;
     private int prevSelection = 0;
-	
+	EnvironmentQueryBean environmentQueryBean;
     private MenuItem envOpenEditorItem = null;    
 
 	private class ImportProcess implements IRunnableWithProgress {
@@ -333,8 +340,8 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		compositeComponents.setLayoutData(new FormData());
 
 		//The label is used as a reference for alignment
-		Label labelEnvironment = addEnvironmentCombo();
-		Label labelComponentType = addComponentCombo(labelEnvironment);
+		Label labelComponentType = addComponentCombo();
+		Label labelEnvironment = addEnvironmentCombo(labelComponentType);
 		FormData dataButtonLocation = addFolderSelection(labelEnvironment, labelComponentType);
 
 		addFilesTable(labelEnvironment);       
@@ -346,36 +353,29 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 	private void addButtons(Label labelEnvironment, FormData dataButtonLocation) {
 		FormData dataImportButton = addImportButton();
-        FormData dataSelectAll = addSelectAllButton(labelEnvironment);		
-		FormData dataDeSelectAll = addDeSelectAllButton();		
-        FormData dataRefresh = addRefreshButton();       
-        setButtonWidths(dataButtonLocation, dataImportButton, dataSelectAll, dataDeSelectAll, dataRefresh);
+        FormData dataRefresh = addRefreshButton(labelEnvironment);       
+        setButtonWidths(dataButtonLocation, dataImportButton, dataRefresh);
 	}
 
-	private void setButtonWidths(FormData dataButtonLocation, FormData dataImportButton, FormData dataSelectAll,
-			FormData dataDeSelectAll, FormData dataRefresh) {
+	private void setButtonWidths(FormData dataButtonLocation, FormData dataImportButton, FormData dataRefresh) {
 		// Set width of all buttons to the widest button
         List<Button> buttons = new ArrayList<Button>();
-        buttons.add(buttonSelectAll);
-        buttons.add(buttonDeSelectAll);
         buttons.add(buttonRefresh);
         buttons.add(buttonImport);
         buttons.add(buttonLocation);
         int width = UIUtilities.computePreferredButtonWidth(buttons);
-        dataSelectAll.width = width;
-        dataDeSelectAll.width = width;
         dataRefresh.width = width;
         dataImportButton.width = width;
         dataButtonLocation.width = width;
 	}
 
-	private FormData addRefreshButton() {
+	private FormData addRefreshButton(Label labelEnvironment) {
 		// CQ10364 Refresh button
         buttonRefresh = safrGuiToolkit.createButton(compositeComponents,
                 SWT.PUSH, "&Refresh");
         buttonRefresh.setData(SAFRLogger.USER, "Refresh");                                                                    
         FormData dataRefresh = new FormData();
-        dataRefresh.left = new FormAttachment(buttonDeSelectAll, 10);
+        dataRefresh.left = new FormAttachment(labelEnvironment, 10);
         dataRefresh.top = new FormAttachment(tableXmlFiles, 5);
         dataRefresh.bottom = new FormAttachment(100, -10);
         buttonRefresh.setLayoutData(dataRefresh);
@@ -413,76 +413,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		}
 	}
 	
-	private FormData addDeSelectAllButton() {
-		buttonDeSelectAll = safrGuiToolkit.createButton(compositeComponents,
-				SWT.PUSH, "&Deselect All");
-		buttonDeSelectAll.setData(SAFRLogger.USER, "Deselect All");                                                                    		
-		FormData dataDeSelectAll = new FormData();
-		dataDeSelectAll.left = new FormAttachment(buttonSelectAll, 10);
-		dataDeSelectAll.top = new FormAttachment(tableXmlFiles, 5);
-		dataDeSelectAll.bottom = new FormAttachment(100, -10);
-		buttonDeSelectAll.setLayoutData(dataDeSelectAll);
-		buttonDeSelectAll.setEnabled(false);
-
-		buttonDeSelectAll.addSelectionListener(new SelectionListener() {
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				if (files == null || files.size() == 0) {
-					return;
-				}
-				tableViewerXmlFiles.setAllChecked(false);
-				enableImportButtons(false);
-				for (ImportFile iFile : files) {
-					iFile.setSelected(false);
-				}
-				prevSelection = 0;
-			}
-
-		});
-		return dataDeSelectAll;
-	}
-
-	private FormData addSelectAllButton(Label labelEnvironment) {
-		buttonSelectAll = safrGuiToolkit.createButton(compositeComponents,
-                SWT.PUSH, "&Select All");
-        buttonSelectAll.setData(SAFRLogger.USER, "Select All");                                                                           
-        FormData dataSelectAll = new FormData();
-        dataSelectAll.left = new FormAttachment(labelEnvironment,10);
-        dataSelectAll.top = new FormAttachment(tableXmlFiles, 5);
-        dataSelectAll.bottom = new FormAttachment(100, -10);
-        buttonSelectAll.setLayoutData(dataSelectAll);
-        buttonSelectAll.setEnabled(false);
-    
-        buttonSelectAll.addSelectionListener(new SelectionListener() {
-    
-            public void widgetDefaultSelected(SelectionEvent e) {
-    
-            }
-    
-            public void widgetSelected(SelectionEvent e) {
-                if (files == null || files.size() == 0) {
-                    return;
-                }
-    
-                tableViewerXmlFiles.setAllChecked(true);
-                if (componentType != null && currentEnvironment != null) {
-                    enableImportButtons(true);
-                    for (ImportFile iFile : files) {
-                        iFile.setSelected(true);
-                    }
-                } else {
-                    enableImportButtons(false);
-                }
-                prevSelection = 0;                              
-            }
-    
-        });
-		return dataSelectAll;
-	}
 
 	private FormData addImportButton() {
 		buttonImport = safrGuiToolkit.createButton(compositeComponents,
@@ -518,7 +448,19 @@ public class ImportUtilityEditor extends SAFREditorPart {
 						ImportFile f = (ImportFile) item;
 						selectedFiles.add(f);
 					}
-
+List<PhysicalFileQueryBean> queryAllPhysicalFiles = SAFRQuery.queryAllPhysicalFiles(environmentQueryBean.getId(),SortType.SORT_BY_ID);
+					List<LogicalRecordQueryBean> queryAllLogicalRecords = SAFRQuery.queryAllLogicalRecords(environmentQueryBean.getId(),SortType.SORT_BY_ID);
+					List<LogicalFileQueryBean> queryAllLogicalFile = SAFRQuery.queryAllLogicalFiles(environmentQueryBean.getId(), SortType.SORT_BY_ID);
+					List<ViewQueryBean> queryAllView = SAFRQuery.queryAllViews(environmentQueryBean.getId(), SortType.SORT_BY_ID);
+					List<ViewFolderQueryBean> queryAllViewfolder = SAFRQuery.queryAllViewFolders(environmentQueryBean.getId(), SortType.SORT_BY_ID);
+					List<LookupQueryBean> queryAllLookups = SAFRQuery.queryAllLookups(environmentQueryBean.getId(), SortType.SORT_BY_ID);
+					if((!componentType.equals(ComponentType.CobolCopyBook) && (!queryAllView.isEmpty() || !queryAllPhysicalFiles.isEmpty() || !queryAllLogicalRecords.isEmpty() || !queryAllLogicalFile.isEmpty() || queryAllViewfolder.size()>1 || !queryAllLookups.isEmpty()))) {
+							MessageDialog.openError(getSite().getShell(),
+				                    "Import Error",
+				                    "Import is only allowed into empty environements. Please create or choose an empty environment to import");
+						
+					}
+					else{
 					importUtility = new ImportUtility(currentEnvironment, componentType, selectedFiles);
 					importUtility.setConfirmWarningStrategy(new SAFRGUIConfirmWarningStrategy(
 					    SAFRGUIContext.IMPORT));
@@ -595,7 +537,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 					} finally {
 						proc.endProgress();
 					}
-					
+					}
 				}
 			}
 		});
@@ -634,32 +576,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
               if (event.detail == SWT.CHECK) {                  
                   int selRow = tableXmlFiles.indexOf((TableItem)event.item);  
                   int stateMask=event.stateMask;                  
-                  if((stateMask & SWT.SHIFT)==SWT.SHIFT){
-                      int prevRow = prevSelection;
-                      
-                      if((stateMask & SWT.CTRL)!=SWT.CTRL){
-                          tableViewerXmlFiles.setAllChecked(false);
-                          for (Object obj : tableViewerXmlFiles.getCheckedElements()) {
-                              ((ImportFile)obj).setSelected(false);
-                          }                          
-                          
-                      }
-                      if (prevRow > selRow) {
-                          for (int i=selRow ; i<=prevRow ; i++) {
-                              Object element = tableViewerXmlFiles.getElementAt(i);
-                              tableViewerXmlFiles.setChecked(element, true);
-                              files.get(i).setSelected(true);
-                          }
-                      }
-                      else {
-                          for (int i=prevRow ; i<=selRow ; i++) {
-                              Object element = tableViewerXmlFiles.getElementAt(i);
-                              tableViewerXmlFiles.setChecked(element, true);
-                              files.get(i).setSelected(true);
-                          }                            
-                      }
-                  }   
-                  else {
                       Object element = tableViewerXmlFiles.getElementAt(selRow);
                       if (tableViewerXmlFiles.getChecked(element)) {
                           prevSelection = tableXmlFiles.indexOf((TableItem)event.item);
@@ -668,7 +584,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
                           prevSelection = 0;
                       }
                   }
-              }                  
             }
           });
 		
@@ -716,11 +631,16 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				ImportFile importFile = (ImportFile) event.getElement();
+if(!componentType.equals(ComponentType.CobolCopyBook) && tableViewerXmlFiles.getCheckedElements().length>1){
+					tableViewerXmlFiles.setAllChecked(false);;
+					tableViewerXmlFiles.setChecked(event.getElement(), true);
 				if (event.getChecked()) {
 					importFile.setSelected(true);
 				} else {
 					importFile.setSelected(false);
 				}
+			}
+
 			}
 		});
 
@@ -786,7 +706,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		labelArchiveFolder = safrGuiToolkit.createLabel(compositeComponents, SWT.NONE, "Archive F&older:");
 		FormData dataLabel = new FormData();
 		dataLabel.width = SWT.DEFAULT;
-		dataLabel.top = new FormAttachment(labelComponentType, 18);
+		dataLabel.top = new FormAttachment(labelEnvironment, 18);
 		dataLabel.left = new FormAttachment(0, 5);
 		labelArchiveFolder.setLayoutData(dataLabel);
 		labelArchiveFolder.setEnabled(false);
@@ -795,7 +715,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		textPath.setData(SAFRLogger.USER, "Archive Folder");                                    		
 		FormData dataLocation = new FormData();
 		dataLocation.left = new FormAttachment(labelEnvironment, 10);
-		dataLocation.top = new FormAttachment(comboComponentType, 10);
+		dataLocation.top = new FormAttachment(comboEnvironment, 10);
 		dataLocation.width = 368;
 		textPath.setLayoutData(dataLocation);
         Preferences preferences = SAFRPreferences.getSAFRPreferences(); 
@@ -809,16 +729,16 @@ public class ImportUtilityEditor extends SAFREditorPart {
         importFromDir = new File(textPath.getText());
 		textPath.setEnabled(false);
 
-		FormData dataButtonLocation = makeBrowseButtonAlignedTo(labelComponentType);
+		FormData dataButtonLocation = makeBrowseButtonAlignedTo(labelEnvironment);
 		return dataButtonLocation;
 	}
 
-	private FormData makeBrowseButtonAlignedTo(Label labelComponentType) {
+	private FormData makeBrowseButtonAlignedTo(Label labelEnvironment) {
 		buttonLocation = safrGuiToolkit.createButton(compositeComponents, SWT.NONE, "&Browse...");
 		buttonLocation.setData(SAFRLogger.USER, "Browse");                                          		
 		FormData dataButtonLocation = new FormData();
 		dataButtonLocation.left = new FormAttachment(textPath, 5);
-		dataButtonLocation.top = new FormAttachment(labelComponentType, 16);
+		dataButtonLocation.top = new FormAttachment(labelEnvironment, 16);
 		buttonLocation.setLayoutData(dataButtonLocation);
 		buttonLocation.setEnabled(false);
 		buttonLocation.addSelectionListener(getFileSelectionListener());
@@ -851,12 +771,14 @@ public class ImportUtilityEditor extends SAFREditorPart {
 		};
 	}
 
-	private Label addComponentCombo(Label labelEnvironment) {
+	private Label addComponentCombo() {
+		Label note = safrGuiToolkit.createLabel(
+				compositeComponents, SWT.NONE, "Note: only one XML file may be imported into an empty environment.");
 		Label labelComponentType = safrGuiToolkit.createLabel(
 				compositeComponents, SWT.NONE, "Component &Type:");
 		FormData dataLabelComponentType = new FormData();
 		dataLabelComponentType.width = SWT.DEFAULT;
-		dataLabelComponentType.top = new FormAttachment(labelEnvironment, 18);
+		dataLabelComponentType.top = new FormAttachment(note, 20);
 		dataLabelComponentType.left = new FormAttachment(0, 5);
 		labelComponentType.setLayoutData(dataLabelComponentType);
 
@@ -864,9 +786,9 @@ public class ImportUtilityEditor extends SAFREditorPart {
 				SWT.READ_ONLY, "");
 		comboComponentType.setData(SAFRLogger.USER, "Component Type");                              		
 		FormData dataComboComponentType = new FormData();
-		dataComboComponentType.left = new FormAttachment(labelEnvironment, 10);
-		dataComboComponentType.top = new FormAttachment(comboEnvironment, 10);
-		dataComboComponentType.width = 350;
+		dataComboComponentType.left = new FormAttachment(labelComponentType, 22);
+		dataComboComponentType.top = new FormAttachment(note, 10);
+		dataComboComponentType.width = 353;
 		comboComponentType.setLayoutData(dataComboComponentType);
 		int i = 0;
 		comboComponentType.add("View");
@@ -877,28 +799,21 @@ public class ImportUtilityEditor extends SAFREditorPart {
         comboComponentType.add(ComponentType.CobolCopyBook.getLabel());
         comboComponentType.setData(String.valueOf(i++), ComponentType.CobolCopyBook);
         
-        comboComponentType.addSelectionListener(makeComponentListener());
+        comboComponentType.addFocusListener(new FocusAdapter() {
 
-		return labelComponentType;
-	}
-	
-	private SelectionListener makeComponentListener() {
-		return new SelectionListener() {
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // no op
-            }
-
-            public void widgetSelected(SelectionEvent e) {
+            public void focusLost(FocusEvent e) {
 				if (comboComponentType.getSelectionIndex() != selectedComponentType) {
+buttonImport.setEnabled(false);
+					tableViewerXmlFiles.setAllChecked(false);
 					componentType = (ComponentType)comboComponentType.getData(String.valueOf(comboComponentType.getSelectionIndex()));
+buttonRefresh.setEnabled(true);
 
 					if (currentEnvID > 0l) {
 						tableViewerXmlFiles.refresh();
 						labelXmlFiles.setEnabled(true);
 
 						enableLocationWidgets(true);
-						enableFileTableButtons(true);
+						buttonImport.setEnabled(true);
 					}
 
 					if (tableViewerXmlFiles.getCheckedElements().length > 0
@@ -912,29 +827,34 @@ public class ImportUtilityEditor extends SAFREditorPart {
 					selectedComponentType = comboComponentType
 							.getSelectionIndex();
 				}
+loadComponentFiles();
+					tableViewerXmlFiles.refresh();
             }
-        };
+        
+		});
+		return labelComponentType;
 	}
 	
-
-	private Label addEnvironmentCombo() {
+private Label addEnvironmentCombo(Label labelComponentType) {
 		Label labelEnvironment = safrGuiToolkit.createLabel(
 				compositeComponents, SWT.NONE, "Target &Environment:");
 		FormData dataLabelEnvironment = new FormData();
 		dataLabelEnvironment.width = SWT.DEFAULT;
 		dataLabelEnvironment.left = new FormAttachment(0, 5);
-		dataLabelEnvironment.top = new FormAttachment(0, 13);
+		dataLabelEnvironment.top = new FormAttachment(labelComponentType, 10);
 		labelEnvironment.setLayoutData(dataLabelEnvironment);
 
 		comboEnvironmentViewer = safrGuiToolkit.createTableComboForComponents(
 				compositeComponents, ComponentType.Environment);
 		comboEnvironment = comboEnvironmentViewer.getTableCombo();
 		comboEnvironment.setData(SAFRLogger.USER, "Target Environment");                              
+comboEnvironment.setEnabled(true);
+
 		addEnvOpenEditorMenu();
 		
 		FormData dataComboEnvironment = new FormData();
 		dataComboEnvironment.left = new FormAttachment(labelEnvironment, 10);
-		dataComboEnvironment.top = new FormAttachment(0, 15);
+		dataComboEnvironment.top = new FormAttachment(comboComponentType, 10);
 		dataComboEnvironment.width = 375;
 		comboEnvironment.setLayoutData(dataComboEnvironment);
 		// load the data
@@ -960,21 +880,10 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 		comboEnvironmentViewer.setInput(envList);
 		
-		comboEnvironment.addSelectionListener(makeEnvSelectListener());
-
-		return labelEnvironment;
-	}
-
-    private SelectionListener makeEnvSelectListener() {
-		return new SelectionListener() {
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-                // no op
-            }
-
-            public void widgetSelected(SelectionEvent e) {
+		comboEnvironment.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
 				if (comboEnvironment.getSelectionIndex() != selectedEnvironment) {
-					EnvironmentQueryBean environmentQueryBean = (EnvironmentQueryBean) comboEnvironment
+					environmentQueryBean = (EnvironmentQueryBean) comboEnvironment
 							.getTable().getSelection()[0].getData();
 					if (environmentQueryBean != null) {
 						currentEnvID = environmentQueryBean.getId();
@@ -1018,7 +927,9 @@ public class ImportUtilityEditor extends SAFREditorPart {
 					selectedEnvironment = comboEnvironment.getSelectionIndex();
 				}
             }
-        };
+        
+		});
+		return labelEnvironment;
 	}
 
 	private void addEnvOpenEditorMenu()
@@ -1195,7 +1106,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 	@Override
 	public void setFocus() {
-		comboEnvironment.setFocus();
+		comboComponentType.setFocus();
 
 	}
 
@@ -1209,7 +1120,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 	}
 
-	public class XmlFilesTableLabelProvider implements ITableLabelProvider {
+	public class XmlFilesTableLabelProvider implements ITableLabelProvider, ITableColorProvider {
 
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -1251,6 +1162,29 @@ public class ImportUtilityEditor extends SAFREditorPart {
 
 		public void removeListener(ILabelProviderListener listener) {
 
+		}
+
+@Override
+		public Color getForeground(Object element, int columnIndex) {
+			ImportFile file = (ImportFile) element;
+            	if (file.getResult() == ActivityResult.CANCEL) {
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+                } 
+            	else if (file.getResult() == ActivityResult.FAIL) {
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+                } 
+            	else if (file.getResult() == ActivityResult.LOADERRORS) {
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+                }
+                else {
+                    return null;
+                }
+         }
+
+		@Override
+		public Color getBackground(Object element, int columnIndex) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 
 	}
@@ -1367,8 +1301,6 @@ public class ImportUtilityEditor extends SAFREditorPart {
 	}
 	
 	private void enableFileTableButtons(boolean enabled) {
-		buttonSelectAll.setEnabled(enabled);
-		buttonDeSelectAll.setEnabled(enabled);
 		buttonRefresh.setEnabled(enabled);
 	}
 	

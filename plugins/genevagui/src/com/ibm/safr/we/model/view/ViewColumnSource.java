@@ -608,7 +608,11 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	 */
 	public void setEffectiveDateLRField(LRField effectiveDateLRField) {
 		this.effectiveDateLRField = effectiveDateLRField;
-		effectiveDateLRFieldId = effectiveDateLRField.getId();
+		if(effectiveDateLRField != null) { 
+			effectiveDateLRFieldId = effectiveDateLRField.getId();
+		} else {
+			effectiveDateLRFieldId = null;
+		}
 		markModified();
 		view.makeViewInactive();
         view.markUpdated();

@@ -1329,7 +1329,7 @@ public class DB2LookupDAO implements LookupDAO {
 					+ "on a.environid=l.environid and l.destlrlfassocid=a.lrlfassocid "
 					+ "join " + schema + ".LRFIELD f "
 					+ "on l.environid=f.environid and a.logrecid=f.logrecid "
-					+ "where UPPER(l.name)= ? and f.environid= ?" ;
+					+ "where UPPER(l.name)= ? and l.validind = 1 and f.environid= ?" ;
 
 			PreparedStatement pst = null;
 			ResultSet rs = null;
