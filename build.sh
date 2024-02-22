@@ -36,3 +36,5 @@ if [ -d "products/com.ibm.safr.we.product/target" ]; then
 fi
 echo "Tycho Build starting..."
 mvn install
+echo "Post Build Script"
+./postbuild/postbuild.sh

@@ -15,7 +15,7 @@
 # under the License.
 
 # Add the JRE zip if built and variable set
-if [ -d "../products/com.ibm.safr.we.product/target/products" ]; then
+if [ -d "./products/com.ibm.safr.we.product/target/products" ]; then
     if [ ! -z $GERS_JRE ]; then
         echo "Add JRE from GERS_JRE"
         cd ../products/com.ibm.safr.we.product/target/products
