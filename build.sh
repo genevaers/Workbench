@@ -14,11 +14,16 @@
 # specific language governing permissions and limitations
 # under the License.
 # Get the Grammar repo if it is not there
-if [ ! -d "./GenevaERS-Grammar" ]; 
+if [ ! -d "./Grammar" ]; 
 then
     echo "Clone the grammar"
-    git clone https://github.com/genevaers/GenevaERS-Grammar.git GenevaERS-Grammar
-    cd ./GenevaERS-Grammar
+    if [[ ! -z "$GERS_GRAMMAR" ]]; then
+        echo "Cloning from $GERS_GRAMMAR"
+        git clone $GERS_GRAMMAR Grammar
+    else
+        git clone https://github.com/genevaers/Grammar.git Grammar
+    fi
+    cd ./Grammar
     mvn install
     cd ..
 else
@@ -31,3 +36,5 @@ if [ -d "products/com.ibm.safr.we.product/target" ]; then
 fi
 echo "Tycho Build starting..."
 mvn install
+echo "Post Build Script"
+./postbuild/postbuild.sh
