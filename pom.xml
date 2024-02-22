@@ -23,7 +23,7 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>4.20.0</version>
+	<version>4.20.1</version>
 	<groupId>org.genevaers</groupId>
 	<artifactId>wb</artifactId>
 	<packaging>pom</packaging>
@@ -135,7 +135,7 @@ under the License.
 						<artifact>
 							<groupId>org.genevaers</groupId>
 							<artifactId>target-platform</artifactId>
-							<version>4.20.0</version>
+							<version>4.20.1</version>
 						</artifact>
 					</target>
 					<environments>
