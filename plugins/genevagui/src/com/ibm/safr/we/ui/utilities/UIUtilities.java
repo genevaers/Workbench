@@ -1523,7 +1523,7 @@ public class UIUtilities {
         try {
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
-            	versionDetails += bundle.getVersion().toString() + " :  OS4";
+            	versionDetails += bundle.getVersion().toString();
             } else {
                 logger.log(Level.SEVERE, "Null getting version");            	
             }
