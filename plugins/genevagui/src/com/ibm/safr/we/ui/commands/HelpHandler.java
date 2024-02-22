@@ -39,7 +39,8 @@ public class HelpHandler extends AbstractHandler{
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		ReportUtils.openReportEditor(ReportType.HelpReport);
+		String url = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.HELP_URL, "");
+		Program.launch(url);
 		return null;
 	}
 	
