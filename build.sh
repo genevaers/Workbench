@@ -14,9 +14,12 @@
 # specific language governing permissions and limitations
 # under the License.
 # Get the Grammar repo if it is not there
-if [ ! -d "./Grammar" ]; 
+if [ ! -d "../Grammar" ]; 
 then
     echo "Clone the grammar"
+    BASEDIR=${PWD}
+    echo "Workbench location: ${BASEDIR}"
+    cd ..
     if [[ ! -z "$GERS_GRAMMAR" ]]; then
         echo "Cloning from $GERS_GRAMMAR"
         git clone $GERS_GRAMMAR Grammar
@@ -24,8 +27,9 @@ then
         git clone https://github.com/genevaers/Grammar.git Grammar
     fi
     cd ./Grammar
+    echo "Grammar location: ${PWD}"
     mvn install
-    cd ..
+    cd $BASEDIR
 else
     echo "Grammar repo in place"
 fi
