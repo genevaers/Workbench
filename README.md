@@ -33,6 +33,22 @@ Or for example within git bash you can enter
 ```
 export GERS_JARS=~/gersjars
 ```
+## GERS_GRAMMAR
+
+If you wish to point to a custom location for GenevaERS Grammar, a pre-requisite for the Workbench, set this environment variable to the location of your desired repo.
+
+```
+export GERS_GRAMMAR="https://github.com/genevaers/Grammar.git"
+```
+
+## GERS_PRE_SCRIPT or GERS_POST_SCRIPT
+
+If you wish to execute a custom script prior to or after the build process, set either of these environment variable to the location of your desired scripts.
+
+```
+export GERS_PRE_SCRIPT="C:\prescript.sh"
+export GERS_POST_SCRIPT="C:\postscript.sh"
+```
 
 ## GERS_JRE
 
