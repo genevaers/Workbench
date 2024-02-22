@@ -13,16 +13,24 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# Run Build scripts
+# Get the Grammar repo if it is not there
 
-echo "Test Grammar"
-./prebuild/Grammar.sh
-echo "Configure Build"
-./prebuild/configBuild.sh
-if [ -d "products/com.ibm.safr.we.product/target" ]; then
-    mvn clean
+if [ ! -d "../Grammar" ]; 
+then
+    echo "Clone the grammar"
+    BASEDIR=${PWD}
+    echo "Workbench location: ${BASEDIR}"
+    cd ..
+    if [[ ! -z "$GERS_GRAMMAR" ]]; then
+        echo "Cloning from $GERS_GRAMMAR"
+        git clone $GERS_GRAMMAR Grammar
+    else
+        git clone https://github.com/genevaers/Grammar.git Grammar
+    fi
+    cd ./Grammar
+    echo "Grammar location: ${PWD}"
+    mvn install
+    cd $BASEDIR
+else
+    echo "Grammar repo in place"
 fi
-echo "Tycho Build starting..."
-mvn install
-echo "Post Build Script"
-./postbuild/postbuild.sh
