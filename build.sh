@@ -15,7 +15,11 @@
 # under the License.
 # Run Build scripts
 
-echo "Test Grammar"
+if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
+    echo "Running custom pre-build script from $GERS_PRE_SCRIPT"
+    $GERS_PRE_SCRIPT
+fi
+echo "Test for Grammar"
 ./prebuild/Grammar.sh
 echo "Configure Build"
 ./prebuild/configBuild.sh
@@ -26,3 +30,7 @@ echo "Tycho Build starting..."
 mvn install
 echo "Post Build Script"
 ./postbuild/postbuild.sh
+if [[ ! -z "$GERS_POST_SCRIPT" ]]; then
+    echo "Running custom post-build script from $GERS_POST_SCRIPT"
+    $GERS_POST_SCRIPT
+fi
