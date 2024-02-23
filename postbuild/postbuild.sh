@@ -30,3 +30,7 @@ if [ -d "./products/com.ibm.safr.we.product/target/products" ]; then
 else
     echo "Build Failed"
 fi
+if [[ ! -z "$GERS_POST_SCRIPT" ]]; then
+    echo "Running custom post-build script from $GERS_POST_SCRIPT"
+    $GERS_POST_SCRIPT
+fi

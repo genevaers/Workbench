@@ -29,8 +29,3 @@ fi
 echo "Tycho Build starting..."
 mvn install
 echo "Post Build Script"
-./postbuild/postbuild.sh
-if [[ ! -z "$GERS_POST_SCRIPT" ]]; then
-    echo "Running custom post-build script from $GERS_POST_SCRIPT"
-    $GERS_POST_SCRIPT
-fi
