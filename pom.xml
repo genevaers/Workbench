@@ -43,7 +43,7 @@ under the License.
 		<module>plugins</module>
 		<module>products</module>
 		<module>releng</module>
-		<module>prebuild</module>
+		<module>postbuild</module>
 	</modules>
 
 	<dependencies>
