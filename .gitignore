@@ -13,6 +13,7 @@ plugins/nebulatablecombo/target/**
 ccb2lr/src/main/antlr4/org/genevaers/ccb2lr/grammar/.antlr/**
 **/.polyglot*
 **/.settings/**
+!plugins/genevagui/.settings/*
 **/.classpath*
 **/workspace/.metadata
 **/*.tycho
