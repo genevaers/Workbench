@@ -15,6 +15,10 @@
 # under the License.
 # Run Build scripts
 
+if [ ! -z "$1" ]; then
+    sed -i -e s/\$\{user.name\}/$1/ prebuild/resources/wb.properties
+fi
+
 if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
     echo "Running custom pre-build script from $GERS_PRE_SCRIPT"
     $GERS_PRE_SCRIPT

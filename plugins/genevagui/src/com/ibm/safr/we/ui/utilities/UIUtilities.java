@@ -21,6 +21,10 @@ package com.ibm.safr.we.ui.utilities;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Properties;
 
 import org.eclipse.core.commands.Command;
 import org.eclipse.core.commands.State;
@@ -1523,7 +1528,7 @@ public class UIUtilities {
         try {
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
-            	versionDetails += bundle.getVersion().toString();
+            	versionDetails += bundle.getVersion().toString() + getTimeStamp();
             } else {
                 logger.log(Level.SEVERE, "Null getting version");            	
             }
@@ -1538,6 +1543,20 @@ public class UIUtilities {
 	public static String getVersionDetails() {
 		return getVersion();
 	}
+
+	public static String getTimeStamp() {
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		Properties properties = new Properties();
+        String ver = "";
+		try (InputStream resourceStream = loader.getResourceAsStream("wb.properties")) {
+			properties.load(resourceStream);
+            ver = " (" + properties.getProperty("builder") + " " + properties.getProperty("timestamp")  + ")";
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        return ver;
+    }
+
 
 	// Return the width of the widest button
 	public static int computePreferredButtonWidth(List<Button> buttons) {
