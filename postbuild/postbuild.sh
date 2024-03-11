@@ -20,7 +20,7 @@ if [ -d "../products/com.ibm.safr.we.product/target/products" ]; then
         echo "Add JRE from GERS_JRE"
         cd ../products/com.ibm.safr.we.product/target/products
         mkdir jre
-        cp -R $GERS_JRE jre
+        cp -R $GERS_JRE/* jre
         7z a wb-win32.win32.x86_64.zip jre/
         cd ..
     else
