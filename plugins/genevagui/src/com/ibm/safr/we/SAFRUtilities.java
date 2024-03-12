@@ -209,10 +209,10 @@ public class SAFRUtilities {
 
 	public static SecretKeySpec createSecretKey()
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] salt = new String(ClientConstants.SALTVALUE).getBytes();
+		byte[] salt = ClientConstants.getSaltvalue().getBytes(); 
 		int iterationCount = 400;
 		int keyLength = 128;
-		String mkey = ClientConstants.MKEYVALUE;
+		String mkey = ClientConstants.getMkeyvalue();
 		SecretKeyFactory keyFactory = SecretKeyFactory
 				.getInstance("PBKDF2WithHmacSHA512");
 		PBEKeySpec keySpec = new PBEKeySpec(mkey.toCharArray(), salt,

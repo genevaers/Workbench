@@ -25,6 +25,15 @@ package com.ibm.safr.we.constants;
  * 
  */
 public class ClientConstants{
-	public static final String SALTVALUE = "ICWasHere";
-	public static final String MKEYVALUE = "GERSForever";
+
+	private static final String SALTVALUE = "ICWasHere";
+	private static final String MKEYVALUE = "GERSForever";
+
+	public static String getMkeyvalue() {
+		return MKEYVALUE;
+	}
+
+	public static String getSaltvalue() {
+		return SALTVALUE;
+	}
 }
