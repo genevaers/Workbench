@@ -42,6 +42,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.ibm.safr.we.constants.ClientConstants;
 import com.ibm.safr.we.exceptions.SAFRFatalException;
 
 /**
@@ -208,10 +209,10 @@ public class SAFRUtilities {
 
 	public static SecretKeySpec createSecretKey()
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] salt = new String("ICWasHere").getBytes();
+		byte[] salt = ClientConstants.getSaltvalue().getBytes(); 
 		int iterationCount = 400;
 		int keyLength = 128;
-		String mkey = "GERSForever";
+		String mkey = ClientConstants.getMkeyvalue();
 		SecretKeyFactory keyFactory = SecretKeyFactory
 				.getInstance("PBKDF2WithHmacSHA512");
 		PBEKeySpec keySpec = new PBEKeySpec(mkey.toCharArray(), salt,
