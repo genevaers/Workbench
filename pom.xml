@@ -38,7 +38,6 @@ under the License.
 
 	<modules>
 		<module>prebuild</module>
-		<module>sycadas</module>
 		<module>ccb2lr</module>
 		<module>plugins</module>
 		<module>products</module>
@@ -97,6 +96,41 @@ under the License.
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-csv</artifactId>
 			<version>1.10.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>repository</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>grammar</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>compilers</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>genevaio</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>utilities</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>runcontrolgenerator</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>runcontrolanalyser</artifactId>
+			<version>1.0.2</version>
 		</dependency>
 	</dependencies>
 

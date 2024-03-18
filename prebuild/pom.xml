@@ -41,8 +41,8 @@ under the License.
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-	   	<timestamp>${maven.build.timestamp}</timestamp>
-   		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 	</properties>
 
 	<dependencies>
@@ -78,6 +78,100 @@ under the License.
 									<overWrite>true</overWrite>
 									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
 								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>repository</artifactId>
+									<version>1.0.2</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>compilers</artifactId>
+									<version>1.0.2</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>grammar</artifactId>
+									<version>1.0.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>genevaio</artifactId>
+									<version>1.0.2</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>utilities</artifactId>
+									<version>1.0.2</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.genevaers</groupId>
+									<artifactId>runcontrolgenerator</artifactId>
+									<version>1.0.2</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.google.flogger</groupId>
+									<artifactId>flogger</artifactId>
+									<version>0.8</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.google.flogger</groupId>
+									<artifactId>flogger-system-backend</artifactId>
+									<version>0.8</version>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.antlr</groupId>
+									<artifactId>antlr4-runtime</artifactId>
+									<version>4.11.1</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.postgresql</groupId>
+									<artifactId>postgresql</artifactId>
+									<version>42.2.16</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-core</artifactId>
+									<version>2.15.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-databind</artifactId>
+									<version>2.15.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.dataformat</groupId>
+									<artifactId>jackson-dataformat-yaml</artifactId>
+									<version>2.15.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.fasterxml.jackson.core</groupId>
+									<artifactId>jackson-annotations</artifactId>
+									<version>2.15.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -87,23 +181,23 @@ under the License.
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.3.1</version>
 				<executions>
-				<execution>
-					<id>copy-resources</id>
-					<!-- here the phase you need -->
-					<phase>validate</phase>
-					<goals>
-					<goal>copy-resources</goal>
-					</goals>
-					<configuration>
-					<outputDirectory>${basedir}/../plugins/genevagui/target/classes</outputDirectory>
-					<resources>          
-						<resource>
-						<directory>resources</directory>
-						<filtering>true</filtering>
-						</resource>
-					</resources>              
-					</configuration>            
-				</execution>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/../plugins/genevagui/target/classes</outputDirectory>
+							<resources>
+								<resource>
+									<directory>resources</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
