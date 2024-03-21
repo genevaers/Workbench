@@ -224,7 +224,7 @@ private boolean isFormatView(ViewReportData vw){
 		return div(
 					h4("Column Mappings"),
 					getColumnMappings(src.getColumnMappings())
-				);
+				).withStyle("overflow-x: scroll").withStyle("overflow-y: scroll");
 	}
 
 	private DomContent getInputDiv(ViewSourceReportData src) {

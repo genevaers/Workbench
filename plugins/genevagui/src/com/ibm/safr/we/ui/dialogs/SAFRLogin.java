@@ -18,7 +18,6 @@ package com.ibm.safr.we.ui.dialogs;
  */
 
 import org.genevaers.ccb2lr.Copybook2LR;
-import org.genevaers.sycadas.ExtractSycada;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +27,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+
+import org.genevaers.runcontrolgenerator.workbenchinterface.*;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -690,7 +691,7 @@ public class SAFRLogin extends TitleAreaDialog {
 			return;
 		} 
 
-	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + ExtractSycada.getVersion());// + ViewActivator.getCompilerVersion());
+	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + WorkbenchCompiler.getVersion());// + ViewActivator.getCompilerVersion());
 	    SAFRLogger.logAll(logger, Level.INFO, "CCB2LR version is " + Copybook2LR.getVersion());// + ViewActivator.getCompilerVersion());
 
 		setReturnCode(returnId);

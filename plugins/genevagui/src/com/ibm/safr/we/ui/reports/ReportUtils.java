@@ -43,6 +43,8 @@ import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 
 public class ReportUtils {
+	private static String text;
+	
 	public static void openReportEditor(ReportType type) {
 		List<Integer> reportIds = new ArrayList<Integer>();
 		SAFRComponent model = null;
@@ -50,13 +52,19 @@ public class ReportUtils {
 		if (page.getActivePart() instanceof MetadataView) {
 			getIdsFromMetadataView(reportIds);
 		} else if (page.getActivePart() instanceof SAFREditorPart) {
-			getIdFromPageModel(reportIds, page);
+			if(type != ReportType.LogicTable) {
+				getIdFromPageModel(reportIds, page);
+			}
 		} else {
 			//We should say something here?
-			return;
+			if (type == ReportType.HelpReport || type == ReportType.LogicTable) {
+				//continue
+			} else {
+				return;
+			}
 		}
 		// open the report only if a parameter is available.
-		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport) {
+		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport || type == ReportType.LogicTable) {
 			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			try {
 				shell.setCursor(shell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));

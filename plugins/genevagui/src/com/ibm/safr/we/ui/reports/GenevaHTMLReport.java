@@ -55,7 +55,7 @@ public abstract class GenevaHTMLReport {
 							),
 							body(
 									bodyContent()
-							)).renderFormatted());
+							).withStyle("overflow-x: scroll")).renderFormatted());
 			fw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

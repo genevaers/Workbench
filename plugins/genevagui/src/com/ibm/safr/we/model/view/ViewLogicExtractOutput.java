@@ -23,15 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractOutputSycada;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
-import org.genevaers.sycadas.SyntaxChecker;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
+import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
-import com.ibm.safr.we.data.WESycadaDataProvider;
+import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 
@@ -44,7 +43,7 @@ public class ViewLogicExtractOutput {
     private SAFRViewActivationException vaException;
     private List<ViewLogicDependency> viewLogicDependencies;
 
-	private ExtractOutputSycada extractOutputSycada;
+	private WBExtractOutputCompiler extractOutputCompiler;
     
     public ViewLogicExtractOutput(View view, 
         SAFRViewActivationException vaException, 
@@ -55,34 +54,34 @@ public class ViewLogicExtractOutput {
         this.viewLogicDependencies = viewLogicDependencies;
     }
 
-    public void compile(ViewSource source, WESycadaDataProvider dataProvider) {
+    public void compile(ViewSource source, WECompilerDataProvider dataProvider) {
         compileExtractOutput(source, dataProvider);
         extractLogicDependencies(source);        
     }
 
-    void compileExtractOutput(ViewSource source, WESycadaDataProvider dataProvider) {
+    void compileExtractOutput(ViewSource source, WECompilerDataProvider dataProvider) {
         try {
-    		extractOutputSycada = (ExtractOutputSycada) SycadaFactory.getProcessorFor(SycadaType.EXTRACT_OUTPUT);
-    		extractOutputSycada.setDataProvider(dataProvider);
-    		extractOutputSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
+    		extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
+    		extractOutputCompiler.setDataProvider(dataProvider);
+    		//extractOutputCompiler.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
     		try {
     			if(source.getExtractRecordOutput() != null)
-    				extractOutputSycada.syntaxCheckLogic(source.getExtractRecordOutput());
+    				extractOutputCompiler.syntaxCheckLogic(source.getExtractRecordOutput());
     		} catch (IOException e) {
     			e.printStackTrace();
     		}
-    		if(extractOutputSycada.hasSyntaxErrors())
-    			vaException.addCompilerErrorsNew(extractOutputSycada.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
-    		extractOutputSycada.generateDependencies();
-    		if(extractOutputSycada.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractOutputSycada.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
+    		if(extractOutputCompiler.hasSyntaxErrors())
+    			vaException.addCompilerErrorsNew(extractOutputCompiler.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
+    		extractOutputCompiler.generateDependencies();
+    		if(extractOutputCompiler.hasDataErrors()) 
+    			vaException.addCompilerErrorsNew(extractOutputCompiler.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         } catch (SAFRCompilerParseException ee) {
         } 
     }
 
     void extractLogicDependencies(ViewSource source) {
     	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractOutputSycada, source, LogicTextType.Extract_Record_Output);
+    	vle.extractDependencies(extractOutputCompiler, source, LogicTextType.Extract_Record_Output);
 	}
     
 }

@@ -767,7 +767,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                     validateERO();
                 }
 				MessageDialog.openInformation(getSite().getShell(),
-						"Logic Text", "The Logic Text is Valid.");
+						"Logic Text", "The Logic Text is Valid.\n");
 			}	
 			closeValidationLog(getSite().getPage());
 		} catch (SAFRViewActivationException sva) {
@@ -840,12 +840,12 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 
 	/**
 	 * Validates the Extract column assignment in this editor.
+	 * @return 
 	 * 
 	 * @throws SAFRException
 	 */
 	private void validateECA() throws SAFRException {
-		((LogicTextEditorInput) getEditorInput()).getViewColumnSource()
-				.validateExtractColumnAssignment(text.getText());
+		((LogicTextEditorInput) getEditorInput()).getViewColumnSource().validateExtractColumnAssignment(text.getText());
 	}
 
 	/**

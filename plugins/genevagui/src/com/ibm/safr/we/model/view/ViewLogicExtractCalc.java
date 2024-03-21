@@ -29,13 +29,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.ExtractColumnSycada;
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.LookupRef;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
+import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
@@ -43,7 +41,7 @@ import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WESycadaDataProvider;
+import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRCompilerException;
 import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -62,7 +60,7 @@ public class ViewLogicExtractCalc {
 
 	private Set<Integer> CTCols;
 
-	private ExtractSycada extractColumnSycada;
+	private WBExtractColumnCompiler extractColumnCompiler;
 
 	private int depCounter;
 
@@ -76,16 +74,16 @@ public class ViewLogicExtractCalc {
         this.viewLogicDependencies = viewLogicDependencies;
     }
     
-    public void compile(ViewSource source, Set<Integer> cTCols, WESycadaDataProvider dataProvider) {
+    public void compile(ViewSource source, Set<Integer> cTCols, WECompilerDataProvider dataProvider) {
         CTCols = cTCols;
         setAllSourceColumnInfo(source);
         
-		extractColumnSycada = (ExtractColumnSycada) SycadaFactory.getProcessorFor(SycadaType.EXTRACT_COLUMN);
-		extractColumnSycada.setDataProvider(dataProvider);
-		extractColumnSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
+		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
+		extractColumnCompiler.setDataProvider(dataProvider);
+	//	extractColumnCompiler.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             processExtractCalculation(source, col);
-            extractColumnSycada.clearDependencies();
+            WorkbenchCompiler.reset();
         }
     }
     
@@ -320,12 +318,12 @@ public class ViewLogicExtractCalc {
         try {
             //compiler.compileExtractColumn(col.getColumnNo(), formulaToCompile);
             //we want the same one for each column
-    		extractColumnSycada.syntaxCheckLogic(formulaToCompile);
-    		if(extractColumnSycada.hasSyntaxErrors())
-    			vaException.addCompilerErrorsNew(extractColumnSycada.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-    		extractColumnSycada.generateDependencies();
-    		if(extractColumnSycada.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractColumnSycada.getDataErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+    		extractColumnCompiler.syntaxCheckLogic(formulaToCompile);
+    		if(extractColumnCompiler.hasSyntaxErrors())
+    			vaException.addCompilerErrorsNew(extractColumnCompiler.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+    		extractColumnCompiler.generateDependencies();
+    		if(extractColumnCompiler.hasDataErrors()) 
+    			vaException.addCompilerErrorsNew(extractColumnCompiler.getDataErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
         } catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -333,7 +331,7 @@ public class ViewLogicExtractCalc {
 
     protected void extractDependencies(ViewColumnSource colSource) {
     	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractColumnSycada, colSource, LogicTextType.Extract_Column_Assignment);
+    	vle.extractDependencies(extractColumnCompiler, colSource, LogicTextType.Extract_Column_Assignment);
 	}
 	
 }

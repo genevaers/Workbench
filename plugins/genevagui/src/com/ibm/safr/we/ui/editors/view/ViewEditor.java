@@ -995,7 +995,7 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				try {
 					// clear previous activation errors first
 					activateException = null;
-					view.activate();
+					view.activate(getSite());
 					activated = true;
 					// view activated without messages so close logView
 					closeActivationLog();

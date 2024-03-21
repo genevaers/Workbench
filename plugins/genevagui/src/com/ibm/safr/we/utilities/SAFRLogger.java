@@ -99,7 +99,8 @@ public class SAFRLogger {
         return new Formatter () {
             @Override
             public String format(LogRecord record) {
-                if (record.getParameters() != null && record.getParameters()[0].equals(Boolean.valueOf(true))) {
+//                if (record.getParameters() != null && record.getParameters()[0].equals(Boolean.valueOf(true))) {
+                if (record.getParameters() != null ) {
                     String result =  record.getLevel() + ": " + record.getMessage() + SAFRUtilities.LINEBREAK;
                     return result;                        
                 } else {

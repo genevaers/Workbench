@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.ui.IWorkbenchPartSite;
+
 import com.ibm.safr.we.SAFRImmutableList;
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
@@ -1996,16 +1998,18 @@ public class View extends SAFRActivatedComponent {
      */
     public void batchActivate() throws DAOException, SAFRException {
         this.batchActivated = true;
-        activate();
+        activate(null);
     }
 
     /**
      * Invoke activation 
+     * @param iWorkbenchPartSite 
      * 
      * @throws DAOException, SAFRException
      */ 
-    public void activate() throws DAOException, SAFRException {
+    public void activate(IWorkbenchPartSite iWorkbenchPartSite) throws DAOException, SAFRException {
         ViewActivator activator = new ViewActivator(this);
+        ViewActivator.setSite(iWorkbenchPartSite);
         activator.activate();
     }
     

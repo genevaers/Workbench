@@ -795,6 +795,7 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	 * 
 	 * @param logicText
 	 *            The format record filter logic text to be validated.
+	 * @return 
 	 * @throws DAOException
 	 * @throws SAFRException
 	 *             SAFRValidation exception will be thrown with a list of

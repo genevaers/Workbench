@@ -36,6 +36,8 @@ import org.eclipse.ui.IWorkbenchPartSite;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
+
 import com.ibm.safr.we.constants.ComponentType;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.model.Environment;
@@ -317,8 +319,7 @@ public class ApplicationMediator {
                 + UIUtilities.getComboString(curEnvironment.getName(),
                         curEnvironment.getId());
 
-        statusLineMsg += "   Compiler: Sycada"; //+ ViewActivator.getCompilerVersion(); sort later                
-        statusLineMsg += "     ";
+        statusLineMsg += "   Compiler: " + WorkbenchCompiler.getVersion();
         return statusLineMsg;
     }
 

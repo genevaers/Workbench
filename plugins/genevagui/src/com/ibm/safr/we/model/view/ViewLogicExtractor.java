@@ -21,8 +21,8 @@ package com.ibm.safr.we.model.view;
 import java.util.List;
 import java.util.Set;
 
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.LookupRef;
+import org.genevaers.runcontrolgenerator.workbenchinterface.LookupRef;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.constants.LogicTextType;
@@ -44,13 +44,13 @@ public class ViewLogicExtractor {
     //We do need the lookup ids, lfpf assocs, and exit ids.
     //There is code checking if fields are used before allowing them to be deleted.
     //As part of LR management and LR delete.
-    public void extractDependencies(ExtractSycada extractSycada, SAFRComponent comp, LogicTextType logicType) {
+    public void extractDependencies(WorkbenchCompiler extractCompiler, SAFRComponent comp, LogicTextType logicType) {
         depCounter=1;
-        //System.out.println(extractSycada.getDependenciesAsString());
-       	extractSycada.getLFPFAssocIDs().forEach(lfpf -> addLfPfAssoc(lfpf, comp, logicType));
-        extractSycada.getExitIDs().forEach(e -> addExitId(e, comp, logicType)); 
-        extractSycada.getFieldIDs().forEach(f -> addField(comp, f, logicType));
-        extractSycada.getLookupsStream().forEach(lkref -> addLookupRef(comp, lkref, logicType));
+        //System.out.println(extractCompiler.getDependenciesAsString());
+       	extractCompiler.getLFPFAssocIDs().forEach(lfpf -> addLfPfAssoc(lfpf, comp, logicType));
+        extractCompiler.getExitIDs().forEach(e -> addExitId(e, comp, logicType)); 
+        extractCompiler.getFieldIDs().forEach(f -> addField(comp, f, logicType));
+        extractCompiler.getLookupsStream().forEach(lkref -> addLookupRef(comp, lkref, logicType));
 	}
 	
 	private void addLookupRef(SAFRComponent comp, LookupRef lkref, LogicTextType logicType) {

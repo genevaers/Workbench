@@ -201,6 +201,7 @@ public class ActivationLogViewNew extends ViewPart {
 			ActivateViewsEditor activateViewsEditor = null;
 			errorMap.clear();
 			viewActivationLog = null;
+			ViewActivator.setSite(editor.getSite());
 			if (editor instanceof ViewEditor) {
                 vEditor = (ViewEditor) editor;			    
 				setPartName("View Activation Log (" + 

@@ -22,9 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.FormatCalculationSyntaxChecker;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
+import org.genevaers.runcontrolgenerator.workbenchinterface.*;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
@@ -140,7 +138,7 @@ public class ViewLogicFormatCalc {
     	//and is not ALPHANUMERIC - which is checked within the compiler at the moment
     	//
         if (!col.isSortKey() && view.isFormatPhaseInUse() && col.getDataTypeCode().getGeneralId() != Codes.ALPHANUMERIC) {
-    		formatCalculationChecker = (FormatCalculationSyntaxChecker) SycadaFactory.getProcessorFor(SycadaType.FORMAT_CALCULATION);
+    		formatCalculationChecker = (FormatCalculationSyntaxChecker) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
     		String calc = col.getFormatColumnCalculation();
     		if(calc != null && calc.length() > 0) {
     			CTCols.add(col.getColumnNo());

@@ -40,6 +40,7 @@ import com.ibm.safr.we.ui.reports.EnvironmentSecurityReportGenerator;
 import com.ibm.safr.we.ui.reports.HelpReport;
 import com.ibm.safr.we.ui.reports.IReportGenerator;
 import com.ibm.safr.we.ui.reports.LRReportData;
+import com.ibm.safr.we.ui.reports.LogicTableReportGenerator;
 import com.ibm.safr.we.ui.reports.LogicalRecordReportGenerator;
 import com.ibm.safr.we.ui.reports.LookupPathReportGenerator;
 import com.ibm.safr.we.ui.reports.UserGroupsReportGenerator;
@@ -54,6 +55,7 @@ public class ReportEditorInput implements IEditorInput {
 	String dpReportParam;
 	ReportType reportType;
 	IReportGenerator reportGenerator;
+	String data;
 
 	public ReportEditorInput(List<Integer> reportParams, ReportType reportType) {
 		this.reportParams = reportParams;
@@ -69,7 +71,9 @@ public class ReportEditorInput implements IEditorInput {
 			} else if (reportType.equals(ReportType.LookupPath)) {
 					reportGenerator = new LookupPathReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.HelpReport)) {
-					reportGenerator = new HelpReport(reportParams);
+				reportGenerator = new HelpReport(reportParams);
+			} else if (reportType.equals(ReportType.LogicTable)) {
+				reportGenerator = new LogicTableReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.ViewColumnPICReport)) {
 					reportGenerator = new ViewColumnPICReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.EnvironmentSecurityById)) {
@@ -177,4 +181,15 @@ public class ReportEditorInput implements IEditorInput {
 		return reportGenerator.getHtmlUrl();
 	}
 
+	public String getReportText() {
+		return reportGenerator.getHtmlUrl();
+	}
+	
+	public void setData(String d) {
+		data = d;
+	}
+	
+	public String getData() {
+		return data;
+	}
 }

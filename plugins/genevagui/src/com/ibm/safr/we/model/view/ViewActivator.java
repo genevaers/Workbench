@@ -27,15 +27,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractFilterSycada;
-import org.genevaers.sycadas.ExtractColumnSycada;
-import org.genevaers.sycadas.ExtractOutputSycada;
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.FormatCalculationSyntaxChecker;
-import org.genevaers.sycadas.FormatFilterSyntaxChecker;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.FormatFilterSyntaxChecker;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
+
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.IWorkbenchPartSite;
+
 
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
@@ -44,8 +43,7 @@ import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WESycadaDataProvider;
-import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
+import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
@@ -63,7 +61,8 @@ public class ViewActivator {
     private SAFRViewActivationException vaException = new SAFRViewActivationException(view);
 
 	private Set<Integer> CTCols;
-	private WESycadaDataProvider dataProvider;
+	private WECompilerDataProvider dataProvider;
+	private static IWorkbenchPartSite siteRef;
 
     public ViewActivator(View view) {
         super();
@@ -75,11 +74,10 @@ public class ViewActivator {
     }    
     
     static public String getNewCompilerVersion() {
-        return ExtractSycada.getVersion();          
+        return WorkbenchCompiler.getVersion();          
     }
     
     static public String getCompilerVersion() {
-        SAFRPreferences preferences = new SAFRPreferences();
             return getNewCompilerVersion();
     }
 
@@ -88,6 +86,9 @@ public class ViewActivator {
     }
     
     
+	public static void setSite(IWorkbenchPartSite site) {
+		siteRef = site;
+	}
     /**
      * Invoke activation 
      * 
@@ -95,6 +96,13 @@ public class ViewActivator {
      */ 
     public void activate() throws DAOException, SAFRException {
         SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
+        SAFRLogger.logAllSeparator(logger, Level.INFO, "My new Message");
+        WorkbenchCompiler wf = new WorkbenchCompiler();
+        SAFRLogger.logAllSeparator(logger, Level.INFO, wf.greetings());
+//		MessageDialog.openError(siteRef.getShell(),
+//				wf.greetings(),
+//                "Acivate");
+        
         vaException = new SAFRViewActivationException(view);   
         try {
             activateNew();
@@ -391,7 +399,7 @@ public class ViewActivator {
 
 
 	protected void compileViewSources() {
-		dataProvider = new WESycadaDataProvider();
+		dataProvider = new WECompilerDataProvider();
 		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
 		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
 		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
@@ -428,8 +436,7 @@ public class ViewActivator {
         // ONLY if format phase is ON
 		if (view.isFormatPhaseInUse()) {
 			if (view.getFormatRecordFilter() != null) {
-				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) SycadaFactory
-						.getProcessorFor(SycadaType.FORMAT_FILTER);
+				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) WBCompilerFactory					.getProcessorFor(WBCompilerType.FORMAT_FILTER);
 				formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
 				if (formatFilterChecker.hasSyntaxErrors()) {
 					vaException.addCompilerErrorsNew(
@@ -481,6 +488,7 @@ public class ViewActivator {
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
         }        
     }
+
     
     /**
      * Activate this view using the old compiler

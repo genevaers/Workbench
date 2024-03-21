@@ -20,21 +20,25 @@ package com.ibm.safr.we.model.view;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractFilterSycada;
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
+import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
+import org.genevaers.repository.*;
 
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WESycadaDataProvider;
+import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
+import com.ibm.safr.we.model.Code;
+import com.ibm.safr.we.model.LRField;
+import com.ibm.safr.we.model.LogicalRecord;
+import com.ibm.safr.we.model.SAFRApplication;
+import com.ibm.safr.we.model.SAFRFactory;
 
 public class ViewLogicExtractFilter {
 
@@ -44,7 +48,7 @@ public class ViewLogicExtractFilter {
     private SAFRViewActivationException vaException;
     private List<ViewLogicDependency> viewLogicDependencies;
 
-	private ExtractSycada extractFilterSycada;
+	private WBExtractFilterCompiler extractFilterCompiler;
 
     
     public ViewLogicExtractFilter(View view, 
@@ -56,7 +60,7 @@ public class ViewLogicExtractFilter {
         this.viewLogicDependencies = viewLogicDependencies;
     } 
 
-    public void compile(ViewSource source, WESycadaDataProvider dataProvider) throws DAOException, SAFRException, SAFRViewActivationException, IOException {
+    public void compile(ViewSource source, WECompilerDataProvider dataProvider) throws DAOException, SAFRException, SAFRViewActivationException, IOException {
 		if(source.getExtractRecordFilter() != null) {
 	        compileExtractFilter(source, dataProvider);
 	        if(vaException.hasErrorOccured()) {
@@ -67,26 +71,70 @@ public class ViewLogicExtractFilter {
 		}
     }
 
-    protected void compileExtractFilter(ViewSource source, WESycadaDataProvider dataProvider) {
+    protected void compileExtractFilter(ViewSource source, CompilerDataProvider dataProvider) {
         // Compile extract record filter.
-		extractFilterSycada = (ExtractSycada) SycadaFactory.getProcessorFor(SycadaType.EXTRACT_FILTER);
-		extractFilterSycada.setDataProvider(dataProvider);
-		extractFilterSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
+		extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
+		extractFilterCompiler.setDataProvider(dataProvider);
+		SAFRFactory factory = SAFRApplication.getSAFRFactory();
+		LogicalRecord lr = factory.getLogicalRecordFromLRLFAssociation(source.getLrFileAssociationId(), source.getEnvironmentId());
+		addRcgLrToCompiler(lr);
+		
 		try {
-			extractFilterSycada.syntaxCheckLogic(source.getExtractRecordFilter());
+			extractFilterCompiler.syntaxCheckLogic(source.getExtractRecordFilter());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(extractFilterSycada.hasSyntaxErrors())
-			vaException.addCompilerErrorsNew(extractFilterSycada.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
-		extractFilterSycada.generateDependencies();
-		if(extractFilterSycada.hasDataErrors()) 
-			vaException.addCompilerErrorsNew(extractFilterSycada.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
+		if(extractFilterCompiler.hasSyntaxErrors())
+			vaException.addCompilerErrorsNew(extractFilterCompiler.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
+		extractFilterCompiler.generateDependencies();
+		if(extractFilterCompiler.hasDataErrors()) 
+			vaException.addCompilerErrorsNew(extractFilterCompiler.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
     }
 
-    protected void extractLogicDependencies(ViewSource source) {
+    private org.genevaers.repository.components.LogicalRecord addRcgLrToCompiler(LogicalRecord lr) {
+		org.genevaers.repository.components.LogicalRecord rcgLR = makeLrAndSaveInRcgRepository(lr);
+		for( LRField f :lr.getLRFields()) {
+			makeFieldAndAddToLR(lr, f);
+		}
+		return rcgLR;
+	}
+
+	private void makeFieldAndAddToLR(LogicalRecord lr, LRField f) {
+		org.genevaers.repository.components.LRField lrf = new org.genevaers.repository.components.LRField();
+		lrf.setComponentId(f.getId());
+		Code type = f.getDataTypeCode();
+		if(type != null) {
+			lrf.setDatatype(org.genevaers.repository.components.enums.DataType.values()[type.getGeneralId()]);
+		}
+		Code dt = f.getDateTimeFormatCode();
+		if(dt != null) {
+			lrf.setDateTimeFormat(org.genevaers.repository.components.enums.DateCode.values()[dt.getGeneralId()]);
+		}
+		int l = f.getLength();
+		lrf.setLength((short)l);
+		lrf.setLrID(lr.getId());
+		lrf.setName(f.getName());
+		int d = f.getDecimals();
+		lrf.setNumDecimalPlaces((short)d);
+		int s = f.getScaling();
+		lrf.setRounding((short)s);
+		lrf.setSigned(f.isSigned());
+		int p = f.getPosition();
+		lrf.setStartPosition((short)p);
+		extractFilterCompiler.addField(lrf);
+	}
+
+	private org.genevaers.repository.components.LogicalRecord makeLrAndSaveInRcgRepository(LogicalRecord lr) {
+		org.genevaers.repository.components.LogicalRecord rcgLR = new org.genevaers.repository.components.LogicalRecord();
+		rcgLR.setComponentId(lr.getId());
+		rcgLR.setName(lr.getName());
+		extractFilterCompiler.addLR(rcgLR);
+		return rcgLR;
+	}
+
+	protected void extractLogicDependencies(ViewSource source) {
     	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractFilterSycada, source, LogicTextType.Extract_Record_Filter);
+    	vle.extractDependencies(extractFilterCompiler, source, LogicTextType.Extract_Record_Filter);
     }
 
 }
