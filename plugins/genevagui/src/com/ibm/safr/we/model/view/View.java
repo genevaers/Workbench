@@ -1320,6 +1320,9 @@ public class View extends SAFRActivatedComponent {
         for (ViewSource viewSource : viewSources.getActiveItems()) {
             addViewColumnSource(vc, viewSource);
         }
+        vc.setExtractAreaCode(SAFRApplication.getSAFRFactory()
+                .getCodeSet(CodeCategories.EXTRACT)
+                .getCode(Codes.DT_AREA));
         vc.setId(dummyColumnId++ * -1);
         makeViewInactive();
         markUpdated();
