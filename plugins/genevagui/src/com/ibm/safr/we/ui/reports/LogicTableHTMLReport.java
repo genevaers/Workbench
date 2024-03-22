@@ -24,6 +24,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
+
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.model.Code;
@@ -50,14 +52,12 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 	public LogicTableHTMLReport() {
 	}
 
-
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
 		Path htmlPath = makeHtmlDirIfNeeded(path);
 		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId();
 		outputFile += ".html";
 		reportPath = htmlPath.resolve(outputFile);
 	}
-
 
 	@Override
 	protected ContainerTag<DivTag> bodyContent() {
@@ -67,9 +67,20 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 				h3("Logic Text"),
 				pre(CompilerFactory.getLogicText()),
 				h3("Abstract Syntax Tree"),
+				getWarningsIfThereAreAny(),
 				h3("Logic Table"),
-				pre(CompilerFactory.getLtReport())
+				pre(CompilerFactory.getLogicTableLog())
 			);
+	}
+
+	private DomContent getWarningsIfThereAreAny() {
+		List<String> ws = CompilerFactory.getWarnings();
+		if(ws.size() > 0) {
+		return div(
+					h3("Warnings"),
+					each(ws, w -> pre(w)));
+					
+		} else return h4("No warnings");
 	}
 
 
