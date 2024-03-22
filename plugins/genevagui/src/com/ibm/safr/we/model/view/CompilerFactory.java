@@ -77,9 +77,10 @@ public class CompilerFactory {
 
 	private static ColumnData ci;
 
-	private static String ltReport;
+	private static String ltLog;
 
 	private static String logicText;
+	private static List<String> warnings;
 
 	static void checkSyntax(LogicTextType type, String text, View view,
 			ViewSource currentSource, ViewColumn col) throws DAOException,
@@ -198,32 +199,39 @@ public class CompilerFactory {
 		WorkbenchCompiler.addColumn(getColumnData(col));
         WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
         WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(rcgLR, view, currentSource, col, text));
-        extractCompiler.compileViewColumnSource();
+        extractCompiler.run();
         if(extractCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(extractCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
         } else {
-        	ltReport = LTLogger.logRecords(extractCompiler.getXlt());
-        	List<Integer> vws = new ArrayList<Integer>();
-        	vws.add(view.getId());
+        	warnings = extractCompiler.getWarnings();
+        	makeLogicTableLog(extractCompiler.getXlt());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
         }
         if(extractCompiler.hasWarnings()) {
-    		sva.addCompilerWarnings(extractCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+    		sva.addCompilerWarnings(warnings, currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
         }
     }
     
-    public static String getLtReport() {
-    	return ltReport;
+    public static List<String> getWarnings() {
+    	return warnings;
+    }
+
+	private static void makeLogicTableLog(LogicTable logicTable) {
+		ltLog = LTLogger.logRecords(logicTable);
+	}
+    
+    public static String getLogicTableLog() {
+    	return ltLog;
     }
 
     private static void checkSyntaxExtractFilter(String text, View view, ViewSource currentSource, ViewColumn col) {
     	currentColumn = col;
     	WBExtractFilterCompiler extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
-        extractFilterCompiler.compileExtractFilter();
+        extractFilterCompiler.run();
         if(extractFilterCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(extractFilterCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);        	
         } else {
-        	ltReport = LTLogger.logRecords(extractFilterCompiler.getXlt());
+        	ltLog = LTLogger.logRecords(extractFilterCompiler.getXlt());
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
@@ -236,11 +244,11 @@ public class CompilerFactory {
     private static void checkSyntaxExtractOutput(String text, View view, ViewSource currentSource, ViewColumn col) {
     	currentColumn = col;
     	WBExtractOutputCompiler extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
-        extractOutputCompiler.compileExtractOutput();
+        extractOutputCompiler.run();
         if(extractOutputCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(extractOutputCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);        	
         } else {
-        	ltReport = LTLogger.logRecords(extractOutputCompiler.getXlt());
+        	ltLog = LTLogger.logRecords(extractOutputCompiler.getXlt());
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);

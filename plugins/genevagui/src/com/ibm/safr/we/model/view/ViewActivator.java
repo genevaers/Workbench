@@ -96,9 +96,6 @@ public class ViewActivator {
      */ 
     public void activate() throws DAOException, SAFRException {
         SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
-        SAFRLogger.logAllSeparator(logger, Level.INFO, "My new Message");
-        WorkbenchCompiler wf = new WorkbenchCompiler();
-        SAFRLogger.logAllSeparator(logger, Level.INFO, wf.greetings());
 //		MessageDialog.openError(siteRef.getShell(),
 //				wf.greetings(),
 //                "Acivate");
