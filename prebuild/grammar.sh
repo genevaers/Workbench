@@ -15,7 +15,8 @@
 # under the License.
 # Get the Grammar repo if it is not there
 
-if [ ! -d "../Grammar" ]; 
+mvn dependency:get -Dartifact=org.genevaers:grammar:1.0.0 -o
+if [ $? != 0 ]; 
 then
     echo "Clone the grammar"
     BASEDIR=${PWD}
