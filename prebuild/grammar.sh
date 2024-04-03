@@ -15,7 +15,7 @@
 # under the License.
 # Get the Grammar repo if it is not there
 
-mvn dependency:get -Dartifact=org.genevaers:grammar:1.0.0 -o
+mvn dependency:get -Dartifact=org.genevaers:grammar:1.0.0 > /dev/null 2>&1
 if [ $? != 0 ]; 
 then
     echo "Clone the grammar"
