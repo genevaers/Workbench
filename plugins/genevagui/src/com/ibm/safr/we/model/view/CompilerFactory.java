@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
 import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.genevaio.dbreader.LazyDBReader;
+import org.genevaers.genevaio.dbreader.DatabaseConnectionParams;
 import org.genevaers.genevaio.ltfile.LTLogger;
 import org.genevaers.genevaio.ltfile.LogicTable;
 import org.genevaers.runcontrolgenerator.compilers.ExtractPhaseCompiler;
@@ -55,6 +57,7 @@ import com.ibm.safr.we.exceptions.SAFRCompilerUnexpectedException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
+import com.ibm.safr.we.internal.data.ConnectionFactory;
 import com.ibm.safr.we.model.Code;
 import com.ibm.safr.we.model.LRField;
 import com.ibm.safr.we.model.LogicalRecord;
@@ -159,9 +162,12 @@ public class CompilerFactory {
     }
 
 	private static void initialiseCompilerData(View view, ViewSource currentSource, ViewColumn col) {
-		SAFRFactory factory = SAFRApplication.getSAFRFactory();
-		LogicalRecord lr = factory.getLogicalRecordFromLRLFAssociation(currentSource.getLrFileAssociationId(), currentSource.getEnvironmentId());
-		rcgLR = addRcgLrToCompiler(lr);
+		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
+		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
+	    WorkbenchCompiler.setEnvironment(currentSource.getEnvironmentId());
+	    WorkbenchCompiler.setSourceLRID(currentSource.getLrFileAssociation().getAssociatingComponentId());
+	    WorkbenchCompiler.setSourceLFID(currentSource.getLrFileAssociation().getAssociatedComponentIdNum());
+
 		WorkbenchCompiler.addView(makeView(view));
 		WorkbenchCompiler.addViewSource(makeViewSource(currentSource));
 	}
@@ -419,44 +425,7 @@ public class CompilerFactory {
         cd.setSigned(vc.isSigned());
         cd.setStartPosition(vc.getStartPosition());
         return cd;
-      }
-    
-    private static LRData addRcgLrToCompiler(LogicalRecord lr) {
-    	LRData lrd = makeLrData(lr);
-    	WorkbenchCompiler.addLR(lrd);
-		for( LRField f :lr.getLRFields()) {
-			makeFieldAndAddToLR(lr, f);
-		}
-		return lrd;
-	}
-
-	private static void makeFieldAndAddToLR(LogicalRecord lr, LRField f) {
-		LRFieldData lrf = new LRFieldData();
-		lrf.setId(f.getId());
-		Code type = f.getDataTypeCode();
-		if(type != null) {
-			lrf.setDataTypeValue(type.getGeneralId());
-		}
-		Code dt = f.getDateTimeFormatCode();
-		if(dt != null) {
-			lrf.setDateCodeValue(dt.getGeneralId());
-		}
-		lrf.setLength(f.getLength());
-		lrf.setLrId(lr.getId());
-		lrf.setName(f.getName());
-		lrf.setNumDecimals(f.getDecimals());
-		lrf.setRounding(f.getScaling());
-		lrf.setSigned(f.isSigned());
-		lrf.setPosition(f.getPosition());
-		WorkbenchCompiler.addLRField(lrf);
-	}
-
-	private static LRData makeLrData(LogicalRecord lr) {
-		LRData rcgLR = new LRData();
-		rcgLR.setId(lr.getId());
-		rcgLR.setName(lr.getName());
-		return rcgLR;
-	}
+    }
 	
     private static ViewSourceData makeViewSource(ViewSource vs) {
     	ViewSourceData vsd = new ViewSourceData();

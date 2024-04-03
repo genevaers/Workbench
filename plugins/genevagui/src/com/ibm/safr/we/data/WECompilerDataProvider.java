@@ -3,6 +3,9 @@ package com.ibm.safr.we.data;
 import java.util.Map;
 
 import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.repository.components.LogicalRecord;
+import org.genevaers.repository.components.LookupPath;
+import org.genevaers.repository.components.ViewNode;
 
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
@@ -56,7 +59,6 @@ public class WECompilerDataProvider implements CompilerDataProvider {
 		return environID;
 	}
 
-	@Override
 	public int getLogicalRecordID() {
 		return sourceLRID;
 	}
@@ -69,6 +71,30 @@ public class WECompilerDataProvider implements CompilerDataProvider {
 	@Override
 	public void setLogicalRecordID(int lrid) {
 		sourceLRID = lrid;
+	}
+
+	@Override
+	public LogicalRecord getLogicalRecord(int arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LookupPath getLookup(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ViewNode getView(int arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void loadLR(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
