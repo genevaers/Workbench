@@ -54,27 +54,21 @@ public class ViewLogicExtractOutput {
         this.viewLogicDependencies = viewLogicDependencies;
     }
 
-    public void compile(ViewSource source, WECompilerDataProvider dataProvider) {
-        compileExtractOutput(source, dataProvider);
+    public void compile(ViewSource source) {
+        compileExtractOutput(source);
         extractLogicDependencies(source);        
     }
 
-    void compileExtractOutput(ViewSource source, WECompilerDataProvider dataProvider) {
+    void compileExtractOutput(ViewSource source){
         try {
     		extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
-    		extractOutputCompiler.setDataProvider(dataProvider);
-    		//extractOutputCompiler.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
-    		try {
-    			if(source.getExtractRecordOutput() != null)
-    				extractOutputCompiler.syntaxCheckLogic(source.getExtractRecordOutput());
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
+    		if(source.getExtractRecordOutput() != null)
+				extractOutputCompiler.syntaxCheckLogic(source.getExtractRecordOutput());
     		if(extractOutputCompiler.hasSyntaxErrors())
     			vaException.addCompilerErrorsNew(extractOutputCompiler.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
-    		extractOutputCompiler.generateDependencies();
-    		if(extractOutputCompiler.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractOutputCompiler.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
+//    		extractOutputCompiler.generateDependencies();
+//    		if(extractOutputCompiler.hasDataErrors()) 
+//    			vaException.addCompilerErrorsNew(extractOutputCompiler.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         } catch (SAFRCompilerParseException ee) {
         } 
     }

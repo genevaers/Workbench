@@ -76,8 +76,6 @@ public class CompilerFactory {
 
     private static SAFRViewActivationException sva;
 
-	private static LRData rcgLR;
-
 	private static ColumnData ci;
 
 	private static String ltLog;
@@ -204,25 +202,25 @@ public class CompilerFactory {
     	currentColumn = col;
 		WorkbenchCompiler.addColumn(getColumnData(col));
         WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
-        WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(rcgLR, view, currentSource, col, text));
+        WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(view, currentSource, col, text));
         extractCompiler.run();
-        if(extractCompiler.hasErrors()) {
-    		sva.addCompilerErrorsNew(extractCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
+        if(WorkbenchCompiler.hasErrors()) {
+    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
         } else {
-        	warnings = extractCompiler.getWarnings();
-        	makeLogicTableLog(extractCompiler.getXlt());
+        	warnings = WorkbenchCompiler.getWarnings();
+        	makeLogicTableLog(WorkbenchCompiler.getXlt());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
         }
-        if(extractCompiler.hasWarnings()) {
+        if(WorkbenchCompiler.hasWarnings()) {
     		sva.addCompilerWarnings(warnings, currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
         }
     }
     
     public static List<String> getWarnings() {
-    	return warnings;
+    	return WorkbenchCompiler.getWarnings();
     }
 
-	private static void makeLogicTableLog(LogicTable logicTable) {
+	public static void makeLogicTableLog(LogicTable logicTable) {
 		ltLog = LTLogger.logRecords(logicTable);
 	}
     
@@ -234,16 +232,16 @@ public class CompilerFactory {
     	currentColumn = col;
     	WBExtractFilterCompiler extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
         extractFilterCompiler.run();
-        if(extractFilterCompiler.hasErrors()) {
-    		sva.addCompilerErrorsNew(extractFilterCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);        	
+        if(WorkbenchCompiler.hasErrors()) {
+    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);        	
         } else {
-        	ltLog = LTLogger.logRecords(extractFilterCompiler.getXlt());
+        	ltLog = LTLogger.logRecords(WorkbenchCompiler.getXlt());
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
         }
-        if(extractFilterCompiler.hasWarnings()) {
-    		sva.addCompilerWarnings(extractFilterCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
+        if(WorkbenchCompiler.hasWarnings()) {
+    		sva.addCompilerWarnings(WorkbenchCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);
         }
     }
 
@@ -251,16 +249,16 @@ public class CompilerFactory {
     	currentColumn = col;
     	WBExtractOutputCompiler extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
         extractOutputCompiler.run();
-        if(extractOutputCompiler.hasErrors()) {
-    		sva.addCompilerErrorsNew(extractOutputCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);        	
+        if(WorkbenchCompiler.hasErrors()) {
+    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);        	
         } else {
-        	ltLog = LTLogger.logRecords(extractOutputCompiler.getXlt());
+        	ltLog = LTLogger.logRecords(WorkbenchCompiler.getXlt());
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
         }
-        if(extractOutputCompiler.hasWarnings()) {
-    		sva.addCompilerWarnings(extractOutputCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
+        if(WorkbenchCompiler.hasWarnings()) {
+    		sva.addCompilerWarnings(WorkbenchCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         }
     }
 
@@ -360,7 +358,7 @@ public class CompilerFactory {
         }// columns loop
     }
     
-    private static ViewData makeView(View v) {
+    public static ViewData makeView(View v) {
     	ViewData vd = new ViewData();
         vd.setId(v.getId());
         vd.setName(v.getName());
@@ -402,7 +400,7 @@ public class CompilerFactory {
         return colType;
     }
     
-    private static ColumnData getColumnData(ViewColumn vc) {
+    public static ColumnData getColumnData(ViewColumn vc) {
         ColumnData cd = new ColumnData();
         cd.setColumnId(vc.getId());
         cd.setColumnNumber(vc.getColumnNo());
@@ -427,18 +425,18 @@ public class CompilerFactory {
         return cd;
     }
 	
-    private static ViewSourceData makeViewSource(ViewSource vs) {
+    public static ViewSourceData makeViewSource(ViewSource vs) {
     	ViewSourceData vsd = new ViewSourceData();
         vsd.setId(vs.getId());
         vsd.setViewID(vs.getView().getId());
         vsd.setExtractFilter(vs.getExtractRecordFilter() != null ? vs.getExtractRecordFilter() : "");
         vsd.setOutputLogic(vs.getExtractRecordOutput() != null ? vs.getExtractRecordOutput() : "");
         vsd.setSequenceNumber(vs.getSequenceNo());
-        vsd.setSourceLrId(rcgLR.getId());
+        vsd.setSourceLrId(vs.getLrFileAssociation().getAssociatingComponentId());
         return vsd;
      }
 
-    private static ViewColumnSourceData makeViewColumnSource(LRData rcgLR, View view, ViewSource vs, ViewColumn col, String logicText) {
+    public static ViewColumnSourceData makeViewColumnSource(View view, ViewSource vs, ViewColumn col, String logicText) {
     	ViewColumnSourceData vcs = new ViewColumnSourceData();
         vcs.setColumnId(col.getId());
         vcs.setColumnNumber(col.getColumnNo());
@@ -446,7 +444,7 @@ public class CompilerFactory {
         vcs.setSequenceNumber(vs.getSequenceNo());
         vcs.setViewSourceId(vs.getId());
         vcs.setViewID(view.getId());
-        vcs.setViewSourceLrId(rcgLR.getId());
+        vcs.setViewSourceLrId(vs.getLrFileAssociation().getAssociatingComponentId());
         return vcs;
      }
     

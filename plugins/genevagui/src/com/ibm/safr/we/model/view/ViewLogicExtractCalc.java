@@ -74,16 +74,14 @@ public class ViewLogicExtractCalc {
         this.viewLogicDependencies = viewLogicDependencies;
     }
     
-    public void compile(ViewSource source, Set<Integer> cTCols, WECompilerDataProvider dataProvider) {
+    public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
         setAllSourceColumnInfo(source);
         
 		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
-		extractColumnCompiler.setDataProvider(dataProvider);
-	//	extractColumnCompiler.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             processExtractCalculation(source, col);
-            WorkbenchCompiler.reset();
+            //WorkbenchCompiler.reset();
         }
     }
     
@@ -315,18 +313,19 @@ public class ViewLogicExtractCalc {
     }    
     
     protected void compileLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource, String formulaToCompile) {
-        try {
+//        try {
+			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+			WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
+			WorkbenchCompiler.addViewColumnSource(CompilerFactory.makeViewColumnSource(view, source, col, formulaToCompile));
+    		extractCompiler.buildAST();
             //compiler.compileExtractColumn(col.getColumnNo(), formulaToCompile);
             //we want the same one for each column
-    		extractColumnCompiler.syntaxCheckLogic(formulaToCompile);
-    		if(extractColumnCompiler.hasSyntaxErrors())
-    			vaException.addCompilerErrorsNew(extractColumnCompiler.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-    		extractColumnCompiler.generateDependencies();
-    		if(extractColumnCompiler.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractColumnCompiler.getDataErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-        } catch (IOException e) {
-			e.printStackTrace();
-		} 
+//    		extractColumnCompiler.syntaxCheckLogic(formulaToCompile);
+//    		if(extractColumnCompiler.hasSyntaxErrors())
+//    			vaException.addCompilerErrorsNew(extractColumnCompiler.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+//        } catch (IOException e) {
+//			e.printStackTrace();
+//		} 
     }
 
     protected void extractDependencies(ViewColumnSource colSource) {

@@ -30,6 +30,9 @@ import java.util.logging.Logger;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.FormatFilterSyntaxChecker;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -40,9 +43,11 @@ import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.constants.OutputFormat;
+import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
+import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
@@ -50,6 +55,7 @@ import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.SAFRValidator;
 import com.ibm.safr.we.preferences.SAFRPreferences;
+import com.ibm.safr.we.ui.reports.ReportUtils;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ViewActivator {    
@@ -61,7 +67,6 @@ public class ViewActivator {
     private SAFRViewActivationException vaException = new SAFRViewActivationException(view);
 
 	private Set<Integer> CTCols;
-	private WECompilerDataProvider dataProvider;
 	private static IWorkbenchPartSite siteRef;
 
     public ViewActivator(View view) {
@@ -396,35 +401,77 @@ public class ViewActivator {
 
 
 	protected void compileViewSources() {
-		dataProvider = new WECompilerDataProvider();
-		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
-		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
-		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
+		WorkbenchCompiler.reset();
+		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
+		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
+//		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
+//		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
+//		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
+		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
 
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
-			dataProvider.setEnvironmentID(source.getEnvironmentId());
-			dataProvider.setLogicalRecordID(source.getLrFileAssociation().getAssociatingComponentId());
-			compileExtractFilter(logicExtractFilter, source);
-			compileExtractCalculation(logicExtractCalc, source, CTCols);
-			compileExtractOutput(logicExtractOutput, source);
+			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
+			
+			//This can not be a whole view thing
+			//So build the whole AST
+			//And the whole XLT accumulation errors etc along the way
+			//in much the same way as MR91 compiles a whole view that is already in the repository
+			
+			//So two phases build the AST
+			//Emit the XLT
+			//But behind the scenes? 
+			//At the end from here we just see errors or not
+			//And get the dependencies
+			//We can also report the whole XLT/JLT is same way as we do for Validation
+				
+		    WorkbenchCompiler.setEnvironment(source.getEnvironmentId());
+		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
+		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
+			compileExtractFilter(source);
+			compileExtractCalculation(source, CTCols);
+			compileExtractOutput(source);
+			
+			WorkbenchCompiler.buildTheExtractTableIfThereAreNoErrors();        
+			if(WorkbenchCompiler.hasErrors()) {
+				vaException.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
+	        } else {
+	        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
+	        	ReportUtils.openReportEditor(ReportType.LogicTable);
+	        }
+	        if(WorkbenchCompiler.hasWarnings()) {
+	        	vaException.addCompilerWarnings(WorkbenchCompiler.getWarnings(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+	        }
+
 		}
 	}
     
-	protected void compileExtractFilter(ViewLogicExtractFilter logicExtract, ViewSource source) {
-		try {
-			logicExtract.compile(source, dataProvider);
-		} catch (SAFRException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	protected void compileExtractFilter(ViewSource source) {
+    	WBExtractFilterCompiler extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
+    	extractFilterCompiler.buildAST();
 	}
     
-    protected void compileExtractCalculation(ViewLogicExtractCalc logicExtract, ViewSource source, Set<Integer> cTCols) {
-        logicExtract.compile(source, cTCols, dataProvider);        
+    protected void compileExtractCalculation(ViewSource source, Set<Integer> cTCols) {
+    	ViewLogicExtractCalc columnsCompiler = new ViewLogicExtractCalc(view, vaException,viewLogicDependencies);
+    	columnsCompiler.compile(source, cTCols);
+    	//need to iterate the columns
+//        CTCols = cTCols;
+//        setAllSourceColumnInfo(source);
+//        
+//		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
+//        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+//            processExtractCalculation(source, col);
+//            WorkbenchCompiler.reset();
+//        }
+//		WorkbenchCompiler.addColumn(getColumnData(col));
+//        WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
+//        WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(view, currentSource, col, text));
+//        extractCompiler.run();
+//        //logicExtract.compile(source, cTCols);        
     }
 
-	protected void compileExtractOutput(ViewLogicExtractOutput logicExtract, ViewSource source) {
-		logicExtract.compile(source, dataProvider);
+	protected void compileExtractOutput(ViewSource source) {
+    	WBExtractOutputCompiler extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
+    	extractOutputCompiler.buildAST();
 	}
     
     protected void compileFormatFilter()
