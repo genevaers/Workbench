@@ -18,7 +18,6 @@ package com.ibm.safr.we.model.view;
  */
 
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,12 +29,10 @@ import java.util.logging.Logger;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.FormatFilterSyntaxChecker;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IWorkbenchPartSite;
 
 
@@ -48,13 +45,11 @@ import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
-import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.SAFRValidator;
-import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.reports.ReportUtils;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
@@ -67,9 +62,7 @@ public class ViewActivator {
     private SAFRViewActivationException vaException = new SAFRViewActivationException(view);
 
 	private Set<Integer> CTCols;
-	private static IWorkbenchPartSite siteRef;
-
-    public ViewActivator(View view) {
+	public ViewActivator(View view) {
         super();
         this.view = view;
     }
@@ -92,7 +85,6 @@ public class ViewActivator {
     
     
 	public static void setSite(IWorkbenchPartSite site) {
-		siteRef = site;
 	}
     /**
      * Invoke activation 
@@ -101,15 +93,11 @@ public class ViewActivator {
      */ 
     public void activate() throws DAOException, SAFRException {
         SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
-//		MessageDialog.openError(siteRef.getShell(),
-//				wf.greetings(),
-//                "Acivate");
         
         vaException = new SAFRViewActivationException(view);   
         try {
             activateNew();
         } catch (SAFRViewActivationException e) {
-        	//Don't log the exception trace
             logger.log(Level.INFO, "New Activation Exception");
         }
         
@@ -404,26 +392,10 @@ public class ViewActivator {
 		WorkbenchCompiler.reset();
 		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
 		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
-//		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
-//		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
-//		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
 		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
 
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
 			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
-			
-			//This can not be a whole view thing
-			//So build the whole AST
-			//And the whole XLT accumulation errors etc along the way
-			//in much the same way as MR91 compiles a whole view that is already in the repository
-			
-			//So two phases build the AST
-			//Emit the XLT
-			//But behind the scenes? 
-			//At the end from here we just see errors or not
-			//And get the dependencies
-			//We can also report the whole XLT/JLT is same way as we do for Validation
-				
 		    WorkbenchCompiler.setEnvironment(source.getEnvironmentId());
 		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
 		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
@@ -453,20 +425,6 @@ public class ViewActivator {
     protected void compileExtractCalculation(ViewSource source, Set<Integer> cTCols) {
     	ViewLogicExtractCalc columnsCompiler = new ViewLogicExtractCalc(view, vaException,viewLogicDependencies);
     	columnsCompiler.compile(source, cTCols);
-    	//need to iterate the columns
-//        CTCols = cTCols;
-//        setAllSourceColumnInfo(source);
-//        
-//		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
-//        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-//            processExtractCalculation(source, col);
-//            WorkbenchCompiler.reset();
-//        }
-//		WorkbenchCompiler.addColumn(getColumnData(col));
-//        WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
-//        WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(view, currentSource, col, text));
-//        extractCompiler.run();
-//        //logicExtract.compile(source, cTCols);        
     }
 
 	protected void compileExtractOutput(ViewSource source) {
@@ -528,16 +486,14 @@ public class ViewActivator {
 	
     protected void processResult() {
         if (!vaException.hasErrorOccured()) {
+        	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
         }        
     }
 
-    
-    /**
-     * Activate this view using the old compiler
-     * 
-     * @throws DAOException, SAFRException
-     */     
-
+    protected void extractDependencies() {
+    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
+    	vle.extractDependencies();
+	}
 }

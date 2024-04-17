@@ -23,22 +23,12 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
-import org.genevaers.repository.*;
-
-import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
-import com.ibm.safr.we.model.Code;
-import com.ibm.safr.we.model.LRField;
-import com.ibm.safr.we.model.LogicalRecord;
-import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.SAFRFactory;
 
 public class ViewLogicExtractFilter {
 
@@ -65,8 +55,6 @@ public class ViewLogicExtractFilter {
 	        compileExtractFilter(source);
 	        if(vaException.hasErrorOccured()) {
 	        	throw vaException;
-	        } else {
-	        	extractLogicDependencies(source);
 	        }
 		}
     }
@@ -82,7 +70,6 @@ public class ViewLogicExtractFilter {
 
 	protected void extractLogicDependencies(ViewSource source) {
     	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractFilterCompiler, source, LogicTextType.Extract_Record_Filter);
     }
 
 }

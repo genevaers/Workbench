@@ -19,15 +19,7 @@ package com.ibm.safr.we.model.view;
 
 
 import java.util.List;
-import java.util.Set;
-
-import org.genevaers.runcontrolgenerator.workbenchinterface.LookupRef;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
-
-import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.constants.LogicTextType;
-import com.ibm.safr.we.exceptions.SAFRViewActivationException;
-import com.ibm.safr.we.model.base.SAFRComponent;
 
 public class ViewLogicExtractor {
 	public View view;
@@ -39,41 +31,15 @@ public class ViewLogicExtractor {
 		view = v;
         this.viewLogicDependencies = vlds;
 	}
-    // Why do we collect the field ids?
-    //The source tells us the LR required.
-    //We do need the lookup ids, lfpf assocs, and exit ids.
-    //There is code checking if fields are used before allowing them to be deleted.
-    //As part of LR management and LR delete.
-    public void extractDependencies(WorkbenchCompiler extractCompiler, SAFRComponent comp, LogicTextType logicType) {
+	
+    public void extractDependencies() {
         depCounter=1;
-        //System.out.println(extractCompiler.getDependenciesAsString());
-       	extractCompiler.getLFPFAssocIDs().forEach(lfpf -> addLfPfAssoc(lfpf, comp, logicType));
-        extractCompiler.getExitIDs().forEach(e -> addExitId(e, comp, logicType)); 
-        extractCompiler.getFieldIDs().forEach(f -> addField(comp, f, logicType));
-        extractCompiler.getLookupsStream().forEach(lkref -> addLookupRef(comp, lkref, logicType));
+        WorkbenchCompiler.getDependenciesStream().forEach(d -> addDependency(d));
+        System.out.println(WorkbenchCompiler.getDependenciesAsString());
 	}
 	
-	private void addLookupRef(SAFRComponent comp, LookupRef lkref, LogicTextType logicType) {
-		if(lkref.hasFields()) {
-			lkref.getLookFieldIdsStream().forEach(f -> addLookupField(comp, lkref.getId(), f, logicType));
-		} else {
-			viewLogicDependencies.add(new ViewLogicDependency(view, logicType, comp, depCounter++, lkref.getId(), null, null, null));			
-		}
-	}
-
-	private void addLookupField(SAFRComponent comp, int lkid, Integer f, LogicTextType logicType) {
-        viewLogicDependencies.add(new ViewLogicDependency(view, logicType, comp, depCounter++, lkid, f, null, null));
-	}
-
-	private void addField(SAFRComponent comp, Integer f, LogicTextType logicType) {
-      viewLogicDependencies.add(new ViewLogicDependency(view, logicType, comp, depCounter++, null, f, null, null));
-	}
-
-	private void addLfPfAssoc(int associd, SAFRComponent comp, LogicTextType logicType) {
-		viewLogicDependencies.add(new ViewLogicDependency(view, logicType, comp, depCounter++, null, null, null, associd));
-	}
-    
-	private void addExitId(int exit, SAFRComponent comp, LogicTextType logicType) {
-    	viewLogicDependencies.add(new ViewLogicDependency(view, logicType, comp, depCounter++, null, null, exit, null));
+	private Object addDependency(org.genevaers.repository.data.ViewLogicDependency d) {
+        viewLogicDependencies.add(new ViewLogicDependency(view, d.getLogicTextType().getTypeValue(), d.getParentId(), depCounter++, d.getLookupPathId(), d.getLrFieldId(), d.getUserExitRoutineId(), d.getFileAssociationId()));
+		return null;
 	}
 }

@@ -39,24 +39,18 @@ public class ViewLogicExtractOutput {
     static transient Logger logger = Logger
     .getLogger("com.ibm.safr.we.model.view.ViewLogicExtractFilter");
     
-    private View view;
     private SAFRViewActivationException vaException;
-    private List<ViewLogicDependency> viewLogicDependencies;
-
-	private WBExtractOutputCompiler extractOutputCompiler;
+    private WBExtractOutputCompiler extractOutputCompiler;
     
     public ViewLogicExtractOutput(View view, 
         SAFRViewActivationException vaException, 
         List<ViewLogicDependency> viewLogicDependencies) {
         super();
-        this.view = view;
         this.vaException = vaException;
-        this.viewLogicDependencies = viewLogicDependencies;
     }
 
     public void compile(ViewSource source) {
         compileExtractOutput(source);
-        extractLogicDependencies(source);        
     }
 
     void compileExtractOutput(ViewSource source){
@@ -66,16 +60,8 @@ public class ViewLogicExtractOutput {
 				extractOutputCompiler.syntaxCheckLogic(source.getExtractRecordOutput());
     		if(extractOutputCompiler.hasSyntaxErrors())
     			vaException.addCompilerErrorsNew(extractOutputCompiler.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
-//    		extractOutputCompiler.generateDependencies();
-//    		if(extractOutputCompiler.hasDataErrors()) 
-//    			vaException.addCompilerErrorsNew(extractOutputCompiler.getDataErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         } catch (SAFRCompilerParseException ee) {
         } 
     }
 
-    void extractLogicDependencies(ViewSource source) {
-    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractOutputCompiler, source, LogicTextType.Extract_Record_Output);
-	}
-    
 }

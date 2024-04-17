@@ -18,32 +18,20 @@ package com.ibm.safr.we.model.view;
  */
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WECompilerDataProvider;
-import com.ibm.safr.we.exceptions.SAFRCompilerException;
-import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
@@ -56,13 +44,9 @@ public class ViewLogicExtractCalc {
 
 	private SAFRViewActivationException vaException;
 
-	private List<ViewLogicDependency> viewLogicDependencies;
-
 	private Set<Integer> CTCols;
 
 	private WBExtractColumnCompiler extractColumnCompiler;
-
-	private int depCounter;
 
 	public ViewLogicExtractCalc(View view,
         SAFRViewActivationException vaException, 
@@ -70,8 +54,6 @@ public class ViewLogicExtractCalc {
         super();
         this.view = view;
         this.vaException = vaException;
-        //this.compiler = compiler;
-        this.viewLogicDependencies = viewLogicDependencies;
     }
     
     public void compile(ViewSource source, Set<Integer> cTCols) {
@@ -90,7 +72,7 @@ public class ViewLogicExtractCalc {
         int positionCT = 1;
         
 		for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-			ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
+			col.getViewColumnSources().get(source.getSequenceNo() - 1);
 			int colType = getColumnType(col);
 			col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 
@@ -151,7 +133,7 @@ public class ViewLogicExtractCalc {
 		if (vaException.hasErrorOccured()) {
 			throw vaException;
 		} else {
-			extractDependencies(colSource);
+			//extractDependencies(colSource);
 		}
 	}
 
@@ -313,24 +295,11 @@ public class ViewLogicExtractCalc {
     }    
     
     protected void compileLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource, String formulaToCompile) {
-//        try {
 			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
 			WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
 			WorkbenchCompiler.addViewColumnSource(CompilerFactory.makeViewColumnSource(view, source, col, formulaToCompile));
     		extractCompiler.buildAST();
-            //compiler.compileExtractColumn(col.getColumnNo(), formulaToCompile);
-            //we want the same one for each column
-//    		extractColumnCompiler.syntaxCheckLogic(formulaToCompile);
-//    		if(extractColumnCompiler.hasSyntaxErrors())
-//    			vaException.addCompilerErrorsNew(extractColumnCompiler.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-//        } catch (IOException e) {
-//			e.printStackTrace();
-//		} 
     }
 
-    protected void extractDependencies(ViewColumnSource colSource) {
-    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractColumnCompiler, colSource, LogicTextType.Extract_Column_Assignment);
-	}
 	
 }
