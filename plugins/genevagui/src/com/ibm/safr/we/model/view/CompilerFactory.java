@@ -42,6 +42,7 @@ import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBFormatCalculationCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
@@ -82,6 +83,7 @@ public class CompilerFactory {
 
 	private static String logicText;
 	private static List<String> warnings;
+	private static String calcStackString;
 
 	static void checkSyntax(LogicTextType type, String text, View view,
 			ViewSource currentSource, ViewColumn col) throws DAOException,
@@ -141,6 +143,7 @@ public class CompilerFactory {
             return ;
         }
         logicText = text;
+        calcStackString = null;
         WorkbenchCompiler.reset();
         currentViewSource = currentSource;
 		initialiseCompilerData(view, currentSource, col);
@@ -160,14 +163,17 @@ public class CompilerFactory {
     }
 
 	private static void initialiseCompilerData(View view, ViewSource currentSource, ViewColumn col) {
+		//Format logic will have a NULL currentSource
 		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
 		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
-	    WorkbenchCompiler.setEnvironment(currentSource.getEnvironmentId());
-	    WorkbenchCompiler.setSourceLRID(currentSource.getLrFileAssociation().getAssociatingComponentId());
-	    WorkbenchCompiler.setSourceLFID(currentSource.getLrFileAssociation().getAssociatedComponentIdNum());
-
-		WorkbenchCompiler.addView(makeView(view));
-		WorkbenchCompiler.addViewSource(makeViewSource(currentSource));
+		if(currentSource != null) {
+		    WorkbenchCompiler.setEnvironment(currentSource.getEnvironmentId());
+		    WorkbenchCompiler.setSourceLRID(currentSource.getLrFileAssociation().getAssociatingComponentId());
+		    WorkbenchCompiler.setSourceLFID(currentSource.getLrFileAssociation().getAssociatedComponentIdNum());
+	
+			WorkbenchCompiler.addView(makeView(view));
+			WorkbenchCompiler.addViewSource(makeViewSource(currentSource));
+		}
 	}
 
     private static void checkSyntaxFormatFilter(String text, View view, ViewSource currentSource, ViewColumn col) {
@@ -185,6 +191,17 @@ public class CompilerFactory {
 
     private static void checkSyntaxFormatCalc(String text, View view, ViewSource currentSource, ViewColumn col) {
         processViewColumnsFormat(view, currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
+		WorkbenchCompiler.addView(makeView(view));
+		WorkbenchCompiler.addViewSource(makeViewSource(view.getViewSources().get(0)));
+		WorkbenchCompiler.addColumn(getColumnData(col));
+		WBFormatCalculationCompiler wbcc = (WBFormatCalculationCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
+		calcStackString = wbcc.generateCalcStack(view.getId(), col.getColumnNo());
+		if(wbcc.hasSyntaxErrors()) {
+			sva.addCompilerErrorsNew(wbcc.getSyntaxErrors(), currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);            
+			throw sva;
+		} else {
+			ReportUtils.openReportEditor(ReportType.LogicTable);
+		}
         
 //        try {
 ////            compiler.compileFormatCalculation(text);
@@ -225,7 +242,11 @@ public class CompilerFactory {
 	}
     
     public static String getLogicTableLog() {
-    	return ltLog;
+    	if(calcStackString != null) {
+    		return calcStackString;
+    	} else {
+    		return ltLog;
+    	}
     }
 
     private static void checkSyntaxExtractFilter(String text, View view, ViewSource currentSource, ViewColumn col) {
@@ -422,6 +443,8 @@ public class CompilerFactory {
         cd.setRounding(vc.getScaling());
         cd.setSigned(vc.isSigned());
         cd.setStartPosition(vc.getStartPosition());
+        cd.setViewID(vc.getView().getId());
+        cd.setColumnCalculation(vc.getFormatColumnCalculation());
         return cd;
     }
 	
@@ -458,6 +481,10 @@ public class CompilerFactory {
     
     public static ViewSource getViewSource() {
     	return  currentViewSource;
+    }
+    
+    public static String getCalculationStack() {
+    	return calcStackString;
     }
 
 //    protected boolean isCTColumn(ViewColumn col) {

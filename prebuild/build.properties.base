@@ -27,14 +27,17 @@ bin.includes = plugin.xml,\
                lib/jackson-databind-2.15.0.jar, \
                lib/jackson-dataformat-yaml-2.15.0.jar, \
                lib/commons-csv-1.10.0.jar, \
+               lib/commons-lang3-3.14.0.jar, \
                lib/j2html-1.6.0.jar, \
                lib/postgresql-42.2.16.jar, \
-               lib/j2html-1.6.0.jar,
-               lib/commons-csv-1.10.0.jar,
-               lib/repository-1.0.2.jar,
-               lib/runcontrolanalyser-1.0.2.jar,
-               lib/runcontrolgenerator-1.0.2.jar,
-               lib/utilities-1.0.2.jar,
-               lib/genevaio-1.0.2.jar,
-               lib/compilers-1.0.2.jar,
-               lib/grammar-1.0.0.jar,
+               lib/j2html-1.6.0.jar, \
+               lib/commons-csv-1.10.0.jar, \
+               lib/repository-1.0.2.jar, \
+               lib/runcontrolanalyser-1.0.2.jar, \
+               lib/runcontrolgenerator-1.0.2.jar, \
+               lib/utilities-1.0.2.jar, \
+               lib/genevaio-1.0.2.jar, \
+               lib/compilers-1.0.2.jar, \
+               lib/grammar-1.0.0.jar, \
+               lib/flogger-0.8.jar, \
+               lib/flogger-system-backend-0.8.jar, \

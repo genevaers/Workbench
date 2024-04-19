@@ -39,7 +39,7 @@ public class ViewLogicFormatCalc {
     
     private View view;
     private SAFRViewActivationException vaException;
-	private FormatCalculationSyntaxChecker formatCalculationChecker; 
+	private WBFormatCalculationCompiler formatCalculationChecker; 
     private Set<Integer> CTCols = new HashSet<Integer>();
 
     
@@ -138,11 +138,12 @@ public class ViewLogicFormatCalc {
     	//and is not ALPHANUMERIC - which is checked within the compiler at the moment
     	//
         if (!col.isSortKey() && view.isFormatPhaseInUse() && col.getDataTypeCode().getGeneralId() != Codes.ALPHANUMERIC) {
-    		formatCalculationChecker = (FormatCalculationSyntaxChecker) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
+    		formatCalculationChecker = (WBFormatCalculationCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
     		String calc = col.getFormatColumnCalculation();
     		if(calc != null && calc.length() > 0) {
     			CTCols.add(col.getColumnNo());
-	    		formatCalculationChecker.syntaxCheckLogic(col.getFormatColumnCalculation());
+    			//formatCalculationChecker.generateCalcStack(col);
+	    		formatCalculationChecker.generateCalcStack(col.getView().getId(), col.getColumnNo()); //.syntaxCheckLogic(col.getFormatColumnCalculation());
 	    		if(formatCalculationChecker.hasSyntaxErrors())
 	    			vaException.addCompilerErrorsNew(formatCalculationChecker.getSyntaxErrors(), null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
 	            Set<Integer> calcCols = formatCalculationChecker.getColumnRefs();

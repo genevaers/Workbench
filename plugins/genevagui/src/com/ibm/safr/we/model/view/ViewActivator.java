@@ -439,7 +439,7 @@ public class ViewActivator {
 		if (view.isFormatPhaseInUse()) {
 			if (view.getFormatRecordFilter() != null) {
 				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) WBCompilerFactory					.getProcessorFor(WBCompilerType.FORMAT_FILTER);
-				formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
+				//formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
 				if (formatFilterChecker.hasSyntaxErrors()) {
 					vaException.addCompilerErrorsNew(
 							formatFilterChecker.getSyntaxErrors(), null, null,

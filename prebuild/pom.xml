@@ -79,6 +79,13 @@ under the License.
 									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
 								</artifactItem>
 								<artifactItem>
+									<groupId>org.apache.commons</groupId>
+									<artifactId>commons-lang3</artifactId>
+									<version>3.14.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
 									<groupId>org.genevaers</groupId>
 									<artifactId>repository</artifactId>
 									<version>1.0.2</version>

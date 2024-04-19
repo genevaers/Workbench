@@ -57,7 +57,7 @@ public class ViewLogicExtractOutput {
         try {
     		extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
     		if(source.getExtractRecordOutput() != null)
-				extractOutputCompiler.syntaxCheckLogic(source.getExtractRecordOutput());
+				extractOutputCompiler.run();//.syntaxCheckLogic(source.getExtractRecordOutput());
     		if(extractOutputCompiler.hasSyntaxErrors())
     			vaException.addCompilerErrorsNew(extractOutputCompiler.getSyntaxErrors(), source, null, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);
         } catch (SAFRCompilerParseException ee) {
