@@ -1,9 +1,9 @@
 package com.ibm.safr.we.model.view;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
@@ -26,15 +26,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
-import org.genevaers.genevaio.dbreader.LazyDBReader;
-import org.genevaers.genevaio.dbreader.DatabaseConnectionParams;
 import org.genevaers.genevaio.ltfile.LTLogger;
 import org.genevaers.genevaio.ltfile.LogicTable;
-import org.genevaers.runcontrolgenerator.compilers.ExtractPhaseCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ColumnData;
-import org.genevaers.runcontrolgenerator.workbenchinterface.LRData;
-import org.genevaers.runcontrolgenerator.workbenchinterface.LRFieldData;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ViewColumnSourceData;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ViewData;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ViewSourceData;
@@ -43,6 +37,7 @@ import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompi
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBFormatCalculationCompiler;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBFormatFilterCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
@@ -52,24 +47,16 @@ import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
-import com.ibm.safr.we.exceptions.SAFRCompilerException;
-import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
-import com.ibm.safr.we.exceptions.SAFRCompilerUnexpectedException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
-import com.ibm.safr.we.internal.data.ConnectionFactory;
-import com.ibm.safr.we.model.Code;
-import com.ibm.safr.we.model.LRField;
-import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.SAFRFactory;
-import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.reports.ReportUtils;
 
 public class CompilerFactory {
     static transient Logger logger = Logger
     .getLogger("com.ibm.safr.we.model.view.CompilerFactory");
+    private static View currentView;
     private static ViewColumn currentColumn;
     private static ViewSource currentViewSource;
     // used to compile a view or to check syntax
@@ -81,6 +68,8 @@ public class CompilerFactory {
 
 	private static String ltLog;
 
+	private static String formatFilterCalculationStack;
+	private static Map<Integer, String> colCalcs = new TreeMap<>();
 	private static String logicText;
 	private static List<String> warnings;
 	private static String calcStackString;
@@ -178,15 +167,16 @@ public class CompilerFactory {
 
     private static void checkSyntaxFormatFilter(String text, View view, ViewSource currentSource, ViewColumn col) {
         processViewColumnsFormat(view, currentSource, null, SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
-        
-        try {
-//            compiler.compileFormatFilter(text);
-        } catch (SAFRCompilerParseException e) {
-            // Compilation error.
-//            sva.addCompilerErrorsNew(compiler, currentSource, col, SAFRCompilerErrorType.FORMAT_RECORD_FILTER);            
-//            sva.addCompilerWarnings(compiler, currentSource, col, SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
-            throw sva;
-        }        
+		WorkbenchCompiler.addView(makeView(view));
+		WorkbenchCompiler.addViewSource(makeViewSource(view.getViewSources().get(0)));
+		WBFormatFilterCompiler wbffc = (WBFormatFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_FILTER);
+		calcStackString = wbffc.generateCalcStack(view.getId());
+		if(wbffc.hasSyntaxErrors()) {
+			sva.addCompilerErrorsNew(wbffc.getSyntaxErrors(), currentSource, col, SAFRCompilerErrorType.FORMAT_RECORD_FILTER);            
+			throw sva;
+		} else {
+			ReportUtils.openReportEditor(ReportType.LogicTable);
+		}
     }
 
     private static void checkSyntaxFormatCalc(String text, View view, ViewSource currentSource, ViewColumn col) {
@@ -202,17 +192,6 @@ public class CompilerFactory {
 		} else {
 			ReportUtils.openReportEditor(ReportType.LogicTable);
 		}
-        
-//        try {
-////            compiler.compileFormatCalculation(text);
-//            sva.addCompilerWarnings(compiler, currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
-//        } catch (SAFRCompilerParseException e) {
-//            // Compilation error.
-//            sva.addCompilerErrorsNew(compiler, currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);            
-//            sva.addCompilerWarnings(compiler, currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
-//            throw sva;
-//        }
-        
     }
 
     private static void checkSyntaxExtractAssign(String text, View view, ViewSource currentSource, ViewColumn col) {
@@ -384,6 +363,7 @@ public class CompilerFactory {
         vd.setId(v.getId());
         vd.setName(v.getName());
         vd.setTypeValue(v.getTypeCode().getGeneralId());
+        vd.setFormatFilter(v.getFormatRecordFilter());
         return vd;
       }
     
@@ -487,18 +467,30 @@ public class CompilerFactory {
     	return calcStackString;
     }
 
-//    protected boolean isCTColumn(ViewColumn col) {
-//        boolean isCTColumn = false;
-//        if (view.isFormatPhaseInUse()) {
-//            if (col.getSubtotalTypeCode() != null ||
-//                CTCols.contains(col.getColumnNo())) {
-//                isCTColumn = true;
-//            }
-//        } 
-//        return isCTColumn;
-//    }
-    
-    
-    }
+	public static void setView(View view) {
+		currentView = view;
+	}
+
+	public static View getView() {
+		return currentView;
+	}
+
+	public static void setFormatFilterCalculationStack(String generateCalcStack) {
+		formatFilterCalculationStack = generateCalcStack;
+	}
+	
+	public static String getFormatFilterCalculationStack() {
+		return formatFilterCalculationStack;
+	}
+	
+	public static void addColumnCalcStack(int colnum, String stack) {
+		colCalcs.put(colnum, stack);
+	}
+	
+	public static String getColumnCalcStacks(int colnum) {
+		return colCalcs.get(colnum);
+	}
+
+}
     
 

@@ -52,19 +52,19 @@ public class ReportUtils {
 		if (page.getActivePart() instanceof MetadataView) {
 			getIdsFromMetadataView(reportIds);
 		} else if (page.getActivePart() instanceof SAFREditorPart) {
-			if(type != ReportType.LogicTable) {
+			if(type != ReportType.LogicTable && type != ReportType.ActivationReport) {
 				getIdFromPageModel(reportIds, page);
 			}
 		} else {
 			//We should say something here?
-			if (type == ReportType.HelpReport || type == ReportType.LogicTable) {
+			if (type == ReportType.HelpReport || type == ReportType.LogicTable || type == ReportType.ActivationReport){
 				//continue
 			} else {
 				return;
 			}
 		}
 		// open the report only if a parameter is available.
-		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport || type == ReportType.LogicTable) {
+		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport || type == ReportType.LogicTable || type == ReportType.ActivationReport) {
 			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			try {
 				shell.setCursor(shell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));

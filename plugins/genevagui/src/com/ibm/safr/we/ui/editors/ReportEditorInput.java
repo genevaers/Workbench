@@ -35,6 +35,7 @@ import com.ibm.safr.we.model.LookupPath;
 import com.ibm.safr.we.model.base.SAFRPersistentObject;
 import com.ibm.safr.we.model.utilities.DependencyChecker;
 import com.ibm.safr.we.model.view.View;
+import com.ibm.safr.we.ui.reports.ActivationReportGenerator;
 import com.ibm.safr.we.ui.reports.DependencyCheckerReportData;
 import com.ibm.safr.we.ui.reports.EnvironmentSecurityReportGenerator;
 import com.ibm.safr.we.ui.reports.HelpReport;
@@ -74,6 +75,8 @@ public class ReportEditorInput implements IEditorInput {
 				reportGenerator = new HelpReport(reportParams);
 			} else if (reportType.equals(ReportType.LogicTable)) {
 				reportGenerator = new LogicTableReportGenerator(reportParams);
+			} else if (reportType.equals(ReportType.ActivationReport)) {
+				reportGenerator = new ActivationReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.ViewColumnPICReport)) {
 					reportGenerator = new ViewColumnPICReportGenerator(reportParams);
 			} else if (reportType.equals(ReportType.EnvironmentSecurityById)) {

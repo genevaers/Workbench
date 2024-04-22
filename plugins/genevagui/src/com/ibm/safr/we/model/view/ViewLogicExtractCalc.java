@@ -63,7 +63,6 @@ public class ViewLogicExtractCalc {
 		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             processExtractCalculation(source, col);
-            //WorkbenchCompiler.reset();
         }
     }
     

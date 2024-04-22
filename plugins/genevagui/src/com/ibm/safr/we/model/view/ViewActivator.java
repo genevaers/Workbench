@@ -27,11 +27,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
-import org.genevaers.runcontrolgenerator.workbenchinterface.FormatFilterSyntaxChecker;
+import org.genevaers.runcontrolgenerator.workbenchinterface.SyntaxChecker;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractFilterCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WBFormatFilterCompiler;
 
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -96,7 +97,7 @@ public class ViewActivator {
         
         vaException = new SAFRViewActivationException(view);   
         try {
-            activateNew();
+        	activateTheWholeView();
         } catch (SAFRViewActivationException e) {
             logger.log(Level.INFO, "New Activation Exception");
         }
@@ -161,7 +162,7 @@ public class ViewActivator {
      * 
      * @throws DAOException, SAFRException
      */ 
-    protected void activateNew() throws DAOException, SAFRException {
+    protected void activateTheWholeView() throws DAOException, SAFRException {
 
         initialization();                
 
@@ -172,14 +173,23 @@ public class ViewActivator {
         processResult();        
     }
 
-    protected void initialization() throws SAFRException, DAOException,
-        SAFRViewActivationException {
+    protected void initialization() throws SAFRException, DAOException, SAFRViewActivationException {
         checkActivationShowStoppers();        
         initViewDependencies();
         initializeViewColumns();
+        initializeWorkbenchCompiler();
     }
 
-    protected void checkActivationShowStoppers()
+    private void initializeWorkbenchCompiler() {
+		WorkbenchCompiler.reset();
+		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
+		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
+		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
+	    WorkbenchCompiler.setEnvironment(view.getEnvironmentId());
+	    CompilerFactory.setView(view);
+	}
+
+	protected void checkActivationShowStoppers()
         throws SAFRException, DAOException, SAFRViewActivationException {
         checkSavedView();
         checkFormatHasSortKey();
@@ -389,14 +399,9 @@ public class ViewActivator {
 
 
 	protected void compileViewSources() {
-		WorkbenchCompiler.reset();
-		WorkbenchCompiler.setSQLConnection(DAOFactoryHolder.getDAOFactory().getConnection());
-		WorkbenchCompiler.setSchema(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getSchema());
-		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
 
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
 			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
-		    WorkbenchCompiler.setEnvironment(source.getEnvironmentId());
 		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
 		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
 			compileExtractFilter(source);
@@ -408,7 +413,6 @@ public class ViewActivator {
 				vaException.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
 	        } else {
 	        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
-	        	ReportUtils.openReportEditor(ReportType.LogicTable);
 	        }
 	        if(WorkbenchCompiler.hasWarnings()) {
 	        	vaException.addCompilerWarnings(WorkbenchCompiler.getWarnings(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
@@ -437,17 +441,17 @@ public class ViewActivator {
         // Format phase record filter compilation
         // ONLY if format phase is ON
 		if (view.isFormatPhaseInUse()) {
-			if (view.getFormatRecordFilter() != null) {
-				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) WBCompilerFactory					.getProcessorFor(WBCompilerType.FORMAT_FILTER);
-				//formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
-				if (formatFilterChecker.hasSyntaxErrors()) {
+			if (view.getFormatRecordFilter() != null & view.getFormatRecordFilter().length() > 0) {
+				WBFormatFilterCompiler ffc = (WBFormatFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_FILTER);
+				CompilerFactory.setFormatFilterCalculationStack(ffc.generateCalcStack(view.getId()));
+				if (ffc.hasSyntaxErrors()) {
 					vaException.addCompilerErrorsNew(
-							formatFilterChecker.getSyntaxErrors(), null, null,
+							ffc.getSyntaxErrors(), null, null,
 							SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
 				}
-	            Set<Integer> calcCols = formatFilterChecker.getColumnRefs();
+	            Set<Integer> calcCols = ffc.getColumnRefs();
 	            checkColumnDataTypes(calcCols);
-	    		CTCols.addAll(formatFilterChecker.getColumnRefs());
+	    		CTCols.addAll(ffc.getColumnRefs());
 			}
 		}
     }
@@ -489,7 +493,8 @@ public class ViewActivator {
         	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
-        }        
+        	ReportUtils.openReportEditor(ReportType.ActivationReport);
+        }
     }
 
     protected void extractDependencies() {

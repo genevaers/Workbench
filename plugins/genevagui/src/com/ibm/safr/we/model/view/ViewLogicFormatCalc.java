@@ -141,14 +141,17 @@ public class ViewLogicFormatCalc {
     		formatCalculationChecker = (WBFormatCalculationCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
     		String calc = col.getFormatColumnCalculation();
     		if(calc != null && calc.length() > 0) {
+    			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
     			CTCols.add(col.getColumnNo());
-    			//formatCalculationChecker.generateCalcStack(col);
-	    		formatCalculationChecker.generateCalcStack(col.getView().getId(), col.getColumnNo()); //.syntaxCheckLogic(col.getFormatColumnCalculation());
-	    		if(formatCalculationChecker.hasSyntaxErrors())
+	    		String cs = formatCalculationChecker.generateCalcStack(col.getView().getId(), col.getColumnNo());
+	    		if(formatCalculationChecker.hasSyntaxErrors()) {
 	    			vaException.addCompilerErrorsNew(formatCalculationChecker.getSyntaxErrors(), null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
-	            Set<Integer> calcCols = formatCalculationChecker.getColumnRefs();
-	            checkColumnDataTypes(col, calcCols);
-	    		CTCols.addAll(calcCols);
+	    		} else {
+		            Set<Integer> calcCols = formatCalculationChecker.getColumnRefs();
+		            checkColumnDataTypes(col, calcCols);
+		    		CTCols.addAll(calcCols);
+		    		CompilerFactory.addColumnCalcStack(col.getColumnNo(), cs);
+	    		}
     		}
         }
     }    
