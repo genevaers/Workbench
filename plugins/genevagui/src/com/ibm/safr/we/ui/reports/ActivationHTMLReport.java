@@ -54,7 +54,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
 		Path htmlPath = makeHtmlDirIfNeeded(path);
-		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId();
+		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId()+"_V"+ CompilerFactory.getView().getId();
 		outputFile += ".html";
 		reportPath = htmlPath.resolve(outputFile);
 	}
@@ -68,8 +68,14 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 				getFormatColumnCalculations(),
 				getExtractLogic(),
 				getLogicTable(),
-				getWarningsIfThereAreAny()
+				getWarningsIfThereAreAny(),
+				getDependencies()
 			).withClass("w3-container");
+	}
+
+	private DomContent getDependencies() {
+		return div(h3("Dependencies"),
+				pre(WorkbenchCompiler.getDependenciesAsString()).withClass("w3-code")).withClass("w3-panel w3-card w3-grey");
 	}
 
 	private DomContent getLogicTable() {
@@ -178,13 +184,6 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 				table(tbody(getWarningsHeader(), each(ws, w -> tr(td(w)))))
 				.withClass("w3-table-all w3-striped w3-border")
 				).withClass("w3-panel w3-card w3-gray");
-//
-//		if(ws.size() > 0) {
-//		return div(
-//					h3("Warnings"),
-//					each(ws, w -> pre(w)));
-//					
-//		} else return h4("No warnings");
 	}
 
 
