@@ -707,8 +707,6 @@ INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','NONE',1,'None');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','SUM',2,'Sum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','MIN',3,'Minimum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','MAX',4,'Maximum');
-INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','FIRST',5,'First');
-INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','LAST',6,'Last');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','CALC',7,
                            'Group Calculation');
 
@@ -719,10 +717,6 @@ INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','SUM',2,'Sum');
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','MIN',3,'Minimum');
 
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','MAX',4,'Maximum');
-
-INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','FIRST',5,'First');
-
-INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','LAST',6,'Last');
 
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','CALC',7,
                            'Group Calculation');
