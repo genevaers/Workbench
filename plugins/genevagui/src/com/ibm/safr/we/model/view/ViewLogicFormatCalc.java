@@ -128,7 +128,7 @@ public class ViewLogicFormatCalc {
             }
         }
         if (vaException.hasNewErrorOccured()) {
-            throw vaException; // cannot continue.
+//            throw vaException; // cannot continue.
         }
     }
 

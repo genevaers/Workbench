@@ -56,7 +56,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 		return div(
 				h1("Activation Report"),
 				getheader(),
-				getErrorsIfThereAreAny(),
+				getStatus(),
 				getWarningsIfThereAreAny(),
 				showDetailsIfRequired()
 			).withClass("w3-container");
@@ -178,13 +178,14 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 		}
 	}
 
-	private DomContent getErrorsIfThereAreAny() {
+	private DomContent getStatus() {
 		List<CompilerMessage> errs = WorkbenchCompiler.getErrorMessages();
 		if (errs.size() > 0) {
 			return div(h3("Errors"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getErrorMessages(), m -> getMessageRow(m))))
 					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-red");
 		} else {
-			return null;
+			return div(h3("Status"), p("Activation Completed" + (WorkbenchCompiler.hasWarnings() ? " with Warnings" : ""))
+					).withClass("w3-panel w3-card w3-green");
 		}
 	}
 

@@ -167,8 +167,10 @@ public class ViewActivator {
         initialization();                
 
         compileFormatCalculation();
-        compileViewSources();
         compileFormatFilter();
+//        vaException.getActivationLogNew().clear();
+        compileViewSources();
+//        vaException.getActivationLogNew().clear();
                 
         processResult();        
     }
@@ -493,8 +495,8 @@ public class ViewActivator {
         	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
-        	ReportUtils.openReportEditor(ReportType.ActivationReport);
         }
+    	ReportUtils.openReportEditor(ReportType.ActivationReport);
     }
 
     protected void extractDependencies() {

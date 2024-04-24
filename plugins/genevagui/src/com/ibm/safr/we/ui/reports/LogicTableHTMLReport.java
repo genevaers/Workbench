@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+import org.genevaers.repository.data.CompilerMessage;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
@@ -35,19 +36,17 @@ import com.ibm.safr.we.model.query.ViewPropertiesReportQueryBean;
 import com.ibm.safr.we.model.query.ViewSortKeyReportQueryBean;
 import com.ibm.safr.we.model.query.ViewSourcesReportQueryBean;
 import com.ibm.safr.we.model.view.CompilerFactory;
+import com.ibm.safr.we.model.view.ViewColumn;
+import com.ibm.safr.we.model.view.ViewColumnSource;
+import com.ibm.safr.we.model.view.ViewSource;
+import com.ibm.safr.we.preferences.SAFRPreferences;
 
 import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 import j2html.tags.specialized.DivTag;
 
-/************************************************************************************************************************/
-/************************************************************************************************************************/
-
 public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 
-	// The Logic table that has been build will be available in the WB Interface 
-	// So get it and generate its string when needed
-	private String lt;
 	
 	public LogicTableHTMLReport() {
 	}
@@ -62,34 +61,60 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 	@Override
 	protected ContainerTag<DivTag> bodyContent() {
 		return div(
-				h1("Logic Report"),
-				getheader(),
-				h3("Logic Text"),
-				pre(CompilerFactory.getLogicText()),
-				h3("Abstract Syntax Tree"),
+				h1("Validation Report"),
+				getErrorsIfThereAreAny(),
 				getWarningsIfThereAreAny(),
-				h3("Logic Table"),
-				pre(CompilerFactory.getLogicTableLog())
-			);
+				getValidationReport()
+			).withClass("w3-container");
 	}
 
+	private DomContent getValidationReport() {
+		if (SAFRPreferences.isFullActicationReportEnabled()) {
+			return div(
+					h3("Logic Text"),
+					div(pre(CompilerFactory.getLogicText())).withClass("w3-code"),
+					h4("Result"),
+					div(pre(CompilerFactory.getLogicTableLog()).withClass("w3-code")
+					)).withClass("w3-panel w3-card w3-gray");
+		} else {
+			return null;
+		}
+	}
+
+	private DomContent getErrorsIfThereAreAny() {
+		List<CompilerMessage> errs = WorkbenchCompiler.getErrorMessages();
+		if (errs.size() > 0) {
+			return div(h3("Errors"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getErrorMessages(), m -> getMessageRow(m))))
+					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-red");
+		} else {
+			return div(h3("Status"), p("Validation Completed" + (WorkbenchCompiler.hasWarnings() ? " with Warnings" : ""))
+					).withClass("w3-panel w3-card w3-green");
+		}
+	}
+	
 	private DomContent getWarningsIfThereAreAny() {
 		List<String> ws = CompilerFactory.getWarnings();
-		if(ws.size() > 0) {
-		return div(
-					h3("Warnings"),
-					each(ws, w -> pre(w)));
-					
-		} else return h4("No warnings");
+		if (ws.size() > 0) {
+			return div(h3("Warnings"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getWarningMessages(), w -> getMessageRow(w))))
+					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-yellow");
+		} else {
+			return null;
+		}
 	}
 
+	private DomContent getMessageRow(CompilerMessage w) {
+		return tr(
+				td(w.getSource().toString()).withClass("w3-border"), 
+				td(Integer.toString(w.getColumnNumber())).withClass("w3-border"), 
+				td(w.getDetail()).withClass("w3-border"));
+	}
 
-	private DomContent getheader() {
-		if(CompilerFactory.getViewColumn() != null) {
-			return 	h2("Column Number " + CompilerFactory.getViewColumn().getColumnNo());
- 		} else {
-			return 	h2("Source "); 			
- 		}
+	private DomContent getMeassageHeader() {
+		return tr(
+				th("Source").withClass("w3-border"),
+				th("Number").withClass("w3-border"),
+				th("Message").withClass("w3-border")
+				);
 	}
 
 }

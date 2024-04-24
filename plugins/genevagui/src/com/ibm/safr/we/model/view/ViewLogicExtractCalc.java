@@ -130,7 +130,7 @@ public class ViewLogicExtractCalc {
 		}
 		compileLogic(source, col, colSource, formulaToCompile);
 		if (vaException.hasErrorOccured()) {
-			throw vaException;
+//			throw vaException;
 		} else {
 			//extractDependencies(colSource);
 		}

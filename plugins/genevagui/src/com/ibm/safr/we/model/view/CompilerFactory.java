@@ -26,7 +26,7 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.genevaio.ltfile.LTLogger;
+//import org.genevaers.genevaio.ltfile.LTLogger;
 import org.genevaers.genevaio.ltfile.LogicTable;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ColumnData;
 import org.genevaers.runcontrolgenerator.workbenchinterface.ViewColumnSourceData;
@@ -63,8 +63,6 @@ public class CompilerFactory {
     final static int CT_ADDITION = 13;
 
     private static SAFRViewActivationException sva;
-
-	private static ColumnData ci;
 
 	private static String ltLog;
 
@@ -171,11 +169,10 @@ public class CompilerFactory {
 		WorkbenchCompiler.addViewSource(makeViewSource(view.getViewSources().get(0)));
 		WBFormatFilterCompiler wbffc = (WBFormatFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_FILTER);
 		calcStackString = wbffc.generateCalcStack(view.getId());
+		ReportUtils.openReportEditor(ReportType.LogicTable);
 		if(wbffc.hasSyntaxErrors()) {
 			sva.addCompilerErrorsNew(wbffc.getSyntaxErrors(), currentSource, col, SAFRCompilerErrorType.FORMAT_RECORD_FILTER);            
 			throw sva;
-		} else {
-			ReportUtils.openReportEditor(ReportType.LogicTable);
 		}
     }
 
@@ -186,11 +183,10 @@ public class CompilerFactory {
 		WorkbenchCompiler.addColumn(getColumnData(col));
 		WBFormatCalculationCompiler wbcc = (WBFormatCalculationCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
 		calcStackString = wbcc.generateCalcStack(view.getId(), col.getColumnNo());
+		ReportUtils.openReportEditor(ReportType.LogicTable);
 		if(wbcc.hasSyntaxErrors()) {
 			sva.addCompilerErrorsNew(wbcc.getSyntaxErrors(), currentSource, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);            
 			throw sva;
-		} else {
-			ReportUtils.openReportEditor(ReportType.LogicTable);
 		}
     }
 
@@ -200,15 +196,15 @@ public class CompilerFactory {
         WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
         WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(view, currentSource, col, text));
         extractCompiler.run();
+       	ReportUtils.openReportEditor(ReportType.LogicTable);
         if(WorkbenchCompiler.hasErrors()) {
-    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
+           	makeLogicTableLog(WorkbenchCompiler.getXlt());
+    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
         } else {
-        	warnings = WorkbenchCompiler.getWarnings();
-        	makeLogicTableLog(WorkbenchCompiler.getXlt());
-        	ReportUtils.openReportEditor(ReportType.LogicTable);
+           	makeLogicTableLog(WorkbenchCompiler.getXlt());
         }
         if(WorkbenchCompiler.hasWarnings()) {
-    		sva.addCompilerWarnings(warnings, currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+    		sva.addCompilerWarnings(WorkbenchCompiler.getWarnings(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
         }
     }
     
@@ -217,7 +213,7 @@ public class CompilerFactory {
     }
 
 	public static void makeLogicTableLog(LogicTable logicTable) {
-		ltLog = LTLogger.logRecords(logicTable);
+		ltLog = WorkbenchCompiler.getLogicTableLog();
 	}
     
     public static String getLogicTableLog() {
@@ -235,7 +231,7 @@ public class CompilerFactory {
         if(WorkbenchCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);        	
         } else {
-        	ltLog = LTLogger.logRecords(WorkbenchCompiler.getXlt());
+        	ltLog = WorkbenchCompiler.getLogicTableLog();
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
@@ -252,7 +248,7 @@ public class CompilerFactory {
         if(WorkbenchCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);        	
         } else {
-        	ltLog = LTLogger.logRecords(WorkbenchCompiler.getXlt());
+        	ltLog = WorkbenchCompiler.getLogicTableLog();
         	List<Integer> vws = new ArrayList<Integer>();
         	vws.add(view.getId());
         	ReportUtils.openReportEditor(ReportType.LogicTable);
