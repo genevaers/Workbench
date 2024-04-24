@@ -52,4 +52,5 @@ public class UserPreferencesNodes {
 	public static final String REPORTS_PATH = "Reports-Path";
 	public static final String ENABLE_SSL = "EnableSSL";
 	public static final String SSL_TRUST_STORELOCATION = "SSL-TrustStore-Location";
+	public static final String FILL_ACTIVATION_REPORT= "Full-Activation-Report";
 }

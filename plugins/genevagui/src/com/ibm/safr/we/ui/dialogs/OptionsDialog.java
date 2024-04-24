@@ -55,14 +55,16 @@ public class OptionsDialog extends TitleAreaDialog {
     private String logPathStr;
     private Button migrateWarnings;
     private Button importWarnings;
+    private Button activationReportChkBox;
     private boolean isIgnoreMigrateWarnings = false;
     private boolean isIgnoreImportWarnings = false;
+    private boolean isFullActivationReportEnabled = false;
 
 	private Text reportPath;
 
 	private String reportsPathStr;
     
-	public OptionsDialog(Shell parentShell, String logPathStr, String reportsPath, boolean isIgnoreMigrateWarnings, boolean isIgnoreImportWarnings) {
+	public OptionsDialog(Shell parentShell, String logPathStr, String reportsPath, boolean isIgnoreMigrateWarnings, boolean isIgnoreImportWarnings, boolean act) {
 		super(parentShell);
 		safrGUIToolkit = new SAFRGUIToolkit();
 		this.parentShell = parentShell;
@@ -70,6 +72,7 @@ public class OptionsDialog extends TitleAreaDialog {
 		this.isIgnoreMigrateWarnings = isIgnoreMigrateWarnings;
 		this.isIgnoreImportWarnings = isIgnoreImportWarnings;
 		this.reportsPathStr = reportsPath;
+		this.isFullActivationReportEnabled = act;
 	}
 
     @Override
@@ -127,8 +130,25 @@ public class OptionsDialog extends TitleAreaDialog {
             }
         });
         
+        addActivationReportOption();
+        
         return parent;
     }
+
+	private void addActivationReportOption() {
+        Label label = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "Enable Full &Activation Report:   ");
+        label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));        
+        activationReportChkBox = safrGUIToolkit.createCheckBox(compositeTopLevel, "");
+        GridData importWarningsData = new GridData(SWT.NONE, SWT.CENTER, false, false);
+        importWarningsData.horizontalSpan = 2;
+        activationReportChkBox.setLayoutData(importWarningsData);
+        activationReportChkBox.setSelection(isFullActivationReportEnabled);
+        activationReportChkBox.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+            	isFullActivationReportEnabled = activationReportChkBox.getSelection();                                        
+            }
+        });
+	}
 
 	private void addLogPath() {
 		Label logPathLabel = safrGUIToolkit.createLabel(compositeTopLevel, SWT.NONE, "&Log Path:   ");
@@ -233,6 +253,10 @@ public class OptionsDialog extends TitleAreaDialog {
 
 	public String getReportsPath() {
 		return reportsPathStr;
+	}
+	
+	public boolean isFullActivationReportEnabled() {
+		return isFullActivationReportEnabled;
 	}
     
 }

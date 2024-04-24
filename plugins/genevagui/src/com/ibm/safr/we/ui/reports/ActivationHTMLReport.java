@@ -22,24 +22,16 @@ import static j2html.TagCreator.*;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
-
+import org.genevaers.repository.data.CompilerMessage;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
-import com.ibm.safr.we.constants.CodeCategories;
-import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.model.Code;
 import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.query.ViewMappingsReportQueryBean;
-import com.ibm.safr.we.model.query.ViewPropertiesReportQueryBean;
-import com.ibm.safr.we.model.query.ViewSortKeyReportQueryBean;
-import com.ibm.safr.we.model.query.ViewSourcesReportQueryBean;
 import com.ibm.safr.we.model.view.CompilerFactory;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewColumnSource;
 import com.ibm.safr.we.model.view.ViewSource;
+import com.ibm.safr.we.preferences.SAFRPreferences;
 
-import j2html.TagCreator;
 import j2html.tags.ContainerTag;
 import j2html.tags.DomContent;
 import j2html.tags.specialized.DivTag;
@@ -64,13 +56,23 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 		return div(
 				h1("Activation Report"),
 				getheader(),
-				getFormatFilterReport(),
-				getFormatColumnCalculations(),
-				getExtractLogic(),
-				getLogicTable(),
+				getErrorsIfThereAreAny(),
 				getWarningsIfThereAreAny(),
-				getDependencies()
+				showDetailsIfRequired()
 			).withClass("w3-container");
+	}
+
+	private DomContent showDetailsIfRequired() {
+		if (SAFRPreferences.isFullActicationReportEnabled()) {
+			return div(
+					getExtractLogic(), 
+					getLogicTable(),
+					getFormatFilterReport(), 
+					getFormatColumnCalculations(), 
+					getDependencies());
+		} else {
+			return null;
+		}
 	}
 
 	private DomContent getDependencies() {
@@ -80,7 +82,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
 	private DomContent getLogicTable() {
 		return div(h3("Logic Table"),
-				pre(CompilerFactory.getLogicTableLog()).withClass("w3-code")).withClass("w3-panel w3-card w3-grey");
+				pre(WorkbenchCompiler.getLogicTableLog()).withClass("w3-code")).withClass("w3-panel w3-card w3-grey");
 	}
 
 	private DomContent getExtractLogic() {
@@ -142,7 +144,6 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 	}
 
 	private DomContent getFormatColumnCalculationDetails() {
-		boolean logicFound = false;
 		return div(
 				each(CompilerFactory.getView().getViewColumns(), c -> getColumnCalc(c))
 				);
@@ -177,24 +178,43 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 		}
 	}
 
-	private DomContent getWarningsIfThereAreAny() {
-		List<String> ws = CompilerFactory.getWarnings();
-		return div(
-				h3("Warnings"),
-				table(tbody(getWarningsHeader(), each(ws, w -> tr(td(w)))))
-				.withClass("w3-table-all w3-striped w3-border")
-				).withClass("w3-panel w3-card w3-gray");
+	private DomContent getErrorsIfThereAreAny() {
+		List<CompilerMessage> errs = WorkbenchCompiler.getErrorMessages();
+		if (errs.size() > 0) {
+			return div(h3("Errors"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getErrorMessages(), m -> getMessageRow(m))))
+					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-red");
+		} else {
+			return null;
+		}
 	}
 
+	private DomContent getWarningsIfThereAreAny() {
+		List<CompilerMessage> ws = WorkbenchCompiler.getWarningMessages();
+		if (ws.size() > 0) {
+			return div(h3("Warnings"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getWarningMessages(), w -> getMessageRow(w))))
+					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-yellow");
+		} else {
+			return null;
+		}
+	}
 
-	private DomContent getWarningsHeader() {
+	private DomContent getMessageRow(CompilerMessage w) {
 		return tr(
+				td(w.getSource().toString()).withClass("w3-border"), 
+				td(Integer.toString(w.getColumnNumber())).withClass("w3-border"), 
+				td(w.getDetail()).withClass("w3-border"));
+	}
+
+	private DomContent getMeassageHeader() {
+		return tr(
+				th("Source").withClass("w3-border"),
+				th("Number").withClass("w3-border"),
 				th("Message").withClass("w3-border")
 				);
 	}
 
 	private DomContent getheader() {
-		return 	h2("View: " + CompilerFactory.getView().getName());
+		return 	h1("View: " + CompilerFactory.getView().getName());
 	}
 
 }

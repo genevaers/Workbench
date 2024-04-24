@@ -237,6 +237,19 @@ public class SAFRPreferences {
 			return false;
 		}
 	}
+    public void setFullActicationReportEnabled(Boolean act) {
+        getSAFRPreferences().put(UserPreferencesNodes.FILL_ACTIVATION_REPORT, (act != null && act) ? "Y" : "N");
+        try {
+            getSAFRPreferences().flush();
+        } catch (BackingStoreException e) {
+            throw new SAFRFatalException(e);
+        }
+    }
+
+ 	public static Boolean isFullActicationReportEnabled() {
+		String actStr = getSAFRPreferences().get(UserPreferencesNodes.FILL_ACTIVATION_REPORT, "");
+		return (actStr != null && actStr.equalsIgnoreCase("Y")) ? true : false ;
+	}
 
     /**
      * @return whether to ignore migrate warnings
