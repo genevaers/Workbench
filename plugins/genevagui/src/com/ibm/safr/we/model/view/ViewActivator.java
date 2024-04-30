@@ -115,43 +115,6 @@ public class ViewActivator {
 	    }
     }
 
-    protected void logActivationErrors() {
-        if (vaException.getActivationLogNew().size() > 0) {     
-            logActErrors("Errors/Warnings from Compiler", vaException.getActivationLogNew());
-        }
-    }
-
-    protected void logActErrors(String title, List<ViewActivationError> rawErrors) {
-        String strErrors = title + System.lineSeparator();
-        Map<SAFRCompilerErrorType, List<ViewActivationError>> errorMap = 
-            new HashMap<SAFRCompilerErrorType, List<ViewActivationError>>();
-        for (ViewActivationError error : rawErrors) {
-            if (errorMap.containsKey(error.getErrorType())) {
-                errorMap.get(error.getErrorType()).add(error);
-            } else {
-                List<ViewActivationError> errors = new ArrayList<ViewActivationError>();
-                errors.add(error);
-                errorMap.put(error.getErrorType(), errors);
-            }
-        }
-        for (SAFRCompilerErrorType type : errorMap.keySet()) {
-            strErrors += type.getText() + " Activation Errors and Warnings" + System.lineSeparator();
-            strErrors += String.format("%s, %s, %s", "Message", "Column", "Source") + System.lineSeparator();
-            for (ViewActivationError error : errorMap.get(type)) {
-                strErrors += getErrorLine(error) + SAFRUtilities.LINEBREAK;
-            }
-            strErrors = strErrors.substring(0, strErrors.length() - SAFRUtilities.LINEBREAK.length());
-        }
-        SAFRLogger.logAll(logger, Level.INFO, strErrors);
-    }
-    
-    private String getErrorLine(ViewActivationError error) {
-        return String.format("%s, %s, %s", 
-            error.getErrorText() == null ? "" : error.getErrorText().replaceAll("(?:\\n|\\r)", ""), 
-            error.viewColumn == null ? "" :  error.viewColumn.getDescriptor(), 
-            error.viewSource == null ? "" :  error.viewSource.getDescriptor());
-    }
-    
     /**
      * Activate
      * 
@@ -414,7 +377,7 @@ public class ViewActivator {
 	}
     
     protected void compileExtractCalculation(ViewSource source, Set<Integer> cTCols) {
-    	ViewLogicExtractCalc columnsCompiler = new ViewLogicExtractCalc(view, vaException,viewLogicDependencies);
+    	ViewLogicExtractCalc columnsCompiler = new ViewLogicExtractCalc(view, viewLogicDependencies);
     	columnsCompiler.compile(source, cTCols);
     }
 

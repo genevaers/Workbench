@@ -42,25 +42,18 @@ public class ViewLogicExtractCalc {
 
 	private View view;
 
-	private SAFRViewActivationException vaException;
-
 	private Set<Integer> CTCols;
 
-	private WBExtractColumnCompiler extractColumnCompiler;
-
 	public ViewLogicExtractCalc(View view,
-        SAFRViewActivationException vaException, 
         List<ViewLogicDependency> viewLogicDependencies) {
         super();
         this.view = view;
-        this.vaException = vaException;
     }
     
     public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
         setAllSourceColumnInfo(source);
         
-		extractColumnCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             processExtractCalculation(source, col);
         }
@@ -153,18 +146,15 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;
     }
 
-    protected void checkViewColumnSourceType(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected void checkViewColumnSourceType(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
+    	//Can this really happen?
         if (colSource.getSourceType() == null) {
-            vaException.addActivationError(new ViewActivationError(source, col,
-                SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                "ERROR: View Column Source does not have a valid source type."));                  
-            throw vaException;
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("View Column Source does not have a valid source type.");                  
         }
     }
     
-    protected String generateConstantLogic(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected String generateConstantLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
         String colValue = colSource.getSourceValue();
         if (col.getDataTypeCode().getGeneralId() == Codes.ALPHANUMERIC) {
@@ -193,6 +183,7 @@ public class ViewLogicExtractCalc {
                 }
                 if (strFlag) {
                     // error.Value cannot be a string.
+                	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
                 	WorkbenchCompiler.addColumnAssignmentErrorMessage("Cannot have alphanumeric value for non-alphanumeric column.");
                 } else {
                     formulaToCompile = "COLUMN = " + colValue;
@@ -202,17 +193,12 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;        
     }
 
-    protected String generateSourceFieldLogic(ViewSource source,
-        ViewColumn col, ViewColumnSource colSource) {
+    protected String generateSourceFieldLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         
         String formulaToCompile = null;        
         if (colSource.getLRField() == null) {
-            // error. no source field selected
-            vaException.addActivationError(new ViewActivationError(
-                    source,
-                    col,
-                    SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                    "ERROR: No source field selected."));
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("No source field selected.");
         } else {
             formulaToCompile = "COLUMN = {"
                     + colSource.getLRField().getName() + "}";
@@ -220,17 +206,12 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;
     }
 
-    protected String generateLookupLogic(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected String generateLookupLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
         
         if (colSource.getLRField() == null) {
-            // error. no lookup lr field selected
-            vaException.addActivationError(new ViewActivationError(
-                    source,
-                    col,
-                    SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                    "ERROR: No lookup field selected."));
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("No lookup field selected.");
         } else {
             switch (colSource.getEffectiveDateTypeCode()
                     .getGeneralId().intValue()) {
@@ -259,13 +240,8 @@ public class ViewLogicExtractCalc {
                 break;
             case Codes.RELPERIOD_SOURCE_FILE_FIELD:
                 if (colSource.getEffectiveDateLRField() == null) {
-                    // error.no LR field selected for effective
-                    // dating.
-                    vaException.addActivationError(new ViewActivationError(
-                            source,
-                            col,
-                            SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                            "ERROR: No effective date field selected."));
+                	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+                	WorkbenchCompiler.addColumnAssignmentErrorMessage("No effective date field selected.");
                 } else {
                     // create the LT.
                     // eg. COLUMN = {Cust_Sales.ID,{date_del}}
