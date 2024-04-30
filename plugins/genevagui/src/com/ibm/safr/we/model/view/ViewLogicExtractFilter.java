@@ -53,9 +53,6 @@ public class ViewLogicExtractFilter {
     public void compile(ViewSource source) throws DAOException, SAFRException, SAFRViewActivationException, IOException {
 		if(source.getExtractRecordFilter() != null) {
 	        compileExtractFilter(source);
-	        if(vaException.hasErrorOccured()) {
-	        	throw vaException;
-	        }
 		}
     }
 

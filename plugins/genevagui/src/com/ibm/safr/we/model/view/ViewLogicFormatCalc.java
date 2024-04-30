@@ -53,7 +53,7 @@ public class ViewLogicFormatCalc {
     public void compile() {
         
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-            
+         
             checkColumnBinary(col);            
             checkColumnHeaderSize(col);
             
@@ -91,10 +91,7 @@ public class ViewLogicFormatCalc {
            (col.getHeading1() != null && col.getHeading1().length() > col.getLength()) ||
            (col.getHeading2() != null && col.getHeading2().length() > col.getLength()) ||
            (col.getHeading3() != null && col.getHeading3().length() > col.getLength())) ) {
-            
-            vaException.addActivationWarning(new ViewActivationError(null, col,
-                SAFRCompilerErrorType.VIEW_PROPERTIES,
-                "WARNING: A column header is greater than the column's length"));               
+            WorkbenchCompiler.addViewPropertiesWarningMessage("A column header is greater than the column's length");               
         }
     }
     
@@ -114,6 +111,7 @@ public class ViewLogicFormatCalc {
                 .getCodeSet(CodeCategories.EXTRACT).getCode(colType));
         col.setDefaultValue(col.getDefaultValue() == null ? null : col
                 .getDefaultValue().trim());
+        WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
     }
     
     protected void validateColumn(ViewColumn col) {
@@ -123,12 +121,8 @@ public class ViewLogicFormatCalc {
         } catch (SAFRValidationException sve) {
             // get errors from sve and attach to compiler errors.
             for (String error : sve.getErrorMessages()) {
-                vaException.addActivationError(new ViewActivationError(null, col,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES, error));
+            	WorkbenchCompiler.addViewPropertiesErrorMessage(error);
             }
-        }
-        if (vaException.hasNewErrorOccured()) {
-//            throw vaException; // cannot continue.
         }
     }
 
@@ -141,11 +135,11 @@ public class ViewLogicFormatCalc {
     		formatCalculationChecker = (WBFormatCalculationCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_CALCULATION);
     		String calc = col.getFormatColumnCalculation();
     		if(calc != null && calc.length() > 0) {
-    			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+    			WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+    			WorkbenchCompiler.clearNewErrorsDetected();
     			CTCols.add(col.getColumnNo());
 	    		String cs = formatCalculationChecker.generateCalcStack(col.getView().getId(), col.getColumnNo());
-	    		if(formatCalculationChecker.hasSyntaxErrors()) {
-	    			vaException.addCompilerErrorsNew(formatCalculationChecker.getSyntaxErrors(), null, col, SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION);
+	    		if(WorkbenchCompiler.newErrorsDetected()) {
 	    		} else {
 		            Set<Integer> calcCols = formatCalculationChecker.getColumnRefs();
 		            checkColumnDataTypes(col, calcCols);
@@ -162,9 +156,9 @@ public class ViewLogicFormatCalc {
 		for(ViewColumn c : view.getViewColumns()) {
 			if(calcCols.contains(c.getColumnNo())) {
 	    		if(c.isNumeric() == false) {
-	                vaException.addActivationError(new ViewActivationError(null, col,
-	                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
-	                        "Column " + c.getColumnNo() + " is not numeric"));
+	    			//The workbench disables this.... should not occur
+	            	WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
+	            	WorkbenchCompiler.addFormatCalculationErrorMessage("Column number " +c.getColumnNo() + " is not numeric");
 	    		}			
 	    		if(c.isSortKey()) {
 	                vaException.addActivationError(new ViewActivationError(null, col,
@@ -175,14 +169,12 @@ public class ViewLogicFormatCalc {
 		}
 		for(Integer refCol : calcCols) {
     		if(refCol > col.getColumnNo()) {
-                vaException.addActivationError(new ViewActivationError(null, col,
-                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
-                        "Column " + refCol + " is greater than the current column number"));
+            	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+            	WorkbenchCompiler.addFormatCalculationErrorMessage("Column " + refCol + " is greater than the current column number");
     		}			
     		if(refCol == 0) {
-                vaException.addActivationError(new ViewActivationError(null, col,
-                        SAFRCompilerErrorType.FORMAT_COLUMN_CALCULATION,
-                        "Column number must be greater than zero"));
+            	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+            	WorkbenchCompiler.addFormatCalculationErrorMessage("Column number must be greater than zero");
     		}						
 		}
 		

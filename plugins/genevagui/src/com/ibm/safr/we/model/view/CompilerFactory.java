@@ -198,8 +198,7 @@ public class CompilerFactory {
         extractCompiler.run();
        	ReportUtils.openReportEditor(ReportType.LogicTable);
         if(WorkbenchCompiler.hasErrors()) {
-           	makeLogicTableLog(WorkbenchCompiler.getXlt());
-    		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
+        	ltLog = "Errors detected";
         } else {
            	makeLogicTableLog(WorkbenchCompiler.getXlt());
         }

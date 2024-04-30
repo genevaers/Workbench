@@ -766,14 +766,9 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                 } else if (viewInput.getLogicTextType() == LogicTextType.Extract_Record_Output) {
                     validateERO();
                 }
-//				MessageDialog.openInformation(getSite().getShell(),
-//						"Logic Text", "The Logic Text is Valid.\n");
 			}	
 			closeValidationLog(getSite().getPage());
 		} catch (SAFRViewActivationException sva) {
-			// Validation error. store in local variable so that the
-			// View
-			// error table can use it. Also open the error RCP view.
 			validateErrors = sva;			
 			openValidationLog();
 		} catch (SAFRException e) {

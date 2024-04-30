@@ -18,19 +18,14 @@ package com.ibm.safr.we.model.view;
  */
 
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractOutputCompiler;
 
-import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
-import com.ibm.safr.we.data.WECompilerDataProvider;
 import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 

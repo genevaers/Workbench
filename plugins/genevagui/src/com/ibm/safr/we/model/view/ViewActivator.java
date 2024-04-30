@@ -104,20 +104,15 @@ public class ViewActivator {
         
         view.setCompilerVersion(ViewActivator.getCompilerVersion());
         
-        if (vaException.hasErrorOrWarningOccured()) {
-            if (vaException.hasErrorOccured()) {
-                SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
-                logActivationErrors();                
-            } else {
-                SAFRLogger.logAll(logger, Level.INFO, "Successful Activation with warnings");
-                logActivationErrors();
-            }
+    	ReportUtils.openReportEditor(ReportType.ActivationReport);
+        if(WorkbenchCompiler.hasErrors()) {
+            SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
             SAFRLogger.logEnd(logger);
             throw vaException;
-        } else {
-            SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
-            SAFRLogger.logEnd(logger);
-        }
+	    } else {
+	        SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
+	        SAFRLogger.logEnd(logger);
+	    }
     }
 
     protected void logActivationErrors() {
@@ -165,18 +160,16 @@ public class ViewActivator {
     protected void activateTheWholeView() throws DAOException, SAFRException {
 
         initialization();                
+        checkActivationShowStoppers();        
 
         compileFormatCalculation();
         compileFormatFilter();
-//        vaException.getActivationLogNew().clear();
         compileViewSources();
-//        vaException.getActivationLogNew().clear();
                 
         processResult();        
     }
 
     protected void initialization() throws SAFRException, DAOException, SAFRViewActivationException {
-        checkActivationShowStoppers();        
         initViewDependencies();
         initializeViewColumns();
         initializeWorkbenchCompiler();
@@ -189,6 +182,18 @@ public class ViewActivator {
 		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
 	    WorkbenchCompiler.setEnvironment(view.getEnvironmentId());
 	    CompilerFactory.setView(view);
+	    setupWorkbenchCompilerViewColumnSources();
+	}
+
+	private void setupWorkbenchCompilerViewColumnSources() {
+		for (ViewSource source : view.getViewSources().getActiveItems()) {
+			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
+		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
+		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
+	        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+				WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+	        }
+		}
 	}
 
 	protected void checkActivationShowStoppers()
@@ -202,7 +207,7 @@ public class ViewActivator {
         checkRecordAggregation();
         checkCopyViewHasNoColumns();
         checkNormalViewHasColumns();
-        if (!vaException.getActivationLogNew().isEmpty()) {
+        if (WorkbenchCompiler.newErrorsDetected()) {
             throw vaException; // cannot continue.                
         }
     }
@@ -210,9 +215,7 @@ public class ViewActivator {
     private void checkNormalViewHasColumns() {
         if (! view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
         	if(view.getViewColumns().size() == 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Only a Source Record Layout view can have no columns."));
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("Only a Source Record Layout view can have no columns.");
         	}
         }		
 	}
@@ -220,9 +223,7 @@ public class ViewActivator {
 	private void checkCopyViewHasNoColumns() {
         if (view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
         	if(view.getViewColumns().size() > 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "A Source Record Layout view cannot have columns."));
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("A Source Record Layout view cannot have columns.");
         	}
         }		
 	}
@@ -231,9 +232,8 @@ public class ViewActivator {
         if (view.isFormatPhaseInUse() && view.isFormatPhaseRecordAggregationOn()) {
         	for(ViewColumn c : view.getViewColumns()) {
         		if(c.isSortKey() == false && c.isNumeric() && c.getRecordAggregationCode() == null) {
-                    vaException.addActivationError(new ViewActivationError(null, c,
-                            SAFRCompilerErrorType.VIEW_PROPERTIES,
-                            "Record Aggregation cannot be blank."));
+        			WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
+                	WorkbenchCompiler.addViewPropertiesErrorMessage("Record Aggregation cannot be blank.");
         		}
         	}
         }		
@@ -247,14 +247,10 @@ public class ViewActivator {
     }
         
     protected void checkFormatHasSortKey() {
-        // if format phase is used, then it should have
-        // atleast one sort key.
         if (view.isFormatPhaseInUse()) {
             if (view.getViewSortKeys().getActiveItems().isEmpty()) {
-                // error. The view must have at least one sort key.
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "This View must have at least one Sort Key."));
+            	WorkbenchCompiler.setCurrentColumnNumber(0);
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("This View must have at least one Sort Key.");
             }
         }
     }
@@ -263,10 +259,8 @@ public class ViewActivator {
         // if the view doesn't have any View sources, then throw activation
         // exception.
         if (view.getViewSources().getActiveItems().isEmpty()) {
-            vaException.addActivationError(new ViewActivationError(null, null,
-                    SAFRCompilerErrorType.VIEW_PROPERTIES,
-                    "This View must have at least one view source."));
-
+        	WorkbenchCompiler.setCurrentColumnNumber(0);
+        	WorkbenchCompiler.addViewPropertiesErrorMessage("This View must have at least one view source.");
         }
     }
     
@@ -277,8 +271,8 @@ public class ViewActivator {
         if (isSummarizedHardCopyView()) {
             for (ViewSortKey key : view.getViewSortKeys().getActiveItems()) {
                 if (isCategoryModeAndLast(key) && isSuppressPrint(key)) {
-                    vaException.addActivationError(new ViewActivationError(null, key.getViewColumn(), SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view."));
+                	WorkbenchCompiler.setCurrentColumnNumber(key.getViewColumn().getColumnNo());
+                	WorkbenchCompiler.addViewPropertiesErrorMessage("Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view.");
                     break;
                 }
             }
@@ -313,10 +307,8 @@ public class ViewActivator {
                 }
             }
             if (found > 1) {
-                // error. duplicate source found.
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Duplicate View sources are not allowed."));
+            	WorkbenchCompiler.setCurrentColumnNumber(0);
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("Duplicate View sources are not allowed.");
                 break;
             }
         }
@@ -393,7 +385,7 @@ public class ViewActivator {
         }
     }
 
-    protected void compileFormatCalculation() {        
+    protected void compileFormatCalculation() {    
         ViewLogicFormatCalc logCompiler = new ViewLogicFormatCalc(view, vaException);
         logCompiler.compile();
         CTCols = logCompiler.getCTCols();
@@ -403,23 +395,16 @@ public class ViewActivator {
 	protected void compileViewSources() {
 
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
-			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
-		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
-		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
+			WorkbenchCompiler.clearNewErrorsDetected();
 			compileExtractFilter(source);
 			compileExtractCalculation(source, CTCols);
 			compileExtractOutput(source);
 			
 			WorkbenchCompiler.buildTheExtractTableIfThereAreNoErrors();        
-			if(WorkbenchCompiler.hasErrors()) {
-				vaException.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);        	
+			if(WorkbenchCompiler.newErrorsDetected()) {
 	        } else {
 	        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
 	        }
-	        if(WorkbenchCompiler.hasWarnings()) {
-	        	vaException.addCompilerWarnings(WorkbenchCompiler.getWarnings(), source, null, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-	        }
-
 		}
 	}
     
@@ -452,8 +437,8 @@ public class ViewActivator {
 							SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
 				}
 	            Set<Integer> calcCols = ffc.getColumnRefs();
-	            checkColumnDataTypes(calcCols);
-	    		CTCols.addAll(ffc.getColumnRefs());
+	            checkColumnDataTypes(calcCols );
+	    		CTCols.addAll(calcCols);
 			}
 		}
     }
@@ -464,11 +449,12 @@ public class ViewActivator {
 		for(ViewColumn c : view.getViewColumns()) {
 			if(calcCols.contains(c.getColumnNo())) {
 	    		if(c.isNumeric() == false) {
-	                vaException.addActivationError(new ViewActivationError(null, null,
-	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-	                        "Column number " +c.getColumnNo() + " is alphanumeric"));
+	    			//The workbench disables this.... should not occur
+	            	WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
+	            	WorkbenchCompiler.addFormatFilterErrorMessage("Column number " +c.getColumnNo() + " is alphanumeric");
 	    		}			
 	    		if(c.isSortKey()) {
+	    			//This is disabled too!
 	                vaException.addActivationError(new ViewActivationError(null, null,
 	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
 	                        "Column number " +c.getColumnNo() + " a sort key column"));
@@ -477,14 +463,12 @@ public class ViewActivator {
 		}
 		for(Integer refCol : calcCols) {
     		if(refCol == 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-                        "Column number must be greater than zero."));
+            	WorkbenchCompiler.setCurrentColumnNumber(refCol);
+            	WorkbenchCompiler.addFormatFilterErrorMessage("Column number must be greater than zero.");
     		}						
     		if(refCol > view.getViewColumns().size()) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-                        "Column number " + refCol + " is greater than the number of columns " + view.getViewColumns().size()));
+            	WorkbenchCompiler.setCurrentColumnNumber(refCol);
+            	WorkbenchCompiler.addFormatFilterErrorMessage("Column number " + refCol + " is greater than the number of columns " + view.getViewColumns().size());
     		}						
 		}
 		
@@ -496,7 +480,6 @@ public class ViewActivator {
             view.setViewLogicDependencies(viewLogicDependencies);
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
         }
-    	ReportUtils.openReportEditor(ReportType.ActivationReport);
     }
 
     protected void extractDependencies() {

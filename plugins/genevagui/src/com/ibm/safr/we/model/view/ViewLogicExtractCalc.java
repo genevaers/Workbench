@@ -129,11 +129,6 @@ public class ViewLogicExtractCalc {
 			return;
 		}
 		compileLogic(source, col, colSource, formulaToCompile);
-		if (vaException.hasErrorOccured()) {
-//			throw vaException;
-		} else {
-			//extractDependencies(colSource);
-		}
 	}
 
     protected String generateColumnLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
@@ -294,7 +289,7 @@ public class ViewLogicExtractCalc {
     }    
     
     protected void compileLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource, String formulaToCompile) {
-			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+    		WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
 			WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
 			WorkbenchCompiler.addViewColumnSource(CompilerFactory.makeViewColumnSource(view, source, col, formulaToCompile));
     		extractCompiler.buildAST();
