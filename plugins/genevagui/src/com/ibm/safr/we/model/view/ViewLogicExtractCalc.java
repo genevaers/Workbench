@@ -119,7 +119,7 @@ public class ViewLogicExtractCalc {
 	protected void processExtractCalculation(ViewSource source, ViewColumn col) throws SAFRViewActivationException, SAFRException, DAOException {
 		ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
 		String formulaToCompile;
-        if(colSource.getExtractColumnAssignment().length() == 0 || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
+        if((colSource.getExtractColumnAssignment() == null || colSource.getExtractColumnAssignment().length() == 0) || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
         	formulaToCompile = generateColumnLogic(source, col, colSource);
             colSource.setExtractColumnAssignmentBasic(formulaToCompile);
         } else {
@@ -193,11 +193,7 @@ public class ViewLogicExtractCalc {
                 }
                 if (strFlag) {
                     // error.Value cannot be a string.
-                    vaException.addActivationError(new ViewActivationError(
-                            source,
-                            col,
-                            SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                            "ERROR: Cannot have alphanumeric value for non-alphanumeric column."));
+                	WorkbenchCompiler.addColumnAssignmentErrorMessage("Cannot have alphanumeric value for non-alphanumeric column.");
                 } else {
                     formulaToCompile = "COLUMN = " + colValue;
                 }
