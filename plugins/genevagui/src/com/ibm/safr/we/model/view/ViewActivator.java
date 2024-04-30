@@ -428,7 +428,7 @@ public class ViewActivator {
         // Format phase record filter compilation
         // ONLY if format phase is ON
 		if (view.isFormatPhaseInUse()) {
-			if (view.getFormatRecordFilter() != null & view.getFormatRecordFilter().length() > 0) {
+			if (view.getFormatRecordFilter() != null && view.getFormatRecordFilter().length() > 0) {
 				WBFormatFilterCompiler ffc = (WBFormatFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.FORMAT_FILTER);
 				CompilerFactory.setFormatFilterCalculationStack(ffc.generateCalcStack(view.getId()));
 				if (ffc.hasSyntaxErrors()) {
