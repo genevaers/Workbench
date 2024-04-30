@@ -99,7 +99,6 @@ public class PGViewSourceDAO implements ViewSourceDAO {
 		vsTransfer.setSourceSeqNo(rs.getInt(COL_SEQNO));
 		vsTransfer.setLRFileAssocId(rs.getInt(COL_INLRLFASSOCID));
 		vsTransfer.setExtractFilterLogic(rs.getString(COL_EXTRACTFILTLOGIC));
-		vsTransfer.setExtractFileAssociationId(rs.getInt(COL_OUTLFPFASSOCID));
 		if (rs.wasNull())
 			vsTransfer.setExtractFileAssociationId(null);
         vsTransfer.setWriteExitId(rs.getInt(COL_WRITEEXITID));
@@ -274,12 +273,7 @@ public class PGViewSourceDAO implements ViewSourceDAO {
 						} else {
 							pst.setString(i++, viewSrcTrans.getExtractFilterLogic());
 						}
-						if (viewSrcTrans.getExtractFileAssociationId() == null || viewSrcTrans.getExtractFileAssociationId() == 0) {
-	                        pst.setNull(i++, Types.INTEGER);						    
-						}
-						else {						    
-	                        pst.setInt(i++, DataUtilities.getInt(viewSrcTrans.getExtractFileAssociationId()));
-						}
+	                    pst.setNull(i++, Types.INTEGER);						    
                         if (viewSrcTrans.getWriteExitId() == null || viewSrcTrans.getWriteExitId() == 0) {
                             pst.setNull(i++, Types.INTEGER);                            
                         }
