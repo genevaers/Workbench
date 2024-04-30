@@ -406,6 +406,15 @@ public class CompilerFactory {
         } else {
         	cd.setDateCodeValue(0);        	
         }
+        int colType;
+        if (vc.isSortKey()) {
+            colType = Codes.SORTKEY;
+        } else {
+            colType = Codes.DT_AREA;
+        }
+        vc.setExtractAreaCode(SAFRApplication.getSAFRFactory()
+                .getCodeSet(CodeCategories.EXTRACT)
+                .getCode(colType));
         cd.setExtractAreaValue(vc.getExtractAreaCode().getGeneralId());
         cd.setLength(vc.getLength());
         if(vc.getDataAlignmentCode() != null) {
