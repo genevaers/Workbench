@@ -418,7 +418,7 @@ public class SAFRFactory extends SAFRObject {
 			} catch (DAOException de) {
 				throw de;
 			} catch (Exception e) {
-				e.printStackTrace();
+				SAFRLogger.logAllSeparator(logger, Level.INFO, "Exception " + e.getMessage());
 			}
 			this.codeSets = codeSetMap;
 		}

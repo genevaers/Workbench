@@ -947,6 +947,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 	
 	public boolean activateView() {
+//		getSite().getShell().setCursor(
+//				getSite().getShell().getDisplay().getSystemCursor(
+//						SWT.CURSOR_WAIT));
 		ToolBar toolBar = setCursorWaiting();
 		try {
 
@@ -1020,6 +1023,7 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 		} finally {
 			updateElement(ViewColumnEditor.STARTPOS);
 			updateElement(ViewColumnEditor.COLUMN_PROP_HEADER);
+//			getSite().getShell().setCursor(null);
 			setCursorNormal(toolBar);
 		}
 	}

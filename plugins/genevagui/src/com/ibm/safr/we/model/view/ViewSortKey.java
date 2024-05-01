@@ -185,7 +185,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 					.getCodeSet(CodeCategories.SORTSEQ).getCode(
 							trans.getSortSequenceCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo
@@ -197,7 +196,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 					.getCodeSet(CodeCategories.SORTBRKFTR).getCode(
 							trans.getFooterOptionCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo
@@ -209,7 +207,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 					.getCodeSet(CodeCategories.SORTBRKHDR).getCode(
 							trans.getHeaderOptionCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo
@@ -220,7 +217,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 			this.displayModeCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.SORTDSP, trans.getDisplayModeCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo
@@ -232,7 +228,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 			this.dataTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.DATATYPE).getCode(trans.getDataTypeCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo
@@ -247,7 +242,6 @@ public class ViewSortKey extends SAFREnvironmentalComponent {
 			this.dateTimeFormatCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.FLDCONTENT, trans.getDateTimeFormatCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("Sort Key "
 							+ this.keySequenceNo

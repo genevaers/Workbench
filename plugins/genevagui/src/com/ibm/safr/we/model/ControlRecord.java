@@ -174,7 +174,6 @@ public class ControlRecord extends SAFREnvironmentalComponent {
 	        SAFRApplication.getModelCount().incCount(this.getClass(), 1);			
 
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException(
 					"The control record with id "
 							+ this.getId()

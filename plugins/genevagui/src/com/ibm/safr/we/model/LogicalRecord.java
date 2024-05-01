@@ -329,7 +329,6 @@ public class LogicalRecord extends SAFRActivatedComponent {
 			this.lrTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.LRTYPE).getCode(trans.getLrTypeCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("This Logical Record does not have a valid type. Please select a valid type before saving.");
 			this.lrTypeCode = null;
@@ -338,7 +337,6 @@ public class LogicalRecord extends SAFRActivatedComponent {
 			this.lrStatusCode = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.LRSTATUS).getCode(trans.getLrStatusCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("This Logical Record does not have a valid status. Please select a valid status before saving.");
 			this.lrStatusCode = null;
@@ -1202,7 +1200,6 @@ public class LogicalRecord extends SAFRActivatedComponent {
 
 			} // end while(!success)
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException(
 					"The logical record with id "
 							+ this.getId()

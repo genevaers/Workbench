@@ -194,7 +194,6 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 			this.sourceType = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.COLSRCTYPE).getCode(trans.getSourceTypeId()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add(" does not have a valid source type. Please select a valid source type before saving.");
 			this.sourceType = null;
@@ -229,7 +228,6 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 			this.effectiveDateTypeCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.RELPERIOD, trans.getEffectiveDateTypeCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add(" does not have a valid effective date type. Please select a valid effective date type, if required, before saving.");
 			this.effectiveDateTypeCode = null;

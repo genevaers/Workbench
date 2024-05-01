@@ -202,7 +202,6 @@ public class Group extends SAFRComponent {
     			trans = DAOFactoryHolder.getDAOFactory().getGroupDAO().persistGroup(trans);
     			setObjectData(trans);
     		} catch (SAFRNotFoundException snfe) {
-    			snfe.printStackTrace();
     			throw new SAFRException("The group with id "+ this.getId()
     			    + " cannot be updated as its already been deleted from the database.",snfe);
     		}

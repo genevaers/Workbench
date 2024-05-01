@@ -1552,7 +1552,7 @@ public class UIUtilities {
 			properties.load(resourceStream);
             ver = " (" + properties.getProperty("builder") + " " + properties.getProperty("timestamp")  + ")";
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "unable to get timestamp", e);
 		}
         return ver;
     }

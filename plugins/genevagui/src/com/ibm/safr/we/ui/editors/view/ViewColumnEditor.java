@@ -2235,7 +2235,6 @@ public class ViewColumnEditor {
             index = tmpcolumn.getColumnNo();
         } catch (SAFRValidationException sve) {
             MessageDialog.openError(mediator.getSite().getShell(), "New Column", sve.getMessageString());
-            sve.printStackTrace();
             return null;
         } catch (SAFRException e) {
             UIUtilities.handleWEExceptions(e);

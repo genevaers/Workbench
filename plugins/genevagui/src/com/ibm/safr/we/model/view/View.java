@@ -301,7 +301,6 @@ public class View extends SAFRActivatedComponent {
                     .getCodeSet(CodeCategories.VIEWSTATUS)
                     .getCode(trans.getStatusCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid Status. " + SAFRUtilities.LINEBREAK + "Status will be set if the View is saved.");
         }
         try {
@@ -312,7 +311,6 @@ public class View extends SAFRActivatedComponent {
                     .getCodeSet(CodeCategories.OUTPUTMED)
                     .getCode(trans.getOutputFormatCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings
                     .add("The Output Format is incomplete. " + SAFRUtilities.LINEBREAK + "A valid Output Format must be specified before saving.");
             this.outputFormatCode = null;
@@ -359,7 +357,6 @@ public class View extends SAFRActivatedComponent {
             this.fileFieldDelimiterCode = ModelUtilities.getCodeFromKey(
                     CodeCategories.FLDDELIM, trans.getFieldDelimCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid field delimiter. Please select a valid field delimiter, if required, before saving.");
             this.fileFieldDelimiterCode = null;
         }
@@ -367,7 +364,6 @@ public class View extends SAFRActivatedComponent {
             this.fileStringDelimiterCode = ModelUtilities.getCodeFromKey(
                     CodeCategories.STRDELIM, trans.getStringDelimCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid string delimiter. Please select a valid string delimiter, if required, before saving.");
             this.fileStringDelimiterCode = null;
         }
@@ -2477,8 +2473,6 @@ public class View extends SAFRActivatedComponent {
             } // end while(!success)
 
         } catch (SAFRNotFoundException snfe) {
-            snfe.printStackTrace();
-
             throw new SAFRException(
                     "The view with id "
                             + this.getId()

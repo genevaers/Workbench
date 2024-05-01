@@ -174,8 +174,10 @@ public class CopybookImporter extends LogicalRecordImporter {
 		try {
 			ccb2lr.processCopybook(cbFile.getFile().toPath());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SAFRValidationException sve = new SAFRValidationException();
+			String err = "Unable to process copybook. IOException";
+			sve.setErrorMessage(Property.LR_NAME, err);
+			throw sve;
 		}
 		if(ccb2lr.hasErrors()) {
 			SAFRValidationException sve = new SAFRValidationException();

@@ -83,6 +83,7 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
+import com.ibm.safr.we.utilities.SAFRLogger;
 
 /**
  * An editor for writing Logic Text.
@@ -315,7 +316,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                     	LogicTextView lTView2 = (LogicTextView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(LogicTextView.ID);
                         lTView2.setFocusOn(selectedField, logicTextType);
 					} catch (PartInitException e1) {
-						e1.printStackTrace();
+					    logger.log(Level.SEVERE, "PartInitException " + e1.getMessage());
 					}
                 }
 			}

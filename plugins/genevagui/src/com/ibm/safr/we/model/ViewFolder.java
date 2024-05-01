@@ -148,7 +148,6 @@ public class ViewFolder extends SAFREnvironmentalComponent {
                 }
             } 
         } catch (SAFRNotFoundException snfe) {
-            snfe.printStackTrace();
             throw new SAFRException("The logical file with id "+ this.getId()
                 + " cannot be updated as its already been deleted from the database.",snfe);
         } finally {

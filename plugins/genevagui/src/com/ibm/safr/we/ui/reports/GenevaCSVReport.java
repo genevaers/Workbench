@@ -31,7 +31,6 @@ public abstract class GenevaCSVReport {
 	
 	protected Path reportPath;
 	protected List<String> headers = new ArrayList<>();
-	//protected List<String> row = new ArrayList<>();
 	protected List<List<String>> allrows = new ArrayList<>();
 
 	public void write() {

@@ -193,7 +193,6 @@ public class ImportUtility extends SAFRObject {
 				initXMLFactories();
 			} catch (ParserConfigurationException e1) {
 				// xml parser runtime problem so cannot continue
-				e1.printStackTrace();
 				throw new SAFRFatalException(
 						"An XML parser system error occurred. Cannot continue with import. ",
 						e1);

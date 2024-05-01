@@ -147,7 +147,6 @@ public class Environment extends SAFRComponent {
 				}
 
 			} catch (SAFRNotFoundException snfe) {
-				snfe.printStackTrace();
 				throw new SAFRException("The environment with id "+ this.getId()+ 
 				    " cannot be updated as its already been deleted from the database.", snfe);
 			}
