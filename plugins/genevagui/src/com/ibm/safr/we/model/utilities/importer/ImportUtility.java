@@ -51,7 +51,6 @@ import com.ibm.safr.we.data.transfer.SAFRComponentTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRCancelException;
 import com.ibm.safr.we.exceptions.SAFRException;
-import com.ibm.safr.we.exceptions.SAFRFatalException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.model.LogicalFile;
 import com.ibm.safr.we.model.LogicalRecord;
@@ -192,10 +191,7 @@ public class ImportUtility extends SAFRObject {
 			try {
 				initXMLFactories();
 			} catch (ParserConfigurationException e1) {
-				// xml parser runtime problem so cannot continue
-				throw new SAFRFatalException(
-						"An XML parser system error occurred. Cannot continue with import. ",
-						e1);
+			    logger.log(Level.SEVERE, "An XML parser system error occurred. Cannot continue with import. " + e1.getMessage());
 			}
 		}
 		
@@ -306,10 +302,7 @@ public class ImportUtility extends SAFRObject {
 				+ file.getName() + " because:" + SAFRUtilities.LINEBREAK + e.getMessage();
 			throw new SAFRException(msg, e);
 		} catch (XPathExpressionException e) {
-			// only occurs on xpath syntax error (programming error)
-			throw new SAFRFatalException(
-					"An XPath system error occurred. Cannot continue with import. ",
-					e);
+		    logger.log(Level.SEVERE, "An XPath system error occurred. Cannot continue with import. " + e.getMessage());
 		}
 	}
 	

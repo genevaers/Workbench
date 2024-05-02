@@ -250,8 +250,7 @@ public class DB2ViewColumnDAO implements ViewColumnDAO {
                 }
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+			logger.severe("Unable to  fixUpCreatedColumns" + e.getMessage());
         }
     }
 	

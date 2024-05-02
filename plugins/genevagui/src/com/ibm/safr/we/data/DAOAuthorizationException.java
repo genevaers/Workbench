@@ -37,8 +37,11 @@ public class DAOAuthorizationException extends DAOException {
 	 * @param cause
 	 *            {@link Throwable} cause of the Exception.
 	 */
+	public DAOAuthorizationException(String message) {
+		super(message);
+	}
+
 	public DAOAuthorizationException(String message, Throwable cause) {
 		super(message, cause);
 	}
-
 }

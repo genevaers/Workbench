@@ -360,13 +360,9 @@ public class UIUtilities {
 			labelProvider.setInput();
 			comboViewer.setLabelProvider(labelProvider);
 
-			int iCounter;
-			for (iCounter = 0; iCounter < 2; iCounter++) {
-				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-						iCounter, comboViewer, ComponentType.ViewFolder);
-				comboBox.getTable().getColumn(iCounter).addSelectionListener(
-						colListener);
-
+			for (int iCounter = 0; iCounter < 2; iCounter++) {
+				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, ComponentType.ViewFolder);
+				comboBox.getTable().getColumn(iCounter).addSelectionListener(colListener);
 			}
 
 			comboViewer.setInput(viewFolderList);
@@ -850,16 +846,14 @@ public class UIUtilities {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 
-		int iCounter = 0;
         String[] columnHeaders = new String[] { "ID", "Name" };
         int[] columnWidths = new int[] { 100, 300 };
         if (nameWidth != null) {
             columnWidths[1] = nameWidth;
         }
 		int length = columnWidths.length;
-		for (iCounter = 0; iCounter < length; iCounter++) {
-			TableViewerColumn column = new TableViewerColumn(tabViewer,
-					SWT.NONE);
+		for (int iCounter = 0; iCounter < length; iCounter++) {
+			TableViewerColumn column = new TableViewerColumn(tabViewer,	SWT.NONE);
 			column.getColumn().setText(columnHeaders[iCounter]);
 			column.getColumn().setToolTipText(columnHeaders[iCounter]);
 			column.getColumn().setWidth(columnWidths[iCounter]);

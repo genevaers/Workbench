@@ -1,6 +1,7 @@
 package com.ibm.safr.we.model.utilities.export;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,6 +41,7 @@ import com.ibm.safr.we.model.query.EnvironmentQueryBean;
 import com.ibm.safr.we.model.utilities.TaskLogger;
 import com.ibm.safr.we.ui.dialogs.ExportInactiveDialog;
 import com.ibm.safr.we.ui.editors.ExportUtilityEditor;
+import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.FileUtils;
 import com.ibm.safr.we.utilities.ProfileLocation;
 
@@ -792,14 +794,17 @@ public class ExportUtility extends SAFRObject {
 	 *            is used to create an output folder.
 	 * @throws IOException
 	 */
-	private OutputStream openFile(List<ExportComponent> exportComponents, String fileName)
-			throws IOException {
+	private OutputStream openFile(List<ExportComponent> exportComponents, String fileName) {
 		File outputFile = new File(exportPath);
 		outputFile.mkdir(); // create the required directory
 		outputFile = new File(exportPath + "/" + fileName);
-		outputFile.createNewFile();
-
-		return new FileOutputStream(outputFile);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(outputFile);
+		} catch (FileNotFoundException e) {
+			UIUtilities.handleWEExceptions(e, "Unable to open file", fileName);
+		}
+		return fos;
 	}
 	
 	public static String getDefaultLocation(ComponentType componentType) {

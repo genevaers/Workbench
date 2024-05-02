@@ -435,7 +435,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
 			            preferences.flush();
 			        } catch (BackingStoreException e1) {
 			            logger.log(Level.SEVERE, "Failed to save preferences", e1);
-			            throw new SAFRFatalException(e1);                    
+			            throw new SAFRFatalException("Failed to save preferences " + e1.getMessage());                    
 			        }       
 				    
 					Object[] checkedElements = tableViewerXmlFiles

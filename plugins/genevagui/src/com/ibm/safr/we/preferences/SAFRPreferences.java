@@ -1,6 +1,5 @@
 package com.ibm.safr.we.preferences;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -34,9 +33,6 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import org.eclipse.core.runtime.Platform;
-
-import com.ibm.safr.we.constants.SAFREnvProp;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.exceptions.SAFRFatalException;
 import com.ibm.safr.we.utilities.ProfileLocation;
@@ -174,7 +170,7 @@ public class SAFRPreferences {
         try {
             getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("setLastUser " + e.getMessage());
         }
     }
 
@@ -202,7 +198,7 @@ public class SAFRPreferences {
         try {
             getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("setIgnoreImportWarnings " + e.getMessage());
         }
     }
 
@@ -222,7 +218,7 @@ public class SAFRPreferences {
         try {
             getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("setIgnoreMigrateWarnings " + e.getMessage());
         }
     }
 
@@ -242,7 +238,7 @@ public class SAFRPreferences {
         try {
             getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("setFullActicationReportEnabled " + e.getMessage());
         }
     }
 
@@ -288,7 +284,7 @@ public class SAFRPreferences {
         try {
             getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("setReportsPath " + e.getMessage());
         }
 		
 	}

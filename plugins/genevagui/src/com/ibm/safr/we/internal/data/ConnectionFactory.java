@@ -79,13 +79,12 @@ public class ConnectionFactory {
 		} catch (SQLException e) {
 			// SQLState 28000 is ISO standard authorization error
 			if (e.getSQLState() != null && e.getSQLState().equals("28000")) {
-				throw new DAOAuthorizationException(e.getMessage(), e);
+				throw new DAOAuthorizationException("Authorization error " + e.getMessage());
 			} else {
 				throw DataUtilities.createDAOException(e.getMessage(), e);
 			}
 		} catch (Exception e) {
-			throw DataUtilities.createDAOException(
-					"Cannot connect to database.", e);
+			throw DataUtilities.createDAOException("Cannot connect to database.", e);
 		}
 	}
 

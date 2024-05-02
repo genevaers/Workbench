@@ -113,10 +113,8 @@ public class FindReplaceCompLRField {
             }
         });
 
-        int iCounter;
-        for (iCounter = 0; iCounter < 2; iCounter++) {
-            ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-                iCounter, comboLRViewer, ComponentType.LogicalRecord);
+        for (int iCounter = 0; iCounter < 2; iCounter++) {
+            ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboLRViewer, ComponentType.LogicalRecord);
             comboLR.getTable().getColumn(iCounter).addSelectionListener(colListener);
         }
                 

@@ -21,6 +21,7 @@ package com.ibm.safr.we.internal.data.pgdao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ibm.safr.we.constants.ComponentType;
@@ -30,7 +31,6 @@ import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.data.DataUtilities;
 import com.ibm.safr.we.data.UserSessionParameters;
 import com.ibm.safr.we.data.dao.MigrateDAO;
-import com.ibm.safr.we.exceptions.SAFRFatalException;
 
 public class PGMigrateDAO implements MigrateDAO {
 
@@ -91,8 +91,10 @@ public class PGMigrateDAO implements MigrateDAO {
 			return "VIEW FOLDER";
 		case View :
 			return "VIEW";
-		default :
-			throw new SAFRFatalException("Invalid ComponentType for migration");
+		default : {
+			logger.log(Level.SEVERE, "Invalid ComponentType for migration");
+			return null;
+		}
 		}
 	}
 	

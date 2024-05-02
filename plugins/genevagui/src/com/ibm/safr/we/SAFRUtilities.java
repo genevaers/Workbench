@@ -89,7 +89,7 @@ public class SAFRUtilities {
 			} catch (IllegalBlockSizeException e) {
 				decrypted = "";
 			} catch (Exception e) {
-				throw new SAFRFatalException(e);
+				throw new SAFRFatalException(e.getMessage());
 			}
 		}
 		return decrypted;
@@ -109,7 +109,7 @@ public class SAFRUtilities {
 			SecretKeySpec key = createSecretKey();
 			encrypted = encrypt(str, key);
 		} catch (Exception e) {
-			throw new SAFRFatalException(e);
+			throw new SAFRFatalException(e.getMessage());
 		}
 		String retstr = "";
 		for (byte b : encrypted.getBytes()) {

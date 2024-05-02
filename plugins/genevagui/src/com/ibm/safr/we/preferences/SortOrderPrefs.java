@@ -86,7 +86,7 @@ public class SortOrderPrefs {
             SAFRPreferences.getSAFRPreferences().sync();
             
         } catch (BackingStoreException e) {
-            throw new SAFRFatalException(e);
+            throw new SAFRFatalException("Unable to Store Preferences " + e.getMessage());
         }        
     }
     

@@ -27,6 +27,8 @@ import java.util.List;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+import com.ibm.safr.we.exceptions.SAFRException;
+
 public abstract class GenevaCSVReport {
 	
 	protected Path reportPath;
@@ -38,7 +40,7 @@ public abstract class GenevaCSVReport {
 			printer.printRecord(getHeaders());
 			printer.printRecords(getRows());
 		 } catch (IOException ex) {
-		     ex.printStackTrace();
+			 throw new SAFRException("Could not write Report CSV file " + reportPath.toString());
 		 }
 	}
 	

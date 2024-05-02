@@ -351,8 +351,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		dummmyLabel.setLayoutData(dataDummyLabel);
 		dummmyLabel.setVisible(false);
 
-		Label labelId = safrGuiToolkit.createLabel(compositeGeneral, SWT.NONE,
-				"ID:");
+		Label labelId = safrGuiToolkit.createLabel(compositeGeneral, SWT.NONE, "ID:");
 		FormData dataLabelId = new FormData();
 		dataLabelId.top = new FormAttachment(0, 10);
 		dataLabelId.left = new FormAttachment(0, 10);

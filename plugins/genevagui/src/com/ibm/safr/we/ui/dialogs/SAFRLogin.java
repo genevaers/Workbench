@@ -389,7 +389,7 @@ public class SAFRLogin extends TitleAreaDialog {
                         SAFRPreferences.getSAFRPreferences().sync();
                     } catch (BackingStoreException e1) {
                         logger.log(Level.SEVERE, "Failed to save preferences", e1);
-                        throw new SAFRFatalException(e1);
+                        throw new SAFRFatalException("Failed to save preferences " + e1.getMessage());
                     }
                 }
                 ApplicationMediator.getAppMediator().waitCursor();
@@ -681,7 +681,7 @@ public class SAFRLogin extends TitleAreaDialog {
 				}
 			} else {
 				if (chckEnv && !defEnvId.equals(newDefEnvId)) {
-					currentUser.setUserPreferences(newDefEnvId, new Integer(0));
+					currentUser.setUserPreferences(newDefEnvId, 0);
 				}
 			}
 
@@ -815,7 +815,7 @@ public class SAFRLogin extends TitleAreaDialog {
 				SAFRPreferences.getSAFRPreferences().sync();
 			} catch (BackingStoreException e1) {
 	            logger.log(Level.SEVERE, "Failure to save preferences", e1);
-				throw new SAFRFatalException(e1);
+				throw new SAFRFatalException("Failed to save preferences" + e1.toString());
 			}
 		}
 		

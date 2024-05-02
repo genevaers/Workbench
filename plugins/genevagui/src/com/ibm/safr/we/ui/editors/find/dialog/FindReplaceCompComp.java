@@ -129,13 +129,11 @@ public class FindReplaceCompComp {
             comboComponentViewer.setInput(list);
             
             // organize sorting for the table
-            int iCounter;
-            for (iCounter = 0; iCounter < 2; iCounter++) {
+            for (int iCounter = 0; iCounter < 2; iCounter++) {
                 if (prvsListner[iCounter] != null) {
                     comboComp.getTable().getColumn(iCounter).removeSelectionListener(prvsListner[iCounter]);
                 }
-                ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-                        iCounter, comboComponentViewer, mediator.getComponentType());
+                ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboComponentViewer, mediator.getComponentType());
                 prvsListner[iCounter] = colListener;
                 comboComp.getTable().getColumn(iCounter).addSelectionListener(colListener);
             }

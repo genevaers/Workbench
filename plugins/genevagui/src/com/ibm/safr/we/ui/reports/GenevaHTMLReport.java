@@ -30,8 +30,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.logging.Logger;
 
 public abstract class GenevaHTMLReport {
+	static transient Logger logger = Logger.getLogger("com.ibm.safr.we.ui.reports.GenevaHTMLReport");
 	
 	protected Path reportPath;
 	private FileWriter fw;
@@ -58,8 +60,7 @@ public abstract class GenevaHTMLReport {
 							).withStyle("overflow-x: scroll")).renderFormatted());
 			fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.severe("Unable to write HTML Report " + reportPath);
 		}
 	}
 	

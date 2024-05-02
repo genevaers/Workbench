@@ -46,6 +46,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
+import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.reports.ViewPropertiesReportGenerator;
@@ -116,8 +117,8 @@ public class ReportEditor extends EditorPart {
 		try {
 			reportInput.writeReportFiles(getAndMakeReportsPath());
 			browser.setUrl(reportInput.getHtmlReportUrl());
-		} catch (Exception e) {
-            logger.log(Level.SEVERE, "Report failure", e);
+		} catch (SAFRException e) {
+            logger.log(Level.SEVERE, "Report failure: " + e);
 		}
 	}
 

@@ -1158,7 +1158,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
                     preferences.flush();
                 } catch (BackingStoreException e1) {
                     logger.log(Level.SEVERE, "Failed to save preferences", e1);
-                    throw new SAFRFatalException(e1);                    
+                    throw new SAFRFatalException("Failed to save preferences " + e1.getMessage());                    
                 }       
 			    
 				ExportComponent modelItem = null;
