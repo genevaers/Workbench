@@ -438,7 +438,9 @@ public class ViewActivator {
 	}
 	
     protected void processResult() {
-        if (!vaException.hasErrorOccured()) {
+        if (WorkbenchCompiler.hasErrors()) {
+        	logger.log(Level.SEVERE, "Activation Errors found");
+        } else {
         	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));

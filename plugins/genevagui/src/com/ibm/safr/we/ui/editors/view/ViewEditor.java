@@ -1013,6 +1013,7 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 					    "A database error occured while performing this operation.",UIUtilities.titleStringDbException);
 				} catch (SAFRViewActivationException e) {
 					//Only get here is something is in error
+					activated = false;
 				} catch (SAFRException e) {
 					// show exception error message.
 					UIUtilities.handleWEExceptions(e,"An error occurred while activating this view. ",null);
