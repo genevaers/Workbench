@@ -54,7 +54,8 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 	@Override
 	protected ContainerTag<DivTag> bodyContent() {
 		return div(
-				h1("Activation Report"),
+				h1("Activation Report "),
+				h3("Compiler version " + WorkbenchCompiler.getVersion()),
 				getheader(),
 				getStatus(),
 				getWarningsIfThereAreAny(),
