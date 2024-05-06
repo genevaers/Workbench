@@ -55,6 +55,7 @@ public class ViewLogicExtractCalc {
         setAllSourceColumnInfo(source);
         
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
             processExtractCalculation(source, col);
         }
     }
