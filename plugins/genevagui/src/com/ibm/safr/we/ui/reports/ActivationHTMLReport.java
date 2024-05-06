@@ -22,9 +22,12 @@ import static j2html.TagCreator.*;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.prefs.Preferences;
+
 import org.genevaers.repository.data.CompilerMessage;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
+import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.view.CompilerFactory;
 import com.ibm.safr.we.model.view.ViewColumn;
@@ -41,14 +44,32 @@ import j2html.tags.specialized.DivTag;
 
 public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
+	private Path htmlPath;
+	private String viewName;
+
 	public ActivationHTMLReport() {
 	}
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
-		Path htmlPath = makeHtmlDirIfNeeded(path);
-		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId()+"_V"+ CompilerFactory.getView().getId();
-		outputFile += ".html";
-		reportPath = htmlPath.resolve(outputFile);
+		htmlPath = makeHtmlDirIfNeeded(path);
+		viewName = "_Env" + SAFRApplication.getUserSession().getEnvironment().getId()+"_V"+ CompilerFactory.getView().getId();
+		String outputFile = baseName + viewName;
+		String outputFileHTML = outputFile + ".html";
+		reportPath = htmlPath.resolve(outputFileHTML);
+		setupDotIfEnabled(path);
+	}
+
+	
+	private void setupDotIfEnabled(Path reportPath) {
+		Preferences prefs = SAFRPreferences.getSAFRPreferences();
+		if(prefs.get(UserPreferencesNodes.DOT_ENABLED, "").equals("Y")) {
+			if(prefs.get(UserPreferencesNodes.DOT_FILTER, "").equalsIgnoreCase("Y")) {
+				WorkbenchCompiler.setDotFilter();
+				WorkbenchCompiler.setDotViews(prefs.get(UserPreferencesNodes.DOT_VIEWS, ""));
+				WorkbenchCompiler.setDotCols(prefs.get(UserPreferencesNodes.DOT_COLS, ""));
+			}
+			WorkbenchCompiler.dotTo(htmlPath.resolve("dots").resolve("XLT" + viewName + ".dot"));
+		}
 	}
 
 	@Override
@@ -63,6 +84,15 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 			).withClass("w3-container");
 	}
 
+	private DomContent addASTDiagrams() {
+		if(htmlPath.resolve(htmlPath.resolve("dots").resolve("XLT" + viewName + ".dot")).toFile().exists()) {
+			return div(h2("XLT AST Tree"),
+					img().attr("src=\"dots/XLT" + viewName + ".dot.svg\""));
+		} else {
+			return null;
+		}
+	}
+
 	private DomContent showDetailsIfRequired() {
 		if (SAFRPreferences.isFullActicationReportEnabled()) {
 			return div(
@@ -70,7 +100,8 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 					getLogicTable(),
 					getFormatFilterReport(), 
 					getFormatColumnCalculations(), 
-					getDependencies());
+					getDependencies(),
+					addASTDiagrams());
 		} else {
 			return null;
 		}

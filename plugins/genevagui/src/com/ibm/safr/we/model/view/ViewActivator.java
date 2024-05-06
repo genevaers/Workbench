@@ -1,5 +1,8 @@
 package com.ibm.safr.we.model.view;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -25,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.SyntaxChecker;
@@ -44,6 +48,7 @@ import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
+import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.data.DAOFactoryHolder;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -51,7 +56,9 @@ import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.SAFRValidator;
+import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.reports.ReportUtils;
+import com.ibm.safr.we.utilities.ProfileLocation;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ViewActivator {    
@@ -357,20 +364,23 @@ public class ViewActivator {
 
 	protected void compileViewSources() {
 
+		WorkbenchCompiler.clearNewErrorsDetected();
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
-			WorkbenchCompiler.clearNewErrorsDetected();
 			compileExtractFilter(source);
 			compileExtractCalculation(source, CTCols);
 			compileExtractOutput(source);
-			
-			WorkbenchCompiler.buildTheExtractTableIfThereAreNoErrors();        
-			if(WorkbenchCompiler.newErrorsDetected()) {
-	        } else {
-	        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
-	        }
 		}
+		setupActivationReport();
 	}
     
+	private void setupActivationReport() {
+		WorkbenchCompiler.buildTheExtractTableIfThereAreNoErrors();        
+		if(WorkbenchCompiler.newErrorsDetected()) {
+        } else {
+        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
+        }
+	}
+
 	protected void compileExtractFilter(ViewSource source) {
     	WBExtractFilterCompiler extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
     	extractFilterCompiler.buildAST();

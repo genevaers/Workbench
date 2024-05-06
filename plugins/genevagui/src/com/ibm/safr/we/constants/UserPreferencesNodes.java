@@ -53,4 +53,8 @@ public class UserPreferencesNodes {
 	public static final String ENABLE_SSL = "EnableSSL";
 	public static final String SSL_TRUST_STORELOCATION = "SSL-TrustStore-Location";
 	public static final String FILL_ACTIVATION_REPORT= "Full-Activation-Report";
+	public static final String DOT_ENABLED= "DOT-Enabled";
+	public static final String DOT_FILTER= "DOT-Filter";
+	public static final String DOT_VIEWS= "DOT-Views";
+	public static final String DOT_COLS= "DOT-Cols";
 }
