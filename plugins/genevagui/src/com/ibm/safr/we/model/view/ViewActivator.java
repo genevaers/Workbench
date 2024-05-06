@@ -152,6 +152,18 @@ public class ViewActivator {
 		WorkbenchCompiler.addView(CompilerFactory.makeView(view));
 	    WorkbenchCompiler.setEnvironment(view.getEnvironmentId());
 	    CompilerFactory.setView(view);
+	    setupWorkbenchCompilerViewColumnSources();
+	}
+
+	private void setupWorkbenchCompilerViewColumnSources() {
+		for (ViewSource source : view.getViewSources().getActiveItems()) {
+			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
+		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
+		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
+	        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+				WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+	        }
+		}
 	}
 
 	protected void checkActivationShowStoppers()
@@ -355,8 +367,6 @@ public class ViewActivator {
 		WorkbenchCompiler.clearNewErrorsDetected();
 		for (ViewSource source : view.getViewSources().getActiveItems()) {
 			WorkbenchCompiler.addViewSource(CompilerFactory.makeViewSource(source));
-		    WorkbenchCompiler.setSourceLRID(source.getLrFileAssociation().getAssociatingComponentId());
-		    WorkbenchCompiler.setSourceLFID(source.getLrFileAssociation().getAssociatedComponentIdNum());
 			compileExtractFilter(source);
 			compileExtractCalculation(source, CTCols);
 			compileExtractOutput(source);
