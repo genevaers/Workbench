@@ -25,7 +25,7 @@ if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
 fi
 echo "Test for Grammar"
 ./prebuild/Grammar.sh
-echo "Test for Run Control Generator"
+echo "Test for Run Control Apps"
 ./prebuild/RCG.sh
 echo "Configure Build"
 ./prebuild/configBuild.sh
