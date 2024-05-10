@@ -33,25 +33,14 @@ DELETE FROM :schemaV.CODE;
 
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','SEQIN',1,
                               'Sequential');
-
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','KSDS', 3,
                               'VSAM - Ordered');
 INSERT INTO :schemaV.CODE VALUES ('ACCMETHOD','DB2SQ',6,
-                              'Db2 via SQL');
-
-                              
+                              'Db2 via SQL');                             
 INSERT INTO :schemaV.CODE VALUES ('CODESET','EBCDI',1,
                               'EBCDIC');
 INSERT INTO :schemaV.CODE VALUES ('CODESET','ASCII',2,
                               'ASCII');
-                              
-INSERT INTO :schemaV.CODE VALUES ('CRECTYPE','NONE', 1,
-                              'None');
-INSERT INTO :schemaV.CODE VALUES ('CRECTYPE','SKIP', 2,
-                              'Skip');
-INSERT INTO :schemaV.CODE VALUES ('CRECTYPE','VERFY',3,
-                              'Verify');
-                              
 INSERT INTO :schemaV.CODE VALUES ('DATATYPE','ALNUM',1,
                               'Alphanumeric');
 INSERT INTO :schemaV.CODE VALUES ('DATATYPE','NUMER',3,
@@ -73,6 +62,12 @@ INSERT INTO :schemaV.CODE VALUES ('DATATYPE','EDNUM',10,
                               
 INSERT INTO :schemaV.CODE VALUES ('DBMSROWFMT','SQL',1,
                               'SQL Standard');
+
+INSERT INTO :schemaV.CODE VALUES ('DESTTYPE','MAILU', 1,
+                              'Email to User');
+INSERT INTO :schemaV.CODE VALUES ('DESTTYPE','MAILG', 2,
+                              'Email to Group');
+
 
 INSERT INTO :schemaV.CODE VALUES ('DSORG','PS', 1,
                               'Physical Sequential');
@@ -123,7 +118,9 @@ INSERT INTO :schemaV.CODE VALUES ('FILETYPE','TOKEN', 5,
 INSERT INTO :schemaV.CODE VALUES ('FILETYPE','DATAB', 6,
                               'Database');
 INSERT INTO :schemaV.CODE VALUES ('FILETYPE','REXIT', 7,
-                              'Read User-Exit Routine');
+                        'Read User-Exit - Standard');
+INSERT INTO :schemaV.CODE VALUES ('FILETYPE','PEXIT', 8,
+                        'Read User-Exit - Pipe');
 
 INSERT INTO :schemaV.CODE VALUES ('FLDCONTENT','NONE', 0,
                               'Unspecified');
@@ -234,8 +231,6 @@ INSERT INTO :schemaV.CODE VALUES ('FLDDELIM','PIPE', 3,
                               'Pipe');
 INSERT INTO :schemaV.CODE VALUES ('FLDDELIM','CTRLA',4,
                               'Ctrl-A');
-INSERT INTO :schemaV.CODE VALUES ('FLDDELIM','FIXED',5,
-                              'Fixed Width - Position && Length');
 INSERT INTO :schemaV.CODE VALUES ('FLDDELIM','SLASH',6,
                               'Slash');
 INSERT INTO :schemaV.CODE VALUES ('FLDDELIM','BLASH',7,
@@ -567,11 +562,11 @@ INSERT INTO :schemaV.CODE VALUES ('REGENOPT','MRGIN',2,
                               'Marginal');
 
 INSERT INTO :schemaV.CODE VALUES ('RELPERIOD','CDATE',1,
-                              'Run Date');
+                        'Constant (in CCYYMMDD format)');
 INSERT INTO :schemaV.CODE VALUES ('RELPERIOD','EDATE',2,
                               'Source File Field');
 INSERT INTO :schemaV.CODE VALUES ('RELPERIOD','SPECD',3,
-                              'Constant (in CCYYMMDD format)');
+                        'Specific Date (Enter CCYYMMDD)');
 
 INSERT INTO :schemaV.CODE VALUES ('SORTBRK','NOBRK',1,
                               'No Break');
@@ -633,8 +628,6 @@ INSERT INTO :schemaV.CODE VALUES ('STRDELIM','SNGLQ',1,
 INSERT INTO :schemaV.CODE VALUES ('STRDELIM','DBLQT',2,
                               'Double Quote');
 
-INSERT INTO :schemaV.CODE VALUES ('SUBTOT','NONE', 1,
-                              'None');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','SUM', 2,
                               'Sum');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','MAX', 3,
@@ -703,14 +696,11 @@ INSERT INTO :schemaV.CODE VALUES ('WRITEDISP','OCD',8,
 INSERT INTO :schemaV.CODE VALUES ('WRITEDISP','OCC',9,
                               'Old,Catalog,Catalog');
 
-INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','NONE',1,'None');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','SUM',2,'Sum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','MIN',3,'Minimum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','MAX',4,'Maximum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','CALC',7,
                            'Group Calculation');
-
-INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','NONE',1,'None');
 
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','SUM',2,'Sum');
 
