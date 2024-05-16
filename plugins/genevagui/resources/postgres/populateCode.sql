@@ -63,12 +63,6 @@ INSERT INTO :schemaV.CODE VALUES ('DATATYPE','EDNUM',10,
 INSERT INTO :schemaV.CODE VALUES ('DBMSROWFMT','SQL',1,
                               'SQL Standard');
 
-INSERT INTO :schemaV.CODE VALUES ('DESTTYPE','MAILU', 1,
-                              'Email to User');
-INSERT INTO :schemaV.CODE VALUES ('DESTTYPE','MAILG', 2,
-                              'Email to Group');
-
-
 INSERT INTO :schemaV.CODE VALUES ('DSORG','PS', 1,
                               'Physical Sequential');
 INSERT INTO :schemaV.CODE VALUES ('DSORG','DA', 2,
