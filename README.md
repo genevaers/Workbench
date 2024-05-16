@@ -111,7 +111,6 @@ And run psql to create and populate your database.
 
     psql -h localhost -p 5432 -U postgres -v dbname=genevaers -v schemaV=gendev -f runall.sql
 
-
 Explanation... 
 
     psql is the postgres command line app  
@@ -122,6 +121,12 @@ Explanation...
     -v schemaV=gendev is a script variable and assigns it the value “gendev”. That will be what the schema is named.  
     You can choose something else if you want.
     -f runall.sql Means run this file. This will create the database called genevaers, create the tables needed, perform an initial set up of those tables, install some stored procedures, and create a GenevaERS user called “postgres”.  
+
+Start the postgres database (see Postgres documentation).  
+
+On a Windows machine, from the command line, use the following script to start the Workbench. 
+    
+    runworkbench.sh
 
 Many of the values above are used in the GenevaERS Connection Manager.
 
