@@ -105,7 +105,7 @@ Open a command prompt and run the following to ensure that Postgres and the asso
     psql (PostgreSQL) 12.4
 
 The from the cloned directory change to the SQL resources as below.
-    cd plugins/genevagui/resources/
+    cd plugins/genevagui/resources/postgres/
 
 And run psql to create and populate your database. 
 
