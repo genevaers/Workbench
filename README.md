@@ -92,8 +92,11 @@ Install PostgreSQL as per its instructions ...
 
 	Add Environment variable PATH values for both PostgreSQL directories for bin and lib  
 
-Note the admin username and password you create as part of the install to be used later. We used the user *postgres*  
-and the password *postgres*.  The database is intended to be a locally run only.
+On windows the typical location depending on your installed version is 
+
+    C:\Program Files\PostgreSQL\12\bin
+
+Note the admin username and password you create as part of the install to be used later. We used the user *postgres* and the password *postgres*.  The database is intended to be a locally run only.
 If you are sharing it then apply some more rigourous security measures :-)
 
 Open a command prompt and run the following to ensure that Postgres and the associated psql are installed.
@@ -102,18 +105,44 @@ Open a command prompt and run the following to ensure that Postgres and the asso
     psql (PostgreSQL) 12.4
 
 The from the cloned directory change to the SQL resources as below.
+
+    cd plugins/genevagui/resources/postgres/
+
 And run psql to create and populate your database. 
 
-    cd plugins/genevagui/resources/
     psql -h localhost -p 5432 -U postgres -v dbname=genevaers -v schemaV=gendev -f runall.sql
 
+Explanation... 
 
-    Explanation... 
-        psql is the postgres command line app  
-        -h the host ip address  
-        -p the port number. 5432 is the default at the install  
-        -U postgres is the name of the postgres admin user you created at install. Change the name if you chose something different when you installed PostgreSQL.  
-        -v dbname=genevaers This creates a script variable called dbname and assigns it the value “genevaers”. That will be the name of the database.  
-        -v schemaV=gendev is a script variable and assigns it the value “gendev”. That will be what the schema is named.  
-        You can choose something else if you want.
-        -f runall.sql Means run this file. This will create the database called genevaers, create the tables needed, perform an initial set up of those tables, install some stored procedures, and create a GenevaERS user called “postgres”.  
+    psql is the postgres command line app  
+    -h the host ip address  
+    -p the port number. 5432 is the default at the install  
+    -U postgres is the name of the postgres admin user you created at install. Change the name if you chose something different when you installed PostgreSQL.  
+    -v dbname=genevaers This creates a script variable called dbname and assigns it the value “genevaers”. That will be the name of the database.  
+    -v schemaV=gendev is a script variable and assigns it the value “gendev”. That will be what the schema is named.  
+    You can choose something else if you want.
+    -f runall.sql Means run this file. This will create the database called genevaers, create the tables needed, perform an initial set up of those tables, install some stored procedures, and create a GenevaERS user called “postgres”.  
+
+Start the postgres database (see Postgres documentation).  
+
+On a Windows machine, from the command line, use the following script to start the Workbench. 
+    
+    ./runworkbench.sh
+
+Many of the values above are used in the GenevaERS Connection Manager.
+
+    - Select "Manage" and enter the following if you used the command above:
+      - Database Type: PostgesQL
+      - Database Name: genevaers
+      - Server: localhost
+      - Port: 5432
+      - Scheme Name: gendev
+      - User ID: postgres
+      - Password: postgres
+    - Select "Save" and on the GenevaERS Login screen enter:
+      - User ID: postgres
+      - Password: postgres
+    - Click "Login"
+    - Click the "Environment" dropdown
+      - Select the "Development" environment
+    - Click "OK"
