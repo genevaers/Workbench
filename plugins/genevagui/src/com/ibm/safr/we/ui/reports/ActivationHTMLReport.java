@@ -52,11 +52,17 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
 		htmlPath = makeHtmlDirIfNeeded(path);
-		viewName = "_Env" + SAFRApplication.getUserSession().getEnvironment().getId()+"_V"+ CompilerFactory.getView().getId();
+		viewName = "_Env" + CompilerFactory.getView().getEnvironmentId()+"_V";
+		if(viewIDs.isEmpty()) {		
+			viewName += CompilerFactory.getView().getId();
+		} else {
+			viewName += viewIDs.get(0);			
+		}
 		String outputFile = baseName + viewName;
 		String outputFileHTML = outputFile + ".html";
 		reportPath = htmlPath.resolve(outputFileHTML);
 		setupDotIfEnabled(path);
+		System.out.println("Actvation Report Path " + reportPath);
 	}
 
 	

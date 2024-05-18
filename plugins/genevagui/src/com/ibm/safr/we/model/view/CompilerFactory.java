@@ -195,7 +195,7 @@ public class CompilerFactory {
 		WorkbenchCompiler.addColumn(getColumnData(col));
         WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
         WorkbenchCompiler.addViewColumnSource(makeViewColumnSource(view, currentSource, col, text));
-        extractCompiler.run();
+        extractCompiler.validate();
        	ReportUtils.openReportEditor(ReportType.LogicTable);
         if(WorkbenchCompiler.hasErrors()) {
         	ltLog = "Errors detected";
@@ -226,7 +226,7 @@ public class CompilerFactory {
     private static void checkSyntaxExtractFilter(String text, View view, ViewSource currentSource, ViewColumn col) {
     	currentColumn = col;
     	WBExtractFilterCompiler extractFilterCompiler = (WBExtractFilterCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_FILTER);
-        extractFilterCompiler.run();
+        extractFilterCompiler.validate();
         if(WorkbenchCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_FILTER);        	
         } else {
@@ -243,7 +243,7 @@ public class CompilerFactory {
     private static void checkSyntaxExtractOutput(String text, View view, ViewSource currentSource, ViewColumn col) {
     	currentColumn = col;
     	WBExtractOutputCompiler extractOutputCompiler = (WBExtractOutputCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_OUTPUT);
-        extractOutputCompiler.run();
+        extractOutputCompiler.validate();
         if(WorkbenchCompiler.hasErrors()) {
     		sva.addCompilerErrorsNew(WorkbenchCompiler.getErrors(), currentSource, col, SAFRCompilerErrorType.EXTRACT_RECORD_OUTPUT);        	
         } else {

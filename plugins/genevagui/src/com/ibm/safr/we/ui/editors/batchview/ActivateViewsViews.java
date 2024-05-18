@@ -145,15 +145,22 @@ public class ActivateViewsViews {
             BatchComponent item = (BatchComponent) element;
             switch (columnIndex) {
             case 1:
-
-                if (item.getResult() == ActivityResult.LOADERRORS) {
+            	switch(item.getResult()) {
+				case FAIL:
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+				case LOADERRORS:
                     return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-                } else if (item.getResult() == ActivityResult.FAIL) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-                }
-                else if (item.getResult() == ActivityResult.WARNING) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-                }           
+				case PASS:
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+				case SYSTEMERROR:
+					break;
+				case WARNING:
+                    return Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
+				case NONE:
+				case CANCEL:
+				default:
+					break;
+            	}
             }
             return null;
 
@@ -266,7 +273,7 @@ public class ActivateViewsViews {
     
     
     protected void create() {
-        sectionTable = mediator.getGUIToolKit().createSection(parent, Section.TITLE_BAR,
+        sectionTable = mediator.getGUIToolKit().createSection(parent, Section.TITLE_BAR ,
                 "Views");
         FormData dataSectionTable = new FormData();
         dataSectionTable.top = new FormAttachment(mediator.getEnvironmentSection(), 10);
@@ -274,7 +281,7 @@ public class ActivateViewsViews {
         dataSectionTable.left = new FormAttachment(0, 5);
         sectionTable.setLayoutData(dataSectionTable);
 
-        compositeViews = mediator.getGUIToolKit().createComposite(sectionTable, SWT.NONE);
+        compositeViews = mediator.getGUIToolKit().createComposite(sectionTable, SWT.BORDER);
         compositeViews.setLayout(new FormLayout());
         compositeViews.setLayoutData(new FormData());
 
@@ -467,14 +474,6 @@ public class ActivateViewsViews {
                             }
                             metadataview.refreshViewList(views);
                         }
-
-                        // show result if row of activated view is selected
-                        currModel = (BatchComponent) ((IStructuredSelection) tableViewerViews
-                            .getSelection()).getFirstElement();
-                        if (currModel != null && viewSet.contains(currModel)) {
-                            showActivationResult();
-                        }
-                        
                     } catch (SAFRException se) {
                         UIUtilities.handleWEExceptions(
                             se,"Unexpected error occurred while activating the views.",null);
@@ -737,23 +736,19 @@ public class ActivateViewsViews {
         switch (currModel.getResult()) {
             case LOADERRORS :
                 mediator.showSectionLoadErrors(true);
-                closeActivationLog();
                 break;
             case WARNING :
             case FAIL :
-                mediator.showSectionLoadErrors(false);
-                showActivationLog();
+                mediator.showSectionLoadErrors(true);
                 break;
             case PASS :
-            case NONE :
-                mediator.showSectionLoadErrors(false);
-                closeActivationLog();
+                mediator.showSectionLoadErrors(true);
                 break;
             case CANCEL :
             case SYSTEMERROR :
                 mediator.showSectionLoadErrors(true);
-                closeActivationLog();
                 break;
+            case NONE :
             default :
                 break;            
         }

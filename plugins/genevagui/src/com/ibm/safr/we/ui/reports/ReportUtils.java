@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.reports;
 
+
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -106,6 +108,25 @@ public class ReportUtils {
 			}
 		}
 		return;
+	}
+	
+	public static void generateOnly(ReportType type) {
+		List<Integer> reportIds = new ArrayList<Integer>();
+		ReportEditorInput input = new ReportEditorInput(reportIds, type);
+		input.writeReportFiles(ReportEditor.getAndMakeReportsPath());
+	}
+
+	public static void openDirectly(ReportType type, int view) {
+		List<Integer> reportIds = new ArrayList<Integer>();
+		reportIds.add(view);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ReportEditorInput input = new ReportEditorInput(reportIds, type);
+		try {
+			page.openEditor(input, ReportEditor.ID);
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void  getIdFromPageModel(List<Integer> reportIds, IWorkbenchPage page) {

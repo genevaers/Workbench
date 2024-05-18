@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
+
 import com.ibm.safr.we.constants.ActivityResult;
 import com.ibm.safr.we.exceptions.SAFRDependencyException;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -99,16 +101,16 @@ public class BatchActivateViews {
                 }
 			}
 			if (actExp == null) {
-                component.setResult(ActivityResult.PASS);
+				if (WorkbenchCompiler.hasWarnings()) {
+	                component.setResult(ActivityResult.WARNING);
+				} else { 
+					component.setResult(ActivityResult.PASS);
+				}
                 component.setActive(true);              			    
 			}
 			else if (actExp.hasErrorOccured()) {
                 component.setResult(ActivityResult.FAIL);
                 component.setActive(false);                 
-			}
-			else if (actExp.hasErrorOrWarningOccured()) {
-                component.setResult(ActivityResult.WARNING);
-                component.setActive(true);                                      			    
 			}
 			else {
                 component.setResult(ActivityResult.PASS);

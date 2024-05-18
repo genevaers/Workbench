@@ -100,7 +100,31 @@ public class ViewActivator {
      * @throws DAOException, SAFRException
      */ 
     public void activate() throws DAOException, SAFRException {
-        SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
+        executeTheActivation();
+    	ReportUtils.openReportEditor(ReportType.ActivationReport);
+        logActivationResult();
+    }
+
+    public void batchActivate() throws DAOException, SAFRException {
+        executeTheActivation();
+    	ReportUtils.generateOnly(ReportType.ActivationReport);
+        logActivationResult();
+    }
+
+	private void logActivationResult() {
+		if(WorkbenchCompiler.hasErrors()) {
+            SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
+            SAFRLogger.logEnd(logger);
+            vaException.setErrorOccured();
+            throw vaException;
+	    } else {
+	        SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
+	        SAFRLogger.logEnd(logger);
+	    }
+	}
+
+	private void executeTheActivation() {
+		SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
         
         vaException = new SAFRViewActivationException(view);   
         try {
@@ -110,17 +134,7 @@ public class ViewActivator {
         }
         
         view.setCompilerVersion(ViewActivator.getCompilerVersion());
-        
-    	ReportUtils.openReportEditor(ReportType.ActivationReport);
-        if(WorkbenchCompiler.hasErrors()) {
-            SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
-            SAFRLogger.logEnd(logger);
-            throw vaException;
-	    } else {
-	        SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
-	        SAFRLogger.logEnd(logger);
-	    }
-    }
+	}
 
     /**
      * Activate
@@ -371,13 +385,14 @@ public class ViewActivator {
 			compileExtractCalculation(source, CTCols);
 			compileExtractOutput(source);
 		}
-		setupActivationReport();
+		if(WorkbenchCompiler.hasNoNewErrors()) {
+			WorkbenchCompiler.buildLogicTablesAndPerformWholeViewChecks();        
+			setupActivationReport();
+		}
 	}
     
 	private void setupActivationReport() {
-		WorkbenchCompiler.buildTheExtractTableIfThereAreNoErrors();        
-		if(WorkbenchCompiler.newErrorsDetected()) {
-        } else {
+		if(WorkbenchCompiler.hasNoNewErrors()) {
         	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
         }
 	}
@@ -411,6 +426,7 @@ public class ViewActivator {
 							SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
 				}
 	            Set<Integer> calcCols = ffc.getColumnRefs();
+	            
 	            checkColumnDataTypes(calcCols );
 	    		CTCols.addAll(calcCols);
 			}
@@ -454,6 +470,7 @@ public class ViewActivator {
         } else {
         	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
+        	CompilerFactory.makeLogicTableLog(WorkbenchCompiler.getXlt());
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
         }
     }

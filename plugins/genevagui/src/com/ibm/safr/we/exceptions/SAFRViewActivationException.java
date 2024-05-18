@@ -88,6 +88,10 @@ public class SAFRViewActivationException extends SAFRException {
         return errorNewOccured;
     }
     
+    public void setErrorOccured() {
+    	errorNewOccured = true;
+    }
+    
     public boolean hasErrorOrWarningOccured() {
         return !activationLogNew.isEmpty() ;
     }

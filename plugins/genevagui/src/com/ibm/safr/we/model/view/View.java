@@ -1997,7 +1997,9 @@ public class View extends SAFRActivatedComponent {
      */
     public void batchActivate() throws DAOException, SAFRException {
         this.batchActivated = true;
-        activate(null);
+        ViewActivator activator = new ViewActivator(this);
+        ViewActivator.setSite(null);
+        activator.batchActivate();
     }
 
     /**
