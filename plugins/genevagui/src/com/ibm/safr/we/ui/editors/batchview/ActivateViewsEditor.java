@@ -171,23 +171,9 @@ public class ActivateViewsEditor extends SAFREditorPart implements
 	}
 
 	public void partHidden(IWorkbenchPartReference partRef) {
-        if (partRef.getPart(false).equals(this)) {
-        	Display.getCurrent().asyncExec(new Runnable() {
-				public void run() {
-					mediator.closeActivationLog();
-				}
-        	});
-        }
 	}
 
 	public void partVisible(IWorkbenchPartReference partRef) {
-        if (partRef.getPart(false).equals(this)) {
-        	Display.getCurrent().asyncExec(new Runnable() {
-				public void run() {
-				    mediator.showActivationLog();
-				}
-        	});
-        }
 	}
 
 	public void partInputChanged(IWorkbenchPartReference partRef) {

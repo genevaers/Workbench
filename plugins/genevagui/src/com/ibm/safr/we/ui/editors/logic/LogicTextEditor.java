@@ -82,7 +82,6 @@ import com.ibm.safr.we.ui.editors.view.ViewEditor;
 import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 /**
@@ -768,62 +767,14 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
                     validateERO();
                 }
 			}	
-			closeValidationLog(getSite().getPage());
 		} catch (SAFRViewActivationException sva) {
 			validateErrors = sva;			
-			openValidationLog();
 		} catch (SAFRException e) {
 			// show user message.
 			UIUtilities.handleWEExceptions(e,"Unexpected error occurred while validating the Logic Text.",null);
 		}
 	}
 
-	public void openValidationLog() {
-	    if (validateErrors != null && validateErrors.hasErrorOrWarningOccured()) {
-	        if (!validateErrors.getActivationLogNew().isEmpty()) {
-	            try {
-	                ActivationLogViewNew eView = (ActivationLogViewNew) getSite()
-	                        .getPage().showView(ActivationLogViewNew.ID);
-                    eView.setViewEditor(false);
-	                eView.showGridForCurrentEditor(this);
-	                eView.setExpands(expandsNew);              
-	            } catch (PartInitException e1) {
-	                UIUtilities.handleWEExceptions(e1,"Unexpected error occurred while opening validation errors view.",null);
-	            }       
-	        }	        
-	    }
-	    else {
-	        ViewEditor editor = viewInput.getViewEditor();
-	        SAFRViewActivationException aex = editor.getViewActivationException();
-	        if (aex != null && aex.hasErrorOrWarningOccured()) {
-	            if (!aex.getActivationLogNew().isEmpty()) {
-	                try {
-	                	IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-	                    ActivationLogViewNew eView = (ActivationLogViewNew) page.showView(ActivationLogViewNew.ID);
-	                    eView.setViewEditor(false);
-	                    eView.showGridForCurrentEditor(editor);
-	                } catch (PartInitException e1) {
-	                    UIUtilities.handleWEExceptions(e1,"Unexpected error occurred while opening validation errors view.",null);
-	                }       
-	            }           	            
-	        }
-	    }
-	}
-	
-	public void closeValidationLog(IWorkbenchPage page) {
-		ActivationLogViewNew logViewNew = (ActivationLogViewNew)page.findView(ActivationLogViewNew.ID);
-		if (logViewNew != null && !logViewNew.isViewEditor()) {
-			if (validateErrors != null && !validateErrors.getActivationLogNew().isEmpty()) {
-				expandsNew = logViewNew.getExpands();
-			}
-			else {
-				expandsNew = null;
-			}
-        	IWorkbenchPage uipage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			uipage.hideView(logViewNew);
-		}		
-	}
-	
 	/**
 	 * Validates the format column calculation in this editor.
 	 * 
@@ -872,15 +823,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	public void modifyText(ModifyEvent e) {
 		super.modifyText(e);
 		viewInput.getViewEditor().setDirty(true);
-	}
-
-	public boolean isLogicTextValidationMessageExistsNew() {
-		return (validateErrors != null && 
-		        !validateErrors.getActivationLogNew().isEmpty());
-	}
-
-	public SAFRViewActivationException getLogicTextValidationErrors() {
-		return validateErrors;
 	}
 
 	@Override
@@ -944,7 +886,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 					if(partRef.getPage() != null) {
 			            IViewPart logicView = partRef.getPage().findView(LogicTextView.ID);
 			            partRef.getPage().hideView(logicView);
-		                closeValidationLog(partRef.getPage());
 					}
 				}
         	});        	
@@ -970,7 +911,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 			        	IViewPart logicView = p.findView(LogicTextView.ID);
 			        	if (logicView != null) {
 			        		((LogicTextView) logicView).showContentsForCurrentEditor(editor);
-			                openValidationLog();		        	
 			        	}
 		            } else {
 					    logger.log(Level.SEVERE,"Page NULL");

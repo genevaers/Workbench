@@ -116,7 +116,6 @@ import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem.TreeItemId;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -1000,8 +999,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 					activateException = null;
 					view.activate(getSite());
 					activated = true;
-					// view activated without messages so close logView
-					closeActivationLog();
 					if (readOnly) {
                         this.setPartName("*" + viewInput.getName());
 					}
@@ -1027,45 +1024,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 //			getSite().getShell().setCursor(null);
 			setCursorNormal(toolBar);
 		}
-	}
-
-	public void openActivationLog() {
-		// Activation error. store in local variable so that the
-		// View error table can use it. Also open the error RCP
-		// view.
-		if (viewActivationMessageExistsNew()) {
-			try {
-				IWorkbenchPage page = getSite().getPage();
-				if(page != null) {
-					ActivationLogViewNew eView = (ActivationLogViewNew) page.showView(ActivationLogViewNew.ID);
-					eView.setViewEditor(true);
-					eView.showGridForCurrentEditor(this);
-					eView.setExpands(expandsNew);
-				}
-			} catch (PartInitException e1) {
-				UIUtilities.handleWEExceptions(
-				    e1,"Unexpected error occurred while opening activation errors view.",null);
-			}
-		}
-	}
-	
-	public void closeActivationLog() {
-		if(getSite().getPage() != null) {
-			ActivationLogViewNew logView = (ActivationLogViewNew)getSite().getPage().findView(ActivationLogViewNew.ID);
-			if (logView != null && logView.isViewEditor()) {
-				if (viewActivationMessageExistsNew()) {
-					expandsNew = logView.getExpands();
-				}
-				else {
-					expandsNew = null;
-				}
-				getSite().getPage().hideView(logView);
-			}		
-		}
-	}
-	
-	public boolean viewActivationMessageExistsNew() {
-		return (activateException != null && !activateException.getActivationLogNew().isEmpty());
 	}
 
 	public SAFRViewActivationException getViewActivationException() {
@@ -1583,7 +1541,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 
 	public void partClosed(IWorkbenchPartReference partRef) {		
-        closeActivationLog();
         mediator.closePropertyView(PropertyViewType.NONE);
 }
 
@@ -1610,7 +1567,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
         	Display.getCurrent().asyncExec(new Runnable() {
 				public void run() {
 		            mediator.closePropertyView(PropertyViewType.NONE);
-		            closeActivationLog();
 				}
         	});        	    		
         }      
@@ -1630,7 +1586,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				        mediator.openFocusedView();
 				    }
 	                initActivationState();
-	                openActivationLog();
 				}
         	});
         }

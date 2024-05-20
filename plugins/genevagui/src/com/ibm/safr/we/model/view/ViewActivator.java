@@ -87,11 +87,6 @@ public class ViewActivator {
             return getNewCompilerVersion();
     }
 
-    static public String getAllCompilerVersion() {
-        return getNewCompilerVersion();
-    }
-    
-    
 	public static void setSite(IWorkbenchPartSite site) {
 	}
     /**

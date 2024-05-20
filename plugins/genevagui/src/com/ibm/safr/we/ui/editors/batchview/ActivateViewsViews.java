@@ -87,7 +87,6 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIConfirmWarningStrategy;
 import com.ibm.safr.we.ui.utilities.SAFRGUIConfirmWarningStrategy.SAFRGUIContext;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ActivateViewsViews {
@@ -754,49 +753,6 @@ public class ActivateViewsViews {
         }
     }
     
-    /**
-     * This method is used to show the view Activation errors in an RCP view.
-     * 
-     * @param viewState
-     */
-    void showActivationLog() {
-        if ( currModel != null && 
-             currModel.getException()!= null &&
-             currModel.getException() instanceof SAFRViewActivationException &&
-            (currModel.getResult() == ActivityResult.FAIL || 
-             currModel.getResult() == ActivityResult.WARNING) ) {
-            SAFRViewActivationException actException = (SAFRViewActivationException)currModel.getException();
-            if (!actException.getActivationLogNew().isEmpty()) {     
-                try {
-                    ActivationLogViewNew eView = (ActivationLogViewNew) mediator.getSite()
-                            .getPage().showView(ActivationLogViewNew.ID);
-                    eView.showGridForCurrentEditor(mediator.getActivateViewsEditor());
-                } catch (PartInitException e1) {
-                    UIUtilities.handleWEExceptions(
-                        e1,"Unexpected error occurred while opening new activation errors view.",null);
-                }
-            }
-        } 
-    }
-    
-    public void closeActivationLog() {
-        if(mediator.getSite().getPage() != null) {
-            ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
-            if (logView != null) {
-                mediator.getSite().getPage().hideView(logView);
-            }       
-        }
-    }
-
-    public boolean isActivationLogOpen() {
-        boolean open = false;
-        ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
-        if (logView != null) {
-            open = true;
-        }       
-        return open;
-    }
-
     public void refreshViews() {
         tableViewerViews.setInput(modelList);
         tableViewerViews.refresh();

@@ -3122,49 +3122,6 @@ public class View extends SAFRActivatedComponent {
         this.migrateRelatedComponents = migrateRelatedComponents;
     }
     
-    protected StringBuffer genActivationLog(List<ViewActivationError> sva) {
-        Map<SAFRCompilerErrorType, List<ViewActivationError>> errorMap = new HashMap<SAFRCompilerErrorType, List<ViewActivationError>>();
-
-        for (ViewActivationError error : sva) {
-            if (errorMap.containsKey(error.getErrorType())) {
-                errorMap.get(error.getErrorType()).add(error);
-            } else {
-                List<ViewActivationError> errors = new ArrayList<ViewActivationError>();
-                errors.add(error);
-                errorMap.put(error.getErrorType(), errors);
-            }
-        }
-
-        StringBuffer msgBuffer = new StringBuffer();
-        
-        if (errorMap.isEmpty()) {
-            return msgBuffer; // no-op
-        }
-
-        String pfx = "*** ";
-        String sfx = " ***";
-        String msgLabel = LINEBREAK + "Message: ";
-        String colLabel = LINEBREAK + "Column:  ";
-        String srcLabel = LINEBREAK + "Source:  ";
-
-        for (SAFRCompilerErrorType errType : errorMap.keySet()) {
-            msgBuffer.append(LINEBREAK);
-            msgBuffer.append(pfx + errType.getText() + sfx);
-            msgBuffer.append(LINEBREAK);
-            for (ViewActivationError vae : errorMap.get(errType)) {
-                msgBuffer.append(msgLabel + vae.getErrorText());
-                msgBuffer.append(colLabel
-                        + (vae.getViewColumn() != null ? vae.getViewColumn()
-                                .getDescriptor() : ""));
-                msgBuffer.append(srcLabel
-                        + (vae.getViewSource() != null ? vae.getViewSource()
-                                .getDescriptor() : ""));
-                msgBuffer.append(LINEBREAK);
-            }
-        }
-        return msgBuffer;
-    }
-    
     public ViewColumn findColumn(Integer colId) {
         for (ViewColumn col : getViewColumns().getActiveItems()) {
             if (col.getId().equals(colId)) {
