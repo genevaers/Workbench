@@ -25,6 +25,8 @@ import org.eclipse.ui.IPersistableElement;
 
 import com.ibm.safr.we.constants.EditRights;
 import com.ibm.safr.we.constants.LogicTextType;
+import com.ibm.safr.we.exceptions.SAFRException;
+import com.ibm.safr.we.model.base.SAFREnvironmentalComponent;
 import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewColumnSource;
@@ -38,36 +40,16 @@ import com.ibm.safr.we.ui.views.vieweditor.LogicTextDialogCellEditor;
  * An editor Input class for the Logic Text Editor.
  * 
  */
-public class LogicTextEditorInput implements IEditorInput {
-	private LogicTextType logicTextType = null;
-	private Object[] expandedItems;
-	private TreePath[] expandedTreePaths;
+public abstract class LogicTextEditorInput implements IEditorInput {
+	protected LogicTextType logicTextType = null;
+	protected Object[] expandedItems;
+	protected TreePath[] expandedTreePaths;
 	private LogicTextViewTreeNode previousLogicTextTreeInput;
 
-	private View view;
-	private ViewColumn viewColumn = null;
-	private ViewSource viewSource = null;
-	private ViewColumnSource viewColumnSource = null;
-	private ViewEditor viewEditor;
+	protected View view;
+	protected ViewEditor viewEditor;
 	private LogicTextDialogCellEditor logicTextDialogCellEditor;
-	private EditRights editRights;
-
-	/**
-	 * Use this constructor for Logic text editor of type <b>Format Record
-	 * Filter </b> .
-	 * 
-	 * @param view
-	 *            object for which Logic text editor is created.
-	 * @param viewEditor
-	 *            for which Logic text editor is created.
-	 */
-	public LogicTextEditorInput(View view, ViewEditor viewEditor,
-			EditRights editRights) {
-		this.logicTextType = LogicTextType.Format_Record_Filter;
-		this.view = view;
-		this.viewEditor = viewEditor;
-		this.editRights = editRights;
-	}
+	protected EditRights editRights;
 
 	public EditRights getEditRights() {
 		return editRights;
@@ -75,65 +57,6 @@ public class LogicTextEditorInput implements IEditorInput {
 
 	public void setEditRights(EditRights editRights) {
 		this.editRights = editRights;
-	}
-
-	/**
-	 * Use this constructor for Logic text editor of type <b>Extract Record
-	 * Filter </b> .
-	 * 
-	 * @param viewSource
-	 *            object for which Logic text editor is created.
-	 * @param viewEditor
-	 *            for which Logic text editor is created.
-	 */
-	public LogicTextEditorInput(ViewSource viewSource, ViewEditor viewEditor, LogicTextType logicTextType) {
-		super();
-		this.logicTextType = logicTextType;
-		this.viewSource = viewSource;
-		this.view = viewSource.getView();
-		this.viewEditor = viewEditor;
-		this.editRights = ((ViewEditorInput) this.viewEditor.getEditorInput()).getEditRights();
-	}
-
-	/**
-	 * Use this constructor for Logic text editor of type <b>Format Phase
-	 * Calculation </b> .
-	 * 
-	 * @param viewColumn
-	 *            object for which Logic text editor is created.
-	 * @param viewEditor
-	 *            View editor from which Logic text editor is be opened.
-	 */
-	public LogicTextEditorInput(ViewColumn viewColumn, ViewEditor viewEditor) {
-		super();
-		this.logicTextType = LogicTextType.Format_Column_Calculation;
-		this.viewColumn = viewColumn;
-		this.view = viewColumn.getView();
-		this.viewEditor = viewEditor;
-		this.editRights = ((ViewEditorInput) this.viewEditor.getEditorInput())
-				.getEditRights();
-	}
-
-	/**
-	 * 
-	 * Use this constructor for Logic text editor of type <b>Extract Column
-	 * Assignment </b> .
-	 * 
-	 * @param viewColumnSource
-	 *            object for which Logic text editor is created.
-	 * @param viewEditor
-	 *            View editor from which Logic text editor is be opened.
-	 */
-
-	public LogicTextEditorInput(ViewColumnSource viewColumnSource,
-			ViewEditor viewEditor) {
-		super();
-		this.logicTextType = LogicTextType.Extract_Column_Assignment;
-		this.viewColumnSource = viewColumnSource;
-		this.view = viewColumnSource.getView();
-		this.viewEditor = viewEditor;
-		this.editRights = ((ViewEditorInput) this.viewEditor.getEditorInput())
-				.getEditRights();
 	}
 
 	public View getView() {
@@ -172,91 +95,23 @@ public class LogicTextEditorInput implements IEditorInput {
 		return null;
 	}
 
-	public String getName() {
-		logicTextType = getLogicTextType();
-		if (logicTextType == LogicTextType.Extract_Record_Filter) {
-			return "ERF [" + view.getId() + "] - Source ("
-					+ viewSource.getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Extract_Record_Output) {
-            return "ERL [" + view.getId() + "] - Source ("
-                    + viewSource.getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			return "ECL [" + view.getId() + "] - Column ("
-					+ viewColumnSource.getViewColumn().getColumnNo()
-					+ ") Source ("
-					+ viewColumnSource.getViewSource().getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-			return "FCL [" + view.getId() + "] - Column ("
-					+ viewColumn.getColumnNo() + ")";
-		} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-			return "FRF [" + getView().getId() + "]";
-		}
-		return "";
-	}
+	public abstract String getLogicText(); //{
+
+	public abstract String getName(); //{
 
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
-	public String getToolTipText() {
+	public abstract String getToolTipText();
 
-		logicTextType = getLogicTextType();
-		if (logicTextType == LogicTextType.Extract_Record_Filter) {
-			return "Extract-Phase Record Filter [" + view.getId() + "] - Source ("
-					+ viewSource.getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Extract_Record_Output) {
-            return "Extract-Phase Record Logic [" + view.getId() + "] - Source ("
-                    + viewSource.getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			return "Extract-Phase Column Logic [" + view.getId()
-					+ "] - Column ("
-					+ viewColumnSource.getViewColumn().getColumnNo()
-					+ ") Source ("
-					+ viewColumnSource.getViewSource().getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-			return "Format-Phase Column Logic [" + view.getId() + "]- Column ("
-					+ viewColumn.getColumnNo() + ")";
-		} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-			return "Format-Phase Record Filter [" + getView().getId() + "]";
-		}
-		return "";
-	}
-
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
     public Object getAdapter(Class adapter) {
 		return null;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if(obj==null){
-			return false;
-		}
-		if (super.equals(obj))
-			return true;
-		if (!(obj instanceof LogicTextEditorInput))
-			return false;
-		LogicTextEditorInput other = (LogicTextEditorInput) obj;
-
-		if ((view.getId().equals(other.getView().getId()))
-				&& (this.logicTextType == other.logicTextType)) {
-			logicTextType = getLogicTextType();
-			if (logicTextType == LogicTextType.Extract_Record_Filter || 
-			    logicTextType == LogicTextType.Extract_Record_Output) {
-				return this.viewSource.equals(other.viewSource);
-			} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-				return (this.viewColumnSource.getViewColumn()
-						.equals(other.viewColumnSource.getViewColumn()))
-						&& (this.viewColumnSource.getViewSource()
-								.equals(other.viewColumnSource.getViewSource()));
-			} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-				return this.viewColumn.equals(other.viewColumn);
-			} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-				return true;
-			}
-		}
-		return false;
-	}
+	public abstract boolean equals(Object obj); 
 
 	/**
 	 * This method returns previousLogicTextTreeInput which is set using .
@@ -278,18 +133,6 @@ public class LogicTextEditorInput implements IEditorInput {
 	public void setPreviousLogicTextTreeInput(
 			LogicTextViewTreeNode previousLogicTextTreeInput) {
 		this.previousLogicTextTreeInput = previousLogicTextTreeInput;
-	}
-
-	public ViewColumn getViewColumn() {
-		return viewColumn;
-	}
-
-	public ViewSource getViewSource() {
-		return viewSource;
-	}
-
-	public ViewColumnSource getViewColumnSource() {
-		return viewColumnSource;
 	}
 
 	public ViewEditor getViewEditor() {
@@ -320,5 +163,15 @@ public class LogicTextEditorInput implements IEditorInput {
 			LogicTextDialogCellEditor logicTextDialogCellEditor) {
 		this.logicTextDialogCellEditor = logicTextDialogCellEditor;
 	}
+
+	protected abstract String getFormHeader();
+
+	protected abstract void saveLogicText(String text);
+
+	protected abstract void validateLogicText(String text) throws SAFRException;
+
+	protected abstract String getLogicTextFormTitle();
+
+	public abstract boolean matches(SAFREnvironmentalComponent component);
 
 }

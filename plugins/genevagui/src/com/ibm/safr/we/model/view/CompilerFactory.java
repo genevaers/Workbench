@@ -290,69 +290,12 @@ public class CompilerFactory {
                     .getCodeSet(CodeCategories.EXTRACT)
                     .getCode(colType));
 
-            String modifiedDefaultVal = col.getDefaultValue() == null ? null
-                    : col.getDefaultValue().trim();
             if (col == icol) {
                 break;
             }            
         }
     }
 
-    private static void processViewColumnsExtract(View view,
-        ViewSource currentSource,
-        SAFRCompilerErrorType safrCompilerErrorType) {
-        int positionDT = 1;
-        int positionCT = 1;
-        int colType;
-        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-            // send only new and modified columns if the columns were
-            // already sent last time.
-            try {
-                // validate the view column first.
-                col.validate();
-            } catch (SAFRValidationException sve) {
-                // Collect the error in SAFRCompilerException and throw
-                // back.
-                for (String error : sve.getErrorMessages()) {
-                    sva.addActivationError(new ViewActivationError(
-                                    currentSource,
-                                    col,
-                                    SAFRCompilerErrorType.VIEW_PROPERTIES,
-                                    error));
-                }
-                throw sva; // cannot continue.
-            }
-
-            // calculate the type of extract area.
-            if (col.isSortKey()) {
-                colType = Codes.SORTKEY;
-            } else {
-                colType = Codes.DT_AREA;
-            }
-            col.setExtractAreaCode(SAFRApplication.getSAFRFactory()
-                    .getCodeSet(CodeCategories.EXTRACT)
-                    .getCode(colType));
-
-            String modifiedDefaultVal = col.getDefaultValue() == null ? null
-                    : col.getDefaultValue().trim();
-
-            // View column source information needed for Extract col
-            // assignment.
-            ViewColumnSource colSource = col.getViewColumnSources()
-                    .get(currentSource.getSequenceNo() - 1);
-                if (col.getSubtotalTypeCode() != null) {
-                    colType = Codes.CT_AREA;
-                }
-                if (colType == Codes.CT_AREA) {
-                    col.setExtractAreaPosition(positionCT);
-                    positionCT += CT_ADDITION;
-                } else {
-                    col.setExtractAreaPosition(positionDT);
-                    positionDT += col.getLength();
-                }
-        }// columns loop
-    }
-    
     public static ViewData makeView(View v) {
     	ViewData vd = new ViewData();
         vd.setId(v.getId());
@@ -367,7 +310,6 @@ public class CompilerFactory {
         int positionCT = 1;
         
 		for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-			ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
 			int colType = getColumnType(col);
 			col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 

@@ -87,6 +87,8 @@ import com.ibm.safr.we.model.query.UserExitRoutineQueryBean;
 import com.ibm.safr.we.model.view.ViewSource;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.ApplicationMediator;
+import com.ibm.safr.we.ui.editors.logic.ERFLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.EROLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditor;
@@ -971,12 +973,8 @@ public class DataSourceView extends ViewPart {
 
                         @Override
                         protected Object openDialogBox(Control cellEditorWindow) {
-                            
-                            LogicTextEditorInput input = null;
-                            input = new LogicTextEditorInput(viewSource, viewEditor,
-                                LogicTextType.Extract_Record_Filter);                           
                             try {
-                                getSite().getPage().openEditor(input,LogicTextEditor.ID);
+                                getSite().getPage().openEditor(new ERFLogicTextEditorInput(viewSource, viewEditor), LogicTextEditor.ID);
                             } catch (PartInitException e) {
                                 UIUtilities.handleWEExceptions(e,
                                     "Unexpected error occurred while opening Logic Text editor.",null);
@@ -1082,12 +1080,8 @@ public class DataSourceView extends ViewPart {
 
                         @Override
                         protected Object openDialogBox(Control cellEditorWindow) {
-                            
-                            LogicTextEditorInput input = null;
-                            input = new LogicTextEditorInput(viewSource, viewEditor,
-                                LogicTextType.Extract_Record_Output);                                                       
                             try {
-                                getSite().getPage().openEditor(input,LogicTextEditor.ID);
+                                getSite().getPage().openEditor(new EROLogicTextEditorInput(viewSource, viewEditor),LogicTextEditor.ID);
                             } catch (PartInitException e) {
                                 UIUtilities.handleWEExceptions(e,
                                     "Unexpected error occurred while opening Logic Text editor.",null);
@@ -1120,11 +1114,9 @@ public class DataSourceView extends ViewPart {
                         DataSourceRow m = (DataSourceRow) item.getData();
                         LogicTextEditorInput input = null;
                         if (m.getRowType() == RowType.RECORDFILTER) {
-                            input = new LogicTextEditorInput(viewSource, viewEditor,
-                                LogicTextType.Extract_Record_Filter);                           
+                            input = new ERFLogicTextEditorInput(viewSource, viewEditor);                           
                         } else if (m.getRowType() == RowType.RECORDOUTPUT) {
-                            input = new LogicTextEditorInput(viewSource, viewEditor,
-                                LogicTextType.Extract_Record_Output);                                                     
+                            input = new EROLogicTextEditorInput(viewSource, viewEditor);                                                     
                         }
                         if (input != null) {
                             try {

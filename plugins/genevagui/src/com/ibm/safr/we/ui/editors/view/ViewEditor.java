@@ -102,6 +102,7 @@ import com.ibm.safr.we.model.view.ViewSource;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.ApplicationMediator;
 import com.ibm.safr.we.ui.commands.SourceProvider;
+import com.ibm.safr.we.ui.editors.ReportEditor;
 import com.ibm.safr.we.ui.editors.SAFREditorPart;
 import com.ibm.safr.we.ui.editors.batchview.ActivateViewsEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
@@ -675,7 +676,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 					// current view.
 					lTeditors.add(editorPart);
 				}
-			}
+            } else if(editorPart.getEditor(false) instanceof ReportEditor) {
+            	lTeditors.add(editorPart);                	            	
+            }
 		}
 		getEditorSite().getPage().closeEditors(
 				lTeditors.toArray(new IEditorReference[lTeditors.size()]),
@@ -715,39 +718,15 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
             IEditorReference editorPart = editors[i];
             if (editorPart.getEditor(false) instanceof LogicTextEditor) {
                 // if the editor is of type logic text editor.
-                LogicTextEditorInput lTEInput = ((LogicTextEditorInput) ((LogicTextEditor) (editorPart
-                        .getEditor(false))).getEditorInput());
-                if (lTEInput.getView().getId().equals(this.view.getId())) {
-                    // if the logic text editor opened is related to
-                    // current view.
-
-                    if (lTEInput.getLogicTextType() == LogicTextType.Format_Column_Calculation) {
-                        if (lTEInput.getViewColumn().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Column_Assignment) {
-                        if ((lTEInput.getViewColumnSource().getViewColumn()
-                                .equals(component))
-                                || (lTEInput.getViewColumnSource()
-                                        .getViewSource().equals(component))
-                                || (lTEInput.getViewColumnSource()
-                                        .equals(component))) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Record_Filter) {
-                        if (lTEInput.getViewSource().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Record_Output) {
-                        if (lTEInput.getViewSource().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Format_Record_Filter) {
-                        if (component instanceof View) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    }
-                }
+            	LogicTextEditor lte = ((LogicTextEditor) (editorPart.getEditor(false)));
+                LogicTextEditorInput lteInput = (LogicTextEditorInput) lte.getEditorInput();
+                if (lteInput.getView().getId().equals(this.view.getId())) {
+	                if(lteInput.matches(component)) {
+	                    lTeditorsToClose.add(editorPart);                	
+	                }
+                }                
+            } else if(editorPart.getEditor(false) instanceof ReportEditor) {
+                lTeditorsToClose.add(editorPart);                	            	
             }
         }
         getSite().getPage().closeEditors(

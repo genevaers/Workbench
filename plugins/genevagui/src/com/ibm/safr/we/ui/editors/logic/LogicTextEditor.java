@@ -585,35 +585,15 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 
 	@Override
 	public void doRefreshControls() throws SAFRException {
-		LogicTextType logicTextType = viewInput.getLogicTextType();
-		String logicText = "";
-		String formHeader = "";
-		if (logicTextType == LogicTextType.Extract_Record_Filter) {
-			logicText = viewInput.getViewSource().getExtractRecordFilter();
-			formHeader = "Extract-Phase Record Filter";
-		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			logicText = viewInput.getViewColumnSource()
-					.getExtractColumnAssignment();
-			formHeader = "Extract-Phase Column Logic";
-		} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-			logicText = viewInput.getViewColumn().getFormatColumnCalculation();
-			formHeader = "Format-Phase Column Logic";
-		} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-			logicText = view.getFormatRecordFilter();
-			formHeader = "Format-Phase Record Filter";
-        } else if (logicTextType == LogicTextType.Extract_Record_Output) {
-            logicText = viewInput.getViewSource().getExtractRecordOutput();
-            formHeader = "Extract-Phase Record Logic";
-        }
-
+		String logicText = viewInput.getLogicText();
 		recording = false;
-		if ((null != logicText) && (logicText != "")) {
+		if (null != logicText) {
 			text.setText(logicText);
 		} else {
 			text.setText("");
 		}
 		recording = true;
-		form.setText(formHeader);
+		form.setText(viewInput.getFormHeader());
 		refreshEditorHeaders();
 	}
 
@@ -637,38 +617,23 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 
 	@Override
 	public void storeModel() throws DAOException, SAFRException {
-		LogicTextEditorInput logicTextEditorInput = (LogicTextEditorInput) this
-				.getEditorInput();
+		LogicTextEditorInput logicTextEditorInput = (LogicTextEditorInput) this.getEditorInput();
+		logicTextEditorInput.saveLogicText(text.getText());
 		LogicTextType logicTextType = logicTextEditorInput.getLogicTextType();
-		if (logicTextType == LogicTextType.Extract_Record_Filter) {
-			logicTextEditorInput.getViewSource().setExtractRecordFilter(
-					text.getText());
-		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			logicTextEditorInput.getViewColumnSource()
-					.setExtractColumnAssignment(text.getText());
-			// update view editor .
+		if (logicTextType == LogicTextType.Extract_Column_Assignment) {
 			logicTextEditorInput.getViewEditor().updateFormulaRows();
 		} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-			logicTextEditorInput.getViewColumn().setFormatColumnCalculation(
-					text.getText());
-			// logicTextEditorInput.getViewEditor().updateFormatPhaseCalRows();
 			logicTextEditorInput.getViewEditor().updateElement(
 					ViewColumnEditor.FORMATPHASECALCULATION);
 		} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-			view.setFormatRecordFilter(text.getText());
-			// update the button caption in view properties.
 			logicTextEditorInput.getViewEditor().updateFRFButtonState();
-        } else if (logicTextType == LogicTextType.Extract_Record_Output) {
-            logicTextEditorInput.getViewSource().setExtractRecordOutput(text.getText());
         }
 		// update logic text cell in View Grid.
 		if (logicTextEditorInput.getLogicTextDialogCellEditor() != null && 
 		    !logicTextEditorInput.getLogicTextDialogCellEditor().getControl().isDisposed()) {
 			// set the logic text value in the logic Text dialog cell editor.
-			logicTextEditorInput.getLogicTextDialogCellEditor().setValue(
-					text.getText());
-			logicTextEditorInput.getLogicTextDialogCellEditor().update(
-					text.getText());
+			logicTextEditorInput.getLogicTextDialogCellEditor().setValue(text.getText());
+			logicTextEditorInput.getLogicTextDialogCellEditor().update(text.getText());
 		}
 		// as the LT is saved, make the view inactive.
 		logicTextEditorInput.getViewEditor().setModified(true);
@@ -692,60 +657,7 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	}
 
 	private String getLogicTextFormTitle() throws DAOException, SAFRException {
-
-		LogicTextEditorInput logicTextEditorInput = (LogicTextEditorInput) this
-				.getEditorInput();
-		LogicTextType logicTextType = logicTextEditorInput.getLogicTextType();
-		String logicTextName = logicTextEditorInput.getView().getName();
-		if (logicTextName == null) {
-			logicTextName = "";
-		}
-		if (logicTextType == LogicTextType.Extract_Record_Filter ||
-		    logicTextType == LogicTextType.Extract_Record_Output) {
-			return "View: "
-					+ logicTextName
-					+ "["
-					+ logicTextEditorInput.getView().getId()
-					+ "] - Source: "
-					+ logicTextEditorInput.getViewSource()
-							.getLrFileAssociation()
-							.getAssociatingComponentName()
-					+ "."
-					+ logicTextEditorInput.getViewSource()
-							.getLrFileAssociation()
-							.getAssociatedComponentName() + " ("
-					+ logicTextEditorInput.getViewSource().getSequenceNo()
-					+ ")";
-		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			return "View: "
-					+ logicTextName
-					+ "["
-					+ logicTextEditorInput.getView().getId()
-					+ "] - Column: "
-					+ logicTextEditorInput.getViewColumnSource()
-							.getViewColumn().getColumnNo()
-
-					+ " Source: "
-					+ logicTextEditorInput.getViewColumnSource()
-							.getViewSource().getLrFileAssociation()
-							.getAssociatingComponentName()
-					+ "."
-					+ logicTextEditorInput.getViewColumnSource()
-							.getViewSource().getLrFileAssociation()
-							.getAssociatedComponentName()
-					+ " ("
-					+ logicTextEditorInput.getViewColumnSource()
-							.getViewSource().getSequenceNo() + ")";
-		} else if (logicTextType == LogicTextType.Format_Column_Calculation) {
-			return "View: " + logicTextName + "["
-					+ logicTextEditorInput.getView().getId() + "] - Column: "
-					+ logicTextEditorInput.getViewColumn().getColumnNo();
-
-		} else if (logicTextType == LogicTextType.Format_Record_Filter) {
-			return "View: " + logicTextName + " ["
-					+ logicTextEditorInput.getView().getId() + "]";
-		}
-		return "";
+		return ((LogicTextEditorInput) this.getEditorInput()).getLogicTextFormTitle();
 	}
 
 	/**
@@ -754,18 +666,8 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	public void validateLogicText() {
 		try {
 			validateErrors = null;
-			if (!text.getText().trim().equals("")) {
-				if (viewInput.getLogicTextType() == LogicTextType.Format_Record_Filter) {
-					validateFRF();
-				} else if (viewInput.getLogicTextType() == LogicTextType.Extract_Record_Filter) {
-					validateERF();
-				} else if (viewInput.getLogicTextType() == LogicTextType.Extract_Column_Assignment) {
-					validateECA();
-				} else if (viewInput.getLogicTextType() == LogicTextType.Format_Column_Calculation) {
-					validateFCC();
-                } else if (viewInput.getLogicTextType() == LogicTextType.Extract_Record_Output) {
-                    validateERO();
-                }
+			if (text.getText().trim().length() > 0) {
+				((LogicTextEditorInput) getEditorInput()).validateLogicText(text.getText());
 			}	
 		} catch (SAFRViewActivationException sva) {
 			validateErrors = sva;			
@@ -773,50 +675,6 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 			// show user message.
 			UIUtilities.handleWEExceptions(e,"Unexpected error occurred while validating the Logic Text.",null);
 		}
-	}
-
-	/**
-	 * Validates the format column calculation in this editor.
-	 * 
-	 * @throws SAFRException
-	 */
-	private void validateFCC() throws SAFRException {
-		((LogicTextEditorInput) getEditorInput()).getViewColumn()
-				.validateFormatColumnCalculation(text.getText());
-	}
-
-	/**
-	 * Validates the Extract column assignment in this editor.
-	 * @return 
-	 * 
-	 * @throws SAFRException
-	 */
-	private void validateECA() throws SAFRException {
-		((LogicTextEditorInput) getEditorInput()).getViewColumnSource().validateExtractColumnAssignment(text.getText());
-	}
-
-	/**
-	 * Validates the extract record filter in this editor.
-	 * 
-	 * @throws SAFRException
-	 */
-	private void validateERF() throws SAFRException {
-		((LogicTextEditorInput) getEditorInput()).getViewSource()
-				.validateExtractRecordFilter(text.getText());
-	}
-
-    private void validateERO() throws SAFRException {
-        ((LogicTextEditorInput) getEditorInput()).getViewSource()
-                .validateExtractRecordOutput(text.getText());
-    }
-	
-	/**
-	 * Validates the format record filter in this editor.
-	 * 
-	 * @throws SAFRException
-	 */
-	private void validateFRF() throws SAFRException {
-		view.validateFormatRecordFilter(text.getText());
 	}
 
 	@Override

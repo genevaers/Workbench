@@ -47,6 +47,9 @@ import com.ibm.safr.we.model.query.UserExitRoutineQueryBean;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewSource;
 import com.ibm.safr.we.preferences.SAFRPreferences;
+import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.ERFLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.EROLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextViewTreeNode.TreeItemId;
@@ -343,15 +346,15 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 	private ViewSource getExtractViewSource() {
 		ViewSource viewSource = null;
 		if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-		    viewSource = logicTextEditorInput.getViewColumnSource().getViewSource();                            
+		    viewSource = ((ECLLogicTextEditorInput)logicTextEditorInput).getViewSource();                            
 		} else if (logicTextType == LogicTextType.Extract_Record_Output) {
-		    viewSource = logicTextEditorInput.getViewSource();                                                        
+		    viewSource = ((EROLogicTextEditorInput)logicTextEditorInput).getViewSource();                                                        
 		}
 		return viewSource;
 	}
 
 	private void getERFChildren(LogicTextViewTreeNode item) {
-		ViewSource viewSource = logicTextEditorInput.getViewSource();
+		ViewSource viewSource = ((ERFLogicTextEditorInput)logicTextEditorInput).getViewSource();  
 		addNodesForSource(item, viewSource);
 	}
 
@@ -417,7 +420,7 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 						item.setChildren(columnsChildren);
 					}
 				} else if (logicTextType == LogicTextType.Extract_Record_Filter) {
-					ViewSource viewSource = logicTextEditorInput.getViewSource();
+					ViewSource viewSource = ((ERFLogicTextEditorInput)logicTextEditorInput).getViewSource();
 					if (item.getId() == TreeItemId.FIELDS) {
 						List<LRField> fields = null;
 						fields = SAFRApplication.getSAFRFactory().getLRFields(viewSource.getLrFileAssociation().getAssociatingComponentId());

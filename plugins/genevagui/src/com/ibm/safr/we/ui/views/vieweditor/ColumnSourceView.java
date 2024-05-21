@@ -94,6 +94,7 @@ import com.ibm.safr.we.model.query.LogicalRecordFieldQueryBean;
 import com.ibm.safr.we.model.query.LogicalRecordQueryBean;
 import com.ibm.safr.we.model.query.LookupQueryBean;
 import com.ibm.safr.we.model.view.ViewColumnSource;
+import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditor;
@@ -466,8 +467,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 						    viewColumnSource.getSourceType().getGeneralId() == Codes.FORMULA) {
 
 							// Open the Logic Text editor tab
-							LogicTextEditorInput input = new LogicTextEditorInput(
-									viewColumnSource, vEditor);
+							LogicTextEditorInput input = new ECLLogicTextEditorInput(viewColumnSource, vEditor);
 							try {
 								PlatformUI.getWorkbench()
 										.getActiveWorkbenchWindow()

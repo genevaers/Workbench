@@ -74,7 +74,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -84,7 +83,6 @@ import org.eclipse.ui.swt.IFocusService;
 
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.constants.EditRights;
-import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
@@ -101,14 +99,15 @@ import com.ibm.safr.we.ui.ApplicationMediator;
 import com.ibm.safr.we.ui.commands.SourceProvider;
 import com.ibm.safr.we.ui.dialogs.NewViewSourceDialog;
 import com.ibm.safr.we.ui.dialogs.viewgen.ViewGenDialog;
+import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.ERFLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.FCCLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
-import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.utilities.IRowEditingSupport;
 import com.ibm.safr.we.ui.utilities.IRowEditingSupportExtended;
 import com.ibm.safr.we.ui.utilities.ImageKeys;
 import com.ibm.safr.we.ui.utilities.RowEditorType;
 import com.ibm.safr.we.ui.utilities.SAFRComboBoxCellEditor;
-import com.ibm.safr.we.ui.utilities.SAFRGUIToolkit;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
@@ -1580,15 +1579,9 @@ public class ViewColumnEditor {
                         // check if the click is on data source cell.
                         if (m.propertyID == ViewColumnEditor.DATASOURCE) {
                             ViewSource source = (ViewSource) m.getData();
-
-                            // the click is on datasource cell so open extract record filter.
-                            // load extract record filter using Source.
-                            LogicTextEditorInput input = new LogicTextEditorInput(source, mediator.getEditor(),
-                                LogicTextType.Extract_Record_Filter);
                             try {
-
                                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                                        .openEditor(input, LogicTextEditor.ID);
+                                        .openEditor(new ERFLogicTextEditorInput(source, mediator.getEditor()), LogicTextEditor.ID);
                             } catch (PartInitException pie) {
                                 UIUtilities.handleWEExceptions(pie,
                                         "Unexpected error occurred while opening logic text editor.", null);
@@ -1618,13 +1611,11 @@ public class ViewColumnEditor {
                             // extract column assignment.
                             if (colSource.getSourceType() != null) {
                                 if (colSource.getSourceType().getGeneralId() == Codes.FORMULA) {
-
-                                    LogicTextEditorInput input = new LogicTextEditorInput(colSource, mediator.getEditor());
                                     try {
                                     	IWorkbenchPage ap = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                                     	IViewPart ltv = ap.findView(LogicTextView.ID);
                                     	if(ltv == null) {
-                                    		ap.openEditor(input, LogicTextEditor.ID);
+                                    		ap.openEditor(new ECLLogicTextEditorInput(colSource, mediator.getEditor()), LogicTextEditor.ID);
                                     	} else {
                                     		ap.showView(LogicTextEditor.ID);
                                     	}
@@ -1638,12 +1629,10 @@ public class ViewColumnEditor {
                             }
                         } else if (m.propertyID == ViewColumnEditor.FORMATPHASECALCULATION
                                 && enableViewEditorCells(getCurrentColumn(), ViewColumnEditor.FORMATPHASECALCULATION)) {
-                            // Open the Logic Text editor tab
-                            LogicTextEditorInput input = new LogicTextEditorInput(getCurrentColumn(), mediator.getEditor());
                             try {
 
                                 PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                                        .openEditor(input, LogicTextEditor.ID);
+                                        .openEditor(new FCCLogicTextEditorInput(getCurrentColumn(), mediator.getEditor()), LogicTextEditor.ID);
                             } catch (PartInitException pie) {
                                 UIUtilities.handleWEExceptions(pie,
                                         "Unexpected error occurred while opening Logic Text editor.", null);
