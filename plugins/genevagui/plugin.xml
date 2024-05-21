@@ -4553,12 +4553,6 @@ under the License.
              restorable="true">
        </view>
        <view
-             class="com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew"
-             id="SAFRWE.ActivationLogViewNew"
-             name="View Activation Errors (new)"
-             restorable="true">
-       </view>
-       <view
              class="com.ibm.safr.we.ui.editors.CompareTextView"
              id="SAFRWE.CompareTextView"
              name="Compare Text View"
