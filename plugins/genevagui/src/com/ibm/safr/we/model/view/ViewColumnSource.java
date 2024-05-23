@@ -799,10 +799,8 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	 *             SAFRValidation exception will be thrown with a list of
 	 *             validation errors.
 	 */
-	public void validateExtractColumnAssignment(String logicText)
-			throws DAOException, SAFRException {
-	    CompilerFactory.checkSyntax(LogicTextType.Extract_Column_Assignment,
-				logicText, view, getViewSource(), getViewColumn());
+	public void validateExtractColumnAssignment(String logicText) throws DAOException, SAFRException {
+		LogicTextSyntaxChecker.checkSyntaxExtractAssign(logicText, view, viewSource, viewColumn);
 	}
 
 	@Override

@@ -69,7 +69,6 @@ public class CompilerFactory {
 	private static String formatFilterCalculationStack;
 	private static Map<Integer, String> colCalcs = new TreeMap<>();
 	private static String logicText;
-	private static List<String> warnings;
 	private static String calcStackString;
 
 	static void checkSyntax(LogicTextType type, String text, View view,

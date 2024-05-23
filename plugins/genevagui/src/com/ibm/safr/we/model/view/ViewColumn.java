@@ -1138,8 +1138,7 @@ public class ViewColumn extends SAFRField {
 	 */
 	public void validateFormatColumnCalculation(String logicText)
 			throws DAOException, SAFRException {
-	    CompilerFactory.checkSyntax(LogicTextType.Format_Column_Calculation,
-				logicText, view, null, this);
+	    LogicTextSyntaxChecker.checkSyntaxFormatCalc(logicText, view, this);
 	}
 
 	@Override

@@ -22,23 +22,15 @@ import static j2html.TagCreator.*;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
+import java.util.prefs.Preferences;
 
 import org.genevaers.repository.data.CompilerMessage;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
-import com.ibm.safr.we.constants.CodeCategories;
-import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.model.Code;
+import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.query.ViewMappingsReportQueryBean;
-import com.ibm.safr.we.model.query.ViewPropertiesReportQueryBean;
-import com.ibm.safr.we.model.query.ViewSortKeyReportQueryBean;
-import com.ibm.safr.we.model.query.ViewSourcesReportQueryBean;
 import com.ibm.safr.we.model.view.CompilerFactory;
-import com.ibm.safr.we.model.view.ViewColumn;
-import com.ibm.safr.we.model.view.ViewColumnSource;
-import com.ibm.safr.we.model.view.ViewSource;
+import com.ibm.safr.we.model.view.LogicTextSyntaxChecker;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 
 import j2html.tags.ContainerTag;
@@ -48,14 +40,31 @@ import j2html.tags.specialized.DivTag;
 public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 
 	
+	private Path htmlPath;
+	private String viewName;
+
 	public LogicTableHTMLReport() {
 	}
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
-		Path htmlPath = makeHtmlDirIfNeeded(path);
+		htmlPath = makeHtmlDirIfNeeded(path);
+		viewName = "_Env" + LogicTextSyntaxChecker.getView().getEnvironmentId()+"_V";
 		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId();
 		outputFile += ".html";
 		reportPath = htmlPath.resolve(outputFile);
+		setupDotIfEnabled(path);
+	}
+
+	private void setupDotIfEnabled(Path reportPath) {
+		Preferences prefs = SAFRPreferences.getSAFRPreferences();
+		if(prefs.get(UserPreferencesNodes.DOT_ENABLED, "").equals("Y")) {
+			if(prefs.get(UserPreferencesNodes.DOT_FILTER, "").equalsIgnoreCase("Y")) {
+				WorkbenchCompiler.setDotFilter();
+				WorkbenchCompiler.setDotViews(prefs.get(UserPreferencesNodes.DOT_VIEWS, ""));
+				WorkbenchCompiler.setDotCols(prefs.get(UserPreferencesNodes.DOT_COLS, ""));
+			}
+			WorkbenchCompiler.dotTo(htmlPath.resolve("dots").resolve("XLT" + viewName + ".dot"));
+		}
 	}
 
 	@Override
@@ -68,13 +77,23 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 			).withClass("w3-container");
 	}
 
+	private DomContent addASTDiagrams() {
+		if(htmlPath.resolve(htmlPath.resolve("dots").resolve("XLT" + viewName + ".dot")).toFile().exists()) {
+			return div(h2("XLT AST Tree"),
+					img().attr("src=\"dots/XLT" + viewName + ".dot.svg\""));
+		} else {
+			return null;
+		}
+	}
+
 	private DomContent getValidationReport() {
 		if (SAFRPreferences.isFullActicationReportEnabled()) {
 			return div(
 					h3("Logic Text"),
-					div(pre(CompilerFactory.getLogicText())).withClass("w3-code"),
+					div(pre(LogicTextSyntaxChecker.getLogicText())).withClass("w3-code"),
 					h4("Result"),
-					div(pre(CompilerFactory.getLogicTableLog()).withClass("w3-code")
+					div(pre(LogicTextSyntaxChecker.getLogicTableLog()).withClass("w3-code"),
+					addASTDiagrams()
 					)).withClass("w3-panel w3-card w3-gray");
 		} else {
 			return null;
@@ -93,7 +112,7 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 	}
 	
 	private DomContent getWarningsIfThereAreAny() {
-		List<String> ws = CompilerFactory.getWarnings();
+		List<String> ws = LogicTextSyntaxChecker.getWarnings();
 		if (ws.size() > 0) {
 			return div(h3("Warnings"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getWarningMessages(), w -> getMessageRow(w))))
 					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-yellow");

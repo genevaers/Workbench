@@ -46,7 +46,6 @@ import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.UserExitRoutineQueryBean;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewSource;
-import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.ERFLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.EROLogicTextEditorInput;

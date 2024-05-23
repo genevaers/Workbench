@@ -1981,10 +1981,8 @@ public class View extends SAFRActivatedComponent {
      *             SAFRValidation exception will be thrown with a list of
      *             validation errors.
      */
-    public void validateFormatRecordFilter(String logicText)
-            throws DAOException, SAFRException {
-        CompilerFactory.checkSyntax(LogicTextType.Format_Record_Filter,
-                logicText, this, null, null);
+    public void validateFormatRecordFilter(String logicText) {
+        LogicTextSyntaxChecker.checkSyntaxFormatFilter(logicText, this);
     }
 
     /**
