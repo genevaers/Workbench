@@ -29,8 +29,7 @@ import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.view.CompilerFactory;
-import com.ibm.safr.we.model.view.LogicTextSyntaxChecker;
+import com.ibm.safr.we.model.view.WBCompilerDataStore;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 
 import j2html.tags.ContainerTag;
@@ -48,7 +47,7 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
 		htmlPath = makeHtmlDirIfNeeded(path);
-		viewName = "_Env" + LogicTextSyntaxChecker.getView().getEnvironmentId()+"_V";
+		viewName = "_Env" + WBCompilerDataStore.getView().getEnvironmentId()+"_V";
 		String outputFile = baseName + "_Env" + SAFRApplication.getUserSession().getEnvironment().getId();
 		outputFile += ".html";
 		reportPath = htmlPath.resolve(outputFile);
@@ -90,9 +89,9 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 		if (SAFRPreferences.isFullActicationReportEnabled()) {
 			return div(
 					h3("Logic Text"),
-					div(pre(LogicTextSyntaxChecker.getLogicText())).withClass("w3-code"),
+					div(pre(WBCompilerDataStore.getLogicText())).withClass("w3-code"),
 					h4("Result"),
-					div(pre(LogicTextSyntaxChecker.getLogicTableLog()).withClass("w3-code"),
+					div(pre(WBCompilerDataStore.getLogicTableLog()).withClass("w3-code"),
 					addASTDiagrams()
 					)).withClass("w3-panel w3-card w3-gray");
 		} else {
@@ -112,7 +111,7 @@ public class LogicTableHTMLReport extends  GenevaHTMLReport  {
 	}
 	
 	private DomContent getWarningsIfThereAreAny() {
-		List<String> ws = LogicTextSyntaxChecker.getWarnings();
+		List<String> ws = WBCompilerDataStore.getWarnings();
 		if (ws.size() > 0) {
 			return div(h3("Warnings"), table(tbody(getMeassageHeader(), each(WorkbenchCompiler.getWarningMessages(), w -> getMessageRow(w))))
 					.withClass("w3-table-all w3-striped w3-border")).withClass("w3-panel w3-card w3-yellow");

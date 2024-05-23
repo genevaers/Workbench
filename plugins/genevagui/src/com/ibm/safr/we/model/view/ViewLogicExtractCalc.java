@@ -22,14 +22,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerType;
-import org.genevaers.runcontrolgenerator.workbenchinterface.WBCompilerFactory;
-import org.genevaers.runcontrolgenerator.workbenchinterface.WBExtractColumnCompiler;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
 import com.ibm.safr.we.exceptions.SAFRException;
@@ -53,34 +49,34 @@ public class ViewLogicExtractCalc {
     public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
         setAllSourceColumnInfo(source);
-        
+
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-			WorkbenchCompiler.addColumn(CompilerFactory.getColumnData(col));
+            WorkbenchCompiler.addColumn(WBCompilerDataStore.getColumnData(col));
             processExtractCalculation(source, col);
         }
     }
-    
+
     protected void setAllSourceColumnInfo(ViewSource source) {
         int positionDT = 1;
         int positionCT = 1;
-        
-		for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-			col.getViewColumnSources().get(source.getSequenceNo() - 1);
-			int colType = getColumnType(col);
-			col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 
-			if (colType == Codes.SORTKEY) {
-				col.setExtractAreaPosition(null);
-			} else if (colType == Codes.CT_AREA) {
-				col.setExtractAreaPosition(positionCT);
-				positionCT += CompilerFactory.CT_ADDITION;
-			} else {
-				col.setExtractAreaPosition(positionDT);
-				positionDT += col.getLength();
-			}
-		}
+        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+            col.getViewColumnSources().get(source.getSequenceNo() - 1);
+            int colType = getColumnType(col);
+            col.setExtractAreaCode(
+                    SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
+
+            if (colType == Codes.SORTKEY) {
+                col.setExtractAreaPosition(null);
+            } else if (colType == Codes.CT_AREA) {
+                col.setExtractAreaPosition(positionCT);
+                positionCT += WBCompilerDataStore.CT_ADDITION;
+            } else {
+                col.setExtractAreaPosition(positionDT);
+                positionDT += col.getLength();
+            }
+        }
     }
-
     
     protected int getColumnType(ViewColumn col) {
         
@@ -110,20 +106,22 @@ public class ViewLogicExtractCalc {
     }
     
     
-	protected void processExtractCalculation(ViewSource source, ViewColumn col) throws SAFRViewActivationException, SAFRException, DAOException {
-		ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
-		String formulaToCompile;
-        if((colSource.getExtractColumnAssignment() == null || colSource.getExtractColumnAssignment().length() == 0) || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
-        	formulaToCompile = generateColumnLogic(source, col, colSource);
+    protected void processExtractCalculation(ViewSource source, ViewColumn col)
+            throws SAFRViewActivationException, SAFRException, DAOException {
+        ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
+        String formulaToCompile;
+        if ((colSource.getExtractColumnAssignment() == null || colSource.getExtractColumnAssignment().length() == 0)
+                || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
+            formulaToCompile = generateColumnLogic(source, col, colSource);
             colSource.setExtractColumnAssignmentBasic(formulaToCompile);
         } else {
-        	formulaToCompile = colSource.getExtractColumnAssignment();
+            formulaToCompile = colSource.getExtractColumnAssignment();
         }
-		if (formulaToCompile == null) {
-			return;
-		}
-		compileLogic(source, col, colSource, formulaToCompile);
-	}
+        if (formulaToCompile == null) {
+            return;
+        }
+        compileLogic(source, col, colSource, formulaToCompile);
+    }
 
     protected String generateColumnLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
@@ -263,9 +261,8 @@ public class ViewLogicExtractCalc {
     
     protected void compileLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource, String formulaToCompile) {
     		WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
-			WBExtractColumnCompiler extractCompiler = (WBExtractColumnCompiler) WBCompilerFactory.getProcessorFor(WBCompilerType.EXTRACT_COLUMN);
-			WorkbenchCompiler.addViewColumnSource(CompilerFactory.makeViewColumnSource(view, source, col, formulaToCompile));
-    		extractCompiler.buildAST();
+            WorkbenchCompiler.addViewColumnSource(WBCompilerDataStore.makeViewColumnSource(view, source, col, formulaToCompile));
+    		WorkbenchCompiler.compileExtractAssign(view.getId(), source.getSequenceNo(), col.getColumnNo());
     }
 
 	

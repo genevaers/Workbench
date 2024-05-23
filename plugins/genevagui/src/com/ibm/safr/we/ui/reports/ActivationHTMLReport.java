@@ -28,11 +28,10 @@ import org.genevaers.repository.data.CompilerMessage;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.UserPreferencesNodes;
-import com.ibm.safr.we.model.SAFRApplication;
-import com.ibm.safr.we.model.view.CompilerFactory;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewColumnSource;
 import com.ibm.safr.we.model.view.ViewSource;
+import com.ibm.safr.we.model.view.WBCompilerDataStore;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 
 import j2html.tags.ContainerTag;
@@ -52,9 +51,9 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
 	public void setFileName(Path path, String baseName, List<Integer> viewIDs) {
 		htmlPath = makeHtmlDirIfNeeded(path);
-		viewName = "_Env" + CompilerFactory.getView().getEnvironmentId()+"_V";
+		viewName = "_Env" + WBCompilerDataStore.getView().getEnvironmentId()+"_V";
 		if(viewIDs.isEmpty()) {		
-			viewName += CompilerFactory.getView().getId();
+			viewName += WBCompilerDataStore.getView().getId();
 		} else {
 			viewName += viewIDs.get(0);			
 		}
@@ -126,7 +125,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 	private DomContent getExtractLogic() {
 		return div(
 					h2("Extract Logic"),
-					each(CompilerFactory.getView().getViewSources(), vs -> getViewSouceLogic(vs))
+					each(WBCompilerDataStore.getView().getViewSources(), vs -> getViewSouceLogic(vs))
 				).withClass("w3-panel w3-card w3-grey");
 	}
 
@@ -183,7 +182,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 
 	private DomContent getFormatColumnCalculationDetails() {
 		return div(
-				each(CompilerFactory.getView().getViewColumns(), c -> getColumnCalc(c))
+				each(WBCompilerDataStore.getView().getViewColumns(), c -> getColumnCalc(c))
 				);
 	}
 
@@ -193,7 +192,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 				h4("Column " + col.getColumnNo()),
 				div(pre(col.getFormatColumnCalculation())).withClass("w3-code"),
 				h4("Calculation Stack"),
-				div(pre(CompilerFactory.getColumnCalcStacks(col.getColumnNo()))).withClass("w3-code")
+				div(pre(WBCompilerDataStore.getColumnCalcStacks(col.getColumnNo()))).withClass("w3-code")
 			).withClass("w3-panel w3-card w3-light-gray");
     	} else {
     		return null;
@@ -201,13 +200,13 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 	}
 
 	private DomContent getFormatFilterReport() {
-		String ff = CompilerFactory.getView().getFormatRecordFilter();
+		String ff = WBCompilerDataStore.getView().getFormatRecordFilter();
 		if(ff != null && ff.length() > 0) {
 			return div(
 					h3("Format Filter"),
 					div(pre(ff)).withClass("w3-code"),
 					h4("Calculation Stack"),
-					div(pre(CompilerFactory.getFormatFilterCalculationStack())).withClass("w3-code")
+					div(pre(WBCompilerDataStore.getFormatFilterCalculationStack())).withClass("w3-code")
 					).withClass("w3-panel w3-card w3-gray");
 		} else {
 			return div(
@@ -253,7 +252,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 	}
 
 	private DomContent getheader() {
-		return 	h1("View: " + CompilerFactory.getView().getName());
+		return 	h1("View: " + WBCompilerDataStore.getView().getName());
 	}
 
 }
