@@ -117,11 +117,11 @@ public class ActivateViewsViews {
                 } else if (model.getResult() == ActivityResult.LOADERRORS) {
                     return "Load Error";
                 } else if (model.getResult().equals(ActivityResult.PASS)) {
-                    return "Pass";
+                    return "Completed";
                 } else if (model.getResult().equals(ActivityResult.WARNING)) {
-                    return "Warning";
+                    return "Warnings";
                 } else {
-                    return "Fail";
+                    return "Errors";
                 }
             case 2:
                 if (model.isActive()) {
@@ -140,33 +140,32 @@ public class ActivateViewsViews {
 
         @Override
         public Color getForeground(Object element) {
-
-            BatchComponent item = (BatchComponent) element;
-            switch (columnIndex) {
-            case 1:
-            	switch(item.getResult()) {
-				case FAIL:
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-				case LOADERRORS:
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-				case PASS:
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
-				case SYSTEMERROR:
-					break;
-				case WARNING:
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
-				case NONE:
-				case CANCEL:
-				default:
-					break;
-            	}
-            }
             return null;
-
         }
 
+        @Override
+        public Color getBackground(Object element) {
+            BatchComponent item = (BatchComponent) element;
+            switch (item.getResult()) {
+            case FAIL:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+            case LOADERRORS:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+            case PASS:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+            case SYSTEMERROR:
+                break;
+            case WARNING:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
+            case NONE:
+            case CANCEL:
+            default:
+                break;
+            }
+            return null;
+        }
     }
-    
+
     private class StatusFilter extends ViewerFilter {
 
         private String status = null;
