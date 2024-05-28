@@ -27,11 +27,5 @@ echo "Test for Grammar"
 ./prebuild/Grammar.sh
 echo "Test for Run Control Apps"
 ./prebuild/RCG.sh
-echo "Configure Build"
-./prebuild/configBuild.sh
-if [ -d "products/com.ibm.safr.we.product/target" ]; then
-    mvn clean
-fi
-echo "Tycho Build starting..."
-mvn install
-echo "Post Build Script"
+echo "Build Workbench"
+./WBOnlyBuild.sh
