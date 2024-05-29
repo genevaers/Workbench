@@ -13,32 +13,36 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# Get the Grammar repo if it is not there
+# Get the Run Control Apps repo if it is not there
 
 main() {
-    echo "Clone the grammar"
+    echo "Clone the Run Control Apps"
     BASEDIR=${PWD}
     echo "Workbench location: ${BASEDIR}"
     cd ..
-    if [[ ! -z "$GERS_GRAMMAR" ]]; then
-        echo "Cloning from bash variable $GERS_GRAMMAR"
-        clone $GERS_GRAMMAR
+    if [[ ! -z "$GERS_RCA" ]]; then
+        echo "Cloning from bash variable $GERS_RCA"
+        clone $GERS_RCA
     else
         echo "Using standard GitHub repo"
-        clone "https://github.com/genevaers/Grammar.git"
+        clone "https://github.com/genevaers/Run-Control-Apps.git"
     fi
-    cd ./Grammar
-    git pull
-    echo "Grammar location: ${PWD}"
-    mvn install
+    cd ./Run-Control-Apps
+    echo "Run-Control-Apps location: ${PWD}"
+    # TODO remove following line
+    # git checkout error-management
+    # git pull
+    mvn install -DskipTests
     cd $BASEDIR
 }
 
 clone() {
-    if [ ! -d Grammar ] 
+    if [ ! -d Run-Control-Apps ] 
     then
-        git clone $1 Grammar
+        git clone $1 Run-Control-Apps
     fi
 }
+
+
 
 main "$@"

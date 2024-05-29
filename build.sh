@@ -23,9 +23,7 @@ if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
     echo "Running custom pre-build script from $GERS_PRE_SCRIPT"
     $GERS_PRE_SCRIPT
 fi
-echo "Test for Grammar"
-./prebuild/Grammar.sh
 echo "Test for Run Control Apps"
-./prebuild/RCG.sh
+./prebuild/RCA.sh
 echo "Build Workbench"
 ./WBOnlyBuild.sh

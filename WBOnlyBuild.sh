@@ -23,3 +23,4 @@ fi
 echo "Tycho Build starting..."
 mvn install
 echo "Post Build Script"
+# The postbuild pom.xml contains the command to execute the postbild.sh script
