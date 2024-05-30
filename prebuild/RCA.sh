@@ -29,9 +29,6 @@ main() {
     fi
     cd ./Run-Control-Apps
     echo "Run-Control-Apps location: ${PWD}"
-    # TODO remove following line
-    # git checkout error-management
-    # git pull
     mvn install -DskipTests
     cd $BASEDIR
 }
