@@ -80,6 +80,7 @@ import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.BatchActivateViews;
 import com.ibm.safr.we.model.utilities.BatchComponent;
+import com.ibm.safr.we.model.utilities.PassGenerator;
 import com.ibm.safr.we.preferences.SortOrderPrefs;
 import com.ibm.safr.we.preferences.SortOrderPrefs.Order;
 import com.ibm.safr.we.ui.editors.OpenEditorPopupState;
@@ -459,11 +460,17 @@ public class ActivateViewsViews {
                     mediator.getSite().getShell().setCursor(mediator.getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
 
                     try {
-                        BatchActivateViews.activate(viewSet, new SAFRGUIConfirmWarningStrategy(
-                                SAFRGUIContext.MODEL));
-                        // refresh the metadata view
-                        MetadataView metadataview = (MetadataView) (PlatformUI
-                                .getWorkbench().getActiveWorkbenchWindow()
+                        BatchActivateViews.activate(viewSet, new SAFRGUIConfirmWarningStrategy(SAFRGUIContext.MODEL));
+                        if(BatchActivateViews.isAllActive()) {
+                            if(mediator.getActivateViewsCriteria().isPass()) {
+                                PassGenerator.run(viewSet, null);
+                            }
+                        } else {
+                            MessageDialog.openError(mediator.getSite().getShell(), "Batch Actiavation",
+                                    "Cannot generate a Pass because not all views are Active");
+
+                        }
+                        MetadataView metadataview = (MetadataView) (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                                 .getActivePage().findView(MetadataView.ID));
                         if (metadataview != null) {
                             List<Integer> views = new ArrayList<Integer>();
