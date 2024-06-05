@@ -1587,7 +1587,7 @@ under the License.
             </separator>
             <command
                   commandId="SAFRWE.AboutSAFR"
-                  label="&amp;About SAFR Workbench...."
+                  label="&amp;About GenevaERS Workbench...."
                   style="push">
             </command>
          </menu>
