@@ -68,7 +68,7 @@ public class SAFRLogger {
         if (userHandler == null) {
             final Logger logger = Logger.getLogger("");
             try {
-            	SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd");
+            	SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd'@'HH_mm_ss");
                 Date dt = Calendar.getInstance().getTime();                            
                 String pattern = logPath + "/WE." + timeFormat.format(dt) + ".%g.log";
                 userHandler = new FileHandler(pattern, 1000000, 10);
