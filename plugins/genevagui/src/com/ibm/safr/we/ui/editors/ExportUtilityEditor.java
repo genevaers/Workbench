@@ -1197,6 +1197,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
         int i = 0;
         String[] textOptions = new String[]{"TEXT", "CSV", "HTML"};
         comboRCAType.setItems(textOptions);
+        comboRCAType.setText(textOptions[0]);
 
     }
 
