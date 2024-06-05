@@ -15,15 +15,12 @@
 # under the License.
 # Run Build scripts
 
-if [ ! -z "$1" ]; then
-    sed -i -e s/\$\{user.name\}/$1/ prebuild/resources/wb.properties
+echo "Configure Build"
+./prebuild/configBuild.sh
+if [ -d "products/com.ibm.safr.we.product/target" ]; then
+    mvn clean
 fi
-
-if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
-    echo "Running custom pre-build script from $GERS_PRE_SCRIPT"
-    $GERS_PRE_SCRIPT
-fi
-echo "Test for Run Control Apps"
-./prebuild/RCA.sh
-echo "Build Workbench"
-./WBOnlyBuild.sh
+echo "Tycho Build starting..."
+mvn install
+echo "Post Build Script"
+# The postbuild pom.xml contains the command to execute the postbild.sh script

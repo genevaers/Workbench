@@ -17,3 +17,4 @@ ccb2lr/src/main/antlr4/org/genevaers/ccb2lr/grammar/.antlr/**
 **/.classpath*
 **/workspace/.metadata
 **/*.tycho
+**/.project

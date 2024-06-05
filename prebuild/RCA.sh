@@ -13,25 +13,33 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-# Get the Grammar repo if it is not there
+# Get the Run Control Apps repo if it is not there
 
-mvn dependency:get -Dartifact=org.genevaers:grammar:1.0.0 > /dev/null 2>&1
-if [ $? != 0 ]; 
-then
-    echo "Clone the grammar"
+main() {
+    echo "Clone the Run Control Apps"
     BASEDIR=${PWD}
     echo "Workbench location: ${BASEDIR}"
     cd ..
-    if [[ ! -z "$GERS_GRAMMAR" ]]; then
-        echo "Cloning from $GERS_GRAMMAR"
-        git clone $GERS_GRAMMAR Grammar
+    if [[ ! -z "$GERS_RCA" ]]; then
+        echo "Cloning from bash variable $GERS_RCA"
+        clone $GERS_RCA
     else
-        git clone https://github.com/genevaers/Grammar.git Grammar
+        echo "Using standard GitHub repo"
+        clone "https://github.com/genevaers/Run-Control-Apps.git"
     fi
-    cd ./Grammar
-    echo "Grammar location: ${PWD}"
-    mvn install
+    cd ./Run-Control-Apps
+    echo "Run-Control-Apps location: ${PWD}"
+    mvn install -DskipTests
     cd $BASEDIR
-else
-    echo "Grammar repo in place"
-fi
+}
+
+clone() {
+    if [ ! -d Run-Control-Apps ] 
+    then
+        git clone $1 Run-Control-Apps
+    fi
+}
+
+
+
+main "$@"
