@@ -250,7 +250,6 @@ public class SAFRLogger {
         // find log file with most current modify date
         for (File file : logPath.listFiles()) {
             if (file.getName().matches("WE\\.\\d\\d\\d\\d-\\d\\d-\\d\\d@\\d\\d_\\d\\d_\\d\\d\\.[0-9]+\\.log")) {
-                // if (file.getName().matches("WE\\.\\d+\\.log(\\.\\d+){0,1}")) {
                     long delta = current - file.lastModified(); 
                 if (lastModDelta > delta) {
                     lastModDelta = delta;
