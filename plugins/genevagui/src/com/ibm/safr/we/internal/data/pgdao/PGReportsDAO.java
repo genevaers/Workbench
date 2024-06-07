@@ -685,7 +685,7 @@ public class PGReportsDAO implements ReportsDAO {
             		+ "E.NAME AS EXITNAME, "
             		+ "R.LOOKUPEXITSTARTUP "
             		+ "FROM " + params.getSchema() + ".LOOKUP L "
-            		+ "JOIN SAFRWBS2.LOGREC SRCLR "
+            		+ "JOIN " + params.getSchema() + ".LOGREC SRCLR "
             		+ "ON SRCLR.ENVIRONID=L.ENVIRONID AND SRCLR.LOGRECID=L.SRCLRID "
             		+ "JOIN " + params.getSchema() + ".LOOKUPSTEP S "
             		+ "ON S.ENVIRONID=L.ENVIRONID AND S.LOOKUPID=L.LOOKUPID "
@@ -769,7 +769,7 @@ public class PGReportsDAO implements ReportsDAO {
 						));
             }
         } catch (SQLException e) {
-			throw DataUtilities.createDAOException("Database error occurred while querying User Groups Report.", e);
+			throw DataUtilities.createDAOException("Database error occurred while querying Lookup Report.", e);
         }
         return result;	
 	}
