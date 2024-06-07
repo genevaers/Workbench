@@ -72,7 +72,7 @@ public class PassGenerator {
         RCDriver.runRCG();
      }
     
-    public static void runFromXML(String exportPath, String fileName, String textType) throws SAFRException {
+    public static void runFromXML(String exportPath, String textType) throws SAFRException {
         RCDriver.setInputType("WBXML");
         RCDriver.setOutputPath(Paths.get(exportPath));
         RCDriver.setRCATextType(textType);
