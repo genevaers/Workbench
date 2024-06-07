@@ -52,7 +52,7 @@ public class SAFRLogger {
     public static final String USER = "USER";
     public static final String SEPARATOR = "================================================================================";
     public static final String NEWLINE = System.getProperty("line.separator");
-    
+    public static String currentLog = null;
     private static ErrorManager errorManager = null;    
     private static FileHandler userHandler = null;
     
@@ -84,6 +84,9 @@ public class SAFRLogger {
             	userHandler.setErrorManager(errorManager);            
             }
             logger.addHandler(userHandler);            
+
+            currentLog = searchLogFileName();
+
         }
     }
 
@@ -183,14 +186,14 @@ public class SAFRLogger {
             }
         }
         
-        File currentLog = new File(getLogPath() + "/" + getCurrentLogFileName());
+        File existingLog = new File(getLogPath() + "/" + getCurrentLogFileName());
         
         teardownLogger();
         
         // grab a copy of the current log contents
         String currLog = "";
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(currentLog));
+            BufferedReader reader = new BufferedReader(new FileReader(existingLog));
             String line=reader.readLine();
             if (line != null) {
                 // if already changed log path skip "Original logging" line
@@ -217,7 +220,7 @@ public class SAFRLogger {
         } catch (IOException ei) {
             throw new SAFRException(ei);
         }
-        currentLog.delete();
+        existingLog.delete();
         
         // add new log handler
         addHandlers(newLogPath);
@@ -253,9 +256,6 @@ public class SAFRLogger {
                     // SAFRLogger.logAllSeparator(logger, Level.INFO, "Deleting old log file: [" + file.getName() + "]");
                     file.delete(); 
                 }
-                // else { 
-                //     SAFRLogger.logAllSeparator(logger, Level.INFO, "Skipping non-matching or up-to-date log file: [" + file.getName() + "]");
-                // } 
             }
         }
         return;
@@ -265,8 +265,12 @@ public class SAFRLogger {
      * @return the current log filename
      */
     public static String getCurrentLogFileName() throws SAFRException {
+        return currentLog;
+    }
+
+    public static String searchLogFileName() throws SAFRException {
+        // it's dumb, but filehandler does not provide a way to get the current log file.  So we search for it to save it.
         File logPath = new File(getLogPath());
-        
         long lastModDelta = Long.MAX_VALUE;
         long current = System.currentTimeMillis();
         File currLog = null;
@@ -287,7 +291,6 @@ public class SAFRLogger {
             return "";
         }
     }
-
     public static String getTraceLogFileName() throws SAFRException {
         File logPath = new File(getLogPath());
         
