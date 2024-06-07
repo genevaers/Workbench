@@ -1121,7 +1121,11 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
 
                 shell = getSite().getShell();
                 String outputDir = textLocation.getText();
+                String rcaReportDir = null;
+                
                 if(checkPass.getSelection()) {
+                    outputDir += "\\RCAReport";
+                    rcaReportDir = outputDir;
                     PassGenerator.clearOutputDirectory(outputDir);
                     outputDir += "\\WBXMLI";
                 }
@@ -1132,11 +1136,11 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
                 try {
                     ApplicationMediator.getAppMediator().waitCursor();
                     exportUtility.export(list, Display.getDefault().getActiveShell());
-                    String t = comboRCAType.getText();
-                    PassGenerator.runFromXML(textLocation.getText(), textFilename.getText(), t);
                     getMsgManager().removeAllMessages();
                     if(checkPass.getSelection()) {
-                        String url = textLocation.getText() + "/rca/gersrca.html";
+                        String t = comboRCAType.getText();
+                        PassGenerator.runFromXML(rcaReportDir, t);
+                        String url = rcaReportDir + "/rca/gersrca.html";
                         Program.launch(url);
                     }
                     getSite().getShell().setCursor(null);
