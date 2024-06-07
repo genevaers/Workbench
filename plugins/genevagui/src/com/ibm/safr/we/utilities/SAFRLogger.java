@@ -122,7 +122,8 @@ public class SAFRLogger {
      */
     public static boolean setupLogger() throws SAFRException {
         boolean stateChanged = false;
-        String logPath = getLogPath();    
+        String logPath = getLogPath(); 
+        clearOldLogFiles();   
         addHandlers(logPath);
         return stateChanged;
     }
@@ -238,6 +239,28 @@ public class SAFRLogger {
                 
     }
     
+    public static void clearOldLogFiles() {
+        File logPath = new File(getLogPath());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH)-10);
+        Date fileCutoff = cal.getTime();
+        // Delete WE.*.log files older than one week
+        for (File file : logPath.listFiles()) {
+            if (file.getName().matches("^WE.*log$")) {
+                if (new Date(file.lastModified()).before(fileCutoff)) { 
+                    // would like to log files deleted, but can't in this module before logger is initialized
+                    // SAFRLogger.logAllSeparator(logger, Level.INFO, "Deleting old log file: [" + file.getName() + "]");
+                    file.delete(); 
+                }
+                // else { 
+                //     SAFRLogger.logAllSeparator(logger, Level.INFO, "Skipping non-matching or up-to-date log file: [" + file.getName() + "]");
+                // } 
+            }
+        }
+        return;
+    }
+
     /**
      * @return the current log filename
      */
