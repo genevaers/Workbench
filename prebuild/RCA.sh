@@ -33,12 +33,12 @@ main() {
         echo "************************************************************"
         echo "Building Run-Control-Apps including Db2 jars from $GERS_JARS"
         echo "************************************************************"
-        mvn install -Pdb2
+        mvn install -DskipTests -Pdb2
     else 
         echo "****************************************************"
         echo "Building Run-Control-Apps with Postgres only version"
         echo "****************************************************"
-        mvn install
+        mvn install -DskipTests
     fi
     cd $BASEDIR
 }
