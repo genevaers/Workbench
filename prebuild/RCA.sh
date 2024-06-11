@@ -29,7 +29,17 @@ main() {
     fi
     cd ./Run-Control-Apps
     echo "Run-Control-Apps location: ${PWD}"
-    mvn install -DskipTests
+    if [[ ! -z "$GERS_JARS" ]]; then
+        echo "************************************************************"
+        echo "Building Run-Control-Apps including Db2 jars from $GERS_JARS"
+        echo "************************************************************"
+        mvn install -Pdb2
+    else 
+        echo "****************************************************"
+        echo "Building Run-Control-Apps with Postgres only version"
+        echo "****************************************************"
+        mvn install
+    fi
     cd $BASEDIR
 }
 
