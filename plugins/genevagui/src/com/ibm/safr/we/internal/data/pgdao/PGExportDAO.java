@@ -89,8 +89,7 @@ public class PGExportDAO implements ExportDAO {
                 dependenciesMap);		    
 		}
 		else {		
-            getComponentDependenciesOther(compType, componentId, environmentId,
-                dependenciesMap);
+            getComponentDependenciesOther(compType, componentId, environmentId, dependenciesMap);
 		}
     		
 		return dependenciesMap;
