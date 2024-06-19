@@ -1,92 +1,8 @@
 # Workbench 4.21
 
-The workbench is the configuration tool for [GeneavaERS](https://genevaers.org/).  
-It is a Java application that can be run on Windows or a Mac.  
-The build can easily be updated to run on a Unix system too.
+The workbench is the configuration tool for [GeneavaERS](https://genevaers.org/).  It is a Java application that can be run on Windows or a Mac.   
 
-This version of the workbench supports both Db2 and PostgreSQL database connections.
-
-# PreRequisite
-
-You will need to have installed Java and a version of Maven.  
-The Maven version used for development was 3.9.4.
-
-Your version of Java must be higher than 1.8.  The development version was 17.0.6.
-
-The final optional step of the build adds a JRE to the distributable zip.
-To do this the build script assumes you have [7Zip](https://www.7-zip.org/download.html) installed and available on your path.
-If you want to use a different zip utiltity edit the shell script postbuild/postbuild.sh.
-
-# Environment Variables
-
-There are two key environment variables used by the build.
-You do not need to set either of them if you simply want a Postgres only version to run with your installed Java.
-
-## GERS_JARS
-This environment variable is used to provide the location of additional jars to be added to the build.
-
-In particular to add licensed Db2 driver jars.
-
-Ensure that your system sets the environment varable to the path of jars. 
-Or for example within git bash you can enter 
-
-```
-export GERS_JARS=~/gersjars
-```
-## GERS_GRAMMAR and GERS_RUNCONTROL
-
-If you wish to point to a custom location for GenevaERS Grammar and the GenevaERS Run Control Apps, pre-requisites for the Workbench, set this environment variable to the location of your desired repo.
-
-```
-export GERS_GRAMMAR="https://github.com/genevaers/Grammar.git"
-export GERS_RUNCONTROL="https://github.com/genevaers/Run-Control-Apps.git"
-```
-
-## GERS_PRE_SCRIPT or GERS_POST_SCRIPT
-
-If you wish to execute a custom script prior to or after the build process, set either of these environment variable to the location of your desired scripts.
-
-```
-export GERS_PRE_SCRIPT="C:\prescript.sh"
-export GERS_POST_SCRIPT="C:\postscript.sh"
-```
-
-## GERS_JRE
-
-If you wish to include a runtime JRE into the distributable Windows zip set this environment variable to
-the location of your desired JRE. The JRE version should be greater than 8.
-
-A suitable location from which to download a JRE is https://adoptium.net/en-GB/
-
-Assume you downloaded your JRE to a directory 'Users/me/Java' then you could for example enter.
-
-```
-export GERS_JRE=/Users/me/Java/OpenJDK17U-jre_x64_windows_hotspot_17.0.7_7/jdk-17.0.7+7-jre
-```
-
-# To Build
-
-With both Java and Maven installed enter
-
-```./build.sh```
-
-Once the build has completed successfully to test the workbench;
-
-if on Windows enter   
-```./runWorkbench.sh```
-    
-if on Mac enter  
-```./runMacWorkbench.sh```
-
-The distributable zips are located in.
-
-```products/com.ibm.safr.we.product/target/products/```
-
-# License Checking
-
-In order to run the Apache license checker enter
-
-``` mvn validate -Prat```
+It support both Db2 (under license) and PostgreSQL database connections under Windows or MacOS.  To use DB2 or MacOS, follow the build procedures below.  To use Postgres on Windows, create the database before downloading or building the Workbench.
 
 # PostgreSQL Database Install  
 Install PostgreSQL as per its instructions ...  
@@ -124,13 +40,19 @@ Explanation...
     You can choose something else if you want.
     -f runall.sql Means run this file. This will create the database called genevaers, create the tables needed, perform an initial set up of those tables, install some stored procedures, and create a GenevaERS user called “postgres”.  
 
+
+
+# Download the Workbench
+Releases of GenevaERS can be found on the left of this document under "Releases."  
+1. Download the zip file
+2. Extract all files to a directory
+3. Double click on the GenevaERS.exe
+
+## Database Connection Parameters
+
 Start the postgres database (see Postgres documentation).  
 
-On a Windows machine, from the command line, use the following script to start the Workbench. 
-    
-    ./runworkbench.sh
-
-Many of the values above are used in the GenevaERS Connection Manager.
+For Postgres, many of the values used in creating the database are used in the GenevaERS Connection Manager.
 
     - Select "Manage" and enter the following if you used the command above:
       - Database Type: PostgesQL
@@ -147,3 +69,91 @@ Many of the values above are used in the GenevaERS Connection Manager.
     - Click the "Environment" dropdown
       - Select the "Development" environment
     - Click "OK"
+
+# Build Processes
+To build the GenevaERS workbench do the following:
+
+## Build PreRequisite
+
+You will need to have installed Java and a version of Maven.  
+The Maven version used for development was 3.9.4.
+
+Your version of Java must be higher than 1.8.  The development version was 17.0.6.
+
+The final optional step of the build adds a JRE to the distributable zip.
+To do this the build script assumes you have [7Zip](https://www.7-zip.org/download.html) installed and available on your path.
+If you want to use a different zip utiltity edit the shell script postbuild/postbuild.sh.
+
+## Environment Variables
+
+There are two key environment variables used by the build.
+You do not need to set either of them if you simply want a Postgres only version to run with your installed Java.
+
+### GERS_JARS
+This environment variable is used to provide the location of additional jars to be added to the build.
+
+In particular to add licensed Db2 driver jars.
+
+Ensure that your system sets the environment varable to the path of jars. 
+Or for example within git bash you can enter 
+
+```
+export GERS_JARS=~/gersjars
+```
+## GERS_GRAMMAR and GERS_RUNCONTROL
+
+If you wish to point to a custom location for GenevaERS Grammar and the GenevaERS Run Control Apps, pre-requisites for the Workbench, set this environment variable to the location of your desired repo.
+
+```
+export GERS_GRAMMAR="https://github.com/genevaers/Grammar.git"
+export GERS_RUNCONTROL="https://github.com/genevaers/Run-Control-Apps.git"
+```
+
+### GERS_PRE_SCRIPT or GERS_POST_SCRIPT
+
+If you wish to execute a custom script prior to or after the build process, set either of these environment variable to the location of your desired scripts.
+
+```
+export GERS_PRE_SCRIPT="C:\prescript.sh"
+export GERS_POST_SCRIPT="C:\postscript.sh"
+```
+
+### GERS_JRE
+
+If you wish to include a runtime JRE into the distributable Windows zip set this environment variable to
+the location of your desired JRE. The JRE version should be greater than 8.
+
+A suitable location from which to download a JRE is https://adoptium.net/en-GB/
+
+Assume you downloaded your JRE to a directory 'Users/me/Java' then you could for example enter.
+
+```
+export GERS_JRE=/Users/me/Java/OpenJDK17U-jre_x64_windows_hotspot_17.0.7_7/jdk-17.0.7+7-jre
+```
+
+## Executing the Build
+
+With both Java and Maven installed enter
+
+```./build.sh```
+
+Once the build has completed successfully to test the workbench;
+
+if on Windows enter   
+```./runWorkbench.sh```
+    
+if on Mac enter  
+```./runMacWorkbench.sh```
+
+The distributable zips are located in.
+
+```products/com.ibm.safr.we.product/target/products/```
+
+Use the Postgres Database connection parameters under the Download section to connect to the database.
+
+# License Checking
+
+In order to run the Apache license checker enter
+
+``` mvn validate -Prat```
+

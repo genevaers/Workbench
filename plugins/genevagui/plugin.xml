@@ -375,6 +375,11 @@ under the License.
              name="AboutSAFR">
        </command>
        <command
+             defaultHandler="com.ibm.safr.we.ui.commands.OpenCurrentLogFile"
+             id="SAFRWE.OpenCurrentLogFile"
+             name="Open Current Log File">
+       </command>
+       <command
              defaultHandler="com.ibm.safr.we.ui.commands.UpdateUserProfileHandler"
              id="SAFRWE.UpdateUserProfile"
              name="Update User Profile">
@@ -480,6 +485,11 @@ under the License.
          <command
                defaultHandler="com.ibm.safr.we.ui.commands.OpenLogFile"
                id="SAFRWE.logFileList"
+               name="Log Files">
+         </command>
+         <command
+               defaultHandler="com.ibm.safr.we.ui.commands.OpenCurrentLogFile"
+               id="SAFRWE.currrentLogFile"
                name="Log Files">
          </command>
          <command
@@ -664,6 +674,15 @@ under the License.
                      id="SAFRWE.mnuRecentViewsList">
                </dynamic>
             </menu>
+            <separator
+       			name="Log Begin"
+       			visible="true">
+			</separator>
+            <command
+                  commandId="SAFRWE.OpenCurrentLogFile"
+                  label="Open Current &amp;Log File" 
+                  style="push">
+            </command>
             <menu
                   label="Open Log &amp;File">
                <dynamic
@@ -671,6 +690,10 @@ under the License.
                      id="SAFRWE.mnuLogFileList">
                </dynamic>
             </menu>
+            <separator
+       			name="Log End"
+       			visible="true">
+			</separator>
             <command
                   commandId="SAFRWE.UpdateUserProfile"
                   label="Update User &amp;Profile..."
