@@ -211,7 +211,7 @@ public class SplashHandler extends EclipseSplashHandler {
 		}
 		SAFRLogger.logAllStamp(logger, Level.INFO, buffer.toString());
 
-		String version= "Sycada Version 0.0.1"; //Try to automate this from Gradle build
+		String version= "Fix me";
 		if (version != null)
 		{
 		    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + version);

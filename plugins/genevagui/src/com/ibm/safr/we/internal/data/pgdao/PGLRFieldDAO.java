@@ -770,7 +770,6 @@ public class PGLRFieldDAO implements LRFieldDAO {
             stmnt.close();
             
         } catch (SQLException e) {
-            e.printStackTrace();
             throw DataUtilities.createDAOException(
                     "Database error occurred while updating LR Fields.", e);
         }
@@ -884,7 +883,6 @@ public class PGLRFieldDAO implements LRFieldDAO {
 			pst1.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw DataUtilities.createDAOException("Database error occurred while creating a new LR Field.",e);
 		}
 		return lrFieldTransfer;

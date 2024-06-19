@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.eclipse.ui.IWorkbenchPartSite;
+
 import com.ibm.safr.we.SAFRImmutableList;
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
@@ -299,7 +301,6 @@ public class View extends SAFRActivatedComponent {
                     .getCodeSet(CodeCategories.VIEWSTATUS)
                     .getCode(trans.getStatusCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid Status. " + SAFRUtilities.LINEBREAK + "Status will be set if the View is saved.");
         }
         try {
@@ -310,7 +311,6 @@ public class View extends SAFRActivatedComponent {
                     .getCodeSet(CodeCategories.OUTPUTMED)
                     .getCode(trans.getOutputFormatCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings
                     .add("The Output Format is incomplete. " + SAFRUtilities.LINEBREAK + "A valid Output Format must be specified before saving.");
             this.outputFormatCode = null;
@@ -357,7 +357,6 @@ public class View extends SAFRActivatedComponent {
             this.fileFieldDelimiterCode = ModelUtilities.getCodeFromKey(
                     CodeCategories.FLDDELIM, trans.getFieldDelimCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid field delimiter. Please select a valid field delimiter, if required, before saving.");
             this.fileFieldDelimiterCode = null;
         }
@@ -365,7 +364,6 @@ public class View extends SAFRActivatedComponent {
             this.fileStringDelimiterCode = ModelUtilities.getCodeFromKey(
                     CodeCategories.STRDELIM, trans.getStringDelimCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This View does not have a valid string delimiter. Please select a valid string delimiter, if required, before saving.");
             this.fileStringDelimiterCode = null;
         }
@@ -1318,6 +1316,9 @@ public class View extends SAFRActivatedComponent {
         for (ViewSource viewSource : viewSources.getActiveItems()) {
             addViewColumnSource(vc, viewSource);
         }
+        vc.setExtractAreaCode(SAFRApplication.getSAFRFactory()
+                .getCodeSet(CodeCategories.EXTRACT)
+                .getCode(Codes.DT_AREA));
         vc.setId(dummyColumnId++ * -1);
         makeViewInactive();
         markUpdated();
@@ -1980,10 +1981,8 @@ public class View extends SAFRActivatedComponent {
      *             SAFRValidation exception will be thrown with a list of
      *             validation errors.
      */
-    public void validateFormatRecordFilter(String logicText)
-            throws DAOException, SAFRException {
-        CompilerFactory.checkSyntax(LogicTextType.Format_Record_Filter,
-                logicText, this, null, null);
+    public void validateFormatRecordFilter(String logicText) {
+        LogicTextSyntaxChecker.checkSyntaxFormatFilter(logicText, this);
     }
 
     /**
@@ -1996,16 +1995,20 @@ public class View extends SAFRActivatedComponent {
      */
     public void batchActivate() throws DAOException, SAFRException {
         this.batchActivated = true;
-        activate();
+        ViewActivator activator = new ViewActivator(this);
+        ViewActivator.setSite(null);
+        activator.batchActivate();
     }
 
     /**
      * Invoke activation 
+     * @param iWorkbenchPartSite 
      * 
      * @throws DAOException, SAFRException
      */ 
-    public void activate() throws DAOException, SAFRException {
+    public void activate(IWorkbenchPartSite iWorkbenchPartSite) throws DAOException, SAFRException {
         ViewActivator activator = new ViewActivator(this);
+        ViewActivator.setSite(iWorkbenchPartSite);
         activator.activate();
     }
     
@@ -2470,8 +2473,6 @@ public class View extends SAFRActivatedComponent {
             } // end while(!success)
 
         } catch (SAFRNotFoundException snfe) {
-            snfe.printStackTrace();
-
             throw new SAFRException(
                     "The view with id "
                             + this.getId()
@@ -3117,49 +3118,6 @@ public class View extends SAFRActivatedComponent {
      */
     public void setMigrateRelatedComponents(boolean migrateRelatedComponents) {
         this.migrateRelatedComponents = migrateRelatedComponents;
-    }
-    
-    protected StringBuffer genActivationLog(List<ViewActivationError> sva) {
-        Map<SAFRCompilerErrorType, List<ViewActivationError>> errorMap = new HashMap<SAFRCompilerErrorType, List<ViewActivationError>>();
-
-        for (ViewActivationError error : sva) {
-            if (errorMap.containsKey(error.getErrorType())) {
-                errorMap.get(error.getErrorType()).add(error);
-            } else {
-                List<ViewActivationError> errors = new ArrayList<ViewActivationError>();
-                errors.add(error);
-                errorMap.put(error.getErrorType(), errors);
-            }
-        }
-
-        StringBuffer msgBuffer = new StringBuffer();
-        
-        if (errorMap.isEmpty()) {
-            return msgBuffer; // no-op
-        }
-
-        String pfx = "*** ";
-        String sfx = " ***";
-        String msgLabel = LINEBREAK + "Message: ";
-        String colLabel = LINEBREAK + "Column:  ";
-        String srcLabel = LINEBREAK + "Source:  ";
-
-        for (SAFRCompilerErrorType errType : errorMap.keySet()) {
-            msgBuffer.append(LINEBREAK);
-            msgBuffer.append(pfx + errType.getText() + sfx);
-            msgBuffer.append(LINEBREAK);
-            for (ViewActivationError vae : errorMap.get(errType)) {
-                msgBuffer.append(msgLabel + vae.getErrorText());
-                msgBuffer.append(colLabel
-                        + (vae.getViewColumn() != null ? vae.getViewColumn()
-                                .getDescriptor() : ""));
-                msgBuffer.append(srcLabel
-                        + (vae.getViewSource() != null ? vae.getViewSource()
-                                .getDescriptor() : ""));
-                msgBuffer.append(LINEBREAK);
-            }
-        }
-        return msgBuffer;
     }
     
     public ViewColumn findColumn(Integer colId) {

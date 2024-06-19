@@ -285,8 +285,7 @@ public class UserMembershipEditor extends SAFREditorPart implements
             }
 
         });
-        int iCounter;
-        for (iCounter = 0; iCounter < 2; iCounter++) {
+        for (int iCounter = 0; iCounter < 2; iCounter++) {
             comboUser.getTable().getColumn(iCounter).addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -450,11 +449,10 @@ public class UserMembershipEditor extends SAFREditorPart implements
             }
           });
 		
-		int iCounter = 0;
 		String[] columnHeaders = { "Group ID", "Name" };
 		int[] columnWidths = { 100, 250 };
 		int length = columnWidths.length;
-		for (iCounter = 0; iCounter < length; iCounter++) {
+		for (int iCounter = 0; iCounter < length; iCounter++) {
 			TableViewerColumn column = new TableViewerColumn(tableViewerGroups, SWT.NONE);
 			column.getColumn().setText(columnHeaders[iCounter]);
 			column.getColumn().setToolTipText(columnHeaders[iCounter]);

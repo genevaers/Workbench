@@ -118,7 +118,7 @@ public class FilePreferences extends AbstractPreferences {
             clearPrefsR(keys);            
             
         } catch (IOException e) {
-            throw new BackingStoreException(e);
+            throw new BackingStoreException("Failed to Sync " + e.getMessage());
         }
     }
 
@@ -199,7 +199,7 @@ public class FilePreferences extends AbstractPreferences {
             st.close();
             
         } catch (IOException e) {
-            throw new BackingStoreException(e);
+            throw new BackingStoreException("Failed to flush " + e.getMessage());
         }
     }
 

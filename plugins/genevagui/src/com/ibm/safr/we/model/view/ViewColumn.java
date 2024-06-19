@@ -168,7 +168,6 @@ public class ViewColumn extends SAFRField {
 			this.dataAlignmentCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.JUSTIFY, trans.getDataAlignmentCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("View Column "
 							+ this.columnNo
@@ -183,7 +182,6 @@ public class ViewColumn extends SAFRField {
 			this.subtotalTypeCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.SUBTOT, trans.getSubtotalTypeCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			this.subtotalTypeCode = null;
 		}
 
@@ -191,7 +189,6 @@ public class ViewColumn extends SAFRField {
 			this.extractAreaCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.EXTRACT, trans.getExtractAreaCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			this.extractAreaCode = null;
 		}
 		this.extractAreaPosition = trans.getExtractAreaPosition();
@@ -1141,8 +1138,7 @@ public class ViewColumn extends SAFRField {
 	 */
 	public void validateFormatColumnCalculation(String logicText)
 			throws DAOException, SAFRException {
-	    CompilerFactory.checkSyntax(LogicTextType.Format_Column_Calculation,
-				logicText, view, null, this);
+	    LogicTextSyntaxChecker.checkSyntaxFormatCalc(logicText, view, this);
 	}
 
 	@Override

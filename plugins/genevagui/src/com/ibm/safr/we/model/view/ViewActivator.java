@@ -1,5 +1,7 @@
 package com.ibm.safr.we.model.view;
 
+
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -18,40 +20,28 @@ package com.ibm.safr.we.model.view;
  */
 
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
+import org.eclipse.ui.IWorkbenchPartSite;
 
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractFilterSycada;
-import org.genevaers.sycadas.ExtractColumnSycada;
-import org.genevaers.sycadas.ExtractOutputSycada;
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.FormatCalculationSyntaxChecker;
-import org.genevaers.sycadas.FormatFilterSyntaxChecker;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
 
-import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
 import com.ibm.safr.we.constants.OutputFormat;
+import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WESycadaDataProvider;
-import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.SAFRValidator;
-import com.ibm.safr.we.preferences.SAFRPreferences;
+import com.ibm.safr.we.ui.reports.ReportUtils;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ViewActivator {    
@@ -63,9 +53,7 @@ public class ViewActivator {
     private SAFRViewActivationException vaException = new SAFRViewActivationException(view);
 
 	private Set<Integer> CTCols;
-	private WESycadaDataProvider dataProvider;
-
-    public ViewActivator(View view) {
+	public ViewActivator(View view) {
         super();
         this.view = view;
     }
@@ -75,113 +63,81 @@ public class ViewActivator {
     }    
     
     static public String getNewCompilerVersion() {
-        return ExtractSycada.getVersion();          
+        return WorkbenchCompiler.getVersion();          
     }
     
     static public String getCompilerVersion() {
-        SAFRPreferences preferences = new SAFRPreferences();
             return getNewCompilerVersion();
     }
 
-    static public String getAllCompilerVersion() {
-        return getNewCompilerVersion();
-    }
-    
-    
+	public static void setSite(IWorkbenchPartSite site) {
+	}
     /**
      * Invoke activation 
      * 
      * @throws DAOException, SAFRException
      */ 
     public void activate() throws DAOException, SAFRException {
-        SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
+        executeTheActivation();
+    	ReportUtils.openReportEditor(ReportType.ActivationReport);
+        logActivationResult();
+    }
+
+    public void batchActivate() throws DAOException, SAFRException {
+        executeTheActivation();
+    	ReportUtils.generateOnly(ReportType.ActivationReport);
+        logActivationResult();
+    }
+
+	private void logActivationResult() {
+		if(WorkbenchCompiler.hasErrors()) {
+            SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
+            SAFRLogger.logEnd(logger);
+            vaException.setErrorOccured();
+            throw vaException;
+	    } else {
+	        SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
+	        SAFRLogger.logEnd(logger);
+	    }
+	}
+
+	private void executeTheActivation() {
+		SAFRLogger.logAllSeparator(logger, Level.INFO, "Activating View " + view.getDescriptor());
+        
         vaException = new SAFRViewActivationException(view);   
         try {
-            activateNew();
+        	activateTheWholeView();
         } catch (SAFRViewActivationException e) {
-        	//Don't log the exception trace
             logger.log(Level.INFO, "New Activation Exception");
         }
         
         view.setCompilerVersion(ViewActivator.getCompilerVersion());
-        
-        if (vaException.hasErrorOrWarningOccured()) {
-            if (vaException.hasErrorOccured()) {
-                SAFRLogger.logAll(logger, Level.INFO, "Failed Activation");                
-                logActivationErrors();                
-            } else {
-                SAFRLogger.logAll(logger, Level.INFO, "Successful Activation with warnings");
-                logActivationErrors();
-            }
-            SAFRLogger.logEnd(logger);
-            throw vaException;
-        } else {
-            SAFRLogger.logAll(logger, Level.INFO, "Successful Activation");
-            SAFRLogger.logEnd(logger);
-        }
-    }
+	}
 
-    protected void logActivationErrors() {
-        if (vaException.getActivationLogNew().size() > 0) {     
-            logActErrors("Errors/Warnings from Compiler", vaException.getActivationLogNew());
-        }
-    }
-
-    protected void logActErrors(String title, List<ViewActivationError> rawErrors) {
-        String strErrors = title + System.lineSeparator();
-        Map<SAFRCompilerErrorType, List<ViewActivationError>> errorMap = 
-            new HashMap<SAFRCompilerErrorType, List<ViewActivationError>>();
-        for (ViewActivationError error : rawErrors) {
-            if (errorMap.containsKey(error.getErrorType())) {
-                errorMap.get(error.getErrorType()).add(error);
-            } else {
-                List<ViewActivationError> errors = new ArrayList<ViewActivationError>();
-                errors.add(error);
-                errorMap.put(error.getErrorType(), errors);
-            }
-        }
-        for (SAFRCompilerErrorType type : errorMap.keySet()) {
-            strErrors += type.getText() + " Activation Errors and Warnings" + System.lineSeparator();
-            strErrors += String.format("%s, %s, %s", "Message", "Column", "Source") + System.lineSeparator();
-            for (ViewActivationError error : errorMap.get(type)) {
-                strErrors += getErrorLine(error) + SAFRUtilities.LINEBREAK;
-            }
-            strErrors = strErrors.substring(0, strErrors.length() - SAFRUtilities.LINEBREAK.length());
-        }
-        SAFRLogger.logAll(logger, Level.INFO, strErrors);
-    }
-    
-    private String getErrorLine(ViewActivationError error) {
-        return String.format("%s, %s, %s", 
-            error.getErrorText() == null ? "" : error.getErrorText().replaceAll("(?:\\n|\\r)", ""), 
-            error.viewColumn == null ? "" :  error.viewColumn.getDescriptor(), 
-            error.viewSource == null ? "" :  error.viewSource.getDescriptor());
-    }
-    
     /**
      * Activate
      * 
      * @throws DAOException, SAFRException
      */ 
-    protected void activateNew() throws DAOException, SAFRException {
+    protected void activateTheWholeView() throws DAOException, SAFRException {
 
         initialization();                
+        checkActivationShowStoppers();        
 
         compileFormatCalculation();
-        compileViewSources();
         compileFormatFilter();
+        compileViewSources();
                 
         processResult();        
     }
 
-    protected void initialization() throws SAFRException, DAOException,
-        SAFRViewActivationException {
-        checkActivationShowStoppers();        
+    protected void initialization() throws SAFRException, DAOException, SAFRViewActivationException {
         initViewDependencies();
         initializeViewColumns();
+        WBCompilerDataStore.initializeWorkbenchCompiler(view);
     }
 
-    protected void checkActivationShowStoppers()
+	protected void checkActivationShowStoppers()
         throws SAFRException, DAOException, SAFRViewActivationException {
         checkSavedView();
         checkFormatHasSortKey();
@@ -192,7 +148,7 @@ public class ViewActivator {
         checkRecordAggregation();
         checkCopyViewHasNoColumns();
         checkNormalViewHasColumns();
-        if (!vaException.getActivationLogNew().isEmpty()) {
+        if (WorkbenchCompiler.newErrorsDetected()) {
             throw vaException; // cannot continue.                
         }
     }
@@ -200,9 +156,7 @@ public class ViewActivator {
     private void checkNormalViewHasColumns() {
         if (! view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
         	if(view.getViewColumns().size() == 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Only a Source Record Layout view can have no columns."));
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("Only a Source Record Layout view can have no columns.");
         	}
         }		
 	}
@@ -210,9 +164,7 @@ public class ViewActivator {
 	private void checkCopyViewHasNoColumns() {
         if (view.getOutputFormat().equals(OutputFormat.Extract_Source_Record_Layout)) {
         	if(view.getViewColumns().size() > 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "A Source Record Layout view cannot have columns."));
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("A Source Record Layout view cannot have columns.");
         	}
         }		
 	}
@@ -221,9 +173,8 @@ public class ViewActivator {
         if (view.isFormatPhaseInUse() && view.isFormatPhaseRecordAggregationOn()) {
         	for(ViewColumn c : view.getViewColumns()) {
         		if(c.isSortKey() == false && c.isNumeric() && c.getRecordAggregationCode() == null) {
-                    vaException.addActivationError(new ViewActivationError(null, c,
-                            SAFRCompilerErrorType.VIEW_PROPERTIES,
-                            "Record Aggregation cannot be blank."));
+        			WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
+                	WorkbenchCompiler.addViewPropertiesErrorMessage("Record Aggregation cannot be blank.");
         		}
         	}
         }		
@@ -237,14 +188,10 @@ public class ViewActivator {
     }
         
     protected void checkFormatHasSortKey() {
-        // if format phase is used, then it should have
-        // atleast one sort key.
         if (view.isFormatPhaseInUse()) {
             if (view.getViewSortKeys().getActiveItems().isEmpty()) {
-                // error. The view must have at least one sort key.
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "This View must have at least one Sort Key."));
+            	WorkbenchCompiler.setCurrentColumnNumber(0);
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("This View must have at least one Sort Key.");
             }
         }
     }
@@ -253,10 +200,8 @@ public class ViewActivator {
         // if the view doesn't have any View sources, then throw activation
         // exception.
         if (view.getViewSources().getActiveItems().isEmpty()) {
-            vaException.addActivationError(new ViewActivationError(null, null,
-                    SAFRCompilerErrorType.VIEW_PROPERTIES,
-                    "This View must have at least one view source."));
-
+        	WorkbenchCompiler.setCurrentColumnNumber(0);
+        	WorkbenchCompiler.addViewPropertiesErrorMessage("This View must have at least one view source.");
         }
     }
     
@@ -267,8 +212,8 @@ public class ViewActivator {
         if (isSummarizedHardCopyView()) {
             for (ViewSortKey key : view.getViewSortKeys().getActiveItems()) {
                 if (isCategoryModeAndLast(key) && isSuppressPrint(key)) {
-                    vaException.addActivationError(new ViewActivationError(null, key.getViewColumn(), SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view."));
+                	WorkbenchCompiler.setCurrentColumnNumber(key.getViewColumn().getColumnNo());
+                	WorkbenchCompiler.addViewPropertiesErrorMessage("Sort Key Footer Option must be 'Print' for the last sort key of a hard copy summary view.");
                     break;
                 }
             }
@@ -303,10 +248,8 @@ public class ViewActivator {
                 }
             }
             if (found > 1) {
-                // error. duplicate source found.
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.VIEW_PROPERTIES,
-                        "Duplicate View sources are not allowed."));
+            	WorkbenchCompiler.setCurrentColumnNumber(0);
+            	WorkbenchCompiler.addViewPropertiesErrorMessage("Duplicate View sources are not allowed.");
                 break;
             }
         }
@@ -383,109 +326,93 @@ public class ViewActivator {
         }
     }
 
-    protected void compileFormatCalculation() {        
+    protected void compileFormatCalculation() {    
         ViewLogicFormatCalc logCompiler = new ViewLogicFormatCalc(view, vaException);
         logCompiler.compile();
         CTCols = logCompiler.getCTCols();
     }
 
 
-	protected void compileViewSources() {
-		dataProvider = new WESycadaDataProvider();
-		ViewLogicExtractFilter logicExtractFilter = new ViewLogicExtractFilter(view, vaException, viewLogicDependencies);
-		ViewLogicExtractCalc logicExtractCalc = new ViewLogicExtractCalc(view, vaException, viewLogicDependencies);
-		ViewLogicExtractOutput logicExtractOutput = new ViewLogicExtractOutput(view, vaException, viewLogicDependencies);
+    protected void compileViewSources() {
 
-		for (ViewSource source : view.getViewSources().getActiveItems()) {
-			dataProvider.setEnvironmentID(source.getEnvironmentId());
-			dataProvider.setLogicalRecordID(source.getLrFileAssociation().getAssociatingComponentId());
-			compileExtractFilter(logicExtractFilter, source);
-			compileExtractCalculation(logicExtractCalc, source, CTCols);
-			compileExtractOutput(logicExtractOutput, source);
-		}
-	}
-    
-	protected void compileExtractFilter(ViewLogicExtractFilter logicExtract, ViewSource source) {
-		try {
-			logicExtract.compile(source, dataProvider);
-		} catch (SAFRException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-    
-    protected void compileExtractCalculation(ViewLogicExtractCalc logicExtract, ViewSource source, Set<Integer> cTCols) {
-        logicExtract.compile(source, cTCols, dataProvider);        
+        WorkbenchCompiler.clearNewErrorsDetected();
+        for (ViewSource source : view.getViewSources().getActiveItems()) {
+            WorkbenchCompiler.addViewSource(WBCompilerDataStore.makeViewSource(source));
+            WorkbenchCompiler.compileExtractFilter(view.getId(), source.getSequenceNo());
+            compileExtractColumns(source, CTCols);
+            WorkbenchCompiler.compileExtractOutput(view.getId(), source.getSequenceNo());
+        }
+        if (WorkbenchCompiler.hasNoNewErrors()) {
+            WorkbenchCompiler.buildLogicTablesAndPerformWholeViewChecks();
+        }
+        WBCompilerDataStore.setLogicTableLog();
     }
 
-	protected void compileExtractOutput(ViewLogicExtractOutput logicExtract, ViewSource source) {
-		logicExtract.compile(source, dataProvider);
-	}
-    
-    protected void compileFormatFilter()
-        throws SAFRException {
+    protected void compileExtractColumns(ViewSource source, Set<Integer> cTCols) {
+    	ViewLogicExtractCalc columnsCompiler = new ViewLogicExtractCalc(view, viewLogicDependencies);
+    	columnsCompiler.compile(source, cTCols);
+    }
+
+    protected void compileFormatFilter() throws SAFRException {
         // Format phase record filter compilation
         // ONLY if format phase is ON
-		if (view.isFormatPhaseInUse()) {
-			if (view.getFormatRecordFilter() != null) {
-				FormatFilterSyntaxChecker formatFilterChecker = (FormatFilterSyntaxChecker) SycadaFactory
-						.getProcessorFor(SycadaType.FORMAT_FILTER);
-				formatFilterChecker.syntaxCheckLogic(view.getFormatRecordFilter());
-				if (formatFilterChecker.hasSyntaxErrors()) {
-					vaException.addCompilerErrorsNew(
-							formatFilterChecker.getSyntaxErrors(), null, null,
-							SAFRCompilerErrorType.FORMAT_RECORD_FILTER);
-				}
-	            Set<Integer> calcCols = formatFilterChecker.getColumnRefs();
-	            checkColumnDataTypes(calcCols);
-	    		CTCols.addAll(formatFilterChecker.getColumnRefs());
-			}
-		}
+        if (view.isFormatPhaseInUse()) {
+            if (view.getFormatRecordFilter() != null && view.getFormatRecordFilter().length() > 0) {
+                String cs =WorkbenchCompiler.compileFormatFilter(view.getId());
+                WBCompilerDataStore.setFormatFilterCalculationStack(cs);
+                Set<Integer> calcCols = WorkbenchCompiler.getColumnRefs();
+                checkColumnDataTypes(calcCols);
+                CTCols.addAll(calcCols);
+            }
+        }
     }
 
-	private void checkColumnDataTypes(Set<Integer> calcCols) {
-		//Columns here are not indexed 
-		//process the other way around - crazy slow ?
-		for(ViewColumn c : view.getViewColumns()) {
-			if(calcCols.contains(c.getColumnNo())) {
-	    		if(c.isNumeric() == false) {
-	                vaException.addActivationError(new ViewActivationError(null, null,
-	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-	                        "Column number " +c.getColumnNo() + " is alphanumeric"));
-	    		}			
-	    		if(c.isSortKey()) {
-	                vaException.addActivationError(new ViewActivationError(null, null,
-	                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-	                        "Column number " +c.getColumnNo() + " a sort key column"));
-	    		}
-			}
-		}
-		for(Integer refCol : calcCols) {
-    		if(refCol == 0) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-                        "Column number must be greater than zero."));
-    		}						
-    		if(refCol > view.getViewColumns().size()) {
-                vaException.addActivationError(new ViewActivationError(null, null,
-                        SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
-                        "Column number " + refCol + " is greater than the number of columns " + view.getViewColumns().size()));
-    		}						
-		}
-		
-	}
+    private void checkColumnDataTypes(Set<Integer> calcCols) {
+        // Columns here are not indexed
+        // process the other way around - crazy slow ?
+        for (ViewColumn c : view.getViewColumns()) {
+            if (calcCols.contains(c.getColumnNo())) {
+                if (c.isNumeric() == false) {
+                    // The workbench disables this.... should not occur
+                    WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
+                    WorkbenchCompiler
+                            .addFormatFilterErrorMessage("Column number " + c.getColumnNo() + " is alphanumeric");
+                }
+                if (c.isSortKey()) {
+                    // This is disabled too!
+                    vaException.addActivationError(
+                            new ViewActivationError(null, null, SAFRCompilerErrorType.FORMAT_RECORD_FILTER,
+                                    "Column number " + c.getColumnNo() + " a sort key column"));
+                }
+            }
+        }
+        for (Integer refCol : calcCols) {
+            if (refCol == 0) {
+                WorkbenchCompiler.setCurrentColumnNumber(refCol);
+                WorkbenchCompiler.addFormatFilterErrorMessage("Column number must be greater than zero.");
+            }
+            if (refCol > view.getViewColumns().size()) {
+                WorkbenchCompiler.setCurrentColumnNumber(refCol);
+                WorkbenchCompiler.addFormatFilterErrorMessage("Column number " + refCol
+                        + " is greater than the number of columns " + view.getViewColumns().size());
+            }
+        }
+
+    }
 	
     protected void processResult() {
-        if (!vaException.hasErrorOccured()) {
+        if (WorkbenchCompiler.hasErrors()) {
+        	logger.log(Level.SEVERE, "Activation Errors found");
+        } else {
+        	extractDependencies();
             view.setViewLogicDependencies(viewLogicDependencies);
+            WBCompilerDataStore.setLogicTableLog();
             view.setStatusCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.VIEWSTATUS).getCode(Codes.ACTIVE));
-        }        
+        }
     }
-    
-    /**
-     * Activate this view using the old compiler
-     * 
-     * @throws DAOException, SAFRException
-     */     
 
+    protected void extractDependencies() {
+    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
+    	vle.extractDependencies();
+	}
 }

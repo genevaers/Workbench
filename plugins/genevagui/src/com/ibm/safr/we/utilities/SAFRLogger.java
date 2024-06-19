@@ -43,6 +43,7 @@ import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.preferences.OverridePreferences;
 import com.ibm.safr.we.preferences.SAFRPreferences;
+import com.ibm.safr.we.ui.utilities.UIUtilities;
 
 /**
  * Utility class to control SAFR logging
@@ -72,10 +73,10 @@ public class SAFRLogger {
                 Date dt = Calendar.getInstance().getTime();                            
                 String pattern = logPath + "/WE." + timeFormat.format(dt) + ".%g.log";
                 userHandler = new FileHandler(pattern, 1000000, 10);
-            } catch (SecurityException e1) {
-                throw new SAFRException(e1);
-            } catch (IOException e2) {
-                throw new SAFRException(e2);
+            } catch (SecurityException ef) {
+                UIUtilities.handleWEExceptions(ef, ef.getMessage(), "Security Exception");
+            } catch (IOException ei) {
+                UIUtilities.handleWEExceptions(ei, ei.getMessage(), "IO Exception");
             }
             
             // Create txt Formatter
@@ -102,7 +103,8 @@ public class SAFRLogger {
         return new Formatter () {
             @Override
             public String format(LogRecord record) {
-                if (record.getParameters() != null && record.getParameters()[0].equals(Boolean.valueOf(true))) {
+//                if (record.getParameters() != null && record.getParameters()[0].equals(Boolean.valueOf(true))) {
+                if (record.getParameters() != null ) {
                     String result =  record.getLevel() + ": " + record.getMessage() + SAFRUtilities.LINEBREAK;
                     return result;                        
                 } else {
@@ -216,9 +218,9 @@ public class SAFRLogger {
             reader.close();
                        
         } catch (FileNotFoundException ef) {
-            throw new SAFRException(ef);
+            UIUtilities.handleWEExceptions(ef, ef.getMessage(), "File Not Found");
         } catch (IOException ei) {
-            throw new SAFRException(ei);
+            UIUtilities.handleWEExceptions(ei, ei.getMessage(), "IO Exception");
         }
         existingLog.delete();
         
@@ -237,7 +239,7 @@ public class SAFRLogger {
         try {
             SAFRPreferences.getSAFRPreferences().flush();
         } catch (BackingStoreException e) {
-            throw new SAFRException(e);
+            UIUtilities.handleWEExceptions(e, e.getMessage(), "BackingStoreException");
         }        
                 
     }

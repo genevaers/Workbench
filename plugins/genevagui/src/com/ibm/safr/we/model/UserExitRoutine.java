@@ -93,7 +93,6 @@ public class UserExitRoutine extends SAFREnvironmentalComponent {
 			this.typeCode = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.EXITTYPE).getCode(trans.getTypeCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("This User-Exit Routine does not have a valid type. Please select a valid type before saving.");
 			this.typeCode = null;
@@ -102,7 +101,6 @@ public class UserExitRoutine extends SAFREnvironmentalComponent {
 			this.languageCode = SAFRApplication.getSAFRFactory().getCodeSet(
 					CodeCategories.PROGTYPE).getCode(trans.getLanguageCode()); // non-null
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings
 					.add("This User-Exit Routine does not have a valid language. Please select a valid language before saving.");
 			this.languageCode = null;
@@ -515,7 +513,6 @@ public class UserExitRoutine extends SAFREnvironmentalComponent {
             SAFRApplication.getModelCount().incCount(this.getClass(), 1);       
 			
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException(
 					"The user exit routine with id "
 							+ this.getId()

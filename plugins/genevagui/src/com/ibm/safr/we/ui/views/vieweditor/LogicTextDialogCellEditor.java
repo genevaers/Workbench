@@ -26,6 +26,8 @@ import org.eclipse.ui.PlatformUI;
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewColumnSource;
+import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
+import com.ibm.safr.we.ui.editors.logic.FCCLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditor;
@@ -86,14 +88,12 @@ public class LogicTextDialogCellEditor extends SAFRDialogCellEditor {
 		LogicTextEditorInput input = null;
 		if (logicTextType == LogicTextType.Format_Column_Calculation) {
 			// for format column calculation logic text.
-			input = new LogicTextEditorInput(viewEditor.getCurrentColumn(),
-					viewEditor);
+			input = new FCCLogicTextEditorInput(viewEditor.getCurrentColumn(), viewEditor);
 		} else if (logicTextType == LogicTextType.Extract_Column_Assignment) {
-			input = new LogicTextEditorInput(viewColumnSource, viewEditor);
+			input = new ECLLogicTextEditorInput(viewColumnSource, viewEditor);
 		}
 		input.setLogicTextDialogCellEditor(this);
 		try {
-
 			PlatformUI.getWorkbench().getActiveWorkbenchWindow()
 					.getActivePage().openEditor(input, LogicTextEditor.ID);
 		} catch (PartInitException pie) {

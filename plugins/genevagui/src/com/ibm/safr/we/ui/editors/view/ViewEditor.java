@@ -102,6 +102,7 @@ import com.ibm.safr.we.model.view.ViewSource;
 import com.ibm.safr.we.preferences.SAFRPreferences;
 import com.ibm.safr.we.ui.ApplicationMediator;
 import com.ibm.safr.we.ui.commands.SourceProvider;
+import com.ibm.safr.we.ui.editors.ReportEditor;
 import com.ibm.safr.we.ui.editors.SAFREditorPart;
 import com.ibm.safr.we.ui.editors.batchview.ActivateViewsEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
@@ -116,7 +117,6 @@ import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem;
 import com.ibm.safr.we.ui.views.navigatortree.MainTreeItem.TreeItemId;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -676,7 +676,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 					// current view.
 					lTeditors.add(editorPart);
 				}
-			}
+            } else if(editorPart.getEditor(false) instanceof ReportEditor) {
+            	lTeditors.add(editorPart);                	            	
+            }
 		}
 		getEditorSite().getPage().closeEditors(
 				lTeditors.toArray(new IEditorReference[lTeditors.size()]),
@@ -716,39 +718,15 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
             IEditorReference editorPart = editors[i];
             if (editorPart.getEditor(false) instanceof LogicTextEditor) {
                 // if the editor is of type logic text editor.
-                LogicTextEditorInput lTEInput = ((LogicTextEditorInput) ((LogicTextEditor) (editorPart
-                        .getEditor(false))).getEditorInput());
-                if (lTEInput.getView().getId().equals(this.view.getId())) {
-                    // if the logic text editor opened is related to
-                    // current view.
-
-                    if (lTEInput.getLogicTextType() == LogicTextType.Format_Column_Calculation) {
-                        if (lTEInput.getViewColumn().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Column_Assignment) {
-                        if ((lTEInput.getViewColumnSource().getViewColumn()
-                                .equals(component))
-                                || (lTEInput.getViewColumnSource()
-                                        .getViewSource().equals(component))
-                                || (lTEInput.getViewColumnSource()
-                                        .equals(component))) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Record_Filter) {
-                        if (lTEInput.getViewSource().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Extract_Record_Output) {
-                        if (lTEInput.getViewSource().equals(component)) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    } else if (lTEInput.getLogicTextType() == LogicTextType.Format_Record_Filter) {
-                        if (component instanceof View) {
-                            lTeditorsToClose.add(editorPart);
-                        }
-                    }
-                }
+            	LogicTextEditor lte = ((LogicTextEditor) (editorPart.getEditor(false)));
+                LogicTextEditorInput lteInput = (LogicTextEditorInput) lte.getEditorInput();
+                if (lteInput.getView().getId().equals(this.view.getId())) {
+	                if(lteInput.matches(component)) {
+	                    lTeditorsToClose.add(editorPart);                	
+	                }
+                }                
+            } else if(editorPart.getEditor(false) instanceof ReportEditor) {
+                lTeditorsToClose.add(editorPart);                	            	
             }
         }
         getSite().getPage().closeEditors(
@@ -947,6 +925,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 	
 	public boolean activateView() {
+//		getSite().getShell().setCursor(
+//				getSite().getShell().getDisplay().getSystemCursor(
+//						SWT.CURSOR_WAIT));
 		ToolBar toolBar = setCursorWaiting();
 		try {
 
@@ -995,10 +976,8 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				try {
 					// clear previous activation errors first
 					activateException = null;
-					view.activate();
+					view.activate(getSite());
 					activated = true;
-					// view activated without messages so close logView
-					closeActivationLog();
 					if (readOnly) {
                         this.setPartName("*" + viewInput.getName());
 					}
@@ -1009,17 +988,8 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 					UIUtilities.handleWEExceptions(e,
 					    "A database error occured while performing this operation.",UIUtilities.titleStringDbException);
 				} catch (SAFRViewActivationException e) {
-					activateException = e;
-					openActivationLog();
-					if (!e.hasErrorOccured()) {
-						activated = true;
-						if (readOnly) {
-	                        this.setPartName("*" + viewInput.getName());
-						}
-						else {
-						    setDirty(true);
-						}						
-					}
+					//Only get here is something is in error
+					activated = false;
 				} catch (SAFRException e) {
 					// show exception error message.
 					UIUtilities.handleWEExceptions(e,"An error occurred while activating this view. ",null);
@@ -1030,47 +1000,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 		} finally {
 			updateElement(ViewColumnEditor.STARTPOS);
 			updateElement(ViewColumnEditor.COLUMN_PROP_HEADER);
+//			getSite().getShell().setCursor(null);
 			setCursorNormal(toolBar);
 		}
-	}
-
-	public void openActivationLog() {
-		// Activation error. store in local variable so that the
-		// View error table can use it. Also open the error RCP
-		// view.
-		if (viewActivationMessageExistsNew()) {
-			try {
-				IWorkbenchPage page = getSite().getPage();
-				if(page != null) {
-					ActivationLogViewNew eView = (ActivationLogViewNew) page.showView(ActivationLogViewNew.ID);
-					eView.setViewEditor(true);
-					eView.showGridForCurrentEditor(this);
-					eView.setExpands(expandsNew);
-				}
-			} catch (PartInitException e1) {
-				UIUtilities.handleWEExceptions(
-				    e1,"Unexpected error occurred while opening activation errors view.",null);
-			}
-		}
-	}
-	
-	public void closeActivationLog() {
-		if(getSite().getPage() != null) {
-			ActivationLogViewNew logView = (ActivationLogViewNew)getSite().getPage().findView(ActivationLogViewNew.ID);
-			if (logView != null && logView.isViewEditor()) {
-				if (viewActivationMessageExistsNew()) {
-					expandsNew = logView.getExpands();
-				}
-				else {
-					expandsNew = null;
-				}
-				getSite().getPage().hideView(logView);
-			}		
-		}
-	}
-	
-	public boolean viewActivationMessageExistsNew() {
-		return (activateException != null && !activateException.getActivationLogNew().isEmpty());
 	}
 
 	public SAFRViewActivationException getViewActivationException() {
@@ -1588,7 +1520,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 	}
 
 	public void partClosed(IWorkbenchPartReference partRef) {		
-        closeActivationLog();
         mediator.closePropertyView(PropertyViewType.NONE);
 }
 
@@ -1615,7 +1546,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
         	Display.getCurrent().asyncExec(new Runnable() {
 				public void run() {
 		            mediator.closePropertyView(PropertyViewType.NONE);
-		            closeActivationLog();
 				}
         	});        	    		
         }      
@@ -1635,7 +1565,6 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				        mediator.openFocusedView();
 				    }
 	                initActivationState();
-	                openActivationLog();
 				}
         	});
         }

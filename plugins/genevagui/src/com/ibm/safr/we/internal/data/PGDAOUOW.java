@@ -42,7 +42,6 @@ public class PGDAOUOW extends DAOUOW {
 		try {
 			con.setAutoCommit(false);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			DataUtilities.createDAOException(
 					"A database error occurred while begining a transaction.",
 					e);
@@ -56,7 +55,6 @@ public class PGDAOUOW extends DAOUOW {
 			con.commit();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			DataUtilities
 					.createDAOException(
 							"A database error occurred while committing the transaction.",
@@ -71,7 +69,6 @@ public class PGDAOUOW extends DAOUOW {
 			con.rollback();
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			e.printStackTrace();
 			DataUtilities
 					.createDAOException(
 							"A database error occurred while performing rollback on the transaction.",

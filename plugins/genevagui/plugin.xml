@@ -1610,7 +1610,7 @@ under the License.
             </separator>
             <command
                   commandId="SAFRWE.AboutSAFR"
-                  label="&amp;About SAFR Workbench...."
+                  label="&amp;About GenevaERS Workbench...."
                   style="push">
             </command>
          </menu>
@@ -4573,12 +4573,6 @@ under the License.
              class="com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView"
              id="SAFRWE.SortKeyTitleView"
              name="Sort Key Title"
-             restorable="true">
-       </view>
-       <view
-             class="com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew"
-             id="SAFRWE.ActivationLogViewNew"
-             name="View Activation Errors (new)"
              restorable="true">
        </view>
        <view

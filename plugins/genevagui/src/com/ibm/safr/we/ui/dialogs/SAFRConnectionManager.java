@@ -374,7 +374,7 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 								.removeNode();
 					} catch (BackingStoreException e) {
 					    logger.log(Level.SEVERE, "Failed to save preferences", e);
-						throw new SAFRFatalException(e);
+						throw new SAFRFatalException("Failed to save preferences" + e.getMessage());
 					}
 					
 					if (removeButton.getText().equals("Default")) {
@@ -505,7 +505,7 @@ public class SAFRConnectionManager extends TitleAreaDialog implements Listener {
 
 		} catch (BackingStoreException e) {
             logger.log(Level.SEVERE, "Failed to save preferences", e);
-			throw new SAFRFatalException(e);
+			throw new SAFRFatalException("Failed to save preferences" + e.getMessage());
 		}
 
 		setReturnCode(returnId);

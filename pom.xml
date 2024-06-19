@@ -23,7 +23,7 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>4.20.1</version>
+	<version>4.21.0</version>
 	<groupId>org.genevaers</groupId>
 	<artifactId>wb</artifactId>
 	<packaging>pom</packaging>
@@ -38,7 +38,6 @@ under the License.
 
 	<modules>
 		<module>prebuild</module>
-		<module>sycadas</module>
 		<module>ccb2lr</module>
 		<module>plugins</module>
 		<module>products</module>
@@ -98,6 +97,41 @@ under the License.
 			<artifactId>commons-csv</artifactId>
 			<version>1.10.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>repository</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>grammar</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>compilers</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>genevaio</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>utilities</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>runcontrolgenerator</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.genevaers</groupId>
+			<artifactId>runcontrolanalyser</artifactId>
+			<version>1.0.2</version>
+		</dependency>
 	</dependencies>
 
 
@@ -135,7 +169,7 @@ under the License.
 						<artifact>
 							<groupId>org.genevaers</groupId>
 							<artifactId>target-platform</artifactId>
-							<version>4.20.1</version>
+							<version>4.21.0</version>
 						</artifact>
 					</target>
 					<environments>

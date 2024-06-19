@@ -37,7 +37,7 @@ public class SAFRViewActivationException extends SAFRException {
 	private static final long serialVersionUID = 1L;
 	View view;
     boolean errorNewOccured=false;
-	List<ViewActivationError> activationLogNew = new ArrayList<ViewActivationError>();
+	List<ViewActivationError> activationMessages = new ArrayList<ViewActivationError>();
 
 
 	public SAFRViewActivationException(View view) {
@@ -45,26 +45,23 @@ public class SAFRViewActivationException extends SAFRException {
 		this.view = view;
 	}
 
-	/**
-	 * @return the activationLog
-	 */
-	public List<ViewActivationError> getActivationLogNew() {
-		return activationLogNew;
+	public List<ViewActivationError> getActivationMessages() {
+		return activationMessages;
 	}
 
     public void addActivationError(ViewActivationError error) {
  		errorNewOccured = true;
-		activationLogNew.add(error);
+		activationMessages.add(error);
 	}
 
     public void addActivationWarning(ViewActivationError error) {
-        activationLogNew.add(error);
+        activationMessages.add(error);
     }
 	
     public void addCompilerErrorsNew(List<String> errors, ViewSource viewSource, ViewColumn viewColumn,
             SAFRCompilerErrorType errorType) {
             for (String error : errors) {
-                activationLogNew.add(new ViewActivationError(viewSource, viewColumn, errorType, error));
+                activationMessages.add(new ViewActivationError(viewSource, viewColumn, errorType, error));
             }
             errorNewOccured = true;
         }
@@ -72,7 +69,7 @@ public class SAFRViewActivationException extends SAFRException {
 	public void addCompilerWarnings(List<String> warnings, ViewSource viewSource, ViewColumn viewColumn,
 			SAFRCompilerErrorType errorType) {
 		for (String warning : warnings) {
-			activationLogNew.add(new ViewActivationError(viewSource, viewColumn, errorType, warning));
+			activationMessages.add(new ViewActivationError(viewSource, viewColumn, errorType, warning));
 		}
 	}
 	
@@ -88,8 +85,12 @@ public class SAFRViewActivationException extends SAFRException {
         return errorNewOccured;
     }
     
+    public void setErrorOccured() {
+    	errorNewOccured = true;
+    }
+    
     public boolean hasErrorOrWarningOccured() {
-        return !activationLogNew.isEmpty() ;
+        return !activationMessages.isEmpty() ;
     }
 	
 }

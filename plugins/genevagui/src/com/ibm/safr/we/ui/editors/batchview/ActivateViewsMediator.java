@@ -119,14 +119,6 @@ public class ActivateViewsMediator {
         activateViewsViews.setFocusViews();
     }
 
-    public void closeActivationLog() {
-        activateViewsViews.closeActivationLog();
-    }
-
-    public void showActivationLog() {
-        activateViewsViews.showActivationLog();
-    }
-
     public ComponentType getComponentType() {
         return activateViewsViews.getComponentType();
     }

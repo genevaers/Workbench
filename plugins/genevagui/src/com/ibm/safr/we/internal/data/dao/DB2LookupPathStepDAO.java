@@ -644,7 +644,6 @@ public class DB2LookupPathStepDAO implements LookupPathStepDAO {
             proc.close();
             
         } catch (SQLException e) {
-            e.printStackTrace();
             throw DataUtilities.createDAOException("Database error occurred while updating LR Fields.", e);
         }
         SAFRApplication.getTimingMap().stopTiming("DB2LookupPathStepDAO.createLookupPathStepSourceFields");

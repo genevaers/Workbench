@@ -1,4 +1,4 @@
-# Workbench 4.20
+# Workbench 4.21
 
 The workbench is the configuration tool for [GeneavaERS](https://genevaers.org/).  It is a Java application that can be run on Windows or a Mac.   
 
@@ -100,12 +100,13 @@ Or for example within git bash you can enter
 ```
 export GERS_JARS=~/gersjars
 ```
-### GERS_GRAMMAR
+## GERS_GRAMMAR and GERS_RUNCONTROL
 
-If you wish to point to a custom location for GenevaERS Grammar, a pre-requisite for the Workbench, set this environment variable to the location of your desired repo.
+If you wish to point to a custom location for GenevaERS Grammar and the GenevaERS Run Control Apps, pre-requisites for the Workbench, set this environment variable to the location of your desired repo.
 
 ```
 export GERS_GRAMMAR="https://github.com/genevaers/Grammar.git"
+export GERS_RUNCONTROL="https://github.com/genevaers/Run-Control-Apps.git"
 ```
 
 ### GERS_PRE_SCRIPT or GERS_POST_SCRIPT

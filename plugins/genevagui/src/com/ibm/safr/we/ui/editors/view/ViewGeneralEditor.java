@@ -772,7 +772,6 @@ public class ViewGeneralEditor {
                         MessageDialog.openError(mediator.getSite().getShell(),
                                 "Create View based on Output Logical Record",
                                 sve.getMessageString());
-                        sve.printStackTrace();
                         if (comboOutputLR.indexOf(selectedLogicalRecord) < 0) {
                             comboOutputLR.getTable().deselectAll();
                         } else {

@@ -1189,7 +1189,7 @@ public class DiffUtilityEditor extends SAFREditorPart implements IPartListener2 
             preferences.flush();
         } catch (BackingStoreException e1) {
             logger.log(Level.INFO, "Failed to save preferences", e1);
-            throw new SAFRFatalException(e1);                    
+            throw new SAFRFatalException("Failed to save preferences " + e1.getMessage());                    
         }               
         try {
             getSite().getShell().setCursor(
@@ -1458,19 +1458,13 @@ public class DiffUtilityEditor extends SAFREditorPart implements IPartListener2 
                 comboComponentViewer.setSorter(new ViewFolderTableSorter(1, SWT.UP));
             }
 			
-			int iCounter;
-			for (iCounter = 0; iCounter < 2; iCounter++) {
+			for (int iCounter = 0; iCounter < 2; iCounter++) {
 				if (prvsListner[iCounter] != null) {
-					comboComponent.getTable().getColumn(iCounter)
-							.removeSelectionListener(prvsListner[iCounter]);
+					comboComponent.getTable().getColumn(iCounter).removeSelectionListener(prvsListner[iCounter]);
 				}
-				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-						iCounter, comboComponentViewer,
-						(ComponentType) componentType);
+				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboComponentViewer,	(ComponentType) componentType);
 				prvsListner[iCounter] = colListener;
-				comboComponent.getTable().getColumn(iCounter)
-						.addSelectionListener(colListener);
-
+				comboComponent.getTable().getColumn(iCounter).addSelectionListener(colListener);
 			}
 			comboComponentViewer.refresh();
 		} catch (DAOException e) {

@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -609,10 +608,8 @@ public class SAFRGUIToolkit {
         };
         labelProvider.setInput();
         tableComboViewer.setLabelProvider(labelProvider);
-        int iCounter;
-        for (iCounter = 0; iCounter < 4; iCounter++) {
-            ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-                iCounter, tableComboViewer, componentType);
+        for (int iCounter = 0; iCounter < 4; iCounter++) {
+            ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, tableComboViewer, componentType);
             tableCombo.getTable().getColumn(iCounter).addSelectionListener(colListener);
         }
         tableCombo.getTable().getColumn(3).setResizable(false);
@@ -690,12 +687,9 @@ public class SAFRGUIToolkit {
 		};
 		labelProvider.setInput();
 		tableComboViewer.setLabelProvider(labelProvider);
-		int iCounter;
-		for (iCounter = 0; iCounter < 3; iCounter++) {
-			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-					iCounter, tableComboViewer, componentType);
-			tableCombo.getTable().getColumn(iCounter).addSelectionListener(
-					colListener);
+		for (int iCounter = 0; iCounter < 3; iCounter++) {
+			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, tableComboViewer, componentType);
+			tableCombo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 		}
 		tableCombo.getTextControl().addFocusListener(new FocusAdapter() {
 			@Override
@@ -817,13 +811,9 @@ public class SAFRGUIToolkit {
 
 		});
 
-		int iCounter;
-		for (iCounter = 0; iCounter < 3; iCounter++) {
-			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-					iCounter, tableComboViewer, "AssociatedComponent");
-			tableCombo.getTable().getColumn(iCounter).addSelectionListener(
-					colListener);
-
+		for (int iCounter = 0; iCounter < 3; iCounter++) {
+			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, tableComboViewer, "AssociatedComponent");
+			tableCombo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 		}
 
 		tableCombo.getTextControl().addFocusListener(new FocusAdapter() {

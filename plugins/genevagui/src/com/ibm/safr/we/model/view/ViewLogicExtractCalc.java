@@ -18,34 +18,16 @@ package com.ibm.safr.we.model.view;
  */
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.genevaers.sycadas.ExtractColumnSycada;
-import org.genevaers.sycadas.ExtractDependencyAnalyser;
-import org.genevaers.sycadas.ExtractSycada;
-import org.genevaers.sycadas.LookupRef;
-import org.genevaers.sycadas.SycadaFactory;
-import org.genevaers.sycadas.SycadaType;
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
+import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
-import com.ibm.safr.we.constants.LogicTextType;
-import com.ibm.safr.we.constants.SAFRCompilerErrorType;
 import com.ibm.safr.we.constants.SAFRPersistence;
 import com.ibm.safr.we.data.DAOException;
-import com.ibm.safr.we.data.WESycadaDataProvider;
-import com.ibm.safr.we.exceptions.SAFRCompilerException;
-import com.ibm.safr.we.exceptions.SAFRCompilerParseException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
@@ -56,60 +38,45 @@ public class ViewLogicExtractCalc {
 
 	private View view;
 
-	private SAFRViewActivationException vaException;
-
-	private List<ViewLogicDependency> viewLogicDependencies;
-
 	private Set<Integer> CTCols;
 
-	private ExtractSycada extractColumnSycada;
-
-	private int depCounter;
-
 	public ViewLogicExtractCalc(View view,
-        SAFRViewActivationException vaException, 
         List<ViewLogicDependency> viewLogicDependencies) {
         super();
         this.view = view;
-        this.vaException = vaException;
-        //this.compiler = compiler;
-        this.viewLogicDependencies = viewLogicDependencies;
     }
     
-    public void compile(ViewSource source, Set<Integer> cTCols, WESycadaDataProvider dataProvider) {
+    public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
         setAllSourceColumnInfo(source);
-        
-		extractColumnSycada = (ExtractColumnSycada) SycadaFactory.getProcessorFor(SycadaType.EXTRACT_COLUMN);
-		extractColumnSycada.setDataProvider(dataProvider);
-		extractColumnSycada.getFieldsForSourceLr(source.getLrFileAssociation().getAssociatingComponentId());
+
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+            WorkbenchCompiler.addColumn(WBCompilerDataStore.getColumnData(col));
             processExtractCalculation(source, col);
-            extractColumnSycada.clearDependencies();
         }
     }
-    
+
     protected void setAllSourceColumnInfo(ViewSource source) {
         int positionDT = 1;
         int positionCT = 1;
-        
-		for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-			ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
-			int colType = getColumnType(col);
-			col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 
-			if (colType == Codes.SORTKEY) {
-				col.setExtractAreaPosition(null);
-			} else if (colType == Codes.CT_AREA) {
-				col.setExtractAreaPosition(positionCT);
-				positionCT += CompilerFactory.CT_ADDITION;
-			} else {
-				col.setExtractAreaPosition(positionDT);
-				positionDT += col.getLength();
-			}
-		}
+        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+            col.getViewColumnSources().get(source.getSequenceNo() - 1);
+            int colType = getColumnType(col);
+            col.setExtractAreaCode(
+                    SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
+
+            if (colType == Codes.SORTKEY) {
+                col.setExtractAreaPosition(null);
+            } else if (colType == Codes.CT_AREA) {
+                col.setExtractAreaPosition(positionCT);
+                positionCT += WBCompilerDataStore.CT_ADDITION;
+            } else {
+                col.setExtractAreaPosition(positionDT);
+                positionDT += col.getLength();
+            }
+        }
     }
-
     
     protected int getColumnType(ViewColumn col) {
         
@@ -139,25 +106,22 @@ public class ViewLogicExtractCalc {
     }
     
     
-	protected void processExtractCalculation(ViewSource source, ViewColumn col) throws SAFRViewActivationException, SAFRException, DAOException {
-		ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
-		String formulaToCompile;
-        if(colSource.getExtractColumnAssignment().length() == 0 || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
-        	formulaToCompile = generateColumnLogic(source, col, colSource);
+    protected void processExtractCalculation(ViewSource source, ViewColumn col)
+            throws SAFRViewActivationException, SAFRException, DAOException {
+        ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
+        String formulaToCompile;
+        if ((colSource.getExtractColumnAssignment() == null || colSource.getExtractColumnAssignment().length() == 0)
+                || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
+            formulaToCompile = generateColumnLogic(source, col, colSource);
             colSource.setExtractColumnAssignmentBasic(formulaToCompile);
         } else {
-        	formulaToCompile = colSource.getExtractColumnAssignment();
+            formulaToCompile = colSource.getExtractColumnAssignment();
         }
-		if (formulaToCompile == null) {
-			return;
-		}
-		compileLogic(source, col, colSource, formulaToCompile);
-		if (vaException.hasErrorOccured()) {
-			throw vaException;
-		} else {
-			extractDependencies(colSource);
-		}
-	}
+        if (formulaToCompile == null) {
+            return;
+        }
+        compileLogic(source, col, colSource, formulaToCompile);
+    }
 
     protected String generateColumnLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
@@ -181,18 +145,15 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;
     }
 
-    protected void checkViewColumnSourceType(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected void checkViewColumnSourceType(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
+    	//Can this really happen?
         if (colSource.getSourceType() == null) {
-            vaException.addActivationError(new ViewActivationError(source, col,
-                SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                "ERROR: View Column Source does not have a valid source type."));                  
-            throw vaException;
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("View Column Source does not have a valid source type.");                  
         }
     }
     
-    protected String generateConstantLogic(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected String generateConstantLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
         String colValue = colSource.getSourceValue();
         if (col.getDataTypeCode().getGeneralId() == Codes.ALPHANUMERIC) {
@@ -221,11 +182,8 @@ public class ViewLogicExtractCalc {
                 }
                 if (strFlag) {
                     // error.Value cannot be a string.
-                    vaException.addActivationError(new ViewActivationError(
-                            source,
-                            col,
-                            SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                            "ERROR: Cannot have alphanumeric value for non-alphanumeric column."));
+                	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+                	WorkbenchCompiler.addColumnAssignmentErrorMessage("Cannot have alphanumeric value for non-alphanumeric column.");
                 } else {
                     formulaToCompile = "COLUMN = " + colValue;
                 }
@@ -234,17 +192,12 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;        
     }
 
-    protected String generateSourceFieldLogic(ViewSource source,
-        ViewColumn col, ViewColumnSource colSource) {
+    protected String generateSourceFieldLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         
         String formulaToCompile = null;        
         if (colSource.getLRField() == null) {
-            // error. no source field selected
-            vaException.addActivationError(new ViewActivationError(
-                    source,
-                    col,
-                    SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                    "ERROR: No source field selected."));
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("No source field selected.");
         } else {
             formulaToCompile = "COLUMN = {"
                     + colSource.getLRField().getName() + "}";
@@ -252,17 +205,12 @@ public class ViewLogicExtractCalc {
         return formulaToCompile;
     }
 
-    protected String generateLookupLogic(ViewSource source, ViewColumn col,
-        ViewColumnSource colSource) {
+    protected String generateLookupLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource) {
         String formulaToCompile = null;
         
         if (colSource.getLRField() == null) {
-            // error. no lookup lr field selected
-            vaException.addActivationError(new ViewActivationError(
-                    source,
-                    col,
-                    SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                    "ERROR: No lookup field selected."));
+        	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+        	WorkbenchCompiler.addColumnAssignmentErrorMessage("No lookup field selected.");
         } else {
             switch (colSource.getEffectiveDateTypeCode()
                     .getGeneralId().intValue()) {
@@ -291,13 +239,8 @@ public class ViewLogicExtractCalc {
                 break;
             case Codes.RELPERIOD_SOURCE_FILE_FIELD:
                 if (colSource.getEffectiveDateLRField() == null) {
-                    // error.no LR field selected for effective
-                    // dating.
-                    vaException.addActivationError(new ViewActivationError(
-                            source,
-                            col,
-                            SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT,
-                            "ERROR: No effective date field selected."));
+                	WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+                	WorkbenchCompiler.addColumnAssignmentErrorMessage("No effective date field selected.");
                 } else {
                     // create the LT.
                     // eg. COLUMN = {Cust_Sales.ID,{date_del}}
@@ -317,23 +260,10 @@ public class ViewLogicExtractCalc {
     }    
     
     protected void compileLogic(ViewSource source, ViewColumn col, ViewColumnSource colSource, String formulaToCompile) {
-        try {
-            //compiler.compileExtractColumn(col.getColumnNo(), formulaToCompile);
-            //we want the same one for each column
-    		extractColumnSycada.syntaxCheckLogic(formulaToCompile);
-    		if(extractColumnSycada.hasSyntaxErrors())
-    			vaException.addCompilerErrorsNew(extractColumnSycada.getSyntaxErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-    		extractColumnSycada.generateDependencies();
-    		if(extractColumnSycada.hasDataErrors()) 
-    			vaException.addCompilerErrorsNew(extractColumnSycada.getDataErrors(), source, col, SAFRCompilerErrorType.EXTRACT_COLUMN_ASSIGNMENT);
-        } catch (IOException e) {
-			e.printStackTrace();
-		} 
+    		WorkbenchCompiler.setCurrentColumnNumber(col.getColumnNo());
+            WorkbenchCompiler.addViewColumnSource(WBCompilerDataStore.makeViewColumnSource(view, source, col, formulaToCompile));
+    		WorkbenchCompiler.compileExtractAssign(view.getId(), source.getSequenceNo(), col.getColumnNo());
     }
 
-    protected void extractDependencies(ViewColumnSource colSource) {
-    	ViewLogicExtractor vle = new ViewLogicExtractor(view, viewLogicDependencies);
-    	vle.extractDependencies(extractColumnSycada, colSource, LogicTextType.Extract_Column_Assignment);
-	}
 	
 }

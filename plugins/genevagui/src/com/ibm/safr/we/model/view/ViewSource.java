@@ -680,15 +680,12 @@ public class ViewSource extends SAFREnvironmentalComponent {
 	 *             SAFRValidation exception will be thrown with a list of
 	 *             validation errors.
 	 */
-	public void validateExtractRecordFilter(String logicText)
-			throws DAOException, SAFRException {
-	    CompilerFactory.checkSyntax(LogicTextType.Extract_Record_Filter,
-				logicText, view, this, null);
+	public void validateExtractRecordFilter(String logicText) {
+	    LogicTextSyntaxChecker.checkSyntaxExtractFilter(logicText, view, this);
 	}
 
     public void validateExtractRecordOutput(String logicText) throws SAFRException {
-        CompilerFactory.checkSyntax(LogicTextType.Extract_Record_Output,
-            logicText, view, this, null);
+    	LogicTextSyntaxChecker.checkSyntaxExtractOutput(logicText, view, this);
     }
 	
 	@Override

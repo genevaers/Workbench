@@ -517,7 +517,6 @@ public class User extends SAFRPersistentObject {
 				setObjectData(trans);
 				setPersistence(SAFRPersistence.OLD);
 			} catch (SAFRNotFoundException snfe) {
-				snfe.printStackTrace();
 				throw new SAFRException(
 						"The user with id "
 								+ this.getUserid()
@@ -770,8 +769,7 @@ public class User extends SAFRPersistentObject {
 			} // end while(!success)
 
 		} catch (DAOException de) {
-			de.printStackTrace();
-
+			throw new SAFRException("saveAs failed");
 		} finally {
 
 			if (success) {

@@ -20,6 +20,7 @@ package com.ibm.safr.we.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ibm.safr.we.constants.LRFieldKeyType;
@@ -30,7 +31,6 @@ import com.ibm.safr.we.data.transfer.LRFieldTransfer;
 import com.ibm.safr.we.data.transfer.LogicalRecordTransfer;
 import com.ibm.safr.we.data.transfer.SAFRTransfer;
 import com.ibm.safr.we.exceptions.SAFRException;
-import com.ibm.safr.we.exceptions.SAFRFatalException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.model.base.SAFRComponent;
 import com.ibm.safr.we.model.utilities.importer.ModelTransferProvider;
@@ -621,7 +621,7 @@ public class LRField extends SAFRField {
             if (redefineFld != null) {
                 // check for redefine loops
                 if (redefine.equals(getId()) || redefineFld.isDescendant(this)) {
-                    throw new SAFRFatalException("Redefines must not loop");
+    			    logger.log(Level.SEVERE, "Redefines must not loop");
                 }
             }
 	    }	 

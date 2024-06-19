@@ -43,6 +43,7 @@ import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.model.view.ViewColumn;
 import com.ibm.safr.we.model.view.ViewSortKey;
 import com.ibm.safr.we.ui.ApplicationMediator;
+import com.ibm.safr.we.ui.editors.logic.FCCLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.utilities.IRowEditingSupport;
@@ -287,10 +288,9 @@ public class ViewColumnEditingSupport extends EditingSupport {
                 {
                     return;
                 }               
-                LogicTextEditorInput input = new LogicTextEditorInput(viewColumn, mediator.getEditor());                
                 try {
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                        .openEditor(input, LogicTextEditor.ID);
+                        .openEditor(new FCCLogicTextEditorInput(viewColumn, mediator.getEditor()), LogicTextEditor.ID);
                 } catch (PartInitException pie) {
                     UIUtilities.handleWEExceptions(pie,
                         "Unexpected error occurred while opening Logic Text editor.",null);

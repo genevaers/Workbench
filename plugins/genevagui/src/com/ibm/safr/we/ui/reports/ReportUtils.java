@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui.reports;
 
+
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -43,6 +45,8 @@ import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 
 public class ReportUtils {
+	private static String text;
+	
 	public static void openReportEditor(ReportType type) {
 		List<Integer> reportIds = new ArrayList<Integer>();
 		SAFRComponent model = null;
@@ -50,13 +54,19 @@ public class ReportUtils {
 		if (page.getActivePart() instanceof MetadataView) {
 			getIdsFromMetadataView(reportIds);
 		} else if (page.getActivePart() instanceof SAFREditorPart) {
-			getIdFromPageModel(reportIds, page);
+			if(type != ReportType.LogicTable && type != ReportType.ActivationReport) {
+				getIdFromPageModel(reportIds, page);
+			}
 		} else {
 			//We should say something here?
-			return;
+			if (type == ReportType.HelpReport || type == ReportType.LogicTable || type == ReportType.ActivationReport){
+				//continue
+			} else {
+				return;
+			}
 		}
 		// open the report only if a parameter is available.
-		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport) {
+		if (!reportIds.isEmpty() || model != null || type == ReportType.HelpReport || type == ReportType.LogicTable || type == ReportType.ActivationReport) {
 			final Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 			try {
 				shell.setCursor(shell.getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
@@ -98,6 +108,25 @@ public class ReportUtils {
 			}
 		}
 		return;
+	}
+	
+	public static void generateOnly(ReportType type) {
+		List<Integer> reportIds = new ArrayList<Integer>();
+		ReportEditorInput input = new ReportEditorInput(reportIds, type);
+		input.writeReportFiles(ReportEditor.getAndMakeReportsPath());
+	}
+
+	public static void openDirectly(ReportType type, int view) {
+		List<Integer> reportIds = new ArrayList<Integer>();
+		reportIds.add(view);
+		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		ReportEditorInput input = new ReportEditorInput(reportIds, type);
+		try {
+			page.openEditor(input, ReportEditor.ID);
+		} catch (PartInitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void  getIdFromPageModel(List<Integer> reportIds, IWorkbenchPage page) {

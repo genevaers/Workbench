@@ -115,7 +115,6 @@ public class HeaderFooterItem extends SAFREnvironmentalComponent {
 					CodeCategories.FUNCTION).getCode(
 					itemTrans.getStdFuctionCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			String justify = "(" + this.justifyCode.getDescription()
 					+ " Selection)";
 			loadWarnings

@@ -23,13 +23,7 @@ if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
     echo "Running custom pre-build script from $GERS_PRE_SCRIPT"
     $GERS_PRE_SCRIPT
 fi
-echo "Test for Grammar"
-./prebuild/Grammar.sh
-echo "Configure Build"
-./prebuild/configBuild.sh
-if [ -d "products/com.ibm.safr.we.product/target" ]; then
-    mvn clean
-fi
-echo "Tycho Build starting..."
-mvn install
-echo "Post Build Script"
+echo "Test for Run Control Apps"
+./prebuild/RunControlApps.sh
+echo "Build Workbench"
+./WBOnlyBuild.sh

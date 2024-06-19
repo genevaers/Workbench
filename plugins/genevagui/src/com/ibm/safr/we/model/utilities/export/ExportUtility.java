@@ -1,6 +1,7 @@
 package com.ibm.safr.we.model.utilities.export;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -40,6 +41,7 @@ import com.ibm.safr.we.model.query.EnvironmentQueryBean;
 import com.ibm.safr.we.model.utilities.TaskLogger;
 import com.ibm.safr.we.ui.dialogs.ExportInactiveDialog;
 import com.ibm.safr.we.ui.editors.ExportUtilityEditor;
+import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.FileUtils;
 import com.ibm.safr.we.utilities.ProfileLocation;
 
@@ -622,25 +624,25 @@ public class ExportUtility extends SAFRObject {
 						// check for cdata
 						if (tableRecord.isCdata()) {
 							// write this table record inside the above <Record> element.
-							xmlStream.write(openCdataElement(tableRecord.getName(), true, false).getBytes());
+							xmlStream.write(openCdataElement(tableRecord.getName().toUpperCase(), true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// normalize line endings
 								String cdstr =  FileUtils.fixCdataLineEndings(tableRecord.getValue());
 								xmlStream.write(cdstr.getBytes());
 							}
-							xmlStream.write(closeCdataElement(tableRecord.getName(), false, true).getBytes());							
+							xmlStream.write(closeCdataElement(tableRecord.getName().toUpperCase(), false, true).getBytes());							
 						}
 						else {
 							// write this table record inside the above <Record>
 							// element.
-							xmlStream.write(openElement(tableRecord.getName(),
+							xmlStream.write(openElement(tableRecord.getName().toUpperCase(),
 									true, false).getBytes());
 							if (tableRecord.getValue() != null) {
 								// handle special characters and write the data
 								xmlStream.write(handleSpecialChars(
 										tableRecord.getValue()).getBytes());
 							}
-							xmlStream.write(closeElement(tableRecord.getName(),
+							xmlStream.write(closeElement(tableRecord.getName().toUpperCase(),
 									false, true).getBytes());
 						}
 					}
@@ -792,14 +794,17 @@ public class ExportUtility extends SAFRObject {
 	 *            is used to create an output folder.
 	 * @throws IOException
 	 */
-	private OutputStream openFile(List<ExportComponent> exportComponents, String fileName)
-			throws IOException {
+	private OutputStream openFile(List<ExportComponent> exportComponents, String fileName) {
 		File outputFile = new File(exportPath);
 		outputFile.mkdir(); // create the required directory
 		outputFile = new File(exportPath + "/" + fileName);
-		outputFile.createNewFile();
-
-		return new FileOutputStream(outputFile);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(outputFile);
+		} catch (FileNotFoundException e) {
+			UIUtilities.handleWEExceptions(e, "Unable to open file", fileName);
+		}
+		return fos;
 	}
 	
 	public static String getDefaultLocation(ComponentType componentType) {

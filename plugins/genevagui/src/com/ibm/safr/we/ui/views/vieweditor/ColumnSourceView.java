@@ -94,6 +94,7 @@ import com.ibm.safr.we.model.query.LogicalRecordFieldQueryBean;
 import com.ibm.safr.we.model.query.LogicalRecordQueryBean;
 import com.ibm.safr.we.model.query.LookupQueryBean;
 import com.ibm.safr.we.model.view.ViewColumnSource;
+import com.ibm.safr.we.ui.editors.logic.ECLLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.view.ViewEditor;
@@ -466,8 +467,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 						    viewColumnSource.getSourceType().getGeneralId() == Codes.FORMULA) {
 
 							// Open the Logic Text editor tab
-							LogicTextEditorInput input = new LogicTextEditorInput(
-									viewColumnSource, vEditor);
+							LogicTextEditorInput input = new ECLLogicTextEditorInput(viewColumnSource, vEditor);
 							try {
 								PlatformUI.getWorkbench()
 										.getActiveWorkbenchWindow()
@@ -1958,13 +1958,9 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 				}
 			});
 
-			int iCounter;
-			for (iCounter = 0; iCounter < 2; iCounter++) {
-				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-						iCounter, comboViewer, "AssociatedLRField");
-				combo.getTable().getColumn(iCounter).addSelectionListener(
-						colListener);
-
+			for (int iCounter = 0; iCounter < 2; iCounter++) {
+				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, "AssociatedLRField");
+				combo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 			}
 			comboViewer.setInput(fieldList);
 			comboViewer.refresh();
@@ -2006,13 +2002,9 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 		labelProvider.setInput();
 		comboViewer.setLabelProvider(labelProvider);
 
-		int iCounter;
-		for (iCounter = 0; iCounter < 2; iCounter++) {
-			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-					iCounter, comboViewer, ComponentType.LogicalRecord);
-			combo.getTable().getColumn(iCounter).addSelectionListener(
-					colListener);
-
+		for (int iCounter = 0; iCounter < 2; iCounter++) {
+			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, ComponentType.LogicalRecord);
+			combo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 		}
 
 		comboViewer.setInput(logicalRecordList);
@@ -2064,12 +2056,9 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 		labelProvider.setInput();
 		comboViewer.setLabelProvider(labelProvider);
 
-		int iCounter;
-		for (iCounter = 0; iCounter < 2; iCounter++) {
-			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-					iCounter, comboViewer, ComponentType.LookupPath);
-			combo.getTable().getColumn(iCounter).addSelectionListener(
-					colListener);
+		for (int iCounter = 0; iCounter < 2; iCounter++) {
+			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, ComponentType.LookupPath);
+			combo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 		}
 
 		comboViewer.setInput(lookupPathList);
@@ -2117,12 +2106,9 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 			}
 		});
 
-		int iCounter;
-		for (iCounter = 0; iCounter < 2; iCounter++) {
-			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-					iCounter, comboViewer, "AssociatedLRField");
-			combo.getTable().getColumn(iCounter).addSelectionListener(
-					colListener);
+		for (int iCounter = 0; iCounter < 2; iCounter++) {
+			ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, "AssociatedLRField");
+			combo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 		}
 		comboViewer.setInput(lookupFieldList);
 

@@ -582,7 +582,6 @@ public class LookupPath extends SAFRActivatedComponent {
 
 			} // end while(!success)
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException("The lookup path with id " + this.getId()
 				+ " cannot be updated as its already been deleted from the database.", snfe);
 		} finally {

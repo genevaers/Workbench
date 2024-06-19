@@ -18,25 +18,18 @@ package com.ibm.safr.we.ui.editors;
  */
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.e4.core.internal.services.about.UserPreferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
@@ -44,11 +37,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.EditorPart;
 
-import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
-import com.ibm.safr.we.model.SAFRApplication;
+import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.preferences.SAFRPreferences;
-import com.ibm.safr.we.ui.reports.ViewPropertiesReportGenerator;
 import com.ibm.safr.we.utilities.ProfileLocation;
 
 public class ReportEditor extends EditorPart {
@@ -97,9 +88,7 @@ public class ReportEditor extends EditorPart {
 
 	private void createBrowser(Composite parent) {
 		toolkit = new FormToolkit(parent.getDisplay());
-		//ScrolledComposite sc = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
 		form = toolkit.createScrolledForm(parent);
-		//form = new ScrolledForm(parent,SWT.H_SCROLL | SWT.V_SCROLL);
 		form.getBody().setLayout(new FormLayout());
 		
 
@@ -116,13 +105,13 @@ public class ReportEditor extends EditorPart {
 		try {
 			reportInput.writeReportFiles(getAndMakeReportsPath());
 			browser.setUrl(reportInput.getHtmlReportUrl());
-		} catch (Exception e) {
-            logger.log(Level.SEVERE, "Report failure", e);
+		} catch (SAFRException e) {
+            logger.log(Level.SEVERE, "Report failure: " + e);
 		}
 	}
 
-	private Path getAndMakeReportsPath() {
-		Path reportPath  =Paths.get(SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.REPORTS_PATH, ProfileLocation.getProfileLocation().getLocalProfile()));
+	public static Path getAndMakeReportsPath() {
+		Path reportPath  = Paths.get(SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.REPORTS_PATH, ProfileLocation.getProfileLocation().getLocalProfile()));
 		if (!reportPath.toFile().exists()) {
 			reportPath.toFile().mkdirs();
 		}

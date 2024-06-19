@@ -82,7 +82,7 @@ public class ExportMetadataHandler extends AbstractHandler implements IHandler {
                         preferences.flush();
                     } catch (BackingStoreException e1) {
                         UIUtilities.handleWEExceptions(e1, "Error storing export path in preferences", "");
-                        throw new SAFRFatalException(e1);                    
+                        throw new SAFRFatalException("Error storing export path in preferences " + e1.getMessage());                    
                     }       
                     
                     File exportFile = new File(dialogOpen);

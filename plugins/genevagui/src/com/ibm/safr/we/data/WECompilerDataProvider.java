@@ -2,6 +2,11 @@ package com.ibm.safr.we.data;
 
 import java.util.Map;
 
+import org.genevaers.genevaio.dataprovider.CompilerDataProvider;
+import org.genevaers.repository.components.LogicalRecord;
+import org.genevaers.repository.components.LookupPath;
+import org.genevaers.repository.components.ViewNode;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -19,21 +24,13 @@ import java.util.Map;
  * under the License.
  */
 
-
-import org.genevaers.sycadas.dataprovider.SycadaDataProvider;
-
-import com.ibm.safr.we.data.transfer.UserExitRoutineTransfer;
-import com.ibm.safr.we.model.view.ViewColumn;
-import com.ibm.safr.we.model.view.ViewColumnSource;
-import com.ibm.safr.we.model.view.ViewSource;
-
-public class WESycadaDataProvider implements SycadaDataProvider {
+public class WECompilerDataProvider implements CompilerDataProvider {
 
 	private DAOFactory DAOFact;
 	private Integer environID;
 	private Integer sourceLRID;
 
-	public WESycadaDataProvider() {
+	public WECompilerDataProvider() {
 		DAOFact = DAOFactoryHolder.getDAOFactory();
 	}
 	
@@ -62,7 +59,6 @@ public class WESycadaDataProvider implements SycadaDataProvider {
 		return environID;
 	}
 
-	@Override
 	public int getLogicalRecordID() {
 		return sourceLRID;
 	}
@@ -75,6 +71,30 @@ public class WESycadaDataProvider implements SycadaDataProvider {
 	@Override
 	public void setLogicalRecordID(int lrid) {
 		sourceLRID = lrid;
+	}
+
+	@Override
+	public LogicalRecord getLogicalRecord(int arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public LookupPath getLookup(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ViewNode getView(int arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void loadLR(int arg0, int arg1) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

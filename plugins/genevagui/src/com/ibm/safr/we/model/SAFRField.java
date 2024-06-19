@@ -101,7 +101,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 			this.dataTypeCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.DATATYPE, trans.getDataType());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarningProperties.add(Property.DATA_TYPE);
 			this.dataTypeCode = null;
 		}
@@ -113,7 +112,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 			this.dateTimeFormatCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.FLDCONTENT, trans.getDateTimeFormat());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarningProperties.add(Property.DATE_TIME_FORMAT);
 			this.dateTimeFormatCode = null;
 		}
@@ -121,7 +119,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 			this.headerAlignmentCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.JUSTIFY, trans.getHeaderAlignment());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarningProperties.add(Property.HEADER_ALIGNMENT);
 			this.headerAlignmentCode = null;
 		}
@@ -132,7 +129,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 			this.numericMaskCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.FORMATMASK, trans.getNumericMask());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarningProperties.add(Property.NUMERIC_MASK);
 			this.numericMaskCode = null;
 

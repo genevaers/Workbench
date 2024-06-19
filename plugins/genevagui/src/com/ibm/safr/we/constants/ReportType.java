@@ -23,6 +23,8 @@ public enum ReportType {
 	LogicalRecord("Logical Record Report", "LogicalRecord"), 
 	LookupPath("Lookup Path Report", "LookupPath"),
 	HelpReport("Help Report", "Help"),
+	LogicTable("Logic Table", "LT"),
+	ActivationReport("ActivationReport", "ActReport"),
 	EnvironmentSecurityById("Environment Security Report", "EnvironmentSecurity"),
 	EnvironmentSecurityByName("User Groups Report", "UserGroups"),
 	DependencyChecker("Dependency Checker Report", "Dependency Checker");

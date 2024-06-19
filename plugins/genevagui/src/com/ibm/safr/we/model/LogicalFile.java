@@ -381,7 +381,6 @@ public class LogicalFile extends SAFREnvironmentalComponent {
 
 			} // end while(!success)
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException("The logical file with id "+ this.getId()
 				+ " cannot be updated as its already been deleted from the database.",snfe);
 		} finally {
@@ -559,7 +558,7 @@ public class LogicalFile extends SAFREnvironmentalComponent {
 								getEnvironmentId(), LFPFAssociationIds,
 								exceptionList);
 			} catch (DAOException e) {
-				e.printStackTrace();
+				throw new SAFRException("Failed to getAssociatedPFViewDependencies.");
 			}
 		} else {
 			return "";

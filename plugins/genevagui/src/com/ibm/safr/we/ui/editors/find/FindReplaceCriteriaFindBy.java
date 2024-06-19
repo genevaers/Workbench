@@ -548,13 +548,11 @@ public class FindReplaceCriteriaFindBy {
             comboCompViewer.setInput(list);
             
             // organize sorting for the table
-            int iCounter;
-            for (iCounter = 0; iCounter < 2; iCounter++) {
+            for (int iCounter = 0; iCounter < 2; iCounter++) {
                 if (prvsListner[iCounter] != null) {
                     comboComp.getTable().getColumn(iCounter).removeSelectionListener(prvsListner[iCounter]);
                 }
-                ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-                        iCounter, comboCompViewer, componentType);
+                ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboCompViewer, componentType);
                 prvsListner[iCounter] = colListener;
                 comboComp.getTable().getColumn(iCounter).addSelectionListener(colListener);
             }

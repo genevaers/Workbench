@@ -29,7 +29,6 @@ import com.ibm.safr.we.ui.editors.CompareTextView;
 import com.ibm.safr.we.ui.views.logic.LogicTextView;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
 import com.ibm.safr.we.ui.views.navigatortree.NavigatorView;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.ui.views.vieweditor.ColumnSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.DataSourceView;
 import com.ibm.safr.we.ui.views.vieweditor.SortKeyTitleView;
@@ -62,7 +61,6 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout folderLayout2 = layout.createFolder(helperViews,
 				IPageLayout.BOTTOM, 0.65f, editorArea);
 		folderLayout2.addView(MetadataView.ID);
-        folderLayout2.addPlaceholder(ActivationLogViewNew.ID);
 		folderLayout2.addPlaceholder(DataSourceView.ID);
 		folderLayout2.addPlaceholder(SortKeyTitleView.ID);
         folderLayout2.addPlaceholder(CompareTextView.ID);

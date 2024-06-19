@@ -632,7 +632,6 @@ public class PGLookupPathStepDAO implements LookupPathStepDAO {
             proc.close();
             
         } catch (SQLException e) {
-            e.printStackTrace();
             throw DataUtilities.createDAOException("Database error occurred while inserting lookup fields.", e);
         }
         return srcFlds;        

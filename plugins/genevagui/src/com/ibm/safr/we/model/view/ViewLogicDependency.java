@@ -56,21 +56,21 @@ public class ViewLogicDependency extends SAFREnvironmentalComponent {
 
 	private View view; // VIEWID
 	private LogicTextType logicTextType; // LOGICTYPECD
-	SAFRComponent parentComponent;
+	private Integer parentId;
 	private Integer sequenceNo; // DEPENDID
 	private Integer lookupPathId; // LOOKUPID
 	private Integer lrFieldId; // LRFIELDID
 	private Integer userExitRoutineId; // EXITID
 	private Integer fileAssociationId; // LFPFASSOCID
 
-	ViewLogicDependency(View view, LogicTextType logicTextType,
-			SAFRComponent parentComponent, Integer sequenceNo,
+	ViewLogicDependency(View view, int logicTextType,
+			Integer parentComponent, Integer sequenceNo,
 			Integer lookupPathId, Integer lrFieldId, Integer userExitRoutineId,
 			Integer fileAssociationId) {
 		super(view.getEnvironmentId());
 		this.view = view;
-		this.logicTextType = logicTextType;
-		this.parentComponent = parentComponent;
+		this.logicTextType = LogicTextType.intToEnum(logicTextType);
+		this.parentId = parentComponent;
 		this.sequenceNo = sequenceNo;
 		this.lookupPathId = lookupPathId;
 		this.lrFieldId = lrFieldId;
@@ -99,7 +99,7 @@ public class ViewLogicDependency extends SAFREnvironmentalComponent {
 		ViewLogicDependencyTransfer trans = (ViewLogicDependencyTransfer) safrTrans;
 		trans.setViewId(view.getId());
 		trans.setLogicTextType(logicTextType);
-		trans.setParentId(parentComponent.getId());
+		trans.setParentId(parentId);
 		trans.setSequenceNo(sequenceNo);
 		trans.setLookupPathId(lookupPathId);
 		trans.setLrFieldId(lrFieldId);
@@ -212,11 +212,6 @@ public class ViewLogicDependency extends SAFREnvironmentalComponent {
 
 	@Override
 	public void store() throws SAFRException, DAOException {
-		// ViewLogicDependencyTransfer trans = new
-		// ViewLogicDependencyTransfer();
-		// setTransferData(trans);
-		// DAOFactoryHolder.getDAOFactory().getViewLogicDependencyDAO()
-		// .persistViewLogicDependency(trans);
 	}
 
 	@Override

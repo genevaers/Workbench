@@ -46,7 +46,8 @@ public class OptionsHandler extends AbstractHandler implements IHandler {
 		optionsDialog = new OptionsDialog(HandlerUtil.getActiveShell(event), SAFRLogger.getLogPath(),
 				preferences.getReportsPath(),
 				preferences.isIgnoreMigrateWarnings(),
-				preferences.isIgnoreImportWarnings());
+				preferences.isIgnoreImportWarnings(),
+				SAFRPreferences.isFullActicationReportEnabled());
         optionsDialog.open();
         if (optionsDialog.getReturnCode() == IDialogConstants.OK_ID) {
             try {
@@ -68,6 +69,7 @@ public class OptionsHandler extends AbstractHandler implements IHandler {
                 preferences.setIgnoreMigrateWarnings(optionsDialog.isIgnoreMigrateWarnings());
                 preferences.setIgnoreImportWarnings(optionsDialog.isIgnoreImportWarnings());
                 preferences.setReportsPath(optionsDialog.getReportsPath());
+                preferences.setFullActicationReportEnabled(optionsDialog.isFullActivationReportEnabled());
 
                 // close all open View editors
                 site.getPage().closeAllEditors(false);

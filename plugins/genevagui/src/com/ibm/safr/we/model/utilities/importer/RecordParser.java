@@ -163,7 +163,6 @@ abstract public class RecordParser {
 				Date date = sdf.parse(fieldValue);
 				return date;
 			} catch (ParseException e1) {
-				e1.printStackTrace(); // JAK temporary
 				SAFRValidationException sve = new SAFRValidationException(e1);
 				sve.setErrorMessage(fieldName, "Element <" + fieldName
 						+ "> has an invalid date/time value '" + fieldValue

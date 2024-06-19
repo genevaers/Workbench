@@ -1167,13 +1167,9 @@ public class SortKeyTitleView extends ViewPart implements IPartListener2, ISelec
 				}
 			});
 
-			int iCounter;
-			for (iCounter = 0; iCounter < 2; iCounter++) {
-				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(
-						iCounter, comboViewer, "AssociatedLRField");
-				combo.getTable().getColumn(iCounter).addSelectionListener(
-						colListener);
-
+			for (int iCounter = 0; iCounter < 2; iCounter++) {
+				ColumnSelectionListenerForTableCombo colListener = new ColumnSelectionListenerForTableCombo(iCounter, comboViewer, "AssociatedLRField");
+				combo.getTable().getColumn(iCounter).addSelectionListener(colListener);
 			}
 			comboViewer.setInput(fieldList);
 			comboViewer.refresh();

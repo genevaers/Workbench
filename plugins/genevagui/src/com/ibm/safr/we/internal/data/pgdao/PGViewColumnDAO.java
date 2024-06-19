@@ -253,8 +253,8 @@ public class PGViewColumnDAO implements ViewColumnDAO {
                 }
             }
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+			throw DataUtilities.createDAOException(
+					"Unable to get column ID map", e);
         }
     }
 	

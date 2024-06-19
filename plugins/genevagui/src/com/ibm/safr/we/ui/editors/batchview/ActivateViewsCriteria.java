@@ -29,17 +29,24 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.Section;
 
 import com.ibm.safr.we.constants.ComponentType;
@@ -83,6 +90,11 @@ public class ActivateViewsCriteria {
     private ViewFolder currentViewFolder = null;
     private List<ViewFolderQueryBean> vfList;
     private MenuItem folOpenEditorItem = null;
+
+    private Button checkPass;
+
+    private Button checkRCA;
+
     
     
     public ActivateViewsCriteria(ActivateViewsMediator mediator, Composite parent) {
@@ -236,6 +248,33 @@ public class ActivateViewsCriteria {
             }
         });
         
+        Group group = new Group(compositeCriteria, SWT.SHADOW_NONE);
+        group.setLayout(new FormLayout());
+        FormData dataGroup = new FormData();
+        dataGroup.left = new FormAttachment(comboEnvironment, 15);
+        group.setLayoutData(dataGroup);
+        group.setVisible(true); 
+        
+        checkPass = mediator.getGUIToolKit().createCheckBox(group, "Generate Pass");
+        checkPass.setData(SAFRLogger.USER, "Filter Active");                                                                          
+        FormData dataActive = new FormData();
+        dataActive.left = new FormAttachment(0, 0);
+        checkPass.setLayoutData(dataActive);
+        checkPass.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+            }
+        });
+
+        checkRCA = mediator.getGUIToolKit().createCheckBox(group, "Show RCA Report");
+        checkRCA.setData(SAFRLogger.USER, "Filter Inactive");                                                                          
+        FormData dataInactive = new FormData();
+        dataInactive.left = new FormAttachment(checkPass, 15);
+        checkRCA.setLayoutData(dataInactive);
+        checkRCA.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+            }
+        });
+
         sectionCriteria.setClient(compositeCriteria);
     }
 
@@ -362,5 +401,12 @@ public class ActivateViewsCriteria {
         return currentViewFolder;
     }       
     
+    public boolean isPass() {
+        return checkPass.getSelection();
+    }
+    
+    public boolean isRCA() {
+        return checkRCA.getSelection();
+    }
     
 }

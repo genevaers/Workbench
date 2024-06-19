@@ -58,11 +58,9 @@ public class ConnectionFactory {
 				if (_params.getType() == DBType.PostgresQL) {
 					String url = "jdbc:postgresql://" 
 							+ _params.getServer() +":" + _params.getPort() + "/" + _params.getDatabase()
-							+ "?user=" + _params.getUserName() 
-							+ "&password=" +_params.getPassWord() 
 							+ "&ssl=false"
 							+ "&currentSchema=" + _params.getSchema();
-						return _con  = DriverManager.getConnection(url);
+					return _con = DriverManager.getConnection(_params.getUrl(), _params.getUserName(), _params.getPassWord());
 				} else if(_params.getType() == DBType.Db2) {
 					String s = "Workbench Database Connection Opened" + SAFRUtilities.LINEBREAK
 							+ "URL    " +_params.getUrl() + SAFRUtilities.LINEBREAK 
@@ -81,13 +79,12 @@ public class ConnectionFactory {
 		} catch (SQLException e) {
 			// SQLState 28000 is ISO standard authorization error
 			if (e.getSQLState() != null && e.getSQLState().equals("28000")) {
-				throw new DAOAuthorizationException(e.getMessage(), e);
+				throw new DAOAuthorizationException("Authorization error " + e.getMessage());
 			} else {
 				throw DataUtilities.createDAOException(e.getMessage(), e);
 			}
 		} catch (Exception e) {
-			throw DataUtilities.createDAOException(
-					"Cannot connect to database.", e);
+			throw DataUtilities.createDAOException("Cannot connect to database.", e);
 		}
 	}
 

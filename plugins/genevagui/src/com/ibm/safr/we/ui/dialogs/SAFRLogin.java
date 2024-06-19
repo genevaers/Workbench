@@ -18,7 +18,6 @@ package com.ibm.safr.we.ui.dialogs;
  */
 
 import org.genevaers.ccb2lr.Copybook2LR;
-import org.genevaers.sycadas.ExtractSycada;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +27,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
+
+import org.genevaers.runcontrolgenerator.workbenchinterface.*;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -388,7 +389,7 @@ public class SAFRLogin extends TitleAreaDialog {
                         SAFRPreferences.getSAFRPreferences().sync();
                     } catch (BackingStoreException e1) {
                         logger.log(Level.SEVERE, "Failed to save preferences", e1);
-                        throw new SAFRFatalException(e1);
+                        throw new SAFRFatalException("Failed to save preferences " + e1.getMessage());
                     }
                 }
                 ApplicationMediator.getAppMediator().waitCursor();
@@ -680,7 +681,7 @@ public class SAFRLogin extends TitleAreaDialog {
 				}
 			} else {
 				if (chckEnv && !defEnvId.equals(newDefEnvId)) {
-					currentUser.setUserPreferences(newDefEnvId, new Integer(0));
+					currentUser.setUserPreferences(newDefEnvId, 0);
 				}
 			}
 
@@ -690,7 +691,7 @@ public class SAFRLogin extends TitleAreaDialog {
 			return;
 		} 
 
-	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + ExtractSycada.getVersion());// + ViewActivator.getCompilerVersion());
+	    SAFRLogger.logAll(logger, Level.INFO, "Compiler version is " + WorkbenchCompiler.getVersion());// + ViewActivator.getCompilerVersion());
 	    SAFRLogger.logAll(logger, Level.INFO, "CCB2LR version is " + Copybook2LR.getVersion());// + ViewActivator.getCompilerVersion());
 
 		setReturnCode(returnId);
@@ -814,7 +815,7 @@ public class SAFRLogin extends TitleAreaDialog {
 				SAFRPreferences.getSAFRPreferences().sync();
 			} catch (BackingStoreException e1) {
 	            logger.log(Level.SEVERE, "Failure to save preferences", e1);
-				throw new SAFRFatalException(e1);
+				throw new SAFRFatalException("Failed to save preferences" + e1.toString());
 			}
 		}
 		

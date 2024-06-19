@@ -171,7 +171,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
         try {
             this.fileTypeCode = getModelFileTypeCode(trans.getFileTypeCode(), trans.getDiskFileTypeCode());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings.add("This Physical File does not have a valid file type. Please select a valid file type before saving.");
             this.accessMethodCode = null;
         }
@@ -180,7 +179,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
 					.getCodeSet(CodeCategories.ACCMETHOD).getCode(
 							trans.getAccessMethodCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings.add("This Physical File does not have a valid access method. Please select a valid access method before saving.");
 			this.accessMethodCode = null;
 		}
@@ -204,7 +202,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
             this.recfm = ModelUtilities.getCodeFromKey(
                     CodeCategories.RECFM, trans.getRecfm());
         } catch (IllegalArgumentException iae) {
-            iae.printStackTrace();
             loadWarnings
                     .add("This Physical File does not have a valid RECFM. Please select a valid RECFM, if required, before saving.");
             this.recfm = null;
@@ -219,7 +216,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
 			this.rowFormatCode = ModelUtilities.getCodeFromKey(
 					CodeCategories.DBMSROWFMT, trans.getRowFormatCode());
 		} catch (IllegalArgumentException iae) {
-			iae.printStackTrace();
 			loadWarnings.add("This Physical File does not have a valid row format. Please select a valid row format, if required, before saving.");
 			this.rowFormatCode = null;
 		}
@@ -613,7 +609,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
             }
 
 		} catch (SAFRNotFoundException snfe) {
-			snfe.printStackTrace();
 			throw new SAFRException(
 					"The physical file with id "
 							+ this.getId()

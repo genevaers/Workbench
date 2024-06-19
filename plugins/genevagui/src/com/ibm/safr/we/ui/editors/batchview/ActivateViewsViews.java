@@ -80,6 +80,7 @@ import com.ibm.safr.we.model.query.SAFRQuery;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.utilities.BatchActivateViews;
 import com.ibm.safr.we.model.utilities.BatchComponent;
+import com.ibm.safr.we.model.utilities.PassGenerator;
 import com.ibm.safr.we.preferences.SortOrderPrefs;
 import com.ibm.safr.we.preferences.SortOrderPrefs.Order;
 import com.ibm.safr.we.ui.editors.OpenEditorPopupState;
@@ -87,7 +88,6 @@ import com.ibm.safr.we.ui.utilities.SAFRGUIConfirmWarningStrategy;
 import com.ibm.safr.we.ui.utilities.SAFRGUIConfirmWarningStrategy.SAFRGUIContext;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.ui.views.metadatatable.MetadataView;
-import com.ibm.safr.we.ui.views.vieweditor.ActivationLogViewNew;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 public class ActivateViewsViews {
@@ -118,11 +118,11 @@ public class ActivateViewsViews {
                 } else if (model.getResult() == ActivityResult.LOADERRORS) {
                     return "Load Error";
                 } else if (model.getResult().equals(ActivityResult.PASS)) {
-                    return "Pass";
+                    return "Completed";
                 } else if (model.getResult().equals(ActivityResult.WARNING)) {
-                    return "Warning";
+                    return "Warnings";
                 } else {
-                    return "Fail";
+                    return "Errors";
                 }
             case 2:
                 if (model.isActive()) {
@@ -141,26 +141,32 @@ public class ActivateViewsViews {
 
         @Override
         public Color getForeground(Object element) {
-
-            BatchComponent item = (BatchComponent) element;
-            switch (columnIndex) {
-            case 1:
-
-                if (item.getResult() == ActivityResult.LOADERRORS) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
-                } else if (item.getResult() == ActivityResult.FAIL) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-                }
-                else if (item.getResult() == ActivityResult.WARNING) {
-                    return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-                }           
-            }
             return null;
-
         }
 
+        @Override
+        public Color getBackground(Object element) {
+            BatchComponent item = (BatchComponent) element;
+            switch (item.getResult()) {
+            case FAIL:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+            case LOADERRORS:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_BLUE);
+            case PASS:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+            case SYSTEMERROR:
+                break;
+            case WARNING:
+                return Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
+            case NONE:
+            case CANCEL:
+            default:
+                break;
+            }
+            return null;
+        }
     }
-    
+
     private class StatusFilter extends ViewerFilter {
 
         private String status = null;
@@ -266,7 +272,7 @@ public class ActivateViewsViews {
     
     
     protected void create() {
-        sectionTable = mediator.getGUIToolKit().createSection(parent, Section.TITLE_BAR,
+        sectionTable = mediator.getGUIToolKit().createSection(parent, Section.TITLE_BAR ,
                 "Views");
         FormData dataSectionTable = new FormData();
         dataSectionTable.top = new FormAttachment(mediator.getEnvironmentSection(), 10);
@@ -274,7 +280,7 @@ public class ActivateViewsViews {
         dataSectionTable.left = new FormAttachment(0, 5);
         sectionTable.setLayoutData(dataSectionTable);
 
-        compositeViews = mediator.getGUIToolKit().createComposite(sectionTable, SWT.NONE);
+        compositeViews = mediator.getGUIToolKit().createComposite(sectionTable, SWT.BORDER);
         compositeViews.setLayout(new FormLayout());
         compositeViews.setLayoutData(new FormData());
 
@@ -454,11 +460,17 @@ public class ActivateViewsViews {
                     mediator.getSite().getShell().setCursor(mediator.getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
 
                     try {
-                        BatchActivateViews.activate(viewSet, new SAFRGUIConfirmWarningStrategy(
-                                SAFRGUIContext.MODEL));
-                        // refresh the metadata view
-                        MetadataView metadataview = (MetadataView) (PlatformUI
-                                .getWorkbench().getActiveWorkbenchWindow()
+                        BatchActivateViews.activate(viewSet, new SAFRGUIConfirmWarningStrategy(SAFRGUIContext.MODEL));
+                        if(BatchActivateViews.isAllActive()) {
+                            if(mediator.getActivateViewsCriteria().isPass()) {
+                                PassGenerator.run(viewSet, null);
+                            }
+                        } else {
+                            MessageDialog.openError(mediator.getSite().getShell(), "Batch Actiavation",
+                                    "Cannot generate a Pass because not all views are Active");
+
+                        }
+                        MetadataView metadataview = (MetadataView) (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                                 .getActivePage().findView(MetadataView.ID));
                         if (metadataview != null) {
                             List<Integer> views = new ArrayList<Integer>();
@@ -467,14 +479,6 @@ public class ActivateViewsViews {
                             }
                             metadataview.refreshViewList(views);
                         }
-
-                        // show result if row of activated view is selected
-                        currModel = (BatchComponent) ((IStructuredSelection) tableViewerViews
-                            .getSelection()).getFirstElement();
-                        if (currModel != null && viewSet.contains(currModel)) {
-                            showActivationResult();
-                        }
-                        
                     } catch (SAFRException se) {
                         UIUtilities.handleWEExceptions(
                             se,"Unexpected error occurred while activating the views.",null);
@@ -737,71 +741,24 @@ public class ActivateViewsViews {
         switch (currModel.getResult()) {
             case LOADERRORS :
                 mediator.showSectionLoadErrors(true);
-                closeActivationLog();
                 break;
             case WARNING :
             case FAIL :
-                mediator.showSectionLoadErrors(false);
-                showActivationLog();
+                mediator.showSectionLoadErrors(true);
                 break;
             case PASS :
-            case NONE :
-                mediator.showSectionLoadErrors(false);
-                closeActivationLog();
+                mediator.showSectionLoadErrors(true);
                 break;
             case CANCEL :
             case SYSTEMERROR :
                 mediator.showSectionLoadErrors(true);
-                closeActivationLog();
                 break;
+            case NONE :
             default :
                 break;            
         }
     }
     
-    /**
-     * This method is used to show the view Activation errors in an RCP view.
-     * 
-     * @param viewState
-     */
-    void showActivationLog() {
-        if ( currModel != null && 
-             currModel.getException()!= null &&
-             currModel.getException() instanceof SAFRViewActivationException &&
-            (currModel.getResult() == ActivityResult.FAIL || 
-             currModel.getResult() == ActivityResult.WARNING) ) {
-            SAFRViewActivationException actException = (SAFRViewActivationException)currModel.getException();
-            if (!actException.getActivationLogNew().isEmpty()) {     
-                try {
-                    ActivationLogViewNew eView = (ActivationLogViewNew) mediator.getSite()
-                            .getPage().showView(ActivationLogViewNew.ID);
-                    eView.showGridForCurrentEditor(mediator.getActivateViewsEditor());
-                } catch (PartInitException e1) {
-                    UIUtilities.handleWEExceptions(
-                        e1,"Unexpected error occurred while opening new activation errors view.",null);
-                }
-            }
-        } 
-    }
-    
-    public void closeActivationLog() {
-        if(mediator.getSite().getPage() != null) {
-            ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
-            if (logView != null) {
-                mediator.getSite().getPage().hideView(logView);
-            }       
-        }
-    }
-
-    public boolean isActivationLogOpen() {
-        boolean open = false;
-        ActivationLogViewNew logView = (ActivationLogViewNew)mediator.getSite().getPage().findView(ActivationLogViewNew.ID);
-        if (logView != null) {
-            open = true;
-        }       
-        return open;
-    }
-
     public void refreshViews() {
         tableViewerViews.setInput(modelList);
         tableViewerViews.refresh();

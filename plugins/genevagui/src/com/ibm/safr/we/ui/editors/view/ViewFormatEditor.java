@@ -69,6 +69,7 @@ import com.ibm.safr.we.model.query.PhysicalFileQueryBean;
 import com.ibm.safr.we.model.query.UserExitRoutineQueryBean;
 import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.model.view.View.Property;
+import com.ibm.safr.we.ui.editors.logic.FRFLogicTextEditorInput;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditor;
 import com.ibm.safr.we.ui.editors.logic.LogicTextEditorInput;
 import com.ibm.safr.we.ui.utilities.DepCheckOpener;
@@ -634,7 +635,7 @@ public class ViewFormatEditor {
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
                 // Load format record filter.
-                LogicTextEditorInput input = new LogicTextEditorInput(view, mediator.getEditor(), mediator.getEditorInput().getEditRights());
+                LogicTextEditorInput input = new FRFLogicTextEditorInput(view, mediator.getEditor(), mediator.getEditorInput().getEditRights());
                 try {
                     textFormatRecordFilter.setText("Please Refresh Me");
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input,LogicTextEditor.ID);
