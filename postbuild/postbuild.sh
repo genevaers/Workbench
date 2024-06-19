@@ -15,22 +15,49 @@
 # under the License.
 
 # Add the JRE zip if built and variable set
-if [ -d "../products/com.ibm.safr.we.product/target/products" ]; then
-    if [ ! -z $GERS_JRE ]; then
-        echo "Add JRE from GERS_JRE"
-        cd ../products/com.ibm.safr.we.product/target/products
-        mkdir jre
-        cp -R $GERS_JRE/* jre
-        7z a wb-win32.win32.x86_64.zip jre/
-        cd ..
+main() {
+    if [ -d "../products/com.ibm.safr.we.product/target/products" ]; then
+        if [ ! -z $GERS_JRE ]; then
+            echo "Add JRE from GERS_JRE"
+            cd ../products/com.ibm.safr.we.product/target/products
+            mkdir jre
+            cp -R $GERS_JRE/* jre
+            7z a wb-win32.win32.x86_64.zip jre/
+            cd ..
+        else
+            echo "No JRE included in wb-win32.win32.x86_64.zip"
+        fi
+        addRunControlApps
+        echo "Build Complete"
     else
-        echo "No JRE included in wb-win32.win32.x86_64.zip"
+        echo "Build Failed"
     fi
-    echo "Build Complete"
-else
-    echo "Build Failed"
-fi
-if [[ ! -z "$GERS_POST_SCRIPT" ]]; then
-    echo "Running custom post-build script from $GERS_POST_SCRIPT"
-    $GERS_POST_SCRIPT
-fi
+    if [[ ! -z "$GERS_POST_SCRIPT" ]]; then
+        echo "Running custom post-build script from $GERS_POST_SCRIPT"
+        $GERS_POST_SCRIPT
+    fi
+}
+
+addRunControlApps() {
+    echo "addRunControlApps"
+    cd ../products/com.ibm.safr.we.product/target/products
+    echo `pwd`
+    mkdir runcontrolapps
+    cd runcontrolapps
+    mkdir runcontrolgenerator
+    cd runcontrolgenerator
+    echo `pwd`
+    ls ../../../../../../../Run-Control-Apps/RunControlGenerator/target/bin .
+
+    cp -R ../../../../../../../Run-Control-Apps/RunControlGenerator/target/bin .
+    cp -R ../../../../../../../Run-Control-Apps/RunControlGenerator/target/repo .
+    cd ..
+    mkdir runcontrolanalyser
+    cd runcontrolanalyser
+    cp -R ../../../../../../../Run-Control-Apps/RunControlAnalyser/target/bin .
+    cp -R ../../../../../../../Run-Control-Apps/RunControlAnalyser/target/repo .
+    cd ../..
+    7z a wb-win32.win32.x86_64.zip runcontrolapps/
+}
+
+main "$@"
