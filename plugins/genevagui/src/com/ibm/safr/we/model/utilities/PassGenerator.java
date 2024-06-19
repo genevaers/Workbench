@@ -83,4 +83,8 @@ public class PassGenerator {
         RCDriver.clearOutputPath(Paths.get(dir));
     }
     
+    public static String getReportHtmlFile() {
+        return RCDriver.getRCAreportFileName();
+    }
+    
 }

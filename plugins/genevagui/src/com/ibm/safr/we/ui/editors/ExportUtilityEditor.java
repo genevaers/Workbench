@@ -1140,7 +1140,7 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
                     if(checkPass.getSelection()) {
                         String t = comboRCAType.getText();
                         PassGenerator.runFromXML(rcaReportDir, t);
-                        String url = rcaReportDir + "/rca/gersrca.html";
+                        String url = rcaReportDir + "/" + PassGenerator.getReportHtmlFile();
                         Program.launch(url);
                     }
                     getSite().getShell().setCursor(null);
