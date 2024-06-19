@@ -20,9 +20,9 @@ main() {
     BASEDIR=${PWD}
     echo "Workbench location: ${BASEDIR}"
     cd ..
-    if [[ ! -z "$GERS_RCA" ]]; then
-        echo "Cloning from bash variable $GERS_RCA"
-        clone $GERS_RCA
+    if [[ ! -z "$GERS_RUNCONTROL" ]]; then
+        echo "Cloning from bash variable $GERS_RUNCONTROL"
+        clone $GERS_RUNCONTROL
     else
         echo "Using standard GitHub repo"
         clone "https://github.com/genevaers/Run-Control-Apps.git"
@@ -33,12 +33,12 @@ main() {
         echo "************************************************************"
         echo "Building Run-Control-Apps including Db2 jars from $GERS_JARS"
         echo "************************************************************"
-        mvn install -DskipTests -Pdb2
+        mvn install -Pdb2
     else 
         echo "****************************************************"
         echo "Building Run-Control-Apps with Postgres only version"
         echo "****************************************************"
-        mvn install -DskipTests
+        mvn install 
     fi
     cd $BASEDIR
 }

@@ -24,6 +24,6 @@ if [[ ! -z "$GERS_PRE_SCRIPT" ]]; then
     $GERS_PRE_SCRIPT
 fi
 echo "Test for Run Control Apps"
-./prebuild/RCA.sh
+./prebuild/RunControlApps.sh
 echo "Build Workbench"
 ./WBOnlyBuild.sh
