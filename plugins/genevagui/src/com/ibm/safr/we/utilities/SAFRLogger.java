@@ -52,7 +52,7 @@ public class SAFRLogger {
     public static final String USER = "USER";
     public static final String SEPARATOR = "================================================================================";
     public static final String NEWLINE = System.getProperty("line.separator");
-    
+    public static String currentLog = null;
     private static ErrorManager errorManager = null;    
     private static FileHandler userHandler = null;
     
@@ -68,7 +68,7 @@ public class SAFRLogger {
         if (userHandler == null) {
             final Logger logger = Logger.getLogger("");
             try {
-            	SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy.MM.dd");
+            	SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd'@'HH_mm_ss");
                 Date dt = Calendar.getInstance().getTime();                            
                 String pattern = logPath + "/WE." + timeFormat.format(dt) + ".%g.log";
                 userHandler = new FileHandler(pattern, 1000000, 10);
@@ -84,6 +84,9 @@ public class SAFRLogger {
             	userHandler.setErrorManager(errorManager);            
             }
             logger.addHandler(userHandler);            
+
+            currentLog = searchLogFileName();
+
         }
     }
 
@@ -122,7 +125,8 @@ public class SAFRLogger {
      */
     public static boolean setupLogger() throws SAFRException {
         boolean stateChanged = false;
-        String logPath = getLogPath();    
+        String logPath = getLogPath(); 
+        clearOldLogFiles();   
         addHandlers(logPath);
         return stateChanged;
     }
@@ -182,14 +186,14 @@ public class SAFRLogger {
             }
         }
         
-        File currentLog = new File(getLogPath() + "/" + getCurrentLogFileName());
+        File existingLog = new File(getLogPath() + "/" + getCurrentLogFileName());
         
         teardownLogger();
         
         // grab a copy of the current log contents
         String currLog = "";
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(currentLog));
+            BufferedReader reader = new BufferedReader(new FileReader(existingLog));
             String line=reader.readLine();
             if (line != null) {
                 // if already changed log path skip "Original logging" line
@@ -216,7 +220,7 @@ public class SAFRLogger {
         } catch (IOException ei) {
             throw new SAFRException(ei);
         }
-        currentLog.delete();
+        existingLog.delete();
         
         // add new log handler
         addHandlers(newLogPath);
@@ -238,19 +242,42 @@ public class SAFRLogger {
                 
     }
     
+    public static void clearOldLogFiles() {
+        File logPath = new File(getLogPath());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH)-10);
+        Date fileCutoff = cal.getTime();
+        // Delete WE.*.log files older than one week
+        for (File file : logPath.listFiles()) {
+            if (file.getName().matches("^WE.*log$")) {
+                if (new Date(file.lastModified()).before(fileCutoff)) { 
+                    // would like to log files deleted, but can't in this module before logger is initialized
+                    // SAFRLogger.logAllSeparator(logger, Level.INFO, "Deleting old log file: [" + file.getName() + "]");
+                    file.delete(); 
+                }
+            }
+        }
+        return;
+    }
+
     /**
      * @return the current log filename
      */
     public static String getCurrentLogFileName() throws SAFRException {
+        return currentLog;
+    }
+
+    public static String searchLogFileName() throws SAFRException {
+        // it's dumb, but filehandler does not provide a way to get the current log file.  So we search for it to save it.
         File logPath = new File(getLogPath());
-        
         long lastModDelta = Long.MAX_VALUE;
         long current = System.currentTimeMillis();
         File currLog = null;
         // find log file with most current modify date
         for (File file : logPath.listFiles()) {
-            if (file.getName().matches("WE\\.\\d+\\.log(\\.\\d+){0,1}")) {
-                long delta = current - file.lastModified(); 
+            if (file.getName().matches("WE\\.\\d\\d\\d\\d-\\d\\d-\\d\\d@\\d\\d_\\d\\d_\\d\\d\\.[0-9]+\\.log")) {
+                    long delta = current - file.lastModified(); 
                 if (lastModDelta > delta) {
                     lastModDelta = delta;
                     currLog = file;
@@ -264,7 +291,6 @@ public class SAFRLogger {
             return "";
         }
     }
-
     public static String getTraceLogFileName() throws SAFRException {
         File logPath = new File(getLogPath());
         
