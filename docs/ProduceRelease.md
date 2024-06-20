@@ -19,3 +19,7 @@ To create a public (Postgres) GenevaERS Release, do the following:
     on the command line
 5. In File Explorer navigate to: ```...Workbench\products\com.ibm.safr.we.product\target\products``` to locate the appropriate operating system zip file.
 6. Post this file as a release on GitHub.
+   1. Create Release
+   2. Create Tag as part of release with WE_4.21.0_RC1 format
+   3. Upload zip file from above.
+7. Old Release Candidates that are superseded can be deleted.
