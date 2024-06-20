@@ -7,10 +7,15 @@ nav_order: 90
 ## Release Procedures 
 
 -----
-To create a GenevaERS Release, do the following:
-1. Remove the GERS_JARS environment variable from .bashrc
-2. Type 
-   ```./build.sh GenevaERS Project```
+To create a public (Postgres) GenevaERS Release, do the following:
+1. Change the Release Candidate (RC)value in [UUtilities.java](..\plugins\genevagui\src\com\ibm\safr\we\ui\utilities\UIUtilities.java) file.
+2. If build is a Version change  (i.e., 4.21.0) 
+   1. Search for Version value (4.21.0) and change in every pom.xml file
+   2. And change the Version also in [rcp.product](..\products\com.ibm.safr.we.product\com.ibm.safr.we.rcp.product) 
+   3. Change in [Manifest.MF](..\plugins\genevagui\META-INF\MANIFEST.MF)
+3. Before running build, remove the GERS_JARS environment variable from .bashrc
+4. Type 
+   ```./build.sh GenevaERS_Project```
     on the command line
-3. In File Explorer navigate to: ```...Workbench\products\com.ibm.safr.we.product\target\products``` to locate the appropriate operating system zip file.
-4. Post this file as a release on GitHub.
+5. In File Explorer navigate to: ```...Workbench\products\com.ibm.safr.we.product\target\products``` to locate the appropriate operating system zip file.
+6. Post this file as a release on GitHub.
