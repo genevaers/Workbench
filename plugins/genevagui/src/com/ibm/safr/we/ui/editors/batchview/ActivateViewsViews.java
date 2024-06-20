@@ -461,15 +461,6 @@ public class ActivateViewsViews {
 
                     try {
                         BatchActivateViews.activate(viewSet, new SAFRGUIConfirmWarningStrategy(SAFRGUIContext.MODEL));
-                        if(BatchActivateViews.isAllActive()) {
-                            if(mediator.getActivateViewsCriteria().isPass()) {
-                                PassGenerator.run(viewSet, null);
-                            }
-                        } else {
-                            MessageDialog.openError(mediator.getSite().getShell(), "Batch Actiavation",
-                                    "Cannot generate a Pass because not all views are Active");
-
-                        }
                         MetadataView metadataview = (MetadataView) (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                                 .getActivePage().findView(MetadataView.ID));
                         if (metadataview != null) {

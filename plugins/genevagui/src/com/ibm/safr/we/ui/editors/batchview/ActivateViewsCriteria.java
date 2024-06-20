@@ -248,33 +248,6 @@ public class ActivateViewsCriteria {
             }
         });
         
-        Group group = new Group(compositeCriteria, SWT.SHADOW_NONE);
-        group.setLayout(new FormLayout());
-        FormData dataGroup = new FormData();
-        dataGroup.left = new FormAttachment(comboEnvironment, 15);
-        group.setLayoutData(dataGroup);
-        group.setVisible(true); 
-        
-        checkPass = mediator.getGUIToolKit().createCheckBox(group, "Generate Pass");
-        checkPass.setData(SAFRLogger.USER, "Filter Active");                                                                          
-        FormData dataActive = new FormData();
-        dataActive.left = new FormAttachment(0, 0);
-        checkPass.setLayoutData(dataActive);
-        checkPass.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
-
-        checkRCA = mediator.getGUIToolKit().createCheckBox(group, "Show RCA Report");
-        checkRCA.setData(SAFRLogger.USER, "Filter Inactive");                                                                          
-        FormData dataInactive = new FormData();
-        dataInactive.left = new FormAttachment(checkPass, 15);
-        checkRCA.setLayoutData(dataInactive);
-        checkRCA.addSelectionListener(new SelectionAdapter() {
-            public void widgetSelected(SelectionEvent e) {
-            }
-        });
-
         sectionCriteria.setClient(compositeCriteria);
     }
 
@@ -400,13 +373,5 @@ public class ActivateViewsCriteria {
     public ViewFolder getCurrentViewFolder() {
         return currentViewFolder;
     }       
-    
-    public boolean isPass() {
-        return checkPass.getSelection();
-    }
-    
-    public boolean isRCA() {
-        return checkRCA.getSelection();
-    }
     
 }
