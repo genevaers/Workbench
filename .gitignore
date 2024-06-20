@@ -18,4 +18,4 @@ ccb2lr/src/main/antlr4/org/genevaers/ccb2lr/grammar/.antlr/**
 **/workspace/.metadata
 **/*.tycho
 **/.project
-plugins/genevagui/runcontrolapps/**
+**/runcontrolapps/**

@@ -58,6 +58,9 @@ addRunControlApps() {
     cp -R ../../../../../../../Run-Control-Apps/RunControlAnalyser/target/repo .
     cd ../..
     7z a wb-win32.win32.x86_64.zip runcontrolapps/
+    #move runcontrol apps so the runWorkbench script will find them
+    cd ../../../
+    mv ../products/com.ibm.safr.we.product/target/products/runcontrolapps ../
 }
 
 main "$@"
