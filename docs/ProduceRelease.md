@@ -22,4 +22,12 @@ To create a public (Postgres) GenevaERS Release, do the following:
    1. Create Release
    2. Create Tag as part of release with WE_4.21.0_RC1 format
    3. Upload zip file from above.
-7. Old Release Candidates that are superseded can be deleted.
+7. Create the same tags in the following repos.  
+   1. Grammar Repo
+   2. Run-Control-Apps
+      1. If there are no stand-alone executables to post as Releases, create only tags (in VS Code, not on web as it has no Tag only creation options)
+      2. Use VS Code Shift-Control-P and search for `git create tag`
+      3. Enter tag name and description
+      4. Use VS Code Shift-Control-p and search for `git push tag`
+      5. Select remote repo
+8. Old Release Candidates that are superseded can be deleted.
