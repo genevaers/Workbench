@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.genevaers.runcontrolgenerator.workbenchinterface.RCDriver;
@@ -69,14 +70,16 @@ public class PassGenerator {
             reportPath.toFile().mkdirs();
         }
         RCDriver.setOutputPath(reportPath);
-        RCDriver.runRCG("");
+        RCDriver.runRCG(reportPath.toString());
      }
     
     public static void runFromXML(String exportPath, String textType) throws SAFRException {
         RCDriver.setInputType("WBXML");
         RCDriver.setOutputPath(Paths.get(exportPath));
         RCDriver.setRCATextType(textType);
-        RCDriver.runRCG("");
+        logger.log(Level.INFO, "runFromXML from path " + exportPath);	
+        RCDriver.runRCG(exportPath);
+        RCDriver.runRCA(exportPath);
     }
     
     public static void clearOutputDirectory(String dir) {
