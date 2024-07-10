@@ -23,7 +23,7 @@ under the License.
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<version>4.21.0</version>
+	<version>4.21.1</version>
 	<groupId>org.genevaers</groupId>
 	<artifactId>wb</artifactId>
 	<packaging>pom</packaging>
@@ -72,66 +72,6 @@ under the License.
 			<artifactId>jackson-dataformat-yaml</artifactId>
 			<version>2.15.0</version>
 		</dependency>
-		<dependency>
-			<groupId>org.freemarker</groupId>
-			<artifactId>freemarker</artifactId>
-			<version>2.3.31</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.flogger</groupId>
-			<artifactId>google-extensions</artifactId>
-			<version>0.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.flogger</groupId>
-			<artifactId>flogger-system-backend</artifactId>
-			<version>0.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.j2html</groupId>
-			<artifactId>j2html</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-csv</artifactId>
-			<version>1.10.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>repository</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>grammar</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>compilers</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>genevaio</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>utilities</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>runcontrolgenerator</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.genevaers</groupId>
-			<artifactId>runcontrolanalyser</artifactId>
-			<version>1.0.2</version>
-		</dependency>
 	</dependencies>
 
 
@@ -169,7 +109,7 @@ under the License.
 						<artifact>
 							<groupId>org.genevaers</groupId>
 							<artifactId>target-platform</artifactId>
-							<version>4.21.0</version>
+							<version>4.21.1</version>
 						</artifact>
 					</target>
 					<environments>
@@ -202,7 +142,7 @@ under the License.
 					<plugin>
 						<groupId>org.apache.rat</groupId>
 						<artifactId>apache-rat-plugin</artifactId>
-						<version>0.15</version>
+						<version>0.16.1</version>
 						<executions>
 							<execution>
 								<phase>validate</phase>

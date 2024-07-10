@@ -32,4 +32,6 @@ else
     echo "Building a Postgres only version"
     echo "*******************************"
 fi 
+echo "Copy the appchooser"
+cp ../Run-Control-Apps/AppChooser/target/appchooser-1.1.0-jar-with-dependencies.jar $GENEVAGUI/lib/
 cat prebuild/build.properties.end >> $GENEVAGUI/build.properties
