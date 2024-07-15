@@ -28,7 +28,6 @@ main() {
         else
             echo "No JRE included in wb-win32.win32.x86_64.zip"
         fi
-        addRunControlApps
         echo "Build Complete"
     else
         echo "Build Failed"
@@ -37,31 +36,6 @@ main() {
         echo "Running custom post-build script from $GERS_POST_SCRIPT"
         $GERS_POST_SCRIPT
     fi
-}
-
-addRunControlApps() {
-    echo "addRunControlApps"
-    cd ../products/com.ibm.safr.we.product/target/products
-    echo `pwd`
-    mkdir runcontrolapps
-    cd runcontrolapps
-    mkdir runcontrolgenerator
-    cd runcontrolgenerator
-    echo `pwd`
-    ls ../../../../../../../Run-Control-Apps/RunControlGenerator/target/bin .
-
-    cp -R ../../../../../../../Run-Control-Apps/RunControlGenerator/target/bin .
-    cp -R ../../../../../../../Run-Control-Apps/RunControlGenerator/target/repo .
-    cd ..
-    mkdir runcontrolanalyser
-    cd runcontrolanalyser
-    cp -R ../../../../../../../Run-Control-Apps/RunControlAnalyser/target/bin .
-    cp -R ../../../../../../../Run-Control-Apps/RunControlAnalyser/target/repo .
-    cd ../..
-    7z a wb-win32.win32.x86_64.zip runcontrolapps/
-    #move runcontrol apps so the runWorkbench script will find them
-    cd ../../../
-    mv ../products/com.ibm.safr.we.product/target/products/runcontrolapps ../
 }
 
 main "$@"
