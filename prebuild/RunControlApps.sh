@@ -29,6 +29,7 @@ main() {
     fi
     cd ./Run-Control-Apps
     echo "Run-Control-Apps location: ${PWD}"
+    git status
     if [[ ! -z "$GERS_JARS" ]]; then
         echo "************************************************************"
         echo "Building Run-Control-Apps including Db2 jars from $GERS_JARS"
