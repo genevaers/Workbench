@@ -993,7 +993,9 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				} catch (SAFRException e) {
 					// show exception error message.
 					UIUtilities.handleWEExceptions(e,"An error occurred while activating this view. ",null);
-				}
+                } catch (NullPointerException e) {
+                    UIUtilities.handleWEExceptions(e,"An error occurred while activating this view. ",null);
+                }
 			}
 			statusText();
 			return activated;

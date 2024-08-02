@@ -1,4 +1,5 @@
-# Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
+#!/usr/bin/env bash
+# Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2023
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,15 +13,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-source.. = src/
-output.. = bin/
-bin.includes = plugin.xml,\
-               META-INF/,\
-               icons/,\
-               plugin_customization.ini,\
-               splash.bmp,\
-               resources/, \
-               lib/ccb2lr.jar, \
-               lib/commons-csv-1.10.0.jar, \
-               lib/rcapps-1.1.0_RC1-jar-with-dependencies.jar, \
-               lib/postgresql-42.2.16.jar, \
+#build the properties file
+#and copy the DB2 jars to the WE lib if needed
+echo updating RCApps version from $1 to $2
+sed -i -e "s/$1/$2/" configBuild.sh
+sed -i -e "s/rcapps-$1/rcapps-$2/" build.properties.base
+sed -i -e "s/rcapps-$1/rcapps-$2/" ../plugins/genevagui/META-INF/MANIFEST.MF
