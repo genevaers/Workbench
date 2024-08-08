@@ -2429,8 +2429,8 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
 					+ schema + ".LOOKUPSTEP B "
 					+ "WHERE A.ENVIRONID = B.ENVIRONID "
                     + "AND A.LOOKUPID = B.LOOKUPID "
-					+ "AND B.ENVIRONID = ?" 
-					+ "AND B.SRCLRID = ?" 
+					+ "AND B.ENVIRONID = ? " 
+					+ "AND B.SRCLRID = ? " 
 					+ "AND B.SRCLRID > 0 ";
 			if(exceptionList.size() > 0) {
 				selectString += "AND B.LOOKUPID NOT IN (" + exceptionPlaceholders + " ) ";
@@ -2444,7 +2444,7 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
                     + "AND A.LOOKUPID = B.LOOKUPID "
 					+ "AND B.ENVIRONID = C.ENVIRONID "
                     + "AND B.LRLFASSOCID = C.LRLFASSOCID "
-					+ "AND C.ENVIRONID = ?"
+					+ "AND C.ENVIRONID = ? "
 					+ "AND C.LOGRECID = ? ";
 			if(exceptionList.size() > 0) {
 				selectString += "AND B.LOOKUPID NOT IN (" + exceptionPlaceholders + " ) ";
