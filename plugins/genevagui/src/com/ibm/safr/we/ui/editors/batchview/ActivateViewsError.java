@@ -31,6 +31,7 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.ibm.safr.we.constants.ActivityResult;
 import com.ibm.safr.we.constants.UserPreferencesNodes;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.utilities.BatchComponent;
@@ -92,12 +93,16 @@ public class ActivateViewsError {
     protected void showSectionLoadErrors(Boolean visible) {
         BatchComponent view = mediator.getSelectedView();
         if (view != null) {
-        	Path reportPath  =Paths.get(SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.REPORTS_PATH, ProfileLocation.getProfileLocation().getLocalProfile()));
-    		Path htmlPath = reportPath.resolve("html");
-    		Path viewName = htmlPath.resolve("ActReport_Env" + mediator.getCurrentEnvironment().getId() +"_V" + view.getComponent().getId()+ ".html");
-			browser.setUrl(viewName.toString());
+            if(view.getResult() == ActivityResult.LOADERRORS) {
+                browser.setText("<pre>"+view.getException().toString()+"</pre>");                          
+            } else {
+            	Path reportPath  =Paths.get(SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.REPORTS_PATH, ProfileLocation.getProfileLocation().getLocalProfile()));
+        		Path htmlPath = reportPath.resolve("html");
+        		Path viewName = htmlPath.resolve("ActReport_Env" + mediator.getCurrentEnvironment().getId() +"_V" + view.getComponent().getId()+ ".html");
+    			browser.setUrl(viewName.toString());
+            }
         } else {
-            //Disaster             
+            browser.setText("Tell about the dependency issues");          
         }
         sectionErrors.setExpanded(visible);
         sectionErrors.setEnabled(visible);

@@ -24,12 +24,14 @@ import java.util.logging.Logger;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.ActivityResult;
+import com.ibm.safr.we.constants.ReportType;
 import com.ibm.safr.we.exceptions.SAFRDependencyException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.query.ViewQueryBean;
 import com.ibm.safr.we.model.view.View;
+import com.ibm.safr.we.ui.reports.ReportUtils;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
 /**
@@ -72,49 +74,55 @@ public class BatchActivateViews {
 
             try {
                 view = SAFRApplication.getSAFRFactory().getView(viewBean.getId(), viewBean.getEnvironmentId());
+                inactivateAndOrActivate(warningStrategy, component, status);
             } catch (SAFRDependencyException sde) {
-                component.setException(sde);
                 component.setResult(ActivityResult.LOADERRORS);
-                continue;
+                component.setActive(false);
+                component.setException(sde);
+                allActive = false;
             }
-            SAFRViewActivationException actExp = null;
-            try {
-                // CQ9748 ensure already Active views are re-compiled if
-                // selected.
-                // If it's currently active, make it inactive first.
-                if (status.equalsIgnoreCase(ACTIVE)) {
-                    view.makeViewInactive();
-                }
-                view.batchActivate();
+        }
+    }
+
+    private static void inactivateAndOrActivate(ConfirmWarningStrategy warningStrategy, BatchComponent component,
+            String status) {
+        SAFRViewActivationException actExp = null;
+        try {
+            // CQ9748 ensure already Active views are re-compiled if
+            // selected.
+            // If it's currently active, make it inactive first.
+            if (status.equalsIgnoreCase(ACTIVE)) {
+                view.makeViewInactive();
+            }
+            view.batchActivate();
+            view.setConfirmWarningStrategy(warningStrategy);
+            view.store();
+        } catch (SAFRViewActivationException svae) {
+            // set the SAFRViewActivationException in the model to use
+            // it in the UI which is later passed to the
+            // SAFRViewActivation Error.
+            actExp = svae;
+            component.setException(svae);
+            // if warning store it anyway
+            if (!svae.hasErrorOccured()) {
                 view.setConfirmWarningStrategy(warningStrategy);
                 view.store();
-            } catch (SAFRViewActivationException svae) {
-                // set the SAFRViewActivationException in the model to use
-                // it in the UI which is later passed to the
-                // SAFRViewActivation Error.
-                actExp = svae;
-                component.setException(svae);
-                // if warning store it anyway
-                if (!svae.hasErrorOccured()) {
-                    view.setConfirmWarningStrategy(warningStrategy);
-                    view.store();
-                }
             }
-            if (actExp == null) {
-                if (WorkbenchCompiler.hasWarnings()) {
-                    component.setResult(ActivityResult.WARNING);
-                } else {
-                    component.setResult(ActivityResult.PASS);
-                }
-                component.setActive(true);
-            } else if (actExp.hasErrorOccured()) {
-                component.setResult(ActivityResult.FAIL);
-                component.setActive(false);
-                allActive = false;
+        }
+        if (actExp == null) {
+            if (WorkbenchCompiler.hasWarnings()) {
+                component.setResult(ActivityResult.WARNING);
             } else {
                 component.setResult(ActivityResult.PASS);
-                component.setActive(true);
             }
+            component.setActive(true);
+        } else if (actExp.hasErrorOccured()) {
+            component.setResult(ActivityResult.FAIL);
+            component.setActive(false);
+            allActive = false;
+        } else {
+            component.setResult(ActivityResult.PASS);
+            component.setActive(true);
         }
     }
     
