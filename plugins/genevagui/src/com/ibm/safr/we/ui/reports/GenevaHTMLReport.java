@@ -75,7 +75,7 @@ public abstract class GenevaHTMLReport {
 	}
 
 	public String getUrl() {
-		return "file://" + reportPath.toString();
+		return reportPath.toString();
 	}
 
 
