@@ -208,16 +208,7 @@ public class View extends SAFRActivatedComponent {
     private void initFromTransfer(ViewTransfer trans) throws DAOException, SAFRException {
         
         if (!isForImport() && !isForMigration()) {
-            // Check for inactive dependencies, throw SAFRDependencyException if
-            // its
-            // found.
-            Map<ComponentType, List<DependentComponentTransfer>> dependencies = DAOFactoryHolder
-                    .getDAOFactory().getViewDAO()
-                    .getInactiveDependenciesOfView(getEnvironmentId(), getId());
-            if (dependencies != null && !dependencies.isEmpty()) {
-                throw new SAFRDependencyException(dependencies);
-            }
-
+            checkForInactiveDependencies();
 
             // init viewColumns and viewSources before viewColumnSources
             this.viewSources.addAll(ViewFactory.getViewSources(this));
@@ -287,6 +278,15 @@ public class View extends SAFRActivatedComponent {
         }
         
                 
+    }
+
+    public void checkForInactiveDependencies() {
+        Map<ComponentType, List<DependentComponentTransfer>> dependencies = DAOFactoryHolder
+                .getDAOFactory().getViewDAO()
+                .getInactiveDependenciesOfView(getEnvironmentId(), getId());
+        if (dependencies != null && !dependencies.isEmpty()) {
+            throw new SAFRDependencyException(dependencies);
+        }
     }
 
     @Override

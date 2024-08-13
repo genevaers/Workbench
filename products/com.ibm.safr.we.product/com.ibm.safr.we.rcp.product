@@ -24,7 +24,7 @@ under the License.
    </configIni>
 
    <launcherArgs>
-      <vmArgs>-Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044</vmArgs>
+      <vmArgs>-Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
