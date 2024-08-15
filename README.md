@@ -23,7 +23,7 @@ Open a command prompt and run the following to ensure that Postgres and the asso
 
 The from the cloned directory change to the SQL resources as below.
 
-    cd plugins/genevagui/resources/postgres/
+    cd database/postgres/
 
 And run psql to create and populate your database. 
 
