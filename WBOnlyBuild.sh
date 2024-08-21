@@ -16,7 +16,7 @@
 # Run Build scripts
 
 echo "Configure Build"
-git status
+git status|head -1
 ./prebuild/configBuild.sh
 if [ -d "products/com.ibm.safr.we.product/target" ]; then
     mvn clean
