@@ -33,5 +33,5 @@ else
     echo "*******************************"
 fi 
 echo "Copy the appchooser"
-cp ../Run-Control-Apps/RCApps/target/rcapps-1.1.0_RC2-jar-with-dependencies.jar $GENEVAGUI/lib/
+cp ../Run-Control-Apps/RCApps/target/rcapps-1.1.0_RC3-jar-with-dependencies.jar $GENEVAGUI/lib/
 cat prebuild/build.properties.end >> $GENEVAGUI/build.properties
