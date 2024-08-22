@@ -19,8 +19,7 @@ bin.includes = plugin.xml,\
                icons/,\
                plugin_customization.ini,\
                splash.bmp,\
-               resources/, \
                lib/ccb2lr.jar, \
                lib/commons-csv-1.10.0.jar, \
-               lib/rcapps-1.1.0_RC2-jar-with-dependencies.jar, \
+               lib/rcapps-1.1.0_RC3-jar-with-dependencies.jar, \
                lib/postgresql-42.2.16.jar, \
