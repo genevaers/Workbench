@@ -126,9 +126,20 @@ public class ViewActivator {
 
         compileFormatCalculation();
         compileFormatFilter();
+        addSummaryColsToCTs();
         compileViewSources();
                 
         processResult();        
+    }
+
+    private void addSummaryColsToCTs() {
+        if (view.isFormatPhaseInUse()) {
+            for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+                if (col.getSubtotalTypeCode() != null && col.getSubtotalTypeCode().getGeneralId() != Codes.GRPAGGR_NONE) {
+                    CTCols.add(col.getColumnNo());
+                }
+            }
+        }
     }
 
     protected void initialization() throws SAFRException, DAOException, SAFRViewActivationException {

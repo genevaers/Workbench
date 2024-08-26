@@ -916,105 +916,72 @@ public class ViewColumn extends SAFRField {
                         break;
                     }
                 }
-			} 
-			// behavior is same for hard copy and drill down.
-		} else if (outputFormat == OutputFormat.Format_Report) {
-			if (!isFormatPhaseAggregationOn) {
-				if (recAggrCodeId == null) {
-					switch (grpAggrCodeId) {
-					case Codes.GRPAGGR_GROUP_CALCULATION:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"BCALC");
-						break;
-					case Codes.GRPAGGR_FIRST:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"FIRST");
-						break;
-					case Codes.GRPAGGR_LAST:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"LAST");
-						break;
-					case Codes.GRPAGGR_MAX:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"MAX");
-						break;
-					case Codes.GRPAGGR_MIN:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"MIN");
-						break;
-					case Codes.GRPAGGR_SUM:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-								.getCodeSet(CodeCategories.SUBTOT).getCode(
-										"SUM");
-						break;
-					}
+            }
+            // behavior is same for hard copy and drill down.
+        } else if (outputFormat == OutputFormat.Format_Report) {
+            if (!isFormatPhaseAggregationOn) {
+                if (recAggrCodeId == null) {
+                    switch (grpAggrCodeId) {
+                    case Codes.GRPAGGR_GROUP_CALCULATION:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("BCALC");
+                        break;
+                    case Codes.GRPAGGR_NONE:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("NONE");
+                        break;
+                    case Codes.GRPAGGR_MAX:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("MAX");
+                        break;
+                    case Codes.GRPAGGR_MIN:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("MIN");
+                        break;
+                    case Codes.GRPAGGR_SUM:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("SUM");
+                        break;
+                    }
                 }
-			}
-			// if format phase record aggregation is on.
-			else {
-			    if (recAggrCodeId == null || grpAggrCodeId == null) {
-			        subtotalTypeCode = null;
-			    }
-			    else if (recAggrCodeId == Codes.GROUP_CALCULATION && 
-			        grpAggrCodeId == Codes.GRPAGGR_GROUP_CALCULATION) {
-					subtotalTypeCode = SAFRApplication.getSAFRFactory()
-					    .getCodeSet(CodeCategories.SUBTOT).getCode("BCALC");
-				} else if (grpAggrCodeId == Codes.GRPAGGR_FIRST) {
-					switch (recAggrCodeId) {
-					case Codes.RECAGGR_FIRST:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("DFRST");
-						break;
-					case Codes.SUM:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("FIRST");
-						break;
-					}
-				} else if (grpAggrCodeId == Codes.GRPAGGR_LAST) {
-					switch (recAggrCodeId) {
-					case Codes.RECAGGR_LAST:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("DLAST");
-						break;
-					case Codes.SUM:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("LAST");
-						break;
-					}
-				} else if (grpAggrCodeId == Codes.GRPAGGR_MAX) {
-					switch (recAggrCodeId) {
-					case Codes.RECAGGR_MAX:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("DMAX");
-						break;
-					case Codes.SUM:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("MAX");
-						break;
-					}
-				} else if (grpAggrCodeId == Codes.GRPAGGR_MIN) {
-					switch (recAggrCodeId) {
-					case Codes.RECAGGR_MIN:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("DMIN");
-						break;
-					case Codes.SUM:
-						subtotalTypeCode = SAFRApplication.getSAFRFactory()
-						    .getCodeSet(CodeCategories.SUBTOT).getCode("MIN");
-						break;
-					}
-				} else if (recAggrCodeId == Codes.SUM && grpAggrCodeId == Codes.GRPAGGR_SUM) {
-					subtotalTypeCode = SAFRApplication.getSAFRFactory()
-					    .getCodeSet(CodeCategories.SUBTOT).getCode("SUM");
-				}
-			}
-		}
-	}
+            }
+            // if format phase record aggregation is on.
+            else {
+                if (recAggrCodeId == null || grpAggrCodeId == null) {
+                    subtotalTypeCode = null;
+                } else if (recAggrCodeId == Codes.GROUP_CALCULATION
+                        && grpAggrCodeId == Codes.GRPAGGR_GROUP_CALCULATION) {
+                    subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                            .getCode("BCALC");
+                } else if (grpAggrCodeId == Codes.GRPAGGR_MAX) {
+                    switch (recAggrCodeId) {
+                    case Codes.RECAGGR_MAX:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("DMAX");
+                        break;
+                    case Codes.SUM:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("MAX");
+                        break;
+                    }
+                } else if (grpAggrCodeId == Codes.GRPAGGR_MIN) {
+                    switch (recAggrCodeId) {
+                    case Codes.RECAGGR_MIN:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("DMIN");
+                        break;
+                    case Codes.SUM:
+                        subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                                .getCode("MIN");
+                        break;
+                    }
+                } else if (recAggrCodeId == Codes.SUM && grpAggrCodeId == Codes.GRPAGGR_SUM) {
+                    subtotalTypeCode = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.SUBTOT)
+                            .getCode("SUM");
+                }
+            }
+        }
+    }
 
 	/**
 	 * Returns the logic text for the ViewColumn's Format Column Calculation.
