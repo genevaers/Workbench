@@ -696,6 +696,8 @@ INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','MAX',4,'Maximum');
 INSERT INTO :schemaV.CODE VALUES('RECORDAGGR','CALC',7,
                            'Group Calculation');
 
+INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','NONE',1,'None');
+
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','SUM',2,'Sum');
 
 INSERT INTO :schemaV.CODE VALUES('GROUPAGGR','MIN',3,'Minimum');
