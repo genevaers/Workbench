@@ -208,6 +208,7 @@ public class Codes {
 	public static final int LAST = 6;
 	public static final int MAXIMUM = 3;
 	public static final int MINIMUM = 4;
+	public static final int NONE = 1;
 
 	/** RECORD AGGREGATION */
 	public static final int GROUP_CALCULATION = 7;
@@ -420,6 +421,12 @@ public class Codes {
 
     private static CodeSet getSUBTOTCodeSet() {
         List<CodeTransfer> transfers = new ArrayList<CodeTransfer>();
+        
+        CodeTransfer none = new CodeTransfer();        
+        none.setGeneralId(NONE);
+        none.setCodeDescription("None");
+        none.setCodeValue("NONE");
+        transfers.add(none);
         
         CodeTransfer sum = new CodeTransfer();        
         sum.setGeneralId(SUM);
