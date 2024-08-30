@@ -208,6 +208,7 @@ public class Codes {
 	public static final int LAST = 6;
 	public static final int MAXIMUM = 3;
 	public static final int MINIMUM = 4;
+	public static final int NONE = 1;
 
 	/** RECORD AGGREGATION */
 	public static final int GROUP_CALCULATION = 7;
@@ -219,11 +220,10 @@ public class Codes {
 
 	/** GROUP AGGREGATION */
 	public static final int GRPAGGR_GROUP_CALCULATION = 7;
-	public static final int GRPAGGR_FIRST = 5;
-	public static final int GRPAGGR_LAST = 6;
 	public static final int GRPAGGR_MAX = 4;
 	public static final int GRPAGGR_MIN = 3;
 	public static final int GRPAGGR_SUM = 2;
+	public static final int GRPAGGR_NONE = 1;
 
 	/** SORT SEQUENCE CODE */
 	public static final int ASCENDING = 1;
@@ -421,6 +421,12 @@ public class Codes {
 
     private static CodeSet getSUBTOTCodeSet() {
         List<CodeTransfer> transfers = new ArrayList<CodeTransfer>();
+        
+        CodeTransfer none = new CodeTransfer();        
+        none.setGeneralId(NONE);
+        none.setCodeDescription("None");
+        none.setCodeValue("NONE");
+        transfers.add(none);
         
         CodeTransfer sum = new CodeTransfer();        
         sum.setGeneralId(SUM);
@@ -671,16 +677,10 @@ public class Codes {
         transfers.add(max);
 
         CodeTransfer first = new CodeTransfer();        
-        first.setGeneralId(GRPAGGR_FIRST);
+        first.setGeneralId(GRPAGGR_NONE);
         first.setCodeDescription("First");
         first.setCodeValue("FIRST");
         transfers.add(first);
-
-        CodeTransfer last = new CodeTransfer();        
-        last.setGeneralId(GRPAGGR_LAST);
-        last.setCodeDescription("Last");
-        last.setCodeValue("LAST");
-        transfers.add(last);
 
         CodeTransfer calc = new CodeTransfer();        
         calc.setGeneralId(GRPAGGR_GROUP_CALCULATION);

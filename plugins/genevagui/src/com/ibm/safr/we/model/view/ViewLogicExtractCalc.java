@@ -48,33 +48,30 @@ public class ViewLogicExtractCalc {
     
     public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
-        setAllSourceColumnInfo(source);
 
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
+            setSourceColumnInfo(source, col);
             WorkbenchCompiler.addColumn(WBCompilerDataStore.getColumnData(col));
             processExtractCalculation(source, col);
         }
     }
 
-    protected void setAllSourceColumnInfo(ViewSource source) {
+    public void setSourceColumnInfo(ViewSource source, ViewColumn col) {
         int positionDT = 1;
         int positionCT = 1;
 
-        for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-            col.getViewColumnSources().get(source.getSequenceNo() - 1);
-            int colType = getColumnType(col);
-            col.setExtractAreaCode(
-                    SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
+        col.getViewColumnSources().get(source.getSequenceNo() - 1);
+        int colType = getColumnType(col);
+        col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 
-            if (colType == Codes.SORTKEY) {
-                col.setExtractAreaPosition(null);
-            } else if (colType == Codes.CT_AREA) {
-                col.setExtractAreaPosition(positionCT);
-                positionCT += WBCompilerDataStore.CT_ADDITION;
-            } else {
-                col.setExtractAreaPosition(positionDT);
-                positionDT += col.getLength();
-            }
+        if (colType == Codes.SORTKEY) {
+            col.setExtractAreaPosition(null);
+        } else if (colType == Codes.CT_AREA) {
+            col.setExtractAreaPosition(positionCT);
+            positionCT += WBCompilerDataStore.CT_ADDITION;
+        } else {
+            col.setExtractAreaPosition(positionDT);
+            positionDT += col.getLength();
         }
     }
     
@@ -97,8 +94,7 @@ public class ViewLogicExtractCalc {
     protected boolean isCTColumn(ViewColumn col) {
         boolean isCTColumn = false;
         if (view.isFormatPhaseInUse()) {
-            if (col.getSubtotalTypeCode() != null ||
-                CTCols.contains(col.getColumnNo())) {
+            if (CTCols.contains(col.getColumnNo())) {
                 isCTColumn = true;
             }
         } 
