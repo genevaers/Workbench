@@ -622,6 +622,8 @@ INSERT INTO :schemaV.CODE VALUES ('STRDELIM','SNGLQ',1,
 INSERT INTO :schemaV.CODE VALUES ('STRDELIM','DBLQT',2,
                               'Double Quote');
 
+INSERT INTO :schemaV.CODE VALUES ('SUBTOT','NONE', 1,
+                              'None');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','SUM', 2,
                               'Sum');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','MAX', 3,

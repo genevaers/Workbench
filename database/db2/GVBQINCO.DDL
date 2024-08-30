@@ -910,6 +910,9 @@ INSERT INTO &$DBSCH..CODETABLE VALUES ('STRDELIM','DBLQT',2,
                               'Double Quote',
                               NULL,NULL,NULL,0);
 
+INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','NONE', 1,
+                              'None',
+                              NULL,NULL,NULL,0);
 INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','SUM', 2,
                               'Sum',
                               NULL,NULL,NULL,0);
