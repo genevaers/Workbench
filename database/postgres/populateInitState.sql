@@ -53,7 +53,7 @@ INSERT INTO :schemaV.USER (
          CREATEDTIMESTAMP,CREATEDUSERID,
          LASTMODTIMESTAMP,LASTMODUSERID)
 VALUES (user,NULL,
-         'The',NULL,'SAFR Administrator',
+         'The',NULL,'GenevaERS Administrator',
          NULL,NULL,1,NULL,
          1,NULL,
          'Created automatically during install',
@@ -65,7 +65,7 @@ INSERT INTO :schemaV.CONTROLREC (ENVIRONID,NAME,
                           COMMENTS,
                           CREATEDTIMESTAMP,CREATEDUSERID,
                           LASTMODTIMESTAMP,LASTMODUSERID)
-VALUES (1,'SAFR_Installation',
+VALUES (1,'GenevaERS Installation',
         1,1,12,
         'Created automatically during install',
         CURRENT_TIMESTAMP,'INSTALL',
