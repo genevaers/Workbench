@@ -1,15 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2000, 2007 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-package com.ibm.safr.we.ui.utilities;
-
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -27,6 +15,7 @@ package com.ibm.safr.we.ui.utilities;
  * under the License.
  */
 
+package com.ibm.safr.we.ui.utilities;
 
 import java.text.MessageFormat;
 
