@@ -60,7 +60,7 @@ public class CCB2Dot {
             fw.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.atSevere().log("Cannot write COBOL File\n%s", e.getMessage());
         }
     }
 
@@ -73,7 +73,7 @@ public class CCB2Dot {
             fw.close();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.atSevere().log("Cannot write COBOL record\n%s", e.getMessage());
         }
     }
 
