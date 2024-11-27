@@ -1522,7 +1522,7 @@ public class UIUtilities {
         try {
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
-            	versionDetails += bundle.getVersion().toString() + "_RC5 " + getTimeStamp();
+            	versionDetails += bundle.getVersion().toString() + "_RC6 " + getTimeStamp();
             } else {
                 logger.log(Level.SEVERE, "Null getting version");            	
             }
