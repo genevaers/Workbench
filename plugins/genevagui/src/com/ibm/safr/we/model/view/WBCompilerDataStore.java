@@ -113,24 +113,6 @@ public class WBCompilerDataStore {
         return vd;
       }
     
-      protected static void setAllSourceColumnInfo(View view, ViewSource source) {
-          int positionDT = 1;
-          int positionCT = 1;
-          for (ViewColumn col : view.getViewColumns().getActiveItems()) {
-              int colType = getColumnType(col);
-              col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
-              if (colType == Codes.SORTKEY) {
-                  col.setExtractAreaPosition(null);
-              } else if (colType == Codes.CT_AREA) {
-                  col.setExtractAreaPosition(positionCT);
-                  positionCT += WBCompilerDataStore.CT_ADDITION;
-              } else {
-                  col.setExtractAreaPosition(positionDT);
-                  positionDT += col.getLength();
-              }
-          }
-      }
-
       protected static int getColumnType(ViewColumn col) {
         
         int colType;
@@ -155,17 +137,22 @@ public class WBCompilerDataStore {
         	cd.setDateCodeValue(0);        	
         }
         cd.setExtractAreaValue(vc.getExtractAreaCode().getGeneralId());
-        cd.setLength(vc.getLength());
+        cd.setExtractAreaPosition(vc.getExtractAreaPosition() != null ? vc.getExtractAreaPosition() : 1);
+        if(vc.getExtractAreaCode().getGeneralId() == Codes.SORTKEY) {
+            ViewSortKey vsk = vc.getViewSortKey();
+            cd.setLength(vsk.getLength());
+        } else {
+            cd.setLength(vc.getLength());
+        }
         if(vc.getDataAlignmentCode() != null) {
         	cd.setAlignment(vc.getDataAlignmentCode().getGeneralId());
         } else {
-        	
         	cd.setAlignment(0);
         }
         cd.setNumDecimalPlaces(vc.getDecimals());
         cd.setRounding(vc.getScaling());
         cd.setSigned(vc.isSigned());
-        cd.setStartPosition(vc.getStartPosition());
+        cd.setStartPosition(vc.getExtractAreaPosition() != null ? vc.getExtractAreaPosition() : 1);
         cd.setViewID(vc.getView().getId());
         cd.setColumnCalculation(vc.getFormatColumnCalculation());
         return cd;
