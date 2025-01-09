@@ -37,6 +37,9 @@ public class ViewLogicExtractCalc {
     static transient Logger logger = Logger.getLogger("com.ibm.safr.we.model.view.ViewLogicExtractFilter");
 
 	private View view;
+    private int positionDT = 1;
+    private int positionCT = 1;
+    private int positionSK = 1;
 
 	private Set<Integer> CTCols;
 
@@ -48,6 +51,9 @@ public class ViewLogicExtractCalc {
     
     public void compile(ViewSource source, Set<Integer> cTCols) {
         CTCols = cTCols;
+        positionDT = 1;
+        positionCT = 1;
+        positionSK = 1;
 
         for (ViewColumn col : view.getViewColumns().getActiveItems()) {
             setSourceColumnInfo(source, col);
@@ -57,15 +63,15 @@ public class ViewLogicExtractCalc {
     }
 
     public void setSourceColumnInfo(ViewSource source, ViewColumn col) {
-        int positionDT = 1;
-        int positionCT = 1;
 
         col.getViewColumnSources().get(source.getSequenceNo() - 1);
         int colType = getColumnType(col);
         col.setExtractAreaCode(SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.EXTRACT).getCode(colType));
 
         if (colType == Codes.SORTKEY) {
-            col.setExtractAreaPosition(null);
+            ViewSortKey vsk = col.getViewSortKey();
+            col.setExtractAreaPosition(positionSK);
+            positionSK += vsk.getLength(); //Should be the SK length not the column length
         } else if (colType == Codes.CT_AREA) {
             col.setExtractAreaPosition(positionCT);
             positionCT += WBCompilerDataStore.CT_ADDITION;
