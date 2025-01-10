@@ -139,7 +139,7 @@ public class Copybook2LR {
             yamlMapper.writeValue(new File(filename), copyRecord);
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.atSevere().log("Cannot write yaml file\n%s", e.getMessage());
         }
     }
 
@@ -204,7 +204,7 @@ public class Copybook2LR {
 			properties.load(resourceStream);
             ver = properties.getProperty("library.name") + ": " + properties.getProperty("build.version");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.atSevere().log("Cannot get build version\n%s", e.getMessage());
 		}
         return ver;
     }
