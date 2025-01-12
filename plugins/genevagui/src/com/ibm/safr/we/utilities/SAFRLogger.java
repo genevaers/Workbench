@@ -151,23 +151,34 @@ public class SAFRLogger {
      * @return the log path
      */
     public static String getLogPath() {
-        String logPath = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.LOG_FILE_PATH, "");
-        if (logPath == null || logPath.length() == 0) {
-            return ProfileLocation.getProfileLocation().getLocalProfile()+"/logs";            
+        String userLogPath = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.LOG_FILE_PATH, "");
+        String defaultPath = ProfileLocation.getProfileLocation().getLocalProfile()+"/logs";
+        String logPath;
+        if (userLogPath == null || userLogPath.length() == 0) {
+            logPath = defaultPath;            
         }
         else {
-            if (!logPath.endsWith("\\") && !logPath.endsWith("/")) {
-                logPath += "\\";
+            if (!userLogPath.endsWith("\\") && !userLogPath.endsWith("/")) {
+                userLogPath += "/";
+                }
+            File userLogDir = new File(userLogPath);
+            if (!userLogDir.exists()) {
+                logPath = userLogPath;
+                } 
+            else {
+                logPath = userLogPath;
+                }
             }
-            File lp = new File(logPath);
-            if(!lp.exists()) {
-            	//force the logpath to the default
-            	logPath = ProfileLocation.getProfileLocation().getLocalProfile()+"/logs";  
-            }
-            return logPath;
+        File logDir = new File(logPath);
+        if (!logDir.exists()) {
+            boolean created = logDir.mkdirs();
+            if (!created) {
+                    throw new RuntimeException("Failed to create logs directory: " + logPath);
+                }
         }
-    }
-    
+        return logPath;
+        }
+
     /**
      * Change the log path location
      * 
