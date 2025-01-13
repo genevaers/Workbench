@@ -152,32 +152,33 @@ public class SAFRLogger {
      */
     public static String getLogPath() {
         String userLogPath = SAFRPreferences.getSAFRPreferences().get(UserPreferencesNodes.LOG_FILE_PATH, "");
-        String defaultPath = ProfileLocation.getProfileLocation().getLocalProfile()+"/logs";
+        String defaultPath = ProfileLocation.getProfileLocation().getLocalProfile() + "/logs";
         String logPath;
+        
         if (userLogPath == null || userLogPath.length() == 0) {
-            logPath = defaultPath;            
-        }
-        else {
+            logPath = defaultPath;
+        } else {
             if (!userLogPath.endsWith("\\") && !userLogPath.endsWith("/")) {
                 userLogPath += "/";
-                }
+            }
             File userLogDir = new File(userLogPath);
             if (!userLogDir.exists()) {
                 logPath = defaultPath;
-                } 
-            else {
+            } else {
                 logPath = userLogPath;
-                }
             }
+        }
+        
         File logDir = new File(logPath);
         if (!logDir.exists()) {
             boolean created = logDir.mkdirs();
             if (!created) {
-                    throw new RuntimeException("Failed to create logs directory: " + logPath);
-                }
+                throw new RuntimeException("Failed to create logs directory: " + logPath);
+            }
         }
+        
         return logPath;
-        }
+    }
 
     /**
      * Change the log path location
