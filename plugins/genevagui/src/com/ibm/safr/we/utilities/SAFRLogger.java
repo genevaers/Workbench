@@ -163,7 +163,7 @@ public class SAFRLogger {
                 }
             File userLogDir = new File(userLogPath);
             if (!userLogDir.exists()) {
-                logPath = userLogPath;
+                logPath = defaultPath;
                 } 
             else {
                 logPath = userLogPath;
