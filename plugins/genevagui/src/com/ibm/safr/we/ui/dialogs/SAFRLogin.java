@@ -700,6 +700,7 @@ public class SAFRLogin extends TitleAreaDialog {
 
 	private Boolean checkUser() {
 		String utext = userID.getText().trim();
+		String spversion = "";
 		if(DAOFactoryHolder.getDAOFactory().getConnectionParameters().getType()== DBType.Db2) {
 			userID.setText(utext.toUpperCase());
 		} else {
@@ -750,15 +751,43 @@ public class SAFRLogin extends TitleAreaDialog {
 
 		// log stored procedure version
 		try {
-		    SAFRLogger.logAll(logger, Level.INFO, "Stored Procedure Version is " + SAFRApplication.getStoredProcedureVersion());
+		    spversion = SAFRApplication.getStoredProcedureVersion();
+		    SAFRLogger.logAll(logger, Level.INFO, "Stored Procedure Version is " + spversion);
         } catch (SAFRException e) {
             logger.log(Level.SEVERE, "Stored Procedure Version is unavailable", e);
         }
-		
-		return true;
+
+		int result = checkSPVersion(spversion);
+        if (result == SWT.YES) {
+            return true;
+        } else {
+            logger.log(Level.SEVERE, "Stored Procedure Version is invalid");
+            MessageBox errorMsg = new MessageBox(getShell(), SWT.ERROR
+                    | SWT.OK);
+            errorMsg.setMessage("Version: " + spversion + " is invalid.\nPlease contact your system administrator.");
+            errorMsg.setText("Stored Procedures");
+            errorMsg.open();
+            System.exit(0);
+			return false;
+        }
 	}
 
-	private void showConnectionFailureMesssage(SAFRException se) {
+	private int checkSPVersion(String spversion) {
+	    int result = SWT.NO;
+	    if(spversion.startsWith("SD PG")) {
+	        result =SWT.YES;
+	    }
+	    if(spversion.contains("4.17")) {
+	        int lastDot = spversion.lastIndexOf('.');
+	        int buildNum = Integer.parseInt(spversion.substring(lastDot+1));
+	        if(buildNum > 260) {
+	            result = SWT.YES;
+	        }
+	    }
+	    return result;
+    }
+
+    private void showConnectionFailureMesssage(SAFRException se) {
 
 		String logFailMsg = "There was an error while logging in." + SAFRUtilities.LINEBREAK + SAFRUtilities.LINEBREAK
 				+ "Possible causes are:" + SAFRUtilities.LINEBREAK
