@@ -764,7 +764,7 @@ public class SAFRLogin extends TitleAreaDialog {
             logger.log(Level.SEVERE, "Stored Procedure Version is invalid");
             MessageBox errorMsg = new MessageBox(getShell(), SWT.ERROR
                     | SWT.OK);
-            errorMsg.setMessage("Version: " + spversion + " is invalid.\nPlease contact your system administrator.");
+            errorMsg.setMessage("Version: " + spversion + " is invalid.\nPlease contact your GenevaERS Support Team.");
             errorMsg.setText("Stored Procedures");
             errorMsg.open();
             System.exit(0);
