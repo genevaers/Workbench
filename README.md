@@ -40,36 +40,6 @@ Explanation...
     You can choose something else if you want.
     -f runall.sql Means run this file. This will create the database called genevaers, create the tables needed, perform an initial set up of those tables, install some stored procedures, and create a GenevaERS user called “postgres”.  
 
-
-
-# Download the Workbench
-Releases of GenevaERS can be found on the left of this document under "Releases."  
-1. Download the zip file
-2. Extract all files to a directory
-3. Double click on the GenevaERS.exe
-
-## Database Connection Parameters
-
-Start the postgres database (see Postgres documentation).  
-
-For Postgres, many of the values used in creating the database are used in the GenevaERS Connection Manager.
-
-    - Select "Manage" and enter the following if you used the command above:
-      - Database Type: PostgesQL
-      - Database Name: genevaers
-      - Server: localhost
-      - Port: 5432
-      - Scheme Name: gendev
-      - User ID: postgres
-      - Password: postgres
-    - Select "Save" and on the GenevaERS Login screen enter:
-      - User ID: postgres
-      - Password: postgres
-    - Click "Login"
-    - Click the "Environment" dropdown
-      - Select the "Development" environment
-    - Click "OK"
-
 # Build Processes
 To build the GenevaERS workbench do the following:
 
@@ -157,3 +127,26 @@ In order to run the Apache license checker enter
 
 ``` mvn validate -Prat```
 
+## Database Connection Parameters
+
+Start the postgres database (see Postgres documentation).  
+
+For Postgres, many of the values used in creating the database are used in the GenevaERS Connection Manager.
+
+    - Select "Manage" and enter the following if you used the command above:
+      - Database Type: PostgesQL
+      - Database Name: genevaers
+      - Server: localhost
+      - Port: 5432
+      - Scheme Name: gendev
+      - User ID: postgres
+      - Password: postgres(this should be whatever you used to create the postgres data)
+    - Select "Save" and on the GenevaERS Login screen enter:
+      - User ID: postgres
+      - Password: postgres(this should be whatever you used to create the postgres data)
+    - Click "Login"
+    - Click the "Environment" dropdown
+      - Select the "Development" environment
+    - Click "OK"
+    
+For next steps, follow the link https://genevaers.github.io/User-Documentation/Setup%20and%20Use/#basic-skills
