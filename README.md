@@ -4,7 +4,7 @@ The workbench is the configuration tool for [GeneavaERS](https://genevaers.org/)
 
 It support both Db2 (under license) and PostgreSQL database connections under Windows or MacOS.  To use DB2 or MacOS, follow the build procedures below.  To use Postgres on Windows, create the database before downloading or building the Workbench.
 
-# PostgreSQL Database Install  
+# PostgreSQL Database Install
 Install PostgreSQL as per its instructions ...  
 
 	Add Environment variable PATH values for both PostgreSQL directories for bin and lib  
