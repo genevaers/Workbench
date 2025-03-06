@@ -250,9 +250,9 @@ public class SAFRLogger {
         cal.setTime(new Date());
         cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH)-10);
         Date fileCutoff = cal.getTime();
-        // Delete WE.*.log files older than one week
+        // Delete WE.*.log and WE.*.log.lck files older than one week
         for (File file : logPath.listFiles()) {
-            if (file.getName().matches("^WE.*log$")) {
+            if (file.getName().matches("^WE.*log(\\.lck)?$")) {
                 if (new Date(file.lastModified()).before(fileCutoff)) { 
                     // would like to log files deleted, but can't in this module before logger is initialized
                     // SAFRLogger.logAllSeparator(logger, Level.INFO, "Deleting old log file: [" + file.getName() + "]");
