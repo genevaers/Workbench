@@ -122,7 +122,6 @@ The distributable zips are located in.
 Use the Postgres Database connection parameters under the Download section to connect to the database.
 
 # License Checking
-
 In order to run the Apache license checker enter
 
 ``` mvn validate -Prat```
