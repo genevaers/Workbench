@@ -108,21 +108,6 @@ public interface PhysicalFileDAO {
 			throws DAOException;
 
 	/**
-	 * This method is used to retrieve a Physical File with the specified name.
-	 * 
-	 * @param physicalFileName
-	 *            : The name of the physical file to be searched.
-	 * @param physicalFileId
-	 *            : The Id of the Physical file.
-	 * @param environmentId
-	 *            : The Id of the environment to which the physical file
-	 *            belongs.
-	 * @return: A Physical File transfer objects which contains the details of
-	 *          all the fields for the Physical File retrieved from
-	 *          PHYFILE table for the specified name.
-	 * @throws DAOException
-	 *             It throws an exception if no Physical File is there with the
-	 *             specified Id.
 	 */
 	PhysicalFileTransfer getDuplicatePhysicalFile(String physicalFileName,
 			Integer physicalFileId, Integer environmentId) throws DAOException;

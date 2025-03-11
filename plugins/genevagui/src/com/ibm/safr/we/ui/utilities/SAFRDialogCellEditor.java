@@ -51,6 +51,7 @@ import org.eclipse.swt.widgets.Layout;
  * The cell editor's value is the value of the dialog.
  * <p>
  * Subclasses may override the following methods:
+ * </p>
  * <ul>
  *  <li><code>createButton</code>: creates the cell editor's button control</li>
  *  <li><code>createContents</code>: creates the cell editor's 'display value' control</li>
@@ -59,7 +60,6 @@ import org.eclipse.swt.widgets.Layout;
  *  <li><code>openDialogBox</code>: opens the dialog box when the end user presses
  *      the button</li>
  * </ul>
- * </p>
  */
 public abstract class SAFRDialogCellEditor extends CellEditor {
 

@@ -102,7 +102,6 @@ public class TimingMap {
     /**
      * Stop timing an individual event
      *
-     * @param event - description of event
      */    
     public void stopTiming(String key) {
         if (!active) {

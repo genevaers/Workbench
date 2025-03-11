@@ -550,13 +550,6 @@ public class UserExitRoutine extends SAFREnvironmentalComponent {
 	 * This method is used to save as an user-exit routine based on a new name
 	 * and a new executable name.
 	 * 
-	 * @param newName
-	 *            new name of the component to be saved as.
-	 * @param executable
-	 *            new executable name of the component to be saved as.
-	 * @return a new copy of this component.
-	 * @throws SAFRValidationException
-	 * @throws SAFRException
 	 */
 	public SAFRComponent saveAs(String newName, String newExecutable)
 			throws SAFRValidationException, SAFRException {

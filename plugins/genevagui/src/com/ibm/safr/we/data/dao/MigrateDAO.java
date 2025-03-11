@@ -31,15 +31,6 @@ public interface MigrateDAO {
 	/**
 	 * This method is to log a single migration in the MIGAUDIT
 	 * 
-	 * @param compType
-	 *            : The type of component.
-	 * @param environmentId
-	 *            : The Id of the source environment
-	 * @param componentId
-	 *            : The Id of the component.
-	 * @return A boolean which is true if the any view is affected or false
-	 *         otherwise.
-	 * @throws DAOException
 	 */
 	void logMigration(
 			Integer srcEnv,

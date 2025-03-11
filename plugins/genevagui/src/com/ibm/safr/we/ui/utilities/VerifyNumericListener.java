@@ -36,7 +36,7 @@ public class VerifyNumericListener implements VerifyListener {
 	Boolean allowNegatives;
 
 	/**
-	 * Constructor of {@link VerifyNumericListener#} with specified WidgetType
+	 * Constructor of {@link VerifyNumericListener} with specified WidgetType
 	 * as defined in {@link UIUtilities}.
 	 * 
 	 * @param type

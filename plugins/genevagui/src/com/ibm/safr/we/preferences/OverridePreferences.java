@@ -41,9 +41,9 @@ import java.util.prefs.Preferences;
  * System.setProperty("java.util.prefs.PreferencesFactory", 
  *                    OverridePreferencesFactory.class.getName());
  * System.setProperty(OverridePreferencesFactory.BASE_PROP, 
- *                    <base file location>); 
+ *                    'base file location'); 
  * System.setProperty(OverridePreferencesFactory.OVER_PROP, 
- *                    <override file location>);
+ *                    'override file location');
  * 
  * Will make Java use OverridePreferences implementation for Preferences
  * 

@@ -36,22 +36,6 @@ public class FindReplaceComponent {
 	private EditRights rights;
 
 	/**
-	 * @param viewId
-	 *            :View id of the view.
-	 * @param viewName
-	 *            :view name of the view.
-	 * @param viewFolderName
-	 *            :viewFolder name of the view.
-	 * @param logicTextType
-	 *            : {@link LogicTextType} present in the view.
-	 * @param logicText
-	 *            : Logic text string according to type of the logic text.
-	 * @param parentId
-	 *            : parent id of the according to type of the logic text <br>
-	 *            <lI>for format record filter it is View id. <br> <lI>for
-	 *            extract record filter it is View source id. <br> <lI>for
-	 *            format phase calculation it is View column id. <br> <lI>for
-	 *            extract column calculation it is View column source id.
 	 */
 	public FindReplaceComponent(Integer viewId, String viewName,
 			LogicTextType logicTextType, String logicText, 
@@ -145,10 +129,14 @@ public class FindReplaceComponent {
 	/**
 	 * This method returns the parent id of the component according to type of
 	 * logic text.<br>
-	 * <lI>for format record filter it is View id. <br> <lI>for extract record
-	 * filter it is View source id. <br> <lI>for format phase calculation it is
-	 * View column id. <br> <lI>for extract column calculation it is View column
-	 * source id.
+	 * <ul>
+	 * <li>for format record filter it is View id. </li> 
+	 * <li>for extract record
+	 * filter it is View source id. </li> <li>for format phase calculation it is
+	 * View column id. </li>
+	 * <li>for extract column calculation it is View column
+	 * source id.</li>
+	 * </ul>
 	 * 
 	 * @return returns the parent id of the component according to type of logic
 	 *         text.
@@ -157,16 +145,6 @@ public class FindReplaceComponent {
 		return parentId;
 	}
 
-	/**
-	 * This method sets the parent id .<br>
-	 * <lI>for format record filter it is View id. <br> <lI>for extract record
-	 * filter it is View source id. <br> <lI>for format phase calculation it is
-	 * View column id. <br> <lI>for extract column calculation it is View column
-	 * source id.
-	 * 
-	 * @param parentId
-	 *            of the component to set.
-	 */
 	void setParentId(Integer parentId) {
 		this.parentId = parentId;
 	}

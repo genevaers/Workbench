@@ -860,9 +860,6 @@ public class Migration extends Observable {
 	 * clients to start the migration process after the migration criteria
 	 * have been chosen (source / target environment, component type,
 	 * component, possible view folder).
-	 * @param monitor 
-	 * 
-	 * @throws SAFRException
 	 */
 	public void migrate() throws SAFRException {
 		

@@ -168,7 +168,7 @@ public class DataUtilities {
 	}
 
 	/**
-	 * This method is to get a list of string chunks of certain maximum
+	 * <p>This method is to get a list of string chunks of certain maximum
 	 * characters from a String delimited by a character. If the maximum
 	 * character limit falls in between the String at position other than that
 	 * of delimiter, then it creates the String chunk which ended just before

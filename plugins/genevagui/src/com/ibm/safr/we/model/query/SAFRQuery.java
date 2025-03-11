@@ -412,10 +412,8 @@ public class SAFRQuery {
 	 * table with only selected columns. As the number of columns selected is
 	 * less, the performance improves while populating the list of Lookup Paths.
 	 * 
-	 * @param environmentId
+	 * @param envId
 	 *            : the ID of the environment to which the Lookup Paths belong.
-	 * @param sortType
-	 *            : the type of sorting(by Id or name).
 	 * @return A list of all LookupQueryBean objects.
 	 * @throws DAOException
 	 */
@@ -892,18 +890,6 @@ public class SAFRQuery {
 	 * If not, it will be the View Folders in the Environment that the specified
 	 * Group has access to. This is used, for example, when setting the Default
 	 * View Folder for a User.
-	 * 
-	 * @param environmentId
-	 *            target Environment containing the required View Folders
-	 * @param groupId
-	 *            target Group that must have access to the View Folders, where
-	 *            isSystemAdmin is false (ignored if isSystemAdmin is true)
-	 * @param User
-	 *            the user who is the subject of this query
-	 * @param sortType
-	 *            sort by ID or Name
-	 * @return a list of ViewFolderQueryBean
-	 * @throws DAOException
 	 */
 	static public List<ViewFolderQueryBean> queryViewFolders(
 			Integer environmentId, Integer groupId, User user, SortType sortType)

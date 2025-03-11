@@ -251,17 +251,6 @@ public class LogicTextViewTreeNode {
 		this.data = data;
 	}
 
-	/**
-	 * This method returns the edit rights for the {@link LogicTextViewTreeNode}
-	 * . The rights are returned as follows: <li>If the node has no rights then
-	 * it returns null. <li>If node is of type field then it returns the rights
-	 * of its parent logical record. <li>For the node of type physical file,if
-	 * its parent logical file node has no rights then returns null, else it
-	 * returns the rights of the physical file itself.
-	 * 
-	 * 
-	 * @return the edit rights for the {@link LogicTextViewTreeNode}
-	 */
 	public EditRights getRights() {
 		if (SAFRApplication.getUserSession().isSystemAdministrator()) {
 			return EditRights.ReadModifyDelete;

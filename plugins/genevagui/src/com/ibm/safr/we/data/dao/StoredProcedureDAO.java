@@ -32,10 +32,6 @@ public interface StoredProcedureDAO {
      * This method is used to get the version of SAFR stored procedures
      * installed in the metadata database
      * 
-     * @return A string representing the stored procedure version of the form
-     *         SD<version>.<major>.<minor>.<build>. e.g. SD4.13.002.73
-     * @throws DAOException
-     *             It throws an exception for database errors accessing the version.
      */
     public String getVersion() throws DAOException;
 }

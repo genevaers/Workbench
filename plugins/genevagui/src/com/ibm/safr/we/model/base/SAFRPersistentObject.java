@@ -94,7 +94,6 @@ abstract public class SAFRPersistentObject extends SAFRObject {
 	 * 
 	 * @param trans
 	 *            the SAFRTransfer object
-	 * @see doSetData
 	 */
 	protected void setObjectData(SAFRTransfer trans) {
 		// before setting the properties, cache the old values so that we can
@@ -122,7 +121,6 @@ abstract public class SAFRPersistentObject extends SAFRObject {
 	 * 
 	 * @param trans
 	 *            the SAFRTransfer object
-	 * @see doSetData
 	 */
 	protected void setTransferData(SAFRTransfer trans) {
 

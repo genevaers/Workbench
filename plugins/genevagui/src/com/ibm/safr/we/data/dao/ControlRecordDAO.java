@@ -90,7 +90,7 @@ public interface ControlRecordDAO {
 	/**
 	 * This method is used to retrieve a Control Record with the specified name.
 	 * 
-	 * @param controlrecordName
+	 * @param controlRecordName
 	 *            : The name of the Control Record which is to be retrieved.
 	 * @param controlRecordId
 	 *            : The Id of Control Record which is to be retrieved.

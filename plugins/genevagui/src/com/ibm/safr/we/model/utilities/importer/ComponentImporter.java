@@ -214,7 +214,6 @@ public abstract class ComponentImporter {
 	 * warning via the ConfirmWarningStrategy call back object.
 	 * 
 	 * @throws SAFRException
-	 * @see getConfirmationWarningStrategy
 	 */
 	protected void checkDuplicateIds() throws SAFRException {
 

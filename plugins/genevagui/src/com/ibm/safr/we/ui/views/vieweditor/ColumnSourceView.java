@@ -1886,7 +1886,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 	 * Used to populate the Column Source Value and Effective Date Value combos
 	 * if they are of type Source File Field
 	 * 
-	 * @param combo
+	 * @param comboViewer
 	 *            the Combo to be populated
 	 * @param comboType
 	 *            constant indicating whether the Combo to be populated is
@@ -1970,7 +1970,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 	/**
 	 * Used to populate the Lookup LR Combo
 	 * 
-	 * @param combo
+	 * @param comboViewer
 	 *            the Combo to be populated
 	 * @throws DAOException
 	 * @throws SAFRException
@@ -2015,7 +2015,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 	/**
 	 * Used to populate the Lookup Path Combo
 	 * 
-	 * @param combo
+	 * @param comboViewer
 	 *            the Combo to be populated
 	 * @param logicalRecordId
 	 * @throws DAOException
@@ -2068,7 +2068,7 @@ public class ColumnSourceView extends ViewPart implements ISelectionListener {
 	/**
 	 * Used to populate the Lookup Field Combo
 	 * 
-	 * @param combo
+	 * @param comboViewer
 	 *            the Combo to be populated
 	 * @param lookupPathId
 	 * @throws SAFRException

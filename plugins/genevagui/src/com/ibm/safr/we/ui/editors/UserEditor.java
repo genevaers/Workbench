@@ -794,12 +794,6 @@ public class UserEditor extends SAFREditorPart {
 
 	/**
 	 * Method to populate a combo box with the list of groups
-	 * 
-	 * @param comboBox
-	 *            the {@link Combo} control to be populated
-	 * @param allowBlank
-	 *            a boolean parameter which determines whether the user can
-	 *            select a blank value in the {@link Combo}
 	 */
 	protected void populateGroup(TableCombo comboBox) {
 		try {

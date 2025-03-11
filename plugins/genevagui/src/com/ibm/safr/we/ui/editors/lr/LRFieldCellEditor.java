@@ -798,7 +798,7 @@ public class LRFieldCellEditor extends EditingSupport {
 		} catch (SAFRValidationException e) {
             UIUtilities.handleWEExceptions(e,"Validation exception changing Logical Record Field",null);
         } catch (SAFRException e) {
-			UIUtilities.handleWEExceptions(e,"Error getting field values – DateTimeFormat,HeaderAlignment,NumericMask.",null);
+			UIUtilities.handleWEExceptions(e,"Error getting field values. DateTimeFormat,HeaderAlignment,NumericMask.",null);
 		}
 		getViewer().update(element, null);
 		if (dirtyFlag) {

@@ -92,7 +92,7 @@ public class ControlRecord extends SAFREnvironmentalComponent {
 	/**
 	 * Set FirstFiscalMonth of the Control Record.
 	 * 
-	 * @param FirstFiscalMonth
+	 * @param firstFiscalMonth
 	 *            to set FirstFiscalMonth of the Control Record.
 	 */
 	public void setFirstFiscalMonth(Integer firstFiscalMonth) {
@@ -112,8 +112,6 @@ public class ControlRecord extends SAFREnvironmentalComponent {
 	/**
 	 * Set BeginPeriod of the Control Record.
 	 * 
-	 * @param BeginPeriod
-	 *            to set BeginPeriod of the Control Record.
 	 */
 	public void setBeginPeriod(Integer beginPeriod) {
 		this.beginPeriod = beginPeriod;
@@ -132,8 +130,6 @@ public class ControlRecord extends SAFREnvironmentalComponent {
 	/**
 	 * Set EndPeriod of the Control Record.
 	 * 
-	 * @param EndPeriod
-	 *            to set EndPeriod of the Control Record.
 	 */
 	public void setEndPeriod(Integer endPeriod) {
 		this.endPeriod = endPeriod;

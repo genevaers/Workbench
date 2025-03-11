@@ -791,13 +791,6 @@ public class ViewColumnSource extends SAFREnvironmentalComponent {
 	/**
 	 * Validate Extract Column Assignment using this View.
 	 * 
-	 * @param logicText
-	 *            The format record filter logic text to be validated.
-	 * @return 
-	 * @throws DAOException
-	 * @throws SAFRException
-	 *             SAFRValidation exception will be thrown with a list of
-	 *             validation errors.
 	 */
 	public void validateExtractColumnAssignment(String logicText) throws DAOException, SAFRException {
 		LogicTextSyntaxChecker.checkSyntaxExtractAssign(logicText, view, viewSource, viewColumn);

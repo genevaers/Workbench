@@ -527,11 +527,6 @@ public class ViewColumn extends SAFRField {
 	 * specified ViewSource, adds it to the list of ViewColumnSources, then
 	 * returns the object.
 	 * 
-	 * @param viewSource
-	 *            the ViewSource to be associated with this ViewColumn
-	 * @return the new ViewColumnSource
-	 * @throws SAFRException
-	 * @see View.addViewColumnSource
 	 */
 	public ViewColumnSource addViewColumnSource(ViewSource viewSource)
 			throws SAFRException {

@@ -110,8 +110,6 @@ public class Environment extends SAFRComponent {
 	 *            name of the new Control Record
 	 * @param groupName
 	 *            name of a new or existing Group
-	 * @param viewFolderName
-	 *            name of the new View Folder
 	 * 
 	 * @throws IllegalStateException
 	 *             if the Environment already exists (if it's not new)

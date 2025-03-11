@@ -172,13 +172,6 @@ public class UIUtilities {
 	 * method of the combo box. <code>Key</code> here is the selected index of
 	 * the combo box.
 	 * 
-	 * @param <b>comboBox</b> the {@link Combo} control to be populated
-	 * @param <b>category</b> the code category
-	 * @param defaultSelected
-	 *            the default value to be displayed in the {@link Combo}
-	 * @param allowBlank
-	 *            a boolean parameter which determines whether the user can
-	 *            select a blank value in the {@link Combo}
 	 */
 	public static void populateComboBox(Combo comboBox, String category,
 			int defaultSelected, Boolean allowBlank) {
@@ -207,13 +200,6 @@ public class UIUtilities {
 	 * <code>getData(Key)</code> method of the CCombo box. <code>Key</code> here
 	 * is the selected index of the CCombo box.
 	 * 
-	 * @param <b>comboBox</b> the {@link CCombo} control to be populated
-	 * @param <b>category</b> the code category
-	 * @param defaultSelected
-	 *            the default value to be displayed in the {@link CCombo}
-	 * @param allowBlank
-	 *            a boolean parameter which determines whether the user can
-	 *            select a blank value in the {@link CCombo}
 	 */
 
 	public static void populateComboBox(CCombo comboBox, String category,
@@ -239,10 +225,6 @@ public class UIUtilities {
 
     /**
      * Populate DateTime format combo
-     * @param comboBox
-     * @param category
-     * @param defaultSelected
-     * @param allowBlank
      */
 	
     public static void populateDateTimeComboBox(CCombo comboBox, boolean numeric, boolean allowBlank) {
@@ -286,11 +268,6 @@ public class UIUtilities {
 	/**
 	 * Utility method to populate a combo box with the list of environments
 	 * 
-	 * @param comboBox
-	 *            the {@link Combo} control to be populated
-	 * @param allowBlank
-	 *            a boolean parameter which determines whether the user can
-	 *            select a blank value in the {@link Combo}
 	 */
 	public static void populateEnvironment(Combo comboBox, Boolean allowBlank,
 			User user) {
@@ -325,11 +302,6 @@ public class UIUtilities {
 	/**
 	 * Utility method to populate a combo box with the list of view folders
 	 * 
-	 * @param comboViewer
-	 *            the {@link TableComboViewer} control to be populated
-	 * @param environmentId
-	 *            ID of the environment, whose view folders need to be displayed
-	 *            in the {@link TableCombo}
 	 */
 	public static void populateViewFolder(TableComboViewer comboViewer,
 			Integer environmentId) {
@@ -379,9 +351,6 @@ public class UIUtilities {
 	 * {@link TableWrapData} object will have the following properties: 1.
 	 * Horizontal alignment = FILL_GRAB 2. Maximum width = 200
 	 * 
-	 * @param colspan
-	 *            int colspan for the returned {@link TableWrapData} object.
-	 * @return {@link TableWrapData} object.
 	 */
 	public static TableWrapData textTableData(int colspan) {
 		TableWrapData tempData = new TableWrapData(TableWrapData.FILL_GRAB);
@@ -395,14 +364,6 @@ public class UIUtilities {
 	 * textbox. The {@link TableWrapData} object will have the following
 	 * properties: 1. Horizontal alignment = FILL 2. Vertical alignment = FILL
 	 * 3. Height = as specified in the parameter passed. 4. Maximum width = 200
-	 * 
-	 * @param rowspan
-	 *            int rowspan for the returned {@link TableWrapData} object.
-	 * @param colspan
-	 *            int colspan for the returned {@link TableWrapData} object.
-	 * @param height
-	 *            int height for the returned {@link TableWrapData} object.
-	 * @return {@link TableWrapData} object.
 	 */
 	public static TableWrapData multiLineTextData(int rowspan, int colspan,
 			int height) {
@@ -423,13 +384,6 @@ public class UIUtilities {
 	 * be of either equal or unequal width depending on the boolean parameter
 	 * passed.
 	 * 
-	 * @param numcols
-	 *            the number of columns for the returned {@link TableWrapLayout}
-	 *            object.
-	 * @param equalWidth
-	 *            boolean parameter which determines whether or not the columns
-	 *            of the {@link TableWrapLayout} object must be of equal width.
-	 * @return {@link TableWrapLayout} object.
 	 */
 	public static TableWrapLayout createTableLayout(int numcols,
 			Boolean equalWidth) {
@@ -445,10 +399,6 @@ public class UIUtilities {
 	 * Utility method to set the text of a textbox if the string to be set is
 	 * not null
 	 * 
-	 * @param textBox
-	 *            the textbox whose text is to be set
-	 * @param value
-	 *            the string to be set
 	 */
 	public static void checkNullText(Text textBox, String value) {
 		if ((null != value)) {
@@ -462,11 +412,6 @@ public class UIUtilities {
 	 * Utility method to set the text of a combobox if the Code object whose
 	 * description is to be set is not null
 	 * 
-	 * @param comboBox
-	 *            the combobox whose text is to be set
-	 * @param code
-	 *            the Code object whose description needs to be set as the
-	 *            combobox's text
 	 */
 	public static void checkNullCombo(Combo comboBox, Code code) {
 		if (null != code) {
@@ -480,9 +425,6 @@ public class UIUtilities {
 	 * Utility method to retrieve the {@link Code} object associated with the
 	 * value selected in a combo box.
 	 * 
-	 * @param combo
-	 *            the {@link Combo} control whose value is being selected
-	 * @return {@link Code} object.
 	 */
 	public static Code getCodeFromCombo(Combo combo) {
 		Code returnCode = null;
@@ -497,9 +439,6 @@ public class UIUtilities {
 	/**
 	 * Retrieve {@link Date} from SWT {@link DateTime} control.
 	 * 
-	 * @param datePicker
-	 *            the SWT {@link DateTime} control
-	 * @return {@link Date}
 	 */
 	public static Date dateFromPicker(DateTime datePicker) {
 		Date returnDate;
@@ -513,10 +452,6 @@ public class UIUtilities {
 	/**
 	 * Sets the value of {@link DateTime} control to the supplied Date.
 	 * 
-	 * @param datePicker
-	 *            the SWT {@link DateTime} control.
-	 * @param date
-	 *            the {@link Date} object.
 	 */
 	public static void setDateInPicker(DateTime datePicker, Date date) {
 		Calendar calendar = new GregorianCalendar();
@@ -528,9 +463,6 @@ public class UIUtilities {
 	/**
 	 * Convert string to {@link Integer}.
 	 * 
-	 * @param string
-	 *            to be converted to {@link Integer}.
-	 * @return {@link Integer}.
 	 */
 	public static Integer stringToInteger(String string) {
 		Integer integerValue;
@@ -1522,7 +1454,7 @@ public class UIUtilities {
         try {
             Bundle bundle = Platform.getBundle("GenevaERS");
             if(bundle != null) {
-            	versionDetails += bundle.getVersion().toString() + "_RC8 " + getTimeStamp();
+            	versionDetails += bundle.getVersion().toString() + "_RC9 " + getTimeStamp();
             } else {
                 logger.log(Level.SEVERE, "Null getting version");            	
             }

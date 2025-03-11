@@ -400,17 +400,6 @@ public class SAFRAssociationFactory {
 
 	}
 
-	/**
-	 * This method is to get the Environment association of a Group.
-	 * 
-	 * @param group
-	 *            : The model object of the Group for which Environment
-	 *            association is to be retrieved.
-	 * @param environment
-	 *            : The model object of the Environment.
-	 * @return A GroupEnvironmentAssociation object.
-	 * @throws DAOException
-	 */
 	static public GroupEnvironmentAssociation getGroupToEnvironmentAssociation(
 			Group group, Integer environmentId) throws DAOException {
 		GroupEnvironmentAssociationTransfer grpEnvAssociationTransfer = DAOFactoryHolder

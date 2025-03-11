@@ -445,10 +445,6 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 	 * Checks the valid state of this step. A step is valid if its complete and
 	 * the target length matches its source length.
 	 * 
-	 * @throws SAFRException
-	 * @throws {@link SAFRValidationException} if a lookup path step is not
-	 *         valid. The error message is this exception will explain the
-	 *         reasons for this step to be invalid.
 	 */
 	public void checkValid() throws SAFRException {
 		SAFRValidationException sve = new SAFRValidationException();
@@ -472,10 +468,6 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
 	 * target LR/LF defined and the target LR's primary key length is greater
 	 * than 0.
 	 * 
-	 * @throws SAFRException
-	 * @throws {@link SAFRValidationException} if a lookup path step is not
-	 *         complete. The error message is this exception will explain the
-	 *         reasons for this step to be incomplete.
 	 */
 	public void checkComplete() throws SAFRException {
 		SAFRValidationException sve = new SAFRValidationException();

@@ -70,19 +70,8 @@ public class DB2ControlRecordDAO implements ControlRecordDAO {
 	private UserSessionParameters safrLogin;
 	private SQLGenerator generator = new SQLGenerator();
 
-	/**
-	 * Constructor for this class.
-	 * 
-	 * @param con
-	 *            : The connection set for database access.
-	 * @param params
-	 *            : The connection parameters which define the URL, userId and
-	 *            other details of the connection.
-	 * @param safrLogin
-	 *            : The parameters related to the user who has logged into the
-	 *            workbench.
-	 */
-	public DB2ControlRecordDAO(Connection con, ConnectionParameters params,
+	@SuppressWarnings("javadoc")
+    public DB2ControlRecordDAO(Connection con, ConnectionParameters params,
 			UserSessionParameters safrlogin) {
 		this.con = con;
 		this.params = params;

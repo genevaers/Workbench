@@ -74,8 +74,6 @@ public class ViewActivator {
 	}
     /**
      * Invoke activation 
-     * 
-     * @throws DAOException, SAFRException
      */ 
     public void activate() throws DAOException, SAFRException {
         executeTheActivation();
@@ -117,7 +115,6 @@ public class ViewActivator {
     /**
      * Activate
      * 
-     * @throws DAOException, SAFRException
      */ 
     protected void activateTheWholeView() throws DAOException, SAFRException {
 

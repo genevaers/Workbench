@@ -63,7 +63,7 @@ public class DB2CodeSetDAO implements CodeSetDAO {
 	 * @param params
 	 *            : The connection parameters which define the URL, userId and
 	 *            other details of the connection.
-	 * @param safrLogin
+	 * @param safrlogin
 	 *            : The parameters related to the user who has logged into the
 	 *            workbench.
 	 */

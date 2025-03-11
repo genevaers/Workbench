@@ -30,7 +30,6 @@ import java.util.List;
  * and should then register objects of this implementation class with the
  * model layer object that needs to issue the warning.
  * 
- * @see ImportUtility.registerConfirmWarningStrategy(ConfirmWarningStrategy)
  */
 public interface ConfirmWarningStrategy {
 

@@ -122,7 +122,7 @@ public interface GroupDAO {
 	 * This method returns the list of users associated with this group as a
 	 * list of GroupUserAssociationTransfer objects
 	 * 
-	 * @param groupid
+	 * @param groupId
 	 *            : The Id of the group whose associated user are to be found.
 	 * @return A list of GroupUserAssociationTransfer objects.
 	 * @throws DAOException
@@ -204,7 +204,7 @@ public interface GroupDAO {
 	 * associated with this Group.
 	 * 
 	 * 
-	 * @param associatedenvIds
+	 * @param associatedEnvIds
 	 *            : A list of the IDs of environments which are already
 	 *            associated with the Group.
 	 * @return A list of EnvironmentalQueryBean objects.
@@ -217,9 +217,6 @@ public interface GroupDAO {
 	 * creates, updates or deletes the Group to Environment associations using a
 	 * Stored Procedure named <code>GP_INSGRPENVTINFO</code>.
 	 * 
-	 * @param grpEnvAssocTransfers
-	 *            : A list of GroupEnvironmentAssociationTransfer objects which
-	 *            are to be created in SECENVIRON.
 	 * @throws DAOException
 	 */
 	public void persistGroupEnvironmentAssociations(

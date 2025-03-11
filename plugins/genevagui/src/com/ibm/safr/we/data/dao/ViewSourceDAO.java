@@ -58,7 +58,6 @@ public interface ViewSourceDAO {
 	 * @param viewSrcTransferList
 	 *            : A list of ViewSourceTransfer objects which are to be created
 	 *            or modified.
-	 * @return A list of ViewSourceTransfer which are created or modified.
 	 * @throws DAOException
 	 */
 	void persistViewSources(List<ViewSourceTransfer> viewSrcTransferList) throws DAOException;

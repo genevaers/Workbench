@@ -65,9 +65,6 @@ public class User extends SAFRPersistentObject {
 	 * Create a User with the specified userid. To be used when defining a new
 	 * user in the application. Only the User's userid will be set. All other
 	 * User attributes will need to be set after the User object is created.
-	 * 
-	 * @param userid
-	 *            userid.
 	 */
 	public User(String id) {
 		super();
@@ -539,11 +536,6 @@ public class User extends SAFRPersistentObject {
 	 * This method is used to authenticate the user by checking the specified
 	 * password against the user's password. The user's password is encrypted,
 	 * but will be decrypted to do the authentication.
-	 * 
-	 * @param String
-	 *            the password to check
-	 * @return boolean true if password matches this user's password, otherwise
-	 *         false
 	 */
 	public boolean authenticate(String password) {
 		this.authenticated = false;

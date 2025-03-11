@@ -27,7 +27,7 @@ public interface HeaderFooterDAO {
 	/**
 	 * This method is responsible for storing view header/footer in database.
 	 * 
-	 * @param headerFooterTransfer
+	 * @param headerFooterItemTransfer
 	 *            : A list of transfer objects.
 	 * @param viewId
 	 *            : The id of the view to which the header/footer is associated.

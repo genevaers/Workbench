@@ -115,10 +115,6 @@ public interface UserDAO {
 	 * This method returns the list of groups associated with this user as a
 	 * list of UserGroupAssociationTransfer objects
 	 * 
-	 * @param userid
-	 *            : The Id of the user whose associated groups are to be found.
-	 * @return A list of UserGroupAssociationTransfer objects.
-	 * @throws DAOException
 	 */
 	List<UserGroupAssociationTransfer> getAssociatedGroups(String userId)
 			throws DAOException;

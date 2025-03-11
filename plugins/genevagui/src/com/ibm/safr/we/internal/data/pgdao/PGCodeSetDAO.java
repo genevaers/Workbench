@@ -55,18 +55,6 @@ public class PGCodeSetDAO implements CodeSetDAO {
 	private ConnectionParameters params;
 	private PGSQLGenerator generator = new PGSQLGenerator();
 
-	/**
-	 * Constructor for this class.
-	 * 
-	 * @param con
-	 *            : The connection set for database access.
-	 * @param params
-	 *            : The connection parameters which define the URL, userId and
-	 *            other details of the connection.
-	 * @param safrLogin
-	 *            : The parameters related to the user who has logged into the
-	 *            workbench.
-	 */
 	public PGCodeSetDAO(Connection con, ConnectionParameters params,
 			UserSessionParameters safrlogin) {
 		this.con = con;

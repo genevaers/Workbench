@@ -65,10 +65,6 @@ public interface ViewDAO {
 	public List<ViewTransfer> queryAllLogicBlocks();
 	
     /**
-     * Get blob from older views
-     * @param view id
-     * @param environmentId
-     * @return logic text bytes
      */
 	
     byte [] getLogicTextBytes(Integer id, Integer environmentId);
@@ -202,17 +198,6 @@ public interface ViewDAO {
 	/**
 	 * This method is used to retrieve a View with the specified name.
 	 * 
-	 * @param viewName
-	 *            : The name of the View to be searched.
-	 * @param viewId
-	 *            : The Id of the view.
-	 * @param environmentId
-	 *            : The Id of the environment to which the view belongs.
-	 * @return: A view transfer objects which contains the details of all the
-	 *          fields for the view retrieved from VIEW table for the
-	 *          specified name.
-	 * @throws DAOException
-	 * 
 	 */
 	ViewTransfer getDuplicateView(String viewName, Integer viewId,
 			Integer environmentId) throws DAOException;
@@ -233,26 +218,6 @@ public interface ViewDAO {
 	 * This method searches views in the database according to the specified
 	 * parameters.
 	 * 
-	 * @param environmentId
-	 *            : Environment id of the component.
-	 * @param searchViewsIn
-	 *            : Enum {@link SearchViewsIn} value.
-	 * @param componentsToSearchViewList
-	 *            : List of integer ids.<br>
-	 *            <li>If Enum {@link SearchViewsIn} value is search specified
-	 *            views then list contains all the integer ids of the views to
-	 *            search. <br> <li>If Enum {@link SearchViewsIn} value is search
-	 *            specified viewfolders then list contains all the integer ids
-	 *            of the views folders to search.
-	 * @param searchCriteria
-	 *            : value of the enum {@link SearchCriteria}.
-	 * @param dateToSearch
-	 *            : date according to which serach is to be refined.
-	 * @param searchPeriod
-	 *            : value of the enum {@link SearchPeriod}.
-	 * @return {@link List} of all {@link FindTransfer} objects obtained after
-	 *         searching database.
-	 * @throws DAOException
 	 */
 	public List<FindTransfer> searchViewsToReplaceLogicText(
 			Integer environmentId, SearchViewsIn searchViewsIn,

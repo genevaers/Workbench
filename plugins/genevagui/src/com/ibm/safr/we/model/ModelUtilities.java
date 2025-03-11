@@ -49,10 +49,6 @@ public class ModelUtilities {
 	 * specified.The length of the string is the num specified.For eg. if the
 	 * parameter is given as 2, then this method returns a string having 2
 	 * spaces("  ").
-	 * 
-	 * @param num
-	 *            : The number of spaces to be generated.
-	 * @return: a string which comprise of the spaces.
 	 */
 	public static String genChar(int num, String character) {
 		String returnVal = "";

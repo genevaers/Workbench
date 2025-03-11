@@ -143,22 +143,6 @@ public class PGSQLGenerator {
         return statement;
     }
 	
-	/**
-	 * This function generates an <code>Update</code> statement
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param names
-	 *            : The list of columns in the table which are to be set after
-	 *            update.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>Where</code> clause of the SQL.
-	 * @return A string equivalent to the SQL <code>Update</code> statement with
-	 *         place holders in place of values to be set later.
-	 */
 	public String getUpdateStatement(String schema, String table,
 			List<String> names, List<String> idNames) {
 		String setStr = "";
@@ -200,22 +184,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This function generates an <code>Update</code> statement
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param names
-	 *            : The list of columns in the table which are to be set after
-	 *            update.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>Where</code> clause of the SQL.
-	 * @return A string equivalent to the SQL <code>Update</code> statement with
-	 *         place holders in place of values to be set later.
-	 */
 	public String getUpdateStatement(String schema, String table,
 			List<String> names, List<String> idNames,
 			boolean currentTimestampOnly) {
@@ -283,19 +251,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This function generates a <code>Delete</code> statement
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>Where</code> clause of the SQL.
-	 * @return A string equivalent to the SQL <code>Delete</code> statement with
-	 *         place holders in place of values to be set later.
-	 */
 	public String getDeleteStatement(String schema, String table,
 			List<String> idNames) {
 		String statement;
@@ -312,22 +267,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This function generates a <code>SelectAll</code> statement. This is used
-	 * for only those metadata components which are <b>not</b> environment
-	 * specific.
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param orderby
-	 *            : The list of columns with which the result set should be
-	 *            sorted. Provide <code>null</code> for unordered result set.
-	 * @return A string equivalent to the SQL <code>SelectAll</code> statement
-	 *         with the <code>ORDER
-	 *         BY</code> clause
-	 */
 	public String getSelectAllStatement(String schema, String table,
 			List<String> orderBy) {
 		String statement;
@@ -346,29 +285,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This function generates a SelectAll statement used to get a list of
-	 * metadata components with ID greater than 0(to neglect corrupted data)
-	 * from a particular environment. Optionally the user can sort the result
-	 * based on certain table columns using ORDER BY clause.
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param environmentId
-	 *            : The ID of the environment to which the metadata component
-	 *            belongs.
-	 * @param orderBy
-	 *            : The list of columns with which the result set of the query
-	 *            should be ordered.Provide <code>null</code> for the unordered
-	 *            result set
-	 * @param idField
-	 *            : The column name which contains ID of the metadata component.
-	 * @return A string equivalent to the SQL <code>SelectAll</code> checking
-	 *         environment id passed to it in <code>Where</code> clause and
-	 *         <code>Order By</code> clause.
-	 */
 	public String getAllMetadataComponent(String schema, String table,
 			Integer environmentId, List<String> orderBy, String idField) {
 		String statement;
@@ -391,24 +307,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This functions generates a
-	 * <code>Select<code> statement with <code>Order By</code> clause
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>WHERE</code> clause of the SQL.
-	 * @param orderby
-	 *            : The list of columns with which the result set of the query
-	 *            should be ordered.
-	 * @return A string equivalent to the SQL <code>Select</code> statement with
-	 *         place holders in place of values to be checked later and with
-	 *         which the result set should be ordered.
-	 */
 	public String getSelectStatement(String schema, String table,
 			List<String> idNames, List<String> orderBy) {
 		String statement;
@@ -444,27 +342,6 @@ public class PGSQLGenerator {
     }
 	
 	
-	/**
-	 * This functions generates a
-	 * <code>Select<code> statement with columns names specified explicitly and
-	 * an <code>Order By</code> clause
-	 * 
-	 * @param columns
-	 *            : The list of columns to be used in the Select clause.
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>WHERE</code> clause of the SQL.
-	 * @param orderby
-	 *            : The list of columns with which the result set of the query
-	 *            should be ordered.
-	 * @return A string equivalent to the SQL <code>Select</code> statement with
-	 *         place holders in place of values to be checked later and with
-	 *         which the result set should be ordered.
-	 */
 	public String getSelectColumnsStatement(List<String> columns,
 			String schema, String table, List<String> idNames,
 			List<String> orderBy) {
@@ -500,20 +377,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This function generates a callable statement for stored procedure
-	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param storedprocedure
-	 *            : The stored procedure which is to be called.
-	 * @param numparam
-	 *            : The number of parameter used as <code>IN</code> and
-	 *            <code>OUT</code> parameters in the stored procedure
-	 * @return A string equivalent to the SQL <code>Call</code> statement for
-	 *         stored procedures with place holders in place of values to be set
-	 *         later.
-	 */
 	public String getStoredProcedure(String schema, String storedprocedure,
 			int numParam) {
 		String statement;
@@ -570,20 +433,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-    /**
-     * This function generates a callable statement for stored procedure
-     * 
-     * @param schema
-     *            : The schema to be used.
-     * @param storedprocedure
-     *            : The stored procedure which is to be called.
-     * @param numparam
-     *            : The number of parameter used as <code>IN</code> and
-     *            <code>OUT</code> parameters in the stored procedure
-     * @return A string equivalent to the SQL <code>Call</code> statement for
-     *         stored procedures with place holders in place of values to be set
-     *         later.
-     */
     public String getReturnStoredProcedure(String schema, String storedprocedure,
             int numParam) {
         String statement;
@@ -603,20 +452,6 @@ public class PGSQLGenerator {
     }
 	
 	
-	/**
-	 * @param schema
-	 *            : The schema to be used
-	 * @param table
-	 *            : The table to be used
-	 * @param componentname
-	 *            : column which contains the name of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @param componentId
-	 *            : column which contains the ID of the metadata component for
-	 *            which duplicate entry is to be checked
-	 * @return A string equivalent to SQL <code>Select</code> statement with
-	 *         place holders in place of values to be set later.
-	 */
 	public String getDuplicateComponent(String schema, String table,
 			String componentName, String componentId) {
 		String statement;
@@ -630,25 +465,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-	/**
-	 * This method is used to retrieve a duplicate metadata component.
-	 * 
-	 * @param schema
-	 *            : the schema to be used
-	 * @param table
-	 *            : The table to be used
-	 * @param environ
-	 *            : column which contains the ID of the environment to which the
-	 *            component belongs.
-	 * @param componentname
-	 *            : column which contains the name of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @param componentid
-	 *            : column which contains the ID of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @return A string equivalent to SQL <code>Select</code> statement with
-	 *         place holders in place of values to be set later.
-	 */
 	public String getDuplicateComponent(String schema, String table,
 			String environ, String componentName, String componentId) {
 		String statement;
@@ -662,12 +478,6 @@ public class PGSQLGenerator {
 		return statement;
 	}
 
-    /**
-     * Generates a SQL string value based on val
-     * @param val
-     * @return
-     */
-    
     public String genStrParm(String val) {
         if (val == null) {
             return "null,";
@@ -677,12 +487,6 @@ public class PGSQLGenerator {
         }
     }
 
-    /**
-     * Generates a SQL int value based on val
-     * @param val
-     * @return
-     */
-    
     public String genTimeParm(Date val) {
         if (val == null) {
             return "null,";
@@ -693,12 +497,6 @@ public class PGSQLGenerator {
         }
     }
 
-    /**
-     * Generates a SQL int value based on val
-     * @param val
-     * @return
-     */
-    
     public String genIntParm(Integer val) {
         if (val == null) {
             return "null,";

@@ -1358,13 +1358,6 @@ public class View extends SAFRActivatedComponent {
      * Creates a new ViewColumnSource to associate the specified ViewColumn and
      * ViewSource, adds this new object to the View and returns it.
      * 
-     * @param viewColumn
-     *            one end of the ViewColumnSource association
-     * @param viewSource
-     *            the other end of the ViewColumnSource association
-     * @return the ViewColumnSource
-     * @throw IllegalArgumentException if a ViewColumnSource already exists for
-     *        the specified ViewColumn and ViewSource
      */
     public ViewColumnSource addViewColumnSource(ViewColumn viewColumn,
             ViewSource viewSource) {
@@ -2002,9 +1995,6 @@ public class View extends SAFRActivatedComponent {
 
     /**
      * Invoke activation 
-     * @param iWorkbenchPartSite 
-     * 
-     * @throws DAOException, SAFRException
      */ 
     public void activate(IWorkbenchPartSite iWorkbenchPartSite) throws DAOException, SAFRException {
         ViewActivator activator = new ViewActivator(this);

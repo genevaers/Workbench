@@ -166,12 +166,6 @@ public class MainTreeItem {
 		return name;
 	}
 
-	/**
-	 * This method sets metadata name for the component.
-	 * 
-	 * @param metadata
-	 *            name to set for the component.
-	 */
 	public void setName(String name) {
 		this.name = name;
 	}

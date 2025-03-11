@@ -93,13 +93,6 @@ public interface UserExitRoutineDAO {
 	/**
 	 * This method is used to delete a User-Exit Routine from the EXIT
 	 * table.
-	 * 
-	 * @param id
-	 *            : The ID of the User Exit Routine which is to be deleted.
-	 * @param envid
-	 *            : The ID of the environment to which the User-Exit Routine
-	 *            belongs.
-	 * @throws DAOException
 	 */
 	void removeUserExitRoutine(Integer id, Integer environmentId)
 			throws DAOException;

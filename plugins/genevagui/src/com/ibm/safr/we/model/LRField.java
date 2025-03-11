@@ -610,11 +610,6 @@ public class LRField extends SAFRField {
         return children;
     }
     
-	/**
-	 * @param redefines
-	 *            the redefines to set
-	 * @throws SAFRValidationException 
-	 */
 	public void setRedefine(Integer redefine) {
 	    if (redefine != null) {
             LRField redefineFld = logicalRecord.findLRField(redefine);

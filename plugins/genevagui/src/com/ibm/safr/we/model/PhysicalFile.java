@@ -315,15 +315,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
 		return fileTypeCode;
 	}
 
-	/**
-	 * Set FileTypeCode of the PhysicalFile.
-	 * 
-	 * @param FileTypeCode
-	 *            to set FileTypeCode of the PhysicalFile.
-	 * @throws NullPointerException
-	 *             if the Code object is null, as this is a mandatory field and
-	 *             cannot be null.
-	 */
 	public void setFileTypeCode(Code fileTypeCode) {
 		if (fileTypeCode == null) {
 			throw new NullPointerException("File Type code cannot be null.");
@@ -820,12 +811,6 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
             return schema;
         }
 
-        /**
-         * Sets the SQL schema
-         * 
-         * @param tableName
-         *            the name of the table to be set.
-         */
         public void setSchema(String schema) {
             PhysicalFile.this.schema = schema;
             markModified();

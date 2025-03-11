@@ -143,9 +143,6 @@ abstract public class SAFREnvironmentalComponent extends SAFRComponent {
 	 * This method is used to check whether the current logged in user has
 	 * specified permission.
 	 * 
-	 * @param permission : the permission to be checked.
-	 * @return true if the user has the specified create permission.
-	 * @throws SAFRException
 	 */
 	protected boolean hasCreatePermission()
 			throws SAFRException {
@@ -191,11 +188,6 @@ abstract public class SAFREnvironmentalComponent extends SAFRComponent {
      * This method is used to check whether the user has read rights on the
      * specified component. 
      * 
-     * @param componentType
-     *            : the type of the component for which the read rights are to
-     *            be checked.
-     * @return true if the user has read rights on the component.
-     * @throws SAFRException
      */
     protected boolean hasReadRights()
             throws SAFRException {

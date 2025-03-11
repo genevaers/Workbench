@@ -114,29 +114,15 @@ public interface ViewFolderDAO {
 
 	/**
 	 * This method is used to remove a View Folder with the specified Id
-	 * 
-	 * @param Id
-	 *            : The id of the view folder which is to be removed.
-	 * @param environmentId
-	 *            : The id of the environment in which the View Folder exists.
-	 * @throws DAOException
+	 * @param id 
+	 * @param environmentId 
+	 * @throws DAOException 
 	 */
 	void removeViewFolder(Integer id, Integer environmentId)
 			throws DAOException;
 
 	/**
 	 * This method is used to retrieve a View Folder with the specified name.
-	 * 
-	 * @param viewFolderName
-	 *            : the name of the View Folder to be searched.
-	 * @param viewFolderId
-	 *            : The id of the View Folder.
-	 * @param environmentId
-	 *            : The id of the environment to which the View Folder belongs.
-	 * @return: a View Folder transfer objects which contains the details of all
-	 *          the fields for the View Folder retrieved from VIEWFOLDER
-	 *          table for the specified name.
-	 * @throws DAOException
 	 */
 	ViewFolderTransfer getDuplicateViewFolder(String viewFolderName,
 			Integer viewFolderId, Integer environmentId) throws DAOException;
@@ -177,7 +163,6 @@ public interface ViewFolderDAO {
     /**
      * Add associated Views to the View folder
      * @param list
-     * @return
      */
     void persistAssociatedViews(List<ViewFolderViewAssociationTransfer> list);
 
@@ -185,14 +170,13 @@ public interface ViewFolderDAO {
      * Get all View associations for a View folder
      * @param environmentId
      * @param id
-     * @return
+     * @return vas
      */
     List<ViewFolderViewAssociationTransfer> getVFVAssociation(Integer environmentId, Integer id);
 
     /**
      * Get all View associations for an environment
      * @param environmentId
-     * @return
      */
     List<ViewFolderViewAssociationTransfer> getVFVAssociations(Integer environmentId);
 
@@ -200,7 +184,6 @@ public interface ViewFolderDAO {
      * Get all available View associations to add
      * @param environmentId
      * @param notInParam
-     * @return
      */
     List<ViewQueryBean> queryPossibleViewAssociations(int environmentId, List<Integer> notInParam);
 

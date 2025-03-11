@@ -95,8 +95,6 @@ public class BatchComponent {
 	}
 
 	/**
-	 * @param select
-	 *            the select to set
 	 */
 	public void setSelected(Boolean selected) {
 		this.selected = selected;

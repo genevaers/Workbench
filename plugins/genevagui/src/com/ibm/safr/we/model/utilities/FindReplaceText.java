@@ -112,6 +112,7 @@ public class FindReplaceText {
 	 * <li>contain view ids if search will be done in specific views.
 	 * <li>contain view folder ids if search will be done in specific view
 	 * folders.
+	 * </ul>
 	 * 
 	 * @param searchRangeList
 	 */
@@ -220,14 +221,6 @@ public class FindReplaceText {
 		return componentsToReplace;
 	}
 
-	/**
-	 * 
-	 * Sets the list of {@link FindReplaceComponent} which should be used to
-	 * replace the text in view's logic.
-	 * 
-	 * @param list
-	 *            of {@link FindReplaceComponent}
-	 */
 	public void setComponentsToReplace(
 			List<FindReplaceComponent> componentsToReplace) {
 		this.componentsToReplace = componentsToReplace;

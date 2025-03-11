@@ -498,7 +498,6 @@ public abstract class DependentComponentNode {
 	 *  the user decided to use the existing db component
 	 *  
 	 *  So fix up references etc
-	 * @param txfr 
 	 * @param parent 
 	 *  
 	 * @throws DAOException
@@ -514,7 +513,6 @@ public abstract class DependentComponentNode {
 	 * 
 	 * Need to walk the tree of components 
 	 * 
-	 * @param dcn
 	 * @throws DAOException 
 	 * @throws SAFRValidationException 
 	 */

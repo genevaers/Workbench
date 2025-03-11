@@ -815,12 +815,6 @@ public class MetadataView extends ViewPart implements ISelectionListener,
 		getSite().getPage().removePartListener(this);
 	}
 
-	/**
-	 * Method to create columns of the table in the metadata view
-	 * 
-	 * @param <b>TreeId</b> ID of the metadata component chosen in the navigator
-	 */
-
 	public void createColumns(TreeItemId treeId) {
 
 		// Remove existing columns and populate the table with new columns

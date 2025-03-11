@@ -110,7 +110,6 @@ public class ExportUtility extends SAFRObject {
 	 * @param componentType
 	 *            : The type of the component to be exported.It can be one of
 	 *            Physical File, Logical File,Logical Record,Lookup Path,View.
-	 * @param b 
 	 */
 	public ExportUtility(EnvironmentQueryBean environment, String exportPath, String fileName,
 			ComponentType componentType, boolean viewId, boolean viewNameViewId, boolean folderId, boolean folderNameFolderId, boolean multiple) {
@@ -147,13 +146,8 @@ public class ExportUtility extends SAFRObject {
 	 * Validates all the Components selected for export and adds the errors to
 	 * the list if any.
 	 * 
-	 * @throws DAOException
 	 * @throws SAFRValidationException
 	 * 
-	 * @throws IOException
-	 *             : Gives an IOEXception when there is some problem while
-	 *             generating an XML file or when the specified file path is not
-	 *             found.
 	 */
 	public void export(List<ExportComponent> exportCompList,Shell shell)
 			throws SAFRValidationException {

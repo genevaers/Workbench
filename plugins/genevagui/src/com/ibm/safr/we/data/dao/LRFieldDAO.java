@@ -125,12 +125,6 @@ public interface LRFieldDAO {
 	 * This method is used to retrieve all the LR fields in a particular
 	 * environment
 	 * 
-	 * @param environmentId
-	 *            : The Id of the environment
-	 * @param ids
-	 *            : The list of Ids whose LR Fields are to be retrieved
-	 * @return A List of LRFieldTransfer
-	 * @throws DAOException
 	 */
 	List<LRFieldTransfer> getLRFields(Integer currentEnvironmentId,
 			List<Integer> ids) throws DAOException;

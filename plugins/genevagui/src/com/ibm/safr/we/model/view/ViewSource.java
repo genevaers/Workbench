@@ -228,8 +228,6 @@ public class ViewSource extends SAFREnvironmentalComponent {
 	 * method sets the logic text for viewSource's Extract Record Filter without
 	 * affecting the state of the view.
 	 * 
-	 * @param extractRecordFilter
-	 *            :a String of logic text
 	 */
 	public void setCompiledExtractRecordFilter(
 			byte[] compiledExtractRecordFilter) {
@@ -351,8 +349,6 @@ public class ViewSource extends SAFREnvironmentalComponent {
     /**
      * Sets the logic text for the ViewSource's Extract Record Filter.
      * 
-     * @param extractRecordFilter
-     *            a String of logic text
      */
     public void setExtractRecordOutput(String extractRecordOutput) {
         this.extractRecordOutput = extractRecordOutput;

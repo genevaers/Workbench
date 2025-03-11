@@ -309,11 +309,6 @@ public class UserSession extends SAFRObject {
 
     /**
      * Returns the edit rights based on just the role of the current logged in user in the given environment
-     * @param componentType
-     * @param envId
-     * @return
-     * @throws DAOException
-     * @throws SAFRException
      */
     
     public EditRights getRoleEditRights(ComponentType componentType) throws DAOException {

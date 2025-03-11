@@ -44,7 +44,6 @@ public abstract class DAOUOW {
 	 * controlled by a meta data importer, calls to this method will be ignored.
 	 * 
 	 * @throws DAOException
-	 * @see isImporting
 	 */
 	final public void begin() throws DAOException {
 		if (multiComponentScope) {

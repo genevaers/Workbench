@@ -133,7 +133,7 @@ public interface EnvironmentDAO {
 	 *            the sort sequence (Id or Name)
 	 * @param userid
 	 *            the specified user
-	 * @param onlyWithEnvAdminRights
+	 * @param onlyWithAdminRights
 	 *            if true returns only those environment on user have admin
 	 *            rights
 	 * @return a List of EnvironmentQueryBean
@@ -190,7 +190,7 @@ public interface EnvironmentDAO {
 	 * This method is used to check if an environment is empty or not. Returns
 	 * True if the environment has dependencies or false if it has none.
 	 * 
-	 * @param id
+	 * @param environmentId
 	 *            : The ID of the Environment for which the dependency is to be
 	 *            checked.
 	 * @return : returns true if there are any dependencies or returns false if
@@ -203,7 +203,7 @@ public interface EnvironmentDAO {
 	/**
 	 * This method is used to delete an Environment from ENVIRON.
 	 * 
-	 * @param id
+	 * @param environmentId
 	 *            : The ID of the Environment which is to be deleted.
 	 * @throws DAOException
 	 */

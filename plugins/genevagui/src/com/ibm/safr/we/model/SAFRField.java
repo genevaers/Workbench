@@ -205,8 +205,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 
 	/**
 	 * This method is used to get the decimals.
-	 * 
-	 * @return: decimals.
 	 */
 	public Integer getDecimals() {
 		return decimals;
@@ -405,9 +403,6 @@ public abstract class SAFRField extends SAFREnvironmentalComponent {
 
 	/**
 	 * This method is used to set sort key label.
-	 * 
-	 * @param sortkeylabel
-	 *            . : The sort key label which is to be set.
 	 */
 	public void setSortKeyLabel(String sortKeyLabel) {
 		this.sortKeyLabel = sortKeyLabel;

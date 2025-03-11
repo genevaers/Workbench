@@ -131,6 +131,19 @@ under the License.
 					</environments>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.11.2</version>
+				<configuration>
+					<additionalJOptions>
+						<additionalJOption>-Xmaxerrs</additionalJOption>
+						<additionalJOption>65536</additionalJOption>
+						<additionalJOption>-Xmaxwarns</additionalJOption>
+						<additionalJOption>65536</additionalJOption>
+					</additionalJOptions>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

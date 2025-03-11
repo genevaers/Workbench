@@ -309,7 +309,6 @@ public class Codes {
 
 	/**
 	 * A way to populate codes without needing the database. Only to be used for unit testing
-	 * @return
 	 */
     public static Map<String, CodeSet> getAllCodeSets() {
         Map<String, CodeSet> allCodeSets = new HashMap<String, CodeSet>();

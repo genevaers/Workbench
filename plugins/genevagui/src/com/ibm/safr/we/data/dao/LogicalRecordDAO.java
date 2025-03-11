@@ -159,12 +159,6 @@ public interface LogicalRecordDAO {
 	/**
 	 * Returns the specified LR Indexes.
 	 * 
-	 * @param lrIndexes
-	 *            a List of LRIndex IDs
-	 * @param environmentId
-	 *            the ID of the Environment containing the LR Indexes
-	 * @return a List of LRIndexTransfer objects
-	 * @throws DAOException
 	 */
 	List<LRIndexTransfer> getLRIndexes(List<Integer> lrIndexIds, Integer environmentId)
 			throws DAOException;
@@ -172,22 +166,12 @@ public interface LogicalRecordDAO {
 	/**
 	 * Returns the LR Index Fields for the specified LR Index.
 	 * 
-	 * @param lrIndexId
-	 * 			the ID of the parent LR Index
-	 * @param environid
-	 * 			the ID of the Environment containing the LR Index Fields 
-	 * @return a List of LRIndexFieldTransfer objects
-	 * @throws DAOException
 	 */
 	public List<LRIndexFieldTransfer> getLRIndexFields(Integer lrIndexId, Integer environid) throws DAOException;
 	
 	/**
 	 * Insert or update the LRIndex for this Logical Record.
 	 * 
-	 * @param lrIndexTransfer
-	 *            the LRIndexTransfer object
-	 * @return the LRIndexTransfer
-	 * @throws DAOException
 	 */
 	LRIndexTransfer persistLRIndex(LRIndexTransfer lrIndexTransfer)
 			throws DAOException;
@@ -196,13 +180,6 @@ public interface LogicalRecordDAO {
 	 * Delete the specified LRIndex and clear the foreign key reference to it
 	 * in its parent Logical Record.
 	 * 
-	 * @param lrIndexId
-	 *            the LRIndex ID
-	 * @param lrId
-	 *            the Logical Record ID
-	 * @param environmentId
-	 *            the ID of the Logical Record's Environment
-	 * @throws DAOException
 	 */
 	void removeLRIndex(Integer lrIndexId, Integer lrId, Integer environmentId) throws DAOException;
 
@@ -210,21 +187,12 @@ public interface LogicalRecordDAO {
 	 * Delete the LR index for the specified LR and clear the foreign key reference to it
 	 * in the LR.
 	 * 
-	 * @param lrId
-	 *            the Logical Record ID
-	 * @param environmentId
-	 *            the ID of the Logical Record's Environment
-	 * @throws DAOException
 	 */
 	void removeLRIndexForLR(Integer lrId, Integer environmentId) throws DAOException;
 
 	/**
 	 * Delete any existing LRIndexField content, then insert the new content.
 	 * 
-	 * @param lrIndexFieldTransfers
-	 *            the List of LRIndexFieldTransfer objects
-	 * @return the List of LRIndexFieldTransfer objects
-	 * @throws DAOException
 	 */
 	void persistLRIndexFields(List<LRIndexFieldTransfer> lrIndexTransfers)
 			throws DAOException;
@@ -232,11 +200,6 @@ public interface LogicalRecordDAO {
 	/**
 	 * Delete the LRIndexField content for the specified LRIndex.
 	 * 
-	 * @param lrIndexId
-	 *            the LRIndex ID
-	 * @param environmentId
-	 *            the ID of the LRIndex's Environment
-	 * @throws DAOException
 	 */
 	void removeLRIndexFields(Integer lrIndexId, Integer environmentId)
 			throws DAOException;
@@ -244,11 +207,6 @@ public interface LogicalRecordDAO {
 	/**
 	 * Delete the LRIndexField content for the specified LR.
 	 * 
-	 * @param lrId
-	 *            the LR ID
-	 * @param environmentId
-	 *            the ID of the LR's Environment
-	 * @throws DAOException
 	 */
 	void removeLRIndexFieldsForLR(Integer lrId, Integer environmentId)
 			throws DAOException;
@@ -371,7 +329,7 @@ public interface LogicalRecordDAO {
 	/**
 	 * This method is used to deactivate the views.
 	 * 
-	 * @param viewIds
+	 * @param LRLFAssociationIds
 	 *            : The list of Ids of the views which are to be deactivated.
 	 * @param environmentId
 	 *            : The Id of the environment to which these lookups belong.
@@ -404,12 +362,6 @@ public interface LogicalRecordDAO {
 	 * This method is to retrieve a LR-LF association object through the
 	 * association Id.
 	 * 
-	 * @param LRLFAssociationId
-	 *            : The Id of LR-LF association.
-	 * @param environmentId
-	 *            : The Id of the environment to which the association belongs.
-	 * @return A ComponentAssociationTransfer object.
-	 * @throws DAOException
 	 */
 	ComponentAssociationTransfer getTargetLogicalFileAssociation(
 			Integer LRLFAssociationId, Integer environmentId)

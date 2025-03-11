@@ -39,12 +39,12 @@ public class SourceProvider extends AbstractSourceProvider {
 	public final static String ALLOW_MOVEDOWN_LRFIELD = "com.ibm.safr.we.ui.commands.SourceProvider.allowMoveDown";
 	/**
 	 *This source provider variable used for enabling or disabling LR field
-	 * paste & Paste Below command handler.
+	 * paste AND Paste Below command handler.
 	 */
 	public final static String ALLOW_INSERT_LRFIELD = "com.ibm.safr.we.ui.commands.SourceProvider.allowInsertLRField";	
     /**
      *This source provider variable used for enabling or disabling LR field
-     * paste & Paste Below command handler.
+     * paste and Paste Below command handler.
      */
     public final static String ALLOW_PASTE_LRFIELD = "com.ibm.safr.we.ui.commands.SourceProvider.allowPasteLRField";
 
@@ -74,7 +74,7 @@ public class SourceProvider extends AbstractSourceProvider {
 	
 	/**
 	 * This source provider variable used for enabling or disabling View Paste
-	 * left & View Paste right command handler.
+	 * left and View Paste right command handler.
 	 */
 	public final static String ALLOW_PASTE_VIEWCOLUMN = "com.ibm.safr.we.ui.commands.SourceProvider.allowPasteViewColumn";
 

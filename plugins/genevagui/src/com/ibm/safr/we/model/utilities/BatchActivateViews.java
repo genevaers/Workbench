@@ -52,7 +52,6 @@ public class BatchActivateViews {
      * any inactive components while activating, then those are added to the
      * loaderrors list.
      * 
-     * @param batchViewComponent
      * @throws SAFRException
      */
     public static void activate(Collection<BatchComponent> batchViewComponents, ConfirmWarningStrategy warningStrategy)

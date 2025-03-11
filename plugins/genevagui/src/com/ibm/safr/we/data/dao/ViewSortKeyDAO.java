@@ -51,8 +51,6 @@ public interface ViewSortKeyDAO {
 	 * 
 	 * @param vskTransferList
 	 *            : A List of ViewSortKeyTransfer objects.
-	 * @return A List of ViewSortKeyTransfer objects which are either created or
-	 *         modified.
 	 * @throws DAOException
 	 */
 	public void persistViewSortKeys(

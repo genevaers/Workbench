@@ -76,10 +76,6 @@ public interface LogicalFileDAO {
 	/**
 	 * This method is used to remove a Logical File with the specified Id
 	 * 
-	 * @param Id
-	 *            : The id of the logical file which is to be removed.
-	 * @param environmentId
-	 *            : The id of the environment in which the logical file exists.
 	 * @throws DAOException
 	 *             It throws an exception if no Logical File is there with the
 	 *             specified Id.
@@ -89,19 +85,6 @@ public interface LogicalFileDAO {
 
 	/**
 	 * This method is used to retrieve a Logical File with the specified name.
-	 * 
-	 * @param logicalFileName
-	 *            : The name of the logical file to be searched.
-	 * @param logicalFileId
-	 *            : The Id of the Logical file.
-	 * @param environmentId
-	 *            : The Id of the environment to which the logical file belongs.
-	 * @return: A Logical File transfer objects which contains the details of
-	 *          all the fields for the Logical File retrieved from LOGFILE
-	 *          table for the specified name.
-	 * @throws DAOException
-	 *             It throws an exception if no Logical File is there with the
-	 *             specified Id.
 	 */
 	LogicalFileTransfer getDuplicateLogicalFile(String logicalFileName,
 			Integer logicalFileId, Integer environmentId) throws DAOException;
@@ -229,16 +212,6 @@ public interface LogicalFileDAO {
 	 * to a view which are newly created and not retrieved in previous
 	 * dependency checks.
 	 * 
-	 * @param environmentId
-	 *            : The Id of the Environment to which the Logical File belongs.
-	 * @param LFPFAssociationIds
-	 *            : List of Ids of the associations between LF and PF.
-	 * @param exceptionList
-	 *            : List of association Ids which have been retrieved in
-	 *            previous dependency checks.
-	 * @return: A Map which has association id as the key and the list of
-	 *          dependent component transfer objects as value.
-	 * @throws DAOException
 	 */
 	Map<Integer, List<DependentComponentTransfer>> getAssociatedPFViewDependencies(
 			Integer environmentId, List<Integer> LFPFAssociationIds,
@@ -247,10 +220,6 @@ public interface LogicalFileDAO {
 	/**
 	 * Get the LF-PF associations in the specified environment.
 	 * 
-	 * @param environmentId
-	 *            : The Id of the Environment.
-	 * @return List<FileAssociationTransfer>
-	 * @throws DAOException
 	 */
 	List<FileAssociationTransfer> getLFPFAssociations(Integer environmentId)
 			throws DAOException;

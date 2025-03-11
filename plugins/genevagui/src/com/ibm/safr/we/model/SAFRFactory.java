@@ -144,17 +144,6 @@ public class SAFRFactory extends SAFRObject {
 		return env;
 	}
 
-	/**
-	 * This methods is used to get Environment having specified id.
-	 * 
-	 * @param id
-	 *            of the Environment to get.
-	 * @return Environment object having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If Environment with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
-	 */
 	public Environment getEnvironment(String name) throws SAFRException {
 
 		Environment env = null;
@@ -260,7 +249,7 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get Group from SAFR database with specified Group
 	 * name.
 	 * 
-	 * @param id
+	 * @param name
 	 *            of the group to search in SAFR database.
 	 * @return Group having specified id.
 	 * @throws SAFRNotFoundException
@@ -281,11 +270,6 @@ public class SAFRFactory extends SAFRObject {
 
 	}
 	
-	/**
-	 * Creates new Control Record in the current Environment..
-	 * 
-	 * @return Control Record object.
-	 */
 	public ControlRecord createControlRecord() {
 		return new ControlRecord(getCurrentEnvironmentId());
 	}
@@ -294,9 +278,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Control Record object created using a
 	 * transfer object.
 	 * 
-	 * @return Control Record object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public ControlRecord initControlRecord(ControlRecordTransfer trans)
 			throws DAOException, SAFRException {
@@ -307,13 +288,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This gets the Control Record with a specified id from the
 	 * users currently logged in environment.
 	 * 
-	 * @param id
-	 *            of the Control Record to get.
-	 * @return Control Record having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If ControlRecord with a specified Id is not in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public ControlRecord getControlRecord(Integer id) throws SAFRException {
 		return getControlRecord(id, getCurrentEnvironmentId());
@@ -322,15 +296,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get Control Record with a specified id from the
 	 * specified environment.
 	 * 
-	 * @param id
-	 *            of the Control Record to get.
-	 * @param environId 
-     *            the Environment containing the Control Record
-	 * @return Control Record having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If ControlRecord with a specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public ControlRecord getControlRecord(Integer id, Integer environId)
 			throws SAFRException {
@@ -350,13 +315,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Returns the CodeSet for the specified code category.
 	 * 
-	 * @param codeCategory
-	 *            the name of the CodeSet.
-	 * @return the required CodeSet
-	 * @throws IllegalStateException
-	 *             if the Codes have not yet been loaded by the application.
-	 * @throws IllegalArgumentException
-	 *             if a CodeSet cannot be found for the specified code category.
 	 */
 
 	public CodeSet getCodeSet(String codeCategory) {
@@ -375,10 +333,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * This method is used to get List of code set searched by their category.
 	 * 
-	 * @return Map of code sets keyed by code category.
-	 * @throws SAFRNotFoundException
-	 *             If no Codes are available in the code table.
-	 * @throws SAFRException.
 	 */
 	public Map<String, CodeSet> getAllCodeSets() throws SAFRException {
 		if (codeSets == null) {
@@ -431,8 +385,6 @@ public class SAFRFactory extends SAFRObject {
 	
 	/**
 	 * Creates new Physical File in the current Environment.
-	 * 
-	 * @return Physical file object.
 	 */
 	public PhysicalFile createPhysicalFile() {
 		return new PhysicalFile(getCurrentEnvironmentId());
@@ -441,10 +393,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Initializes and returns a new Physical File object created using a
 	 * transfer object.
-	 * 
-	 * @return Physical File object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public PhysicalFile initPhysicalFile(PhysicalFileTransfer trans)
 			throws DAOException, SAFRException {
@@ -455,13 +403,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method gets the specified Physical file from the user's current
 	 * environment.
 	 * 
-	 * @param id
-	 *            : the Id of the Physical file to be searched.
-	 * @return the physical file having the specified id.
-	 * @throws SAFRNotFoundException
-	 *             If PhysicalFile with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public PhysicalFile getPhysicalFile(Integer id) throws SAFRException {
 		return getPhysicalFile(id, getCurrentEnvironmentId());
@@ -471,15 +412,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method gets the specified Physical file from the specified
 	 * environment.
 	 * 
-	 * @param id
-	 *            : the Id of the Physical file to be searched.
-	 * @param environId
-	 *            : the Id of the Environment to be searched.
-	 * @return the physical file having the specified id and environment id.
-	 * @throws SAFRNotFoundException
-	 *             If PhysicalFile with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public PhysicalFile getPhysicalFile(Integer id, Integer environId)
 			throws SAFRException {
@@ -516,7 +448,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Creates new User Exit Routine in the current environment.
 	 * 
-	 * @return User Exit Routine object.
 	 */
 	public UserExitRoutine createUserExitRoutine() {
 		UserExitRoutine userExitRoutine = new UserExitRoutine(
@@ -557,15 +488,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method gets the User Exit Routine with specified id from the
 	 * specified Environment.
 	 * 
-	 * @param id
-	 *            of the User Exit Routine to get.
-	 * @param environId
-	 *            : the Id of the Environment to be searched.
-	 * @return User Exit Routine having specified id and environment id.
-	 * @throws SAFRNotFoundException
-	 *             If UserExitRoutine with the specified Id is not present in
-	 *             the database.
-	 * @throws SAFRException
 	 */
 	public UserExitRoutine getUserExitRoutine(Integer id, Integer environId)
 			throws SAFRException {
@@ -586,11 +508,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get all SAFR User Exit Routines from SAFR
 	 * database.
 	 * 
-	 * @return List of all SAFR User Exit Routines from SAFR database.
-	 * 
-	 * @throws DAOException
-	 *             when there is an error in retrieving data from database.
-	 * @throws SAFRException.
 	 */
 	public List<UserExitRoutine> getAllUserExitRoutines() throws DAOException,
 			SAFRException {
@@ -614,7 +531,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Creates new Logical File in current Environment.
 	 * 
-	 * @return Logical File object.
 	 */
 	public LogicalFile createLogicalfile() {
 		return new LogicalFile(getCurrentEnvironmentId());
@@ -624,9 +540,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Logical File object created using a
 	 * transfer object.
 	 * 
-	 * @return Logical File object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public LogicalFile initLogicalFile(LogicalFileTransfer trans)
 			throws DAOException, SAFRException {
@@ -637,9 +550,6 @@ public class SAFRFactory extends SAFRObject {
      * Initializes and returns a new ViewFolder object created using a
      * transfer object.
      * 
-     * @return ViewFolder object.
-     * @throws SAFRException
-     * @throws DAOException
      */
     public ViewFolder initViewFolder(ViewFolderTransfer trans)
             throws DAOException, SAFRException {
@@ -651,13 +561,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This methods gets the specified Logical File from the user's
 	 * current Environment.
 	 * 
-	 * @param id
-	 *            of the Logical File to get.
-	 * @return Logical File having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If LogicalFile with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LogicalFile getLogicalFile(Integer id) throws SAFRException {
 		return getLogicalFile(id, getCurrentEnvironmentId());
@@ -671,15 +574,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This methods gets the specified Logical File from the specified
 	 * Environment.
 	 * 
-	 * @param id
-	 *            of the Logical File to get.
-	 * @param environId
-	 *            the Environment containing the Logical File.
-	 * @return Logical File having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If LogicalFile with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LogicalFile getLogicalFile(Integer id, Integer environId)
 			throws SAFRException {
@@ -724,9 +618,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Logical Record object created using a
 	 * transfer object.
 	 * 
-	 * @return Logical Record object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public LogicalRecord initLogicalRecord(LogicalRecordTransfer trans)
 			throws DAOException, SAFRException {
@@ -737,8 +628,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Logical Record Field object created using a
 	 * transfer object.
 	 * 
-	 * @return Logical Record Field object.
-	 * @throws SAFRException
 	 */
 	public LRField initLRField(LRFieldTransfer trans) throws SAFRException {
 		return new LRField(trans);
@@ -747,13 +636,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Gets the specified Logical Record from the user's current environment.
 	 * 
-	 * @param id
-	 *            of the Logical Record to get.
-	 * @return Logical Record having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If LogicalRecord with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LogicalRecord getLogicalRecord(Integer id) throws SAFRException {
 		return getLogicalRecord(id, getCurrentEnvironmentId());
@@ -766,15 +648,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Gets the specified Logical Record from the specified Environment.
 	 * 
-	 * @param id
-	 *            of the Logical Record to get.
-	 * @param environId
-	 *            Environment containing the Logical Record.
-	 * @return Logical Record having specified id.
-	 * @throws SAFRNotFoundException
-	 *             If LogicalRecord with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LogicalRecord getLogicalRecord(Integer id, Integer environId) throws SAFRException {
 		LogicalRecord logicalRecord = null;
@@ -807,10 +680,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the LR fields of the specified Parent Logical
 	 * Record.
 	 * 
-	 * @param parentLR
-	 *            : the Logical Record whose LR Fields are to be retrieved.
-	 * @return a list of LR fields whose parent LR is specified.
-	 * @throws SAFRException
 	 */
 	public List<LRField> getLRFields(LogicalRecord parentLR)
 			throws SAFRException {
@@ -828,10 +697,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * This method is used to get the LR fields of the specified Logical Record.
 	 * 
-	 * @param logicalRecordId
-	 *            : the Logical Record whose LR Fields are to be retrieved.
-	 * @return a list of LR fields whose parent LR is specified.
-	 * @throws SAFRException
 	 */
 	public List<LRField> getLRFields(Integer logicalRecordId) throws SAFRException {
 		List<LRField> lrfs = new ArrayList<LRField>();
@@ -847,12 +712,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the LR fields corresponding to the list of ids
 	 * passed as parameter
 	 * 
-	 * @param envId
-	 *            : the id of the environment.
-	 * @param ids
-	 *            : the list of Ids whose LR Fields are to be retrieved
-	 * @return a list of LR fields
-	 * @throws SAFRException
 	 */
 	public List<LRField> getLRFields(Integer envId, List<Integer> ids)
 			throws SAFRException {
@@ -869,13 +728,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * This method is used to get the LR field with the specified ID.
 	 * 
-	 * @param id
-	 *            : the LRField id
-	 * @return an LRField
-	 * @throws SAFRNotFoundException
-	 *             If LRField with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LRField getLRField(Integer id, Boolean retrieveKeyInfo)
 			throws SAFRException {
@@ -896,13 +748,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * This method is used to get the LR field with the specified ID.
 	 * 
-	 * @param id : the LRField id
-	 * @param envId : environment id            
-	 * @return an LRField
-	 * @throws SAFRNotFoundException
-	 *             If LRField with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LRField getLRField(Integer id, Integer envId, Boolean retrieveKeyInfo)
 			throws SAFRException {
@@ -924,13 +769,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to retrieve the Logical Record from the specified
 	 * LRLFAssociation.
 	 * 
-	 * @param LRLFassociationId
-	 *            : the id of LRLF Association from which the Logical Record is
-	 *            to be retrieved.
-	 * @param environmentId
-	 *            : the id of the environment.
-	 * @return the Logical Record object.
-	 * @throws SAFRException
 	 */
 	public LogicalRecord getLogicalRecordFromLRLFAssociation(
 			Integer LRLFassociationId, Integer environmentId)
@@ -953,11 +791,6 @@ public class SAFRFactory extends SAFRObject {
 
 	/**
 	 * Creates new Lookup Path in the current Environment.
-	 * 
-	 * @return a Lookup Path object.
-	 * @throws SAFRException
-	 * @throws DAOException
-	 *             when there is an error in retrieving data from database.
 	 */
 	public LookupPath createLookupPath() throws SAFRException, DAOException {
 		return new LookupPath(getCurrentEnvironmentId());
@@ -967,9 +800,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Lookup path object created using a transfer
 	 * object.
 	 * 
-	 * @return Lookup path object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public LookupPath initLookupPath(LookupPathTransfer trans)
 			throws DAOException, SAFRException {
@@ -980,9 +810,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Lookup path step object created using a
 	 * transfer object and the parent lookup path.
 	 * 
-	 * @return Lookup Path Step object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public LookupPathStep initLookupPathStep(LookupPathStepTransfer trans,
 			LookupPath parentLookupPath, LogicalRecord sourceLR,
@@ -996,9 +823,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new Lookup path source field object created
 	 * using a transfer object and the parent lookup path step.
 	 * 
-	 * @return Lookup Path Source Field object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public LookupPathSourceField initLookupPathSourceField(
 			LookupPathSourceFieldTransfer trans, LookupPathStep parentStep)
@@ -1010,10 +834,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the Lookup path of the specified id in the
 	 * current environment.
 	 * 
-	 * @param id
-	 *            Lookup path id.
-	 * @return A Lookup path.
-	 * @throws SAFRException
 	 */
 	public LookupPath getLookupPath(Integer id) throws SAFRException {
 		return getLookupPath(id, getCurrentEnvironmentId());
@@ -1023,15 +843,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the Lookup path of the specified id and
 	 * specified environment id.
 	 * 
-	 * @param id
-	 *            Lookup path Id.
-	 * @param environId
-	 *            Environment Id from which the lookup path is retrieved .
-	 * @return A LookupPath.
-	 * @throws SAFRNotFoundException
-	 *             If LookupPath with the specified Id is not present in the
-	 *             database.
-	 * @throws SAFRException
 	 */
 	public LookupPath getLookupPath(Integer id, Integer environId)
 			throws SAFRException {
@@ -1054,10 +865,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the list of lookup paths steps present in the
 	 * specified Lookup Path.
 	 * 
-	 * @param parentLookup
-	 *            : the Lookup Path whose steps are to be retrieved.
-	 * @return a list of lookup path steps present in the specified Lookup Path.
-	 * @throws SAFRException
 	 */
 	public List<LookupPathStep> getLookupPathSteps(LookupPath parentLookup)
 			throws SAFRException {
@@ -1083,14 +890,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to get the source fields present in the specified
 	 * Lookup Path step.
 	 * 
-	 * @param parentLookkupPathStep
-	 *            : the lookup path step whose source fields are to be
-	 *            retrieved.
-	 * @return a list of source fields present in the specified Lookup Path
-	 *         step.
-	 * @throws DAOException
-	 *             when there is an error in retrieving data from database.
-	 * @throws SAFRException
 	 */
 	public List<LookupPathSourceField> getLookUpPathStepSourceFields(
 			LookupPathStep parentLookkupPathStep) throws DAOException,
@@ -1112,8 +911,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Creates new View in the current Environment.
 	 * 
-	 * @return a view object.
-	 * @throws SAFRException
 	 */
 	public View createView() {
 		return new View(getCurrentEnvironmentId());
@@ -1123,9 +920,6 @@ public class SAFRFactory extends SAFRObject {
 	 * Initializes and returns a new View object created using a transfer
 	 * object.
 	 * 
-	 * @return View object.
-	 * @throws SAFRException
-	 * @throws DAOException
 	 */
 	public View initView(ViewTransfer trans) throws DAOException, SAFRException {
 		return new View(trans);
@@ -1134,13 +928,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Get the existing View with the specified ID in the current environment.
 	 * 
-	 * @param id
-	 *            the View id
-	 * @return the View object
-	 * @throws SAFRException
-	 *             In case there are inactive dependencies and the view cannot
-	 *             be loaded, a subtype {@link SAFRDependencyException} will be
-	 *             thrown with a list of inactive components.
 	 */
 	public View getView(Integer id) throws SAFRException {
 
@@ -1150,17 +937,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Get the existing View with the specified ID and environment ID.
 	 * 
-	 * @param id
-	 *            the View id
-	 * @param environId
-	 *            id of the Environment containing the View
-	 * @return the View object
-	 * @throws SAFRNotFoundException
-	 *             If View with the specified Id is not present in the database.
-	 * @throws SAFRException
-	 *             In case there are inactive dependencies and the view cannot
-	 *             be loaded, a subtype {@link SAFRDependencyException} will be
-	 *             thrown with a list of inactive components.
 	 */
 	public View getView(Integer id, Integer environId) throws SAFRException	{
 		View view = null;
@@ -1204,8 +980,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Closes the active database connection.
 	 * 
-	 * @throws SAFRException
-	 *             if an error occurs.
 	 */
 	public void closeDatabaseConnection() throws SAFRException {
 		try {
@@ -1218,8 +992,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Keeps a backup copy of the active database connection.
 	 * 
-	 * @throws SAFRException
-	 *             if an error occurs.
 	 */
 	public void backupDatabaseConnection() {
 		DAOFactoryHolder.backupDAOFactory();
@@ -1228,8 +1000,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Keeps a backup copy of the active database connection.
 	 * 
-	 * @throws SAFRException
-	 *             if an error occurs.
 	 */
 	public void restoreDatabaseConnection() throws SAFRException {
 		DAOFactoryHolder.restoreDAOFactory();
@@ -1238,8 +1008,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Closes the active database connection.
 	 * 
-	 * @throws SAFRException
-	 *             if an error occurs.
 	 */
 	public void closeBackupDatabaseConnection() throws SAFRException {
 		try {
@@ -1252,8 +1020,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Returns URL used for current database connection.
 	 * 
-	 * @return Returns URL used for current database connection.
-	 * @throws DAOException
 	 */
 	public static String getCurrentDatabaseUrl() throws DAOException {
 
@@ -1264,7 +1030,6 @@ public class SAFRFactory extends SAFRObject {
 	/**
 	 * Returns the current environment in which the user is logged into.
 	 * 
-	 * @return Current environment in which the user is logged into.
 	 */
 	private Integer getCurrentEnvironmentId() {
 		return SAFRApplication.getUserSession().getEnvironment().getId();
@@ -1276,9 +1041,6 @@ public class SAFRFactory extends SAFRObject {
 	 * admin or if the general user has at least modify rights on the view
 	 * folder containing that view. 
 	 * 
-	 * @param viewId
-	 *            : The Id of the View which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeView(Integer viewId) throws SAFRException {
 		removeView(viewId, getCurrentEnvironmentId(),false);
@@ -1298,9 +1060,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to delete a User Exit Routine. Deletion is allowed
 	 * only if the User has delete rights on the User Exit Routine.
 	 * 
-	 * @param userExitRoutineId
-	 *            : The Id of the User Exit Routine which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeUserExitRoutine(Integer userExitRoutineId)
 			throws SAFRException {
@@ -1333,9 +1092,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to delete a Control Record. Deletion is allowed only
 	 * if the User is a System Admin or an Environment Admin.
 	 * 
-	 * @param controlRecordId
-	 *            : The Id of the Control Record which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeControlRecord(Integer controlRecordId)
 			throws SAFRException {
@@ -1371,10 +1127,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to delete a Physical File. This delete action can
 	 * only be performed if the user has delete rights on the specified Physical
 	 * File.
-	 * 
-	 * @param physicalFileId
-	 *            : The Id of the Physical File which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removePhysicalFile(Integer physicalFileId) throws SAFRException {
 	    
@@ -1412,10 +1164,6 @@ public class SAFRFactory extends SAFRObject {
 
 	/**
 	 * This method is to delete a Lookup Path.
-	 * 
-	 * @param lookupPathId
-	 *            : The Id of the Lookup Path which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeLookupPath(Integer lookupPathId) throws SAFRException {
 
@@ -1445,10 +1193,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to delete a View Folder. This delete action can only
 	 * be performed if the user has delete rights on the specified View Folder
 	 * and the View Folder does not contain any view in it.
-	 * 
-	 * @param viewFolderId
-	 *            : The Id of the View Folder which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeViewFolder(Integer viewFolderId,
 			SAFRValidationToken safrValidationToken) throws SAFRException {
@@ -1523,10 +1267,6 @@ public class SAFRFactory extends SAFRObject {
 	 * only be performed if the user has delete rights on the specified Logical
 	 * Record and the Logical Record does not have any View or Lookup Path
 	 * dependencies.
-	 * 
-	 * @param logicalRecordId
-	 *            : The Id of the Logical Record which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeLogicalRecord(Integer logicalRecordId)
 			throws SAFRException {
@@ -1573,10 +1313,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method is used to delete a Group. The user will only allowed to
 	 * delete a Group if user is a System Administrator. Deletion will be
 	 * restricted if Group is associated to any User or Environment.
-	 * 
-	 * @param groupId
-	 *            : The Id of the Group which is to be deleted.
-	 * @throws SAFRException
 	 */
 	public void removeGroup(Integer groupId) throws SAFRException {
 		if ((SAFRApplication.getUserSession().getUser().isSystemAdmin())) {
@@ -1677,13 +1413,6 @@ public class SAFRFactory extends SAFRObject {
 	 * This method will clear all the data from an environment. Only a system
 	 * admin or an environment admin is allowed to clear an environment.'
 	 * 
-	 * @param environmentId
-	 *            : The Id of the environment.
-	 * @throws SAFRException
-	 *             throws SAFRException if the environment to be cleared is not
-	 *             a system admin or an environment admin or if the environment
-	 *             admin tries to clear an environment which doesn't have admin
-	 *             rights.
 	 */
 	public void clearEnvironment(Integer environmentId) throws SAFRException {
 	    Environment env = getEnvironment(environmentId);
@@ -1708,11 +1437,6 @@ public class SAFRFactory extends SAFRObject {
 	 *This method will remove an existing environment. Only a system admin is
 	 * allowed to remove an environment.
 	 * 
-	 * @param environmentId
-	 *            : The Id of the environment.
-	 * @throws SAFRException
-	 * @throws SAFRDependencyException
-	 *             Thrown when dependencies found in this environment.
 	 */
 	public void removeEnvironment(Integer environmentId) throws SAFRException {
 

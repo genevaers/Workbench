@@ -112,14 +112,6 @@ public interface LookupPathStepDAO {
      * removes all the source fields belonging to the listed steps and then
      * then create the source fields in LOOKUPSRCKEY.
      * 
-     * @param lookupStepIds
-     *            : list of Ids of the Lookup Path Step to which the source fields
-     *            belong.
-     * @param sourceFieldsTrans
-     *            : The list of LookupPathSourceFieldTransfer objects which are
-     *            to be created.
-     * @return A list of LookupPathSourceFieldTransfer objects.
-     * @throws DAOException
      */
     void persistLookupPathStepsSourceFields(
             List<Integer> lookupStepIds,
@@ -130,12 +122,6 @@ public interface LookupPathStepDAO {
 	 * This method is to remove a Lookup Path Step Source Fields from
 	 * LOOKUPSRCKEY.
 	 * 
-	 * @param lkupPathStepId
-	 *            : The Id of the Lookup Step to which the source fields belong
-	 *            which are to be removed.
-	 * @param environmentId
-	 *            : The Id of the environment to which the source Fields belong.
-	 * @throws DAOException
 	 */
 	void removeLookupPathStepSourceField(Integer lkupPathStepId,
 			Integer environmentId) throws DAOException;

@@ -153,7 +153,7 @@ public class SQLGenerator {
 	 * @param names
 	 *            : The list of columns in the table which are to be set after
 	 *            update.
-	 * @param idnames
+	 * @param idNames
 	 *            : The list of columns which are to be checked in
 	 *            <code>Where</code> clause of the SQL.
 	 * @return A string equivalent to the SQL <code>Update</code> statement with
@@ -210,7 +210,7 @@ public class SQLGenerator {
 	 * @param names
 	 *            : The list of columns in the table which are to be set after
 	 *            update.
-	 * @param idnames
+	 * @param idNames
 	 *            : The list of columns which are to be checked in
 	 *            <code>Where</code> clause of the SQL.
 	 * @return A string equivalent to the SQL <code>Update</code> statement with
@@ -267,7 +267,7 @@ public class SQLGenerator {
 	 *            : The schema to be used.
 	 * @param table
 	 *            : The table to be used.
-	 * @param idnames
+	 * @param idNames
 	 *            : The list of columns which are to be checked in
 	 *            <code>Where</code> clause of the SQL.
 	 * @return A string equivalent to the SQL <code>Delete</code> statement with
@@ -298,7 +298,7 @@ public class SQLGenerator {
 	 *            : The schema to be used.
 	 * @param table
 	 *            : The table to be used.
-	 * @param orderby
+	 * @param orderBy
 	 *            : The list of columns with which the result set should be
 	 *            sorted. Provide <code>null</code> for unordered result set.
 	 * @return A string equivalent to the SQL <code>SelectAll</code> statement
@@ -370,21 +370,8 @@ public class SQLGenerator {
 
 	/**
 	 * This functions generates a
-	 * <code>Select<code> statement with <code>Order By</code> clause
+	 * Select statement with Order By clause
 	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>WHERE</code> clause of the SQL.
-	 * @param orderby
-	 *            : The list of columns with which the result set of the query
-	 *            should be ordered.
-	 * @return A string equivalent to the SQL <code>Select</code> statement with
-	 *         place holders in place of values to be checked later and with
-	 *         which the result set should be ordered.
 	 */
 	public String getSelectStatement(String schema, String table,
 			List<String> idNames, List<String> orderBy) {
@@ -423,24 +410,8 @@ public class SQLGenerator {
 	
 	/**
 	 * This functions generates a
-	 * <code>Select<code> statement with columns names specified explicitly and
-	 * an <code>Order By</code> clause
-	 * 
-	 * @param columns
-	 *            : The list of columns to be used in the Select clause.
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param table
-	 *            : The table to be used.
-	 * @param idnames
-	 *            : The list of columns which are to be checked in
-	 *            <code>WHERE</code> clause of the SQL.
-	 * @param orderby
-	 *            : The list of columns with which the result set of the query
-	 *            should be ordered.
-	 * @return A string equivalent to the SQL <code>Select</code> statement with
-	 *         place holders in place of values to be checked later and with
-	 *         which the result set should be ordered.
+	 * Select statement with columns names specified explicitly and
+	 * an Order By clause
 	 */
 	public String getSelectColumnsStatement(List<String> columns,
 			String schema, String table, List<String> idNames,
@@ -480,16 +451,6 @@ public class SQLGenerator {
 	/**
 	 * This function generates a callable statement for stored procedure
 	 * 
-	 * @param schema
-	 *            : The schema to be used.
-	 * @param storedprocedure
-	 *            : The stored procedure which is to be called.
-	 * @param numparam
-	 *            : The number of parameter used as <code>IN</code> and
-	 *            <code>OUT</code> parameters in the stored procedure
-	 * @return A string equivalent to the SQL <code>Call</code> statement for
-	 *         stored procedures with place holders in place of values to be set
-	 *         later.
 	 */
 	public String getStoredProcedure(String schema, String storedprocedure,
 			int numParam) {
@@ -512,16 +473,6 @@ public class SQLGenerator {
     /**
      * This function generates a callable statement for stored procedure
      * 
-     * @param schema
-     *            : The schema to be used.
-     * @param storedprocedure
-     *            : The stored procedure which is to be called.
-     * @param numparam
-     *            : The number of parameter used as <code>IN</code> and
-     *            <code>OUT</code> parameters in the stored procedure
-     * @return A string equivalent to the SQL <code>Call</code> statement for
-     *         stored procedures with place holders in place of values to be set
-     *         later.
      */
     public String getReturnStoredProcedure(String schema, String storedprocedure,
             int numParam) {
@@ -543,18 +494,6 @@ public class SQLGenerator {
 	
 	
 	/**
-	 * @param schema
-	 *            : The schema to be used
-	 * @param table
-	 *            : The table to be used
-	 * @param componentname
-	 *            : column which contains the name of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @param componentId
-	 *            : column which contains the ID of the metadata component for
-	 *            which duplicate entry is to be checked
-	 * @return A string equivalent to SQL <code>Select</code> statement with
-	 *         place holders in place of values to be set later.
 	 */
 	public String getDuplicateComponent(String schema, String table,
 			String componentName, String componentId) {
@@ -571,22 +510,6 @@ public class SQLGenerator {
 
 	/**
 	 * This method is used to retrieve a duplicate metadata component.
-	 * 
-	 * @param schema
-	 *            : the schema to be used
-	 * @param table
-	 *            : The table to be used
-	 * @param environ
-	 *            : column which contains the ID of the environment to which the
-	 *            component belongs.
-	 * @param componentname
-	 *            : column which contains the name of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @param componentid
-	 *            : column which contains the ID of the metadata component for
-	 *            which duplicate entry is to be checked.
-	 * @return A string equivalent to SQL <code>Select</code> statement with
-	 *         place holders in place of values to be set later.
 	 */
 	public String getDuplicateComponent(String schema, String table,
 			String environ, String componentName, String componentId) {

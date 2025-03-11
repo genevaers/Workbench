@@ -101,22 +101,6 @@ public class MetadataListDialog extends Dialog implements ISearchablePart {
     private int prevSelection = 0; 
 
 
-	/**
-	 * Create an MetadataListDialog object.
-	 * 
-	 * @param parentShell
-	 *            : shell.
-	 * @param treeId
-	 *            : one of the type of enum TreeItemId representing component
-	 *            for which list need to be populated.
-	 * 
-	 * @param Object
-	 *            : SafrPersistentObject required in case of retrieving list for
-	 *            association otherwise optional.
-	 * @param environmentId
-	 *            : ID of the environment from which the list need to be
-	 *            retrieved.
-	 */
 	public MetadataListDialog(Shell parentShell, TreeItemId treeId,
 			SAFRPersistentObject object, int environmentId) {
 		super(parentShell);

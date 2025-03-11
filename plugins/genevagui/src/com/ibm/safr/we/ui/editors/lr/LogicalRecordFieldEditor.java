@@ -848,14 +848,6 @@ public class LogicalRecordFieldEditor {
         return newField;
     }
 
-    /**
-     * This function is used to insert a new row in the table above the selected
-     * row
-     * 
-     * @param index
-     *            of the selected row
-     * @return the newly inserted LR Field
-     */
     protected LRField insertRowBefore(LRField field) {
         try {
             newField = logicalRecord.insertFieldBefore(field);
@@ -874,14 +866,6 @@ public class LogicalRecordFieldEditor {
         return newField;
     }
 
-    /**
-     * This function is used to insert a new row in the table above the selected
-     * row
-     * 
-     * @param index
-     *            of the selected row
-     * @return the newly inserted LR Field
-     */
     protected LRField insertRowAfter(LRField field) {
         try {
             newField = logicalRecord.insertFieldAfter(field);

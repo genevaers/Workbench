@@ -27,19 +27,17 @@ import com.ibm.safr.we.model.base.SAFRPersistentObject;
 
 /**
  * This class represents a list of SAFRPersistentObjects. This is an extension
- * of java.util.ArrayList<T> so it supports the interface java.util.List<T>.
+ * of java.util.ArrayList&gt;T&lt; so it supports the interface java.util.List&gt;T&lt;.
  * Instances of this class are created by substituting template symbol 'T' with
  * a subtype of SAFRPersistentObject. The class overrides the behaviour of
  * certain List methods with behaviour required for managing lists of persistent
  * objects within the SAFR application. For example, if such an object is to be
  * removed from a list, it should also be deleted from the database, so this
- * class overrides the behaviour of List<T>.remove to mark an object that is
+ * class overrides the behaviour of List&gt;T&lt;.remove to mark an object that is
  * already persistent for deletion, rather than physically removing it from the
  * list. This is necessary to that the data layer can erase the objects
  * persistent state when the object is stored.
  * 
- * @param <T>
- *            SAFRPersistentObject or one of its subclasses
  */
 public class SAFRList<T extends SAFRPersistentObject> extends ArrayList<T>
 		implements List<T> {

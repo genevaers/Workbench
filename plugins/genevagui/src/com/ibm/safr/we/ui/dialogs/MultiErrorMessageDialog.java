@@ -49,11 +49,12 @@ public class MultiErrorMessageDialog extends MessageDialog {
 	 * @param errorMessage
 	 *            error message to display in the dialog.
 	 * @param dialogImageType
-	 *            one of the following values:<li>MessageDialog.NONE for a
-	 *            dialog with no image <li>MessageDialog.ERROR for a dialog with
-	 *            an error image <li>MessageDialog.INFORMATION for a dialog with
-	 *            an information image <li>MessageDialog.QUESTION for a dialog
-	 *            with a question image <li>MessageDialog.WARNING for a dialog
+	 *            one of the following values:
+	 * MessageDialog.NONE for a
+	 *            dialog with no image MessageDialog.ERROR for a dialog with
+	 *            an error image MessageDialog.INFORMATION for a dialog with
+	 *            an information image MessageDialog.QUESTION for a dialog
+	 *            with a question image MessageDialog.WARNING for a dialog
 	 *            with a warning image
 	 * @param dialogButtonLabels
 	 *            an array of the string containing names to display on the
@@ -102,11 +103,11 @@ public class MultiErrorMessageDialog extends MessageDialog {
 	 * @param errorMessage
 	 *            error message to display in the dialog.
 	 * @param dialogImageType
-	 *            one of the following values:<li>MessageDialog.NONE for a
-	 *            dialog with no image <li>MessageDialog.ERROR for a dialog with
-	 *            an error image <li>MessageDialog.INFORMATION for a dialog with
-	 *            an information image <li>MessageDialog.QUESTION for a dialog
-	 *            with a question image <li>MessageDialog.WARNING for a dialog
+	 *            one of the following values:MessageDialog.NONE for a
+	 *            dialog with no image MessageDialog.ERROR for a dialog with
+	 *            an error image MessageDialog.INFORMATION for a dialog with
+	 *            an information image MessageDialog.QUESTION for a dialog
+	 *            with a question image MessageDialog.WARNING for a dialog
 	 *            with a warning image
 	 * @param dialogButtonLabels
 	 *            an array of the string containing names to display on the
