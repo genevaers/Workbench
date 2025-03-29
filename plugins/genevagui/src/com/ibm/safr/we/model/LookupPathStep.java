@@ -620,7 +620,7 @@ public class LookupPathStep extends SAFREnvironmentalComponent {
         }       
         if(!isForImport() && !isForMigration() && isTargetLFisToken()) {
             safrValidationException.setErrorMessage(Property.TARGETLF,
-                "    Target LF cannot be a token.");
+                "    Target PF cannot be a token.");
         }
         
 		
