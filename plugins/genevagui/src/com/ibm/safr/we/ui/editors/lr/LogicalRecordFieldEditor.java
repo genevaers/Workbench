@@ -604,7 +604,7 @@ public class LogicalRecordFieldEditor {
                 if (e.detail == SWT.TRAVERSE_TAB_NEXT) {
                     if (pt != null) {
                         if (pt.x == numCols - 1) {
-                            // At the end of row.
+                            // At the end of row.   
                             if (pt.y == numRows - 1) {
                                 // on the last row so add a new row
                                 addRow(true);
@@ -630,11 +630,13 @@ public class LogicalRecordFieldEditor {
                         } else if ((pt.x == ColumnType.DATETIMEFORMAT.ordinal() || 
                                     pt.x == ColumnType.SIGNED.ordinal() || 
                                     pt.x == ColumnType.DECIMALPLACES.ordinal() || 
-                                    pt.x == ColumnType.SCALING.ordinal())
-                            && currDataType == Codes.ALPHANUMERIC) {
+                                    pt.x == ColumnType.SCALING.ordinal())) {
+                            //&& currDataType == Codes.ALPHANUMERIC) {
                             // for alphanumeric skip Signed, Decimals, Scaling, 
                             // and Numeric Mask and go to Primary Key
-                            tableViewerLRFields.editElement(currField, ColumnType.PRIMARYKEY.ordinal());
+                            if(currDataType == Codes.ALPHANUMERIC) {
+                                tableViewerLRFields.editElement(currField, ColumnType.PRIMARYKEY.ordinal());
+                            }
                         }
                        
                         else if (pt.x == ColumnType.REDEFINES.ordinal()  && 
