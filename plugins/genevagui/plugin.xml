@@ -3459,14 +3459,22 @@ under the License.
       <handler
             class="com.ibm.safr.we.ui.commands.EditViewHandler"
             commandId="SAFRWE.genLRFromView">
-         <activeWhen>
+         <enabledWhen>
+            <and>
             <with
-                  variable="activeEditorId">
+                  variable="com.ibm.safr.we.ui.commands.SourceProvider.allowCopyViewSource">
                <equals
-                     value="SAFRWE.ViewEditor">
+                     value="TRUE">
                </equals>
             </with>
-         </activeWhen>
+               <with
+                     variable="com.ibm.safr.we.ui.commands.SourceProvider.allowEdit">
+                  <equals
+                        value="TRUE">
+                  </equals>
+               </with>
+            </and>
+         </enabledWhen>
       </handler>
       <handler
             class="com.ibm.safr.we.ui.commands.RefreshNavigatorViewHandler"
@@ -4142,24 +4150,40 @@ under the License.
             class="com.ibm.safr.we.ui.commands.EditViewHandler"
             commandId="SAFRWE.viewCopyDataSource">
          <enabledWhen>
+            <and>
             <with
                   variable="com.ibm.safr.we.ui.commands.SourceProvider.allowCopyViewSource">
                <equals
                      value="TRUE">
                </equals>
             </with>
+               <with
+                     variable="com.ibm.safr.we.ui.commands.SourceProvider.allowEdit">
+                  <equals
+                        value="TRUE">
+                  </equals>
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler
             class="com.ibm.safr.we.ui.commands.EditViewHandler"
             commandId="SAFRWE.viewColumnGenerator">
          <enabledWhen>
+            <and>
             <with
                   variable="com.ibm.safr.we.ui.commands.SourceProvider.allowCopyViewSource">
                <equals
                      value="TRUE">
                </equals>
             </with>
+               <with
+                     variable="com.ibm.safr.we.ui.commands.SourceProvider.allowEdit">
+                  <equals
+                        value="TRUE">
+                  </equals>
+               </with>
+            </and>
          </enabledWhen>
       </handler>
       <handler
