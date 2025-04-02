@@ -60,7 +60,6 @@ import com.ibm.safr.we.exceptions.SAFRNotFoundException;
 import com.ibm.safr.we.model.ControlRecord;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.query.ControlRecordQueryBean;
-import com.ibm.safr.we.model.query.EnvironmentalQueryBean;
 import com.ibm.safr.we.model.query.ViewFolderQueryBean;
 import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.model.view.View.Property;
@@ -99,7 +98,6 @@ public class ViewGeneralEditor {
         }
     
     }
-
     
     // member variables
     private ViewMediator mediator;
@@ -137,15 +135,8 @@ public class ViewGeneralEditor {
     private Label labelModifiedValue;
     private Label labelActivatedValue;
     private String defaultModStr = "-";
-    private Section sectionOutputLR;
-    private TableComboViewer comboOutputLRViewer;
-    private TableCombo comboOutputLR;
-
-    // state
-    private EnvironmentalQueryBean prevLR;
     
     private String selectedControlRecord = "";
-    private String selectedLogicalRecord = "";
     
     private Boolean toggleAccKey_m = true;
     private Boolean toggleAccKey_n = true;
@@ -421,7 +412,6 @@ public class ViewGeneralEditor {
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
     
-                comboOutputLR.setEnabled(true);
                 if (!UIUtilities.isEqual(view.getOutputFormat(),OutputFormat.Format_Report)) {
                     mediator.setModified(true);
                     view.setOutputFormat(OutputFormat.Format_Report);
@@ -683,7 +673,6 @@ public class ViewGeneralEditor {
 
     protected void populateCombos() {
         mediator.populateViewCombos(ComponentType.ControlRecord, comboControlRecord, comboControlRecordViewer, false);
-        mediator.populateViewCombos(ComponentType.LogicalRecord, comboOutputLR, comboOutputLRViewer, false);
     }
 
     protected void refreshControlsGeneral() {
@@ -702,19 +691,9 @@ public class ViewGeneralEditor {
             } else {
                 labelActivatedValue.setText(view.getActivatedBy() + " on "
                     + view.getActivatedTimeString() + " version " + view.getCompilerVersion());                
-            }
-            sectionOutputLR.setVisible(false);
-        } else {
-            sectionOutputLR.setVisible(true);
-        }
-
+            } 
+        } 
         loadSectionOutputFormat();
-
-        // if this is a new view then select output LR in combo
-        // this is required for the new toggle behaviour, so that the
-        // previously selected output LR is retained if the user comes back
-        // to view prop tab from the Grid tab.
-        comboOutputLR.setText(selectedLogicalRecord);
 
         try {
             // setting the Control Record combo
@@ -724,13 +703,6 @@ public class ViewGeneralEditor {
         } catch (SAFRNotFoundException snfe) {
             logger.log(Level.INFO, "", snfe);
             view.setControlRecord(null);
-        }
-
-        if (comboOutputLR.getTable().getSelection().length > 0) {
-            prevLR = (EnvironmentalQueryBean) comboOutputLR.getTable()
-                    .getSelection()[0].getData();
-        } else {
-            prevLR = null;
         }
         
         tableViewerViewFolders.setInput(view.getViewFolderAssociations());
@@ -806,9 +778,6 @@ public class ViewGeneralEditor {
     }
 
     protected void refreshExtractSource() {
-        comboOutputLR.clearSelection();
-        comboOutputLR.setEnabled(false);
-
         mediator.hideFormatPhase();
         mediator.hideFormatReport();
         mediator.hideFormatDelimited();
