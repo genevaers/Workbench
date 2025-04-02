@@ -1298,17 +1298,19 @@ public class SortKeyTitleView extends ViewPart implements IPartListener2, ISelec
 		// Added extra parameter 'checkPrevious' to forcefully refresh the grid
 		// without checking if user has clicked on another sort key if output
 		// format of the View is changed
-		label.setVisible(!show);
-		sortKeyTitleTableViewer.getGrid().setVisible(show);
-		/* CQ 7489. Nikita. 02/02/2010. */
-		// Refresh the grid only if the Sort Key has changed.
-		if (show
-				|| (checkPrevious && UIUtilities.isEqual(previousSortKey,
-						sortKey))) {
-			sortKeyTitleTableViewer.refresh();
-		} else {
-			enableDisableDeleteButton();
-		}
+	    if(!label.isDisposed()) {
+    		label.setVisible(!show);
+    		sortKeyTitleTableViewer.getGrid().setVisible(show);
+    		/* CQ 7489. Nikita. 02/02/2010. */
+    		// Refresh the grid only if the Sort Key has changed.
+    		if (show
+    				|| (checkPrevious && UIUtilities.isEqual(previousSortKey,
+    						sortKey))) {
+    			sortKeyTitleTableViewer.refresh();
+    		} else {
+    			enableDisableDeleteButton();
+    		}
+	    }
 
 	}
 
