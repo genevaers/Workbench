@@ -170,20 +170,6 @@ public class LogicTextLineStyler implements LineStyleListener, ExtendedModifyLis
 				quoteCntr += countCharacters(word, '"');
 				commentCntr += countCharacters(word, '\'');
 
-				// word is logical operator and and is not in proper case.
-				if ((commentCntr == 0) && (quoteCntr % 2 == 0)
-						&& parser.isLogicalOperator(word)
-						&& (!word.matches("(And|Or|Not)"))) {
-					// convert 1st character of the logical operator to
-					// upper case.
-					word = word.toLowerCase();
-					char[] charArray = word.toCharArray();
-					charArray[0] = Character.toUpperCase(charArray[0]);
-					word = new String(charArray);
-					sText.replaceTextRange(start, word.length(), word);
-					continue;
-				}
-
 				// check if word is in lower case.
 				if ((commentCntr == 0) && (quoteCntr % 2 == 0) && (word.compareTo(word.toUpperCase()) != 0)) {
 					// if it is keyword.
