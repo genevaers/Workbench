@@ -135,7 +135,7 @@ BEGIN
                                     WHERE C.ENVIRONID = B.ENVIRONID
                                     AND C.ENVIRONID=P_ENVIRONID
                                     AND C.VIEWID=P_ENTITYID
-                          AND (C.LOGICTYPECD=01 OR C.LOGICTYPECD=05)
+                          AND (C.LOGICTYPECD=01 OR C.LOGICTYPECD=02 OR C.LOGICTYPECD=05)
                                     AND C.LOOKUPID > 0);
 
  INSERT INTO SESSION.TMPDEPVW
@@ -521,7 +521,7 @@ IF P_FUNCTCODE = '1' OR P_FUNCTCODE = '2' THEN
   AND C.ENVIRONID=D.ENVIRONID
   AND C.LRFIELDID=D.LRFIELDID
   AND D.ENVIRONID=P_ENVIRONID
-  AND (D.LOGICTYPECD=01 OR D.LOGICTYPECD=05)
+  AND (D.LOGICTYPECD=01 OR C.LOGICTYPECD=02 OR D.LOGICTYPECD=05)
   AND D.VIEWID=P_ENTITYID
   AND D.LRFIELDID > 0;
 
@@ -900,7 +900,7 @@ IF P_FUNCTCODE = '2' OR P_FUNCTCODE = '3' THEN
                                 WHERE C.ENVIRONID=B.ENVIRONID
                                 AND C.ENVIRONID=P_ENVIRONID
                                 AND C.VIEWID=P_ENTITYID
-                       AND (C.LOGICTYPECD=01 OR C.LOGICTYPECD=05) 
+                       AND (C.LOGICTYPECD=01 OR C.LOGICTYPECD=02 OR C.LOGICTYPECD=05) 
                                 AND C.LRFIELDID > 0);
 
 
