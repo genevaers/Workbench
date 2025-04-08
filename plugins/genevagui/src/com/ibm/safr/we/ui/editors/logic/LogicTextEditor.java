@@ -19,6 +19,8 @@ package com.ibm.safr.we.ui.editors.logic;
 
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,8 +54,11 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.ISaveablePart2;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPartReference;
@@ -68,6 +73,7 @@ import com.ibm.safr.we.constants.ComponentType;
 import com.ibm.safr.we.constants.EditRights;
 import com.ibm.safr.we.constants.LogicTextType;
 import com.ibm.safr.we.data.DAOException;
+import com.ibm.safr.we.exceptions.SAFRCancelException;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.exceptions.SAFRViewActivationException;
@@ -781,4 +787,57 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	@Override
     public void partInputChanged(IWorkbenchPartReference partRef) {
     }	
+	
+	@Override
+	public int promptToSaveOnClose() {
+		// Implemented to allow users to modify data and try re-save if an error
+		// occurs while saving the dirty editor on close.
+		MessageDialog dialog = new MessageDialog(getSite().getShell(),
+				"Save Changes?", null, "Do you want to save changes made to "
+						+ getPartName() + "?", MessageDialog.QUESTION,
+				new String[] { "&Yes", "&No", "&Cancel" }, 0);
+		int returnVal = dialog.open();
+		// Display an hour glass till editor is closed.
+		Display.getCurrent().getActiveShell().setCursor(
+				Display.getCurrent().getActiveShell().getDisplay()
+						.getSystemCursor(SWT.CURSOR_WAIT));
+		if (returnVal == 0) {
+			// 'Yes' pressed, try to validate and save
+			try {
+				refreshModel();
+				validate();
+				storeModel();
+				setDirty(false);
+				refreshMetadataView();
+				returnVal = ISaveablePart2.NO; // already saved. return no to
+				// continue with other editors.
+			} catch (SAFRValidationException e) {
+				if (!(e.getMessageString().equals(""))) {
+					MessageDialog.openError(getSite().getShell(),
+							"Error saving " + getModelName() + ".", e
+									.getMessageString());
+					setDirty(false);
+				}
+				returnVal = ISaveablePart2.CANCEL; // allow users to modify data
+			} catch (SAFRCancelException e) {
+				//no-op, just cancel this operation
+			} catch (SAFRException e) {
+				setDirty(false);
+	            logger.log(Level.SEVERE, "Error saving " + getModelName(), e);
+				MessageDialog.openError(getSite().getShell(), "Error saving "
+						+ getModelName(), e.getMessage());
+				returnVal = ISaveablePart2.CANCEL; // allow users to modify data
+			}
+		} else if (returnVal == 1) {
+			// 'No' pressed, just return the code back.
+			viewInput.getViewEditor().setDirty(false);;
+			returnVal = ISaveablePart2.NO;
+		} else {
+			// 'Cancel' pressed, just return the code back.
+			returnVal = ISaveablePart2.CANCEL;
+		}
+		// return cursor to normal
+		Display.getCurrent().getActiveShell().setCursor(null);
+		return returnVal;
+	}
 }
