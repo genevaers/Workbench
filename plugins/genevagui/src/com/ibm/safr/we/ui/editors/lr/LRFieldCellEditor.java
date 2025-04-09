@@ -631,14 +631,13 @@ public class LRFieldCellEditor extends EditingSupport {
 				}
 				break;
 			case DATETIMEFORMAT:
-				val = (Integer) value;
+			    val = (Integer) value;
 				if (val < 0) {
 					val = 0;
 				}
 				if (editedField.getDateTimeFormatCode() == null && val > 0) {
 					dirtyFlag = true;
-				} else if (editedField.getDateTimeFormatCode() == null
-						&& val == 0) {
+				} else if (editedField.getDateTimeFormatCode() == null && val == 0) {
 					dirtyFlag = false;
 					editedField.setDateTimeFormatCode(null);
 				} else {
@@ -651,8 +650,7 @@ public class LRFieldCellEditor extends EditingSupport {
 				if (dirtyFlag == true) {
 					if (editedField.getDataTypeCode() != null) {
 						if ((editedField.getDataTypeCode().getGeneralId() == Codes.BINARY)
-								&& ((Code) comboDateTimeFormat.getData(Integer
-										.toString(val)) != null)) {
+								&& ((Code) comboDateTimeFormat.getData(Integer.toString(val)) != null)) {
 							editedField.setSigned(false);
 						}
 					}
@@ -798,7 +796,7 @@ public class LRFieldCellEditor extends EditingSupport {
 		} catch (SAFRValidationException e) {
             UIUtilities.handleWEExceptions(e,"Validation exception changing Logical Record Field",null);
         } catch (SAFRException e) {
-			UIUtilities.handleWEExceptions(e,"Error getting field values – DateTimeFormat,HeaderAlignment,NumericMask.",null);
+			UIUtilities.handleWEExceptions(e,"Error getting field values ï¿½ DateTimeFormat,HeaderAlignment,NumericMask.",null);
 		}
 		getViewer().update(element, null);
 		if (dirtyFlag) {

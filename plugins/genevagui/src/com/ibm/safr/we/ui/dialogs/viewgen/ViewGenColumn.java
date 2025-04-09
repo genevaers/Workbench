@@ -172,8 +172,8 @@ public class ViewGenColumn {
     private Button remove;    
     private Button up;    
     private Button down;    
-    private Table tableColumn;
-    private CheckboxTableViewer tableViewerColumn;
+    private Table columnsTable;
+    private CheckboxTableViewer columnsTableCheckboxViewer;
     private int prevSelection=-1;
 
     public ViewGenColumn(
@@ -215,7 +215,7 @@ public class ViewGenColumn {
         
         compositeButtons.setLayout(butLayout);
         
-        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "  C  ");
+        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add C ");
         constant.setEnabled(false);
         constant.addSelectionListener(new SelectionAdapter() {
 
@@ -225,7 +225,7 @@ public class ViewGenColumn {
             }
 
         });
-        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, " fx ");
+        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add fx ");
         formula.setEnabled(false);
         formula.addSelectionListener(new SelectionAdapter() {
 
@@ -269,7 +269,7 @@ public class ViewGenColumn {
     }
     
     protected void createTable() {
-        tableColumn = mediator.getGUIToolKit().createTable(compositeColumn,
+        columnsTable = mediator.getGUIToolKit().createTable(compositeColumn,
             SWT.FULL_SELECTION | SWT.SINGLE | SWT.V_SCROLL | SWT.BORDER | SWT.CHECK, false);
         GridData tabData = new GridData(SWT.RIGHT, SWT.TOP, false, false);
         tabData.minimumWidth = 600;
@@ -277,13 +277,13 @@ public class ViewGenColumn {
         tabData.minimumHeight = 340;
         tabData.heightHint = 340;
         tabData.horizontalSpan = 2;
-        tableColumn.setLayoutData(tabData);
-        tableViewerColumn = new CheckboxTableViewer(tableColumn);
-        tableColumn.setHeaderVisible(true);
-        tableColumn.setLinesVisible(true);
+        columnsTable.setLayoutData(tabData);
+        columnsTableCheckboxViewer = new CheckboxTableViewer(columnsTable);
+        columnsTable.setHeaderVisible(true);
+        columnsTable.setLinesVisible(true);
         
         for (ColumnType type : ColumnType.values()) {
-            TableViewerColumn column = new TableViewerColumn(tableViewerColumn, SWT.NONE);
+            TableViewerColumn column = new TableViewerColumn(columnsTableCheckboxViewer, SWT.NONE);
             column.setLabelProvider(new ColumnLabelProvider() {
 
                 @Override
@@ -298,78 +298,96 @@ public class ViewGenColumn {
             column.getColumn().setResizable(true);
         }
 
-        tableViewerColumn.setContentProvider(new ColumnContentGenerator());
-        tableViewerColumn.setLabelProvider(new ViewColumnLabelProvider());
+        columnsTableCheckboxViewer.setContentProvider(new ColumnContentGenerator());
+        columnsTableCheckboxViewer.setLabelProvider(new ViewColumnLabelProvider());
         
-        tableColumn.addListener(SWT.Selection, new Listener() {
+        columnsTable.addListener(SWT.Selection, new Listener() {
             
             public void handleEvent(Event e) {
                 if (e.detail == SWT.CHECK) {                  
-                    int selRow = tableColumn.indexOf((TableItem)e.item);  
+                    int selRow = columnsTable.indexOf((TableItem)e.item);  
                     int stateMask=e.stateMask;                  
                     if((stateMask & SWT.SHIFT)==SWT.SHIFT){
                         int prevRow = prevSelection;
                         
                         if((stateMask & SWT.CTRL)!=SWT.CTRL){
-                            tableViewerColumn.setAllChecked(false);
+                            columnsTableCheckboxViewer.setAllChecked(false);
                         }
                         if (prevRow > selRow) {
                             for (int i=selRow ; i<=prevRow ; i++) {
-                                Object element = tableViewerColumn.getElementAt(i);
-                                tableViewerColumn.setChecked(element, true);
+                                Object element = columnsTableCheckboxViewer.getElementAt(i);
+                                columnsTableCheckboxViewer.setChecked(element, true);
                             }
                         }
                         else {
                             for (int i=prevRow ; i<=selRow ; i++) {
-                                Object element = tableViewerColumn.getElementAt(i);
-                                tableViewerColumn.setChecked(element, true);
+                                Object element = columnsTableCheckboxViewer.getElementAt(i);
+                                columnsTableCheckboxViewer.setChecked(element, true);
                             }                            
                         }
                     }   
                     else {
-                        Object element = tableViewerColumn.getElementAt(selRow);
-                        if (tableViewerColumn.getChecked(element)) {
-                            prevSelection = tableColumn.indexOf((TableItem)e.item);
+                        Object element = columnsTableCheckboxViewer.getElementAt(selRow);
+                        if (columnsTableCheckboxViewer.getChecked(element)) {
+                            prevSelection = columnsTable.indexOf((TableItem)e.item);
                         }
                         else {
                             prevSelection = 0;
                         }
                     }
-                }                  
+                    Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
+                    if(checked.length == 0) {
+                        mediator.setErrorMessage("No columns selected");                        
+                    } else {
+                        writeCheckedPositions(checked);
+                    }
+                } else {
+                    columnsTable.deselectAll();
+                    mediator.setErrorMessage("Selection event. Selected " + columnsTable.getSelectionIndex());                    
+                }
               
             }
-        });
-        
-        tableColumn.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                constant.setEnabled(true);
-                formula.setEnabled(true);
-                up.setEnabled(true);
-                down.setEnabled(true);
-                mediator.refreshAddButtonState();                
-            }
 
         });
         
-        tableViewerColumn.addCheckStateListener(new ICheckStateListener() {
+        columnsTableCheckboxViewer.addCheckStateListener(new ICheckStateListener() {
 
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
-                if (tableViewerColumn.getCheckedElements().length == 0) {
+                int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
+                if ( numChecked == 0) {
+                    constant.setEnabled(false);
+                    formula.setEnabled(false);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
                     remove.setEnabled(false);
-                } else {
+                } else if (numChecked == 1) {
+                    constant.setEnabled(true);
+                    formula.setEnabled(true);
+                    up.setEnabled(true);
+                    down.setEnabled(true);
                     remove.setEnabled(true);                    
+                } else {
+                    constant.setEnabled(false);
+                    formula.setEnabled(false);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
+                    remove.setEnabled(true);
                 }
             }
             
         });
-        tableViewerColumn.setInput(1);
+        columnsTableCheckboxViewer.setInput(1);
+    }
+    
+    private void writeCheckedPositions(Object[] checked) {
+        int first = ((ViewColumn)checked[0]).getColumnNo();
+        int last  =((ViewColumn)checked[checked.length - 1]).getColumnNo();
+        mediator.setErrorMessage("First col selected " + first + " last col " + last);
     }
 
     public boolean isColumnSelected() {
-        return tableColumn.getSelectionIndex() != -1;
+        return columnsTableCheckboxViewer.getCheckedElements().length > 0;
     }
 
     public boolean viewHasNoColumns() {
@@ -377,7 +395,7 @@ public class ViewGenColumn {
     }
 
     public int numberColumnsFromSelection() {        
-        return tableColumn.getItemCount() - tableColumn.getSelectionIndex();
+        return columnsTable.getItemCount() - columnsTable.getSelectionIndex();
     }    
 
     public void putFields(
@@ -413,7 +431,7 @@ public class ViewGenColumn {
         if (viewHasNoColumns()) {
             position = 0;
         } else {
-            position = tableColumn.getSelectionIndex();
+            position = getInsertionPosition()-1;
         }
         
         insertColumns(lrFields, lpFields, position);
@@ -427,14 +445,13 @@ public class ViewGenColumn {
         if (viewHasNoColumns()) {
             position = 0;
         } else {
-            position = tableColumn.getSelectionIndex() + 1;
+            position = getInsertionPosition();
         }
         
         insertColumns(lrFields, lpFields, position);
     }
 
-    protected void insertColumns(List<LRField> lrFields,
-        List<FieldTreeNodeLeaf> lpFields, int position) {
+    protected void insertColumns(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields, int position) {
         int newPos = view.genFieldsAsColumns(lrFields, position, viewSource);
         
         // insert lookup path fields
@@ -446,129 +463,154 @@ public class ViewGenColumn {
                 lrNode.getLrBean(), lpNode.getLPBean());            
             newPos++;
         }
-        tableViewerColumn.setInput(1);
-        tableColumn.setSelection(newPos-1);
+        columnsTableCheckboxViewer.setInput(1);
+        columnsTable.setSelection(newPos-1);
     }
 
     private void overAll(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
+        int position = getInsertionPosition();
         
-        int position = tableColumn.getSelectionIndex();
-        
-        int newPos = view.overAllFieldsAsColumns(lrFields, position, viewSource);
-        
-        // insert lookup path fields
-        for (FieldTreeNodeLeaf lpLeaf : lpFields) {
-            FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
-            FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
-            
-            view.overAllLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                lrNode.getLrBean(), lpNode.getLPBean());            
-            newPos++;
+        //If total number of fields > number of columns it will overfow
+        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
+            mediator.setErrorMessage("Selection exceeds table size");
+        } else {
+            int newPos = view.overAllFieldsAsColumns(lrFields, position-1, viewSource);
+            // insert lookup path fields
+            for (FieldTreeNodeLeaf lpLeaf : lpFields) {
+                FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
+                FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
+                
+                view.overAllLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
+                    lrNode.getLrBean(), lpNode.getLPBean());            
+                newPos++;
+            }
+            columnsTableCheckboxViewer.setInput(1);
+            columnsTable.setSelection(newPos-1);
         }
-        tableViewerColumn.setInput(1);
-        tableColumn.setSelection(newPos-1);        
     }
     
     private void overSource(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
         
-        int position = tableColumn.getSelectionIndex();
-        
-        int newPos = view.overSourceFieldsAsColumns(lrFields, position, viewSource);
-        
-        // insert lookup path fields
-        for (FieldTreeNodeLeaf lpLeaf : lpFields) {
-            FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
-            FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
+        int position = getInsertionPosition();
+        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
+            mediator.setErrorMessage("Selection exceeds table size");
+        } else {
+            int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource);
             
-            view.overSourceLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                lrNode.getLrBean(), lpNode.getLPBean());            
-            newPos++;
+            // insert lookup path fields
+            for (FieldTreeNodeLeaf lpLeaf : lpFields) {
+                FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
+                FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
+                
+                view.overSourceLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
+                    lrNode.getLrBean(), lpNode.getLPBean());            
+                newPos++;
+            }
+            columnsTableCheckboxViewer.setInput(1);
+            columnsTable.setSelection(newPos-1);
         }
-        tableViewerColumn.setInput(1);
-        tableColumn.setSelection(newPos-1);        
     }
     
-    protected void putConstant() {
-        int position = tableColumn.getSelectionIndex();
-        
-        position = generateConstant(position);
-        tableViewerColumn.setInput(1);
-        if (position >= tableViewerColumn.getTable().getItemCount()-1) {
-            tableColumn.setSelection(position);                    
-        } else {
-            tableColumn.setSelection(position+1);                                
+    private int getInsertionPosition() {
+        int pos = 0;
+        Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
+        if(checked.length > 0) {
+            EditMode mode = mediator.getEditMode();
+            
+            switch (mode) {
+                case INSERTBEFORE :
+                case OVERALL:
+                case OVERSOURCE:
+                    pos = ((ViewColumn)checked[0]).getColumnNo();
+                    break;
+                case INSERTAFTER :
+                    pos =((ViewColumn)checked[checked.length - 1]).getColumnNo();
+                    break;
+            }
         }
+        return pos;
+    }
+    
+    protected ViewColumn putConstant() {
+        ViewColumn vc = null;
+        int position = getInsertionPosition();
+        if(position > 0) {
+            vc = generateConstant(position);
+            columnsTableCheckboxViewer.setInput(1);
+            if (position >= columnsTableCheckboxViewer.getTable().getItemCount()-1) {
+                columnsTable.setSelection(position);                    
+            } else {
+                columnsTable.setSelection(position+1);                                
+            }
+        }
+        return vc;
     }
 
     private void putFormula() {
-        int position = tableColumn.getSelectionIndex();
-        
-        position = generateConstant(position);
-        
-        ViewColumn col = view.getViewColumns().getActiveItems().get(position);        
+        //put constant and then flip it to a formula
+        ViewColumn col = putConstant();
         ViewColumnSource colSrc = col.getViewColumnSources().get(viewSource.getSequenceNo()-1);
         colSrc.setSourceType(SAFRApplication.getSAFRFactory().
             getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.FORMULA));
-        
-        tableViewerColumn.setInput(1);
-        if (position >= tableViewerColumn.getTable().getItemCount()-1) {
-            tableColumn.setSelection(position);                    
-        } else {
-            tableColumn.setSelection(position+1);                                
-        }
+        columnsTableCheckboxViewer.setInput(1);
     }
 
-    protected int generateConstant(int position) {
+    protected ViewColumn generateConstant(int position) {
+        ViewColumn vc = null;
         // get the edit mode
         EditMode mode = mediator.getEditMode();
         
         switch (mode) {
             case INSERTBEFORE :
-                view.addViewColumn(position+1);
+                vc = view.addViewColumn(position);
                 break;
             case INSERTAFTER :
-                view.addViewColumn(position+2);
+                vc = view.addViewColumn(position+1);
                 position++;
                 break;
             case OVERALL :
-                view.overAllAsConstant(position, viewSource);
+                view.overAllAsConstant(position-1, viewSource);
                 break;
             case OVERSOURCE :
-                view.overSourceAsConstant(position, viewSource);
+                view.overSourceAsConstant(position-1, viewSource);
                 break;
             default :
                 break;                    
         }
-        return position;
+        return vc;
     }
 
     protected void moveDown() {
-        int position = tableColumn.getSelectionIndex();        
-        if (position < view.getViewColumns().getActiveItems().size()-1) {
-            view.moveColumnRight(view.getViewColumns().getActiveItems().get(position));
-            tableViewerColumn.setInput(1);
-            tableColumn.setSelection(position+1);
+        int position = getInsertionPosition();        
+        if (position > 0 && position < view.getViewColumns().getActiveItems().size()) {
+            view.moveColumnRight(view.getViewColumns().getActiveItems().get(position-1));
+            columnsTableCheckboxViewer.setInput(1);
+            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
+        } else {
+            mediator.setErrorMessage("Cannot move out of bounds");
         }
-    }
+     }
 
     protected void moveUp() {
-        int position = tableColumn.getSelectionIndex();
-        if (position > 0) { 
-            view.moveColumnLeft(view.getViewColumns().getActiveItems().get(position));
-            tableViewerColumn.setInput(1);
-            tableColumn.setSelection(position-1);
+        int position = getInsertionPosition();
+        if (position > 1 && position <= view.getViewColumns().getActiveItems().size()) { 
+            view.moveColumnLeft(view.getViewColumns().getActiveItems().get(position-1));
+            columnsTableCheckboxViewer.setInput(1);
+            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
+        } else {
+            mediator.setErrorMessage("Cannot move out of bounds");
         }
     }
 
     
     protected void removeColumns() {
-        Object[] checked = tableViewerColumn.getCheckedElements();
+        Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
         for (Object obj : checked) {
             ViewColumn col = (ViewColumn)obj;
             view.removeViewColumn(col);
         }
-        tableColumn.removeAll();
-        tableViewerColumn.setInput(1);
+        columnsTable.removeAll();
+        columnsTableCheckboxViewer.setInput(1);
         remove.setEnabled(false);
     }
     

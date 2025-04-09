@@ -20,7 +20,9 @@ package com.ibm.safr.we.ui.dialogs.viewgen;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 
 import com.ibm.safr.we.model.LRField;
 import com.ibm.safr.we.ui.dialogs.viewgen.ViewGenCriteria.EditMode;
@@ -62,6 +64,15 @@ public class ViewGenMediator {
     public void setMessage(String string) {
         viewGenDialog.setMessage(string);
     }
+    
+    public void setInfoMessage(String string) {
+        viewGenDialog.setErrorMessage(null);
+        viewGenDialog.setMessage(string, SWT.ICON_INFORMATION);
+    }
+    
+    public void setErrorMessage(String string) {
+        viewGenDialog.setErrorMessage(string);
+   }
     
     public Font getFont() {
         return viewGenDialog.getFont();

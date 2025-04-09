@@ -440,45 +440,35 @@ public class ViewGenField {
 	}
 
     public void refreshAddButtonState() {
-        boolean leafSelected = false;
-        // check that tree has at least one leaf selected
-        @SuppressWarnings("unchecked")
-        Iterator<ISelection> selections = ((TreeSelection) fieldTreeViewer.getSelection()).iterator();
-        while (selections.hasNext()) {
-            FieldTreeNode node = (FieldTreeNode)selections.next();
-            if (node instanceof FieldTreeNodeLeaf) {
-                leafSelected = true;
-                break;
+        boolean enableAddition = false;
+        boolean leafSelected = !fieldTreeViewer.getSelection().isEmpty(); 
+        if (leafSelected ) {
+            // set message
+            if ((mediator.getEditMode().equals(EditMode.INSERTBEFORE) ||
+                 mediator.getEditMode().equals(EditMode.INSERTAFTER))) {
+                if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
+                    mediator.setErrorMessage("Select position to insert in the columns table");            
+                } else {
+                    enableAddition = true;
+                    mediator.setInfoMessage("Add the selected fields");
+                }
+            } else if ((mediator.getEditMode().equals(EditMode.OVERALL) || 
+                        mediator.getEditMode().equals(EditMode.OVERSOURCE))) {
+                if (!leafSelected) {
+                    mediator.setMessage("Select field to overwrite as a column");
+                } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
+                    mediator.setMessage("Select position to overwrite in the columns table");            
+                } else if (!enoughRoomForColumns()) {
+                    mediator.setMessage("Too many fields selected to overwrite columns");
+                } else {
+                    mediator.setMessage("");
+                    enableAddition = true;
+                }
             }
+        } else {
+            mediator.setErrorMessage("Select fields to insert");            
         }
-        
-        // set message
-        if ((mediator.getEditMode().equals(EditMode.INSERTBEFORE) ||
-             mediator.getEditMode().equals(EditMode.INSERTAFTER))) {
-            if (!leafSelected) {
-                mediator.setMessage("Select field to insert as a column");
-            } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
-                mediator.setMessage("Select position to insert in the columns table");            
-            } else {
-                fieldAdd.setEnabled(true);
-                mediator.setMessage("");
-                return;
-            }
-        } else if ((mediator.getEditMode().equals(EditMode.OVERALL) || 
-                    mediator.getEditMode().equals(EditMode.OVERSOURCE))) {
-            if (!leafSelected) {
-                mediator.setMessage("Select field to overwrite as a column");
-            } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
-                mediator.setMessage("Select position to overwrite in the columns table");            
-            } else if (!enoughRoomForColumns()) {
-                mediator.setMessage("Too many fields selected to overwrite columns");
-            } else {
-                mediator.setMessage("");
-                fieldAdd.setEnabled(true);
-                return;
-            }
-        }
-        fieldAdd.setEnabled(false);        
+        fieldAdd.setEnabled(enableAddition);        
     }
  
     private boolean enoughRoomForColumns() {
