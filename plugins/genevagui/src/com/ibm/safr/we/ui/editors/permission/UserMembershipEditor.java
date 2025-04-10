@@ -609,8 +609,8 @@ public class UserMembershipEditor extends SAFREditorPart implements
         ISourceProviderService sourceProviderService = (ISourceProviderService) PlatformUI
         .getWorkbench().getService(ISourceProviderService.class);
         OpenEditorPopupState service = (OpenEditorPopupState) sourceProviderService.
-            getSourceProvider(OpenEditorPopupState.GRPMEM);
-        service.setGrpMem(enabled);
+            getSourceProvider(OpenEditorPopupState.USRMEM);
+        service.setUsrMem(enabled);
     }
 	
     public UserGroupAssociation getCurrentSelection() {
