@@ -338,12 +338,9 @@ public class ViewGenColumn {
                     Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
                     if(checked.length == 0) {
                         mediator.setErrorMessage("No columns selected");                        
-                    } else {
-                        writeCheckedPositions(checked);
                     }
                 } else {
-                    columnsTable.deselectAll();
-                    mediator.setErrorMessage("Selection event. Selected " + columnsTable.getSelectionIndex());                    
+                    columnsTable.deselectAll();                 
                 }
               
             }
@@ -380,12 +377,6 @@ public class ViewGenColumn {
         columnsTableCheckboxViewer.setInput(1);
     }
     
-    private void writeCheckedPositions(Object[] checked) {
-        int first = ((ViewColumn)checked[0]).getColumnNo();
-        int last  =((ViewColumn)checked[checked.length - 1]).getColumnNo();
-        mediator.setErrorMessage("First col selected " + first + " last col " + last);
-    }
-
     public boolean isColumnSelected() {
         return columnsTableCheckboxViewer.getCheckedElements().length > 0;
     }
@@ -411,9 +402,6 @@ public class ViewGenColumn {
                 break;
             case INSERTAFTER :
                 insertAfter(lrFields, lpFields);
-                break;
-            case OVERALL :
-                overAll(lrFields, lpFields);
                 break;
             case OVERSOURCE :
                 overSource(lrFields, lpFields);
@@ -466,34 +454,12 @@ public class ViewGenColumn {
         columnsTableCheckboxViewer.setInput(1);
         columnsTable.setSelection(newPos-1);
     }
-
-    private void overAll(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
-        int position = getInsertionPosition();
-        
-        //If total number of fields > number of columns it will overfow
-        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
-            mediator.setErrorMessage("Selection exceeds table size");
-        } else {
-            int newPos = view.overAllFieldsAsColumns(lrFields, position-1, viewSource);
-            // insert lookup path fields
-            for (FieldTreeNodeLeaf lpLeaf : lpFields) {
-                FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
-                FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
-                
-                view.overAllLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                    lrNode.getLrBean(), lpNode.getLPBean());            
-                newPos++;
-            }
-            columnsTableCheckboxViewer.setInput(1);
-            columnsTable.setSelection(newPos-1);
-        }
-    }
     
     private void overSource(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
         
         int position = getInsertionPosition();
-        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
-            mediator.setErrorMessage("Selection exceeds table size");
+        if(lrFields.size() + lpFields.size() != columnsTableCheckboxViewer.getCheckedElements().length) {
+            mediator.setErrorMessage("Selected fields should match number of checked columns in table");
         } else {
             int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource);
             
@@ -508,6 +474,7 @@ public class ViewGenColumn {
             }
             columnsTableCheckboxViewer.setInput(1);
             columnsTable.setSelection(newPos-1);
+            mediator.setErrorMessage(null);
         }
     }
     
@@ -519,7 +486,6 @@ public class ViewGenColumn {
             
             switch (mode) {
                 case INSERTBEFORE :
-                case OVERALL:
                 case OVERSOURCE:
                     pos = ((ViewColumn)checked[0]).getColumnNo();
                     break;
@@ -568,9 +534,6 @@ public class ViewGenColumn {
                 vc = view.addViewColumn(position+1);
                 position++;
                 break;
-            case OVERALL :
-                view.overAllAsConstant(position-1, viewSource);
-                break;
             case OVERSOURCE :
                 view.overSourceAsConstant(position-1, viewSource);
                 break;
@@ -585,7 +548,6 @@ public class ViewGenColumn {
         if (position > 0 && position < view.getViewColumns().getActiveItems().size()) {
             view.moveColumnRight(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
-            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }
@@ -596,7 +558,6 @@ public class ViewGenColumn {
         if (position > 1 && position <= view.getViewColumns().getActiveItems().size()) { 
             view.moveColumnLeft(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
-            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }

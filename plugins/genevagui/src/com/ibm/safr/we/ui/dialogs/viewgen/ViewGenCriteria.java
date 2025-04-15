@@ -32,7 +32,7 @@ import com.ibm.safr.we.model.view.ViewSource;
 
 public class ViewGenCriteria {
 
-    enum EditMode {INSERTBEFORE,INSERTAFTER,OVERALL,OVERSOURCE};
+    enum EditMode {INSERTBEFORE,INSERTAFTER,OVERSOURCE};
     
     private ViewGenMediator mediator;    
     private ViewSource source;
@@ -88,14 +88,6 @@ public class ViewGenCriteria {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.INSERTAFTER;
-                mediator.refreshAddButtonState();
-            }
-        });
-        Button overAllBut = mediator.getGUIToolKit().createRadioButton(eGroup, "Overwrite both Column and Column Source");
-        overAllBut.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                editMode = EditMode.OVERALL;
                 mediator.refreshAddButtonState();
             }
         });

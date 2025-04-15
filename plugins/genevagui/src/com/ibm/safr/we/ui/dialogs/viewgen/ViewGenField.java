@@ -452,8 +452,7 @@ public class ViewGenField {
                     enableAddition = true;
                     mediator.setInfoMessage("Add the selected fields");
                 }
-            } else if ((mediator.getEditMode().equals(EditMode.OVERALL) || 
-                        mediator.getEditMode().equals(EditMode.OVERSOURCE))) {
+            } else if (mediator.getEditMode().equals(EditMode.OVERSOURCE)) {
                 if (!leafSelected) {
                     mediator.setMessage("Select field to overwrite as a column");
                 } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
