@@ -121,7 +121,6 @@ public class ViewGenMediator {
     }
 
 	public boolean isSelectedOneColumn() {
-		// TODO Auto-generated method stub
 		return viewGenColumn.isSelectedOneColumn();
 	}
 
