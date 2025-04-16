@@ -115,6 +115,15 @@ public class ViewGenMediator {
     public void refreshDialog() {
     	//viewGenDialog.refresh();
     }
+    
+    public boolean isCorFxAdded() {
+    	return viewGenColumn.isCorFxAdded();
+    }
+
+	public boolean isSelectedOneColumn() {
+		// TODO Auto-generated method stub
+		return viewGenColumn.isSelectedOneColumn();
+	}
 
 
 

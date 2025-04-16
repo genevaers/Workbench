@@ -2987,19 +2987,19 @@ public class View extends SAFRActivatedComponent {
         setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
     }
     
-    public int overSourceFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc) {
+    public int overSourceFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc, Object[] checkedElements) {
         int i = 0;
         for (; i < lrFields.size(); i++) {
             LRField lrField = lrFields.get(i);
-            ViewColumn vc = viewColumns.get(startPos+i);
+            ViewColumn vc = (ViewColumn) checkedElements[startPos+i];
             setColumnSourceField(vc, lrField, viewSrc);
-        }      
+        }
         return startPos+i;
     }
     
     public void overSourceLPFieldAsColumn(LRField field, int position, ViewSource viewSrc,
-        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean) {
-        ViewColumn vc = viewColumns.get(position);
+        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean, Object[] checkedElements) {
+        ViewColumn vc = (ViewColumn) checkedElements[position];
         setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
     }
 

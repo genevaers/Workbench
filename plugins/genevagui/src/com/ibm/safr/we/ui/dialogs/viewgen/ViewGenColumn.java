@@ -175,6 +175,7 @@ public class ViewGenColumn {
     private Table columnsTable;
     private CheckboxTableViewer columnsTableCheckboxViewer;
     private int prevSelection=-1;
+    private boolean isConstantAdded = false;
 
     public ViewGenColumn(
         ViewGenMediator mediator, 
@@ -458,10 +459,12 @@ public class ViewGenColumn {
     private void overSource(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
         
         int position = getInsertionPosition();
-        if(lrFields.size() + lpFields.size() != columnsTableCheckboxViewer.getCheckedElements().length) {
+        Object[] checkedElements = columnsTableCheckboxViewer.getCheckedElements();
+        if(lrFields.size() + lpFields.size() != checkedElements.length) {
             mediator.setErrorMessage("Selected fields should match number of checked columns in table");
         } else {
-            int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource);
+        	
+            int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource, checkedElements);
             
             // insert lookup path fields
             for (FieldTreeNodeLeaf lpLeaf : lpFields) {
@@ -469,7 +472,7 @@ public class ViewGenColumn {
                 FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
                 
                 view.overSourceLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                    lrNode.getLrBean(), lpNode.getLPBean());            
+                    lrNode.getLrBean(), lpNode.getLPBean(), checkedElements);            
                 newPos++;
             }
             columnsTableCheckboxViewer.setInput(1);
@@ -508,6 +511,7 @@ public class ViewGenColumn {
             } else {
                 columnsTable.setSelection(position+1);                                
             }
+            isConstantAdded = true;
         }
         return vc;
     }
@@ -574,7 +578,14 @@ public class ViewGenColumn {
         columnsTableCheckboxViewer.setInput(1);
         remove.setEnabled(false);
     }
+
+	public boolean isSelectedOneColumn() {
+		return columnsTableCheckboxViewer.getCheckedElements().length==1;
+	}
     
+	public boolean isCorFxAdded() {
+		return this.isConstantAdded;
+	}
     
     
 }

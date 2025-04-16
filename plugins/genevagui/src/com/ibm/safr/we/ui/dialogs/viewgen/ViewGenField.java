@@ -448,9 +448,11 @@ public class ViewGenField {
                  mediator.getEditMode().equals(EditMode.INSERTAFTER))) {
                 if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
                     mediator.setErrorMessage("Select position to insert in the columns table");            
-                } else {
+                } else if (mediator.isSelectedOneColumn()) {
                     enableAddition = true;
                     mediator.setInfoMessage("Add the selected fields");
+                } else {
+                	mediator.setErrorMessage("Select only one position to insert in the columns table");
                 }
             } else if (mediator.getEditMode().equals(EditMode.OVERSOURCE)) {
                 if (!leafSelected) {
