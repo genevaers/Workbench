@@ -141,7 +141,7 @@ public class ViewGenDialog extends TitleAreaDialog {
             MessageDialog dialog = new MessageDialog(Display.getCurrent()
                     .getActiveShell(),
 					"Constant/Formula Colums", null,
-					"Make sure to fill in other details for Constant/Formula added by View Column Generator",
+					"Please complete the edit of any added Columns or Formulas.",
 					MessageDialog.INFORMATION,
 					0);
             dialog.open();

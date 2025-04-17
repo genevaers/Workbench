@@ -442,11 +442,13 @@ public class ViewGenField {
     public void refreshAddButtonState() {
         boolean enableAddition = false;
         boolean leafSelected = !fieldTreeViewer.getSelection().isEmpty(); 
-        if (leafSelected ) {
+//        if (leafSelected ) {
             // set message
             if ((mediator.getEditMode().equals(EditMode.INSERTBEFORE) ||
                  mediator.getEditMode().equals(EditMode.INSERTAFTER))) {
-                if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
+            	if (!leafSelected) {
+            		mediator.setErrorMessage("Select fields to insert");  
+            	} else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
                     mediator.setErrorMessage("Select position to insert in the columns table");            
                 } else if (mediator.isSelectedOneColumn()) {
                     enableAddition = true;
@@ -456,19 +458,16 @@ public class ViewGenField {
                 }
             } else if (mediator.getEditMode().equals(EditMode.OVERSOURCE)) {
                 if (!leafSelected) {
-                    mediator.setMessage("Select field to overwrite as a column");
+                    mediator.setErrorMessage("Select field to overwrite as a column");
                 } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
-                    mediator.setMessage("Select position to overwrite in the columns table");            
+                    mediator.setErrorMessage("Select position to overwrite in the columns table");            
                 } else if (!enoughRoomForColumns()) {
-                    mediator.setMessage("Too many fields selected to overwrite columns");
+                    mediator.setErrorMessage("Selected fields should match number of checked columns in table");
                 } else {
-                    mediator.setMessage("");
+                    mediator.setInfoMessage("Overwrite selected column source");
                     enableAddition = true;
                 }
             }
-        } else {
-            mediator.setErrorMessage("Select fields to insert");            
-        }
         fieldAdd.setEnabled(enableAddition);        
     }
  
@@ -488,9 +487,9 @@ public class ViewGenField {
             }
         }
         
-        int numAvailColumns = mediator.numberColumnsFromSelection();
+        int numColumnsSelected = mediator.numberColumnsSelected();
         
-        if (numAvailColumns >= lrFields.size() + lpFields.size()) {
+        if (numColumnsSelected == lrFields.size() + lpFields.size()) {
             return true;
         }
         else {

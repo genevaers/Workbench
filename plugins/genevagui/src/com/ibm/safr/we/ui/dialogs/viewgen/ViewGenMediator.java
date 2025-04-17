@@ -108,7 +108,7 @@ public class ViewGenMediator {
         return viewGenColumn.viewHasNoColumns();
     }
 
-    public int numberColumnsFromSelection() {
+    public int numberColumnsSelected() {
         return viewGenColumn.numberColumnsFromSelection();
     }
     
@@ -121,7 +121,6 @@ public class ViewGenMediator {
     }
 
 	public boolean isSelectedOneColumn() {
-		// TODO Auto-generated method stub
 		return viewGenColumn.isSelectedOneColumn();
 	}
 

@@ -275,8 +275,8 @@ public class ViewGenColumn {
         GridData tabData = new GridData(SWT.RIGHT, SWT.TOP, false, false);
         tabData.minimumWidth = 600;
         tabData.widthHint = 600;
-        tabData.minimumHeight = 340;
-        tabData.heightHint = 340;
+        tabData.minimumHeight = 350;
+        tabData.heightHint = 350;
         tabData.horizontalSpan = 2;
         columnsTable.setLayoutData(tabData);
         columnsTableCheckboxViewer = new CheckboxTableViewer(columnsTable);
@@ -343,7 +343,7 @@ public class ViewGenColumn {
                 } else {
                     columnsTable.deselectAll();                 
                 }
-              
+                mediator.refreshAddButtonState();
             }
 
         });
@@ -387,7 +387,7 @@ public class ViewGenColumn {
     }
 
     public int numberColumnsFromSelection() {        
-        return columnsTable.getItemCount() - columnsTable.getSelectionIndex();
+        return columnsTableCheckboxViewer.getCheckedElements().length;
     }    
 
     public void putFields(
@@ -476,7 +476,7 @@ public class ViewGenColumn {
                 newPos++;
             }
             columnsTableCheckboxViewer.setInput(1);
-            columnsTable.setSelection(newPos-1);
+            columnsTable.setSelection(position-1);
             mediator.setErrorMessage(null);
         }
     }

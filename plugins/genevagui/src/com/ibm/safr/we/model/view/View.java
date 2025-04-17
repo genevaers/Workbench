@@ -2968,33 +2968,15 @@ public class View extends SAFRActivatedComponent {
             setColumnAsField(lrField, vc);
         }
     }
-
-    public int overAllFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc) {
-        int i = 0;
-        for (; i < lrFields.size(); i++) {
-            LRField lrField = lrFields.get(i);
-            ViewColumn vc = viewColumns.get(startPos+i);
-            setColumnAsField(lrField, vc);
-            setColumnSourceField(vc, lrField, viewSrc);
-        }      
-        return startPos+i;
-    }
-    
-    public void overAllLPFieldAsColumn(LRField field, int position, ViewSource viewSrc,
-        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean) {
-        ViewColumn vc = viewColumns.get(position);
-        setColumnAsField(field, vc);
-        setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
-    }
     
     public int overSourceFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc, Object[] checkedElements) {
         int i = 0;
         for (; i < lrFields.size(); i++) {
             LRField lrField = lrFields.get(i);
-            ViewColumn vc = (ViewColumn) checkedElements[startPos+i];
+            ViewColumn vc = (ViewColumn) checkedElements[i];
             setColumnSourceField(vc, lrField, viewSrc);
         }
-        return startPos+i;
+        return i;
     }
     
     public void overSourceLPFieldAsColumn(LRField field, int position, ViewSource viewSrc,
