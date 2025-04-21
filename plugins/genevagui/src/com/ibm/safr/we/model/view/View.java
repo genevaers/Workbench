@@ -2969,7 +2969,7 @@ public class View extends SAFRActivatedComponent {
         }
     }
     
-    public int overSourceFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc, Object[] checkedElements) {
+    public int overSourceFieldsAsColumns(List<LRField> lrFields, ViewSource viewSrc, Object[] checkedElements) {
         int i = 0;
         for (; i < lrFields.size(); i++) {
             LRField lrField = lrFields.get(i);
@@ -2984,27 +2984,15 @@ public class View extends SAFRActivatedComponent {
         ViewColumn vc = (ViewColumn) checkedElements[position];
         setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
     }
-
-    public void overAllAsConstant(int position, ViewSource viewSrc) {
-        ViewColumn col = viewColumns.get(position);
-        
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSrc.getSequenceNo()-1);
-        colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.CONSTANT));
-        colSrc.setSourceValue(" ");
-        
-        resetColumn(col);  
-        
-        setPersistence(SAFRPersistence.MODIFIED);
-    }
     
-    public void overSourceAsConstant(int position, ViewSource viewSrc) {
-        ViewColumn col = viewColumns.get(position);
-        
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSrc.getSequenceNo()-1);
-        colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.CONSTANT));
-        colSrc.setSourceValue(" ");        
+    public void overSourceAsConstant(Object[] checkedCols, ViewSource viewSrc, int sourceType) {
+    	for(Object chCol : checkedCols) {
+    		ViewColumn col = (ViewColumn) chCol;
+            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceType(SAFRApplication.getSAFRFactory().
+                getCodeSet(CodeCategories.COLSRCTYPE).getCode(sourceType));
+            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceValue(" ");            
+    	}
+      
     }
     
 

@@ -462,7 +462,7 @@ public class ViewGenField {
                 } else if (!mediator.isColumnSelected() && !mediator.viewHasNoColumns()) {
                     mediator.setErrorMessage("Select position to overwrite in the columns table");            
                 } else if (!enoughRoomForColumns()) {
-                    mediator.setErrorMessage("Selected fields should match number of checked columns in table");
+                    mediator.setErrorMessage("Selected fields should match the number of checked columns in table");
                 } else {
                     mediator.setInfoMessage("Overwrite selected column source");
                     enableAddition = true;

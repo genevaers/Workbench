@@ -222,7 +222,7 @@ public class ViewGenColumn {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                putConstant();
+            	putConstant(Codes.CONSTANT);
             }
 
         });
@@ -232,7 +232,7 @@ public class ViewGenColumn {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                putFormula();
+                putFormula(Codes.FORMULA);
             }
 
         });
@@ -365,8 +365,14 @@ public class ViewGenColumn {
                     up.setEnabled(true);
                     down.setEnabled(true);
                     remove.setEnabled(true);                    
+                } else if (numChecked>1 && (mediator.getEditMode().name().equalsIgnoreCase(EditMode.OVERSOURCE.name()))) {
+                    constant.setEnabled(true);
+                    formula.setEnabled(true);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
+                    remove.setEnabled(true);
                 } else {
-                    constant.setEnabled(false);
+                	constant.setEnabled(false);
                     formula.setEnabled(false);
                     up.setEnabled(false);
                     down.setEnabled(false);
@@ -461,10 +467,10 @@ public class ViewGenColumn {
         int position = getInsertionPosition();
         Object[] checkedElements = columnsTableCheckboxViewer.getCheckedElements();
         if(lrFields.size() + lpFields.size() != checkedElements.length) {
-            mediator.setErrorMessage("Selected fields should match number of checked columns in table");
+            mediator.setErrorMessage("Selected fields should match the number of checked columns in table");
         } else {
         	
-            int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource, checkedElements);
+            int newPos = view.overSourceFieldsAsColumns(lrFields, viewSource, checkedElements);
             
             // insert lookup path fields
             for (FieldTreeNodeLeaf lpLeaf : lpFields) {
@@ -500,32 +506,34 @@ public class ViewGenColumn {
         return pos;
     }
     
-    protected ViewColumn putConstant() {
+    protected ViewColumn putConstant(int sourceType) {
         ViewColumn vc = null;
         int position = getInsertionPosition();
         if(position > 0) {
-            vc = generateConstant(position);
+            vc = generateConstant(position,sourceType);
             columnsTableCheckboxViewer.setInput(1);
-            if (position >= columnsTableCheckboxViewer.getTable().getItemCount()-1) {
+            if (EditMode.INSERTAFTER.name().equals(mediator.getEditMode().name())) {
                 columnsTable.setSelection(position);                    
             } else {
-                columnsTable.setSelection(position+1);                                
+                columnsTable.setSelection(position-1);                                
             }
             isConstantAdded = true;
         }
         return vc;
     }
 
-    private void putFormula() {
+    private void putFormula(int sourceType) {
         //put constant and then flip it to a formula
-        ViewColumn col = putConstant();
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSource.getSequenceNo()-1);
+    	ViewColumn col = putConstant(sourceType);
+    	if(col != null) {
+    	ViewColumnSource colSrc = col.getViewColumnSources().get(viewSource.getSequenceNo()-1);
         colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.FORMULA));
+            getCodeSet(CodeCategories.COLSRCTYPE).getCode(sourceType));
+    	}
         columnsTableCheckboxViewer.setInput(1);
     }
 
-    protected ViewColumn generateConstant(int position) {
+    protected ViewColumn generateConstant(int position, int sourceType) {
         ViewColumn vc = null;
         // get the edit mode
         EditMode mode = mediator.getEditMode();
@@ -539,7 +547,7 @@ public class ViewGenColumn {
                 position++;
                 break;
             case OVERSOURCE :
-                view.overSourceAsConstant(position-1, viewSource);
+                view.overSourceAsConstant(columnsTableCheckboxViewer.getCheckedElements(), viewSource, sourceType);
                 break;
             default :
                 break;                    
@@ -585,6 +593,36 @@ public class ViewGenColumn {
     
 	public boolean isCorFxAdded() {
 		return this.isConstantAdded;
+	}
+	
+	public void refreshColumnGenButtons() {
+		int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
+        if ( numChecked == 0) {
+            constant.setEnabled(false);
+            formula.setEnabled(false);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(false);
+        } else if (numChecked == 1) {
+            constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(true);
+            down.setEnabled(true);
+            remove.setEnabled(true);                    
+        } else if (numChecked>1 && (mediator.getEditMode().name().equalsIgnoreCase(EditMode.OVERSOURCE.name()))) {
+            constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(true);
+        } else {
+        	constant.setEnabled(false);
+            formula.setEnabled(false);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(true);
+        }
+   
 	}
     
     

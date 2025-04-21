@@ -93,6 +93,11 @@ public class ViewGenMediator {
     public void refreshAddButtonState() {
         viewGenField.refreshAddButtonState();
     }
+    
+    public void refreshColGenButtonState() {
+        viewGenColumn.refreshColumnGenButtons();
+    }
+    
 
     // calls on viewGenColumn
     

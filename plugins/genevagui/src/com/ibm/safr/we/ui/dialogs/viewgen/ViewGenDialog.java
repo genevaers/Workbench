@@ -142,7 +142,7 @@ public class ViewGenDialog extends TitleAreaDialog {
                     .getActiveShell(),
 					"Constant/Formula Colums", null,
 					"Please complete the edit of any added Columns or Formulas.",
-					MessageDialog.INFORMATION,
+					MessageDialog.INFORMATION,new String[] { "OK" },
 					0);
             dialog.open();
             }

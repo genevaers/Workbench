@@ -36,7 +36,7 @@ public class ViewGenCriteria {
     
     private ViewGenMediator mediator;    
     private ViewSource source;
-    private EditMode editMode = EditMode.INSERTBEFORE;
+    private EditMode editMode;
 
     private Composite parent;
     private Composite compositeCriteria;
@@ -81,6 +81,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.INSERTBEFORE;
                 mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });
         Button insAftBut = mediator.getGUIToolKit().createRadioButton(eGroup, "Insert After");
@@ -89,6 +90,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.INSERTAFTER;
                 mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });
         Button overColSrc = mediator.getGUIToolKit().createRadioButton(eGroup, "Overwrite only Column Source");
@@ -97,6 +99,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.OVERSOURCE;
                 mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });        
    }
