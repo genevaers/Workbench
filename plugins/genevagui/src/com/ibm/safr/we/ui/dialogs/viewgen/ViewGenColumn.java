@@ -1,5 +1,8 @@
 package com.ibm.safr.we.ui.dialogs.viewgen;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -45,6 +48,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
+import com.ibm.safr.we.model.Code;
 import com.ibm.safr.we.model.LRField;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.view.View;
@@ -175,7 +179,7 @@ public class ViewGenColumn {
     private Table columnsTable;
     private CheckboxTableViewer columnsTableCheckboxViewer;
     private int prevSelection=-1;
-    private boolean isConstantAdded = false;
+    private List<ViewColumn> vcf = new ArrayList<>();
 
     public ViewGenColumn(
         ViewGenMediator mediator, 
@@ -216,7 +220,7 @@ public class ViewGenColumn {
         
         compositeButtons.setLayout(butLayout);
         
-        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add C ");
+        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Constant ");
         constant.setEnabled(false);
         constant.addSelectionListener(new SelectionAdapter() {
 
@@ -226,7 +230,7 @@ public class ViewGenColumn {
             }
 
         });
-        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add fx ");
+        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Formula ");
         formula.setEnabled(false);
         formula.addSelectionListener(new SelectionAdapter() {
 
@@ -353,7 +357,8 @@ public class ViewGenColumn {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
-                if ( numChecked == 0) {
+                if(!viewHasNoColumns()) {
+                if (numChecked == 0) {
                     constant.setEnabled(false);
                     formula.setEnabled(false);
                     up.setEnabled(false);
@@ -377,6 +382,12 @@ public class ViewGenColumn {
                     up.setEnabled(false);
                     down.setEnabled(false);
                     remove.setEnabled(true);
+                }}else {
+                	constant.setEnabled(true);
+                    formula.setEnabled(true);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
+                    remove.setEnabled(false);
                 }
             }
             
@@ -499,28 +510,26 @@ public class ViewGenColumn {
                     pos = ((ViewColumn)checked[0]).getColumnNo();
                     break;
                 case INSERTAFTER :
-                    pos =((ViewColumn)checked[checked.length - 1]).getColumnNo();
+                    pos =((ViewColumn)checked[0]).getColumnNo();
                     break;
             }
         }
         return pos;
     }
     
-    protected ViewColumn putConstant(int sourceType) {
-        ViewColumn vc = null;
-        int position = getInsertionPosition();
-        if(position > 0) {
-            vc = generateConstant(position,sourceType);
-            columnsTableCheckboxViewer.setInput(1);
-            if (EditMode.INSERTAFTER.name().equals(mediator.getEditMode().name())) {
-                columnsTable.setSelection(position);                    
-            } else {
-                columnsTable.setSelection(position-1);                                
-            }
-            isConstantAdded = true;
-        }
-        return vc;
-    }
+	protected ViewColumn putConstant(int sourceType) {
+		ViewColumn vc = null;
+		int position = getInsertionPosition();
+		vc = generateConstant(position, sourceType);
+		columnsTableCheckboxViewer.setInput(1);
+		if (EditMode.INSERTAFTER.name().equals(mediator.getEditMode().name())) {
+			columnsTable.setSelection(position);
+		} else {
+			columnsTable.setSelection(position - 1);
+		}
+		vcf.add(vc);
+		return vc;
+	}
 
     private void putFormula(int sourceType) {
         //put constant and then flip it to a formula
@@ -547,7 +556,7 @@ public class ViewGenColumn {
                 position++;
                 break;
             case OVERSOURCE :
-                view.overSourceAsConstant(columnsTableCheckboxViewer.getCheckedElements(), viewSource, sourceType);
+                view.overSourceAsConstant(columnsTableCheckboxViewer.getCheckedElements(), viewSource, sourceType, vcf);
                 break;
             default :
                 break;                    
@@ -580,11 +589,18 @@ public class ViewGenColumn {
         Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
         for (Object obj : checked) {
             ViewColumn col = (ViewColumn)obj;
+            for(Iterator<ViewColumn> iterator = vcf.iterator(); iterator.hasNext(); ){
+            	ViewColumn vc = iterator.next();
+            	if(vc.getColumnNo()==col.getColumnNo()) {
+            		iterator.remove();
+            	}
+            }
             view.removeViewColumn(col);
         }
         columnsTable.removeAll();
         columnsTableCheckboxViewer.setInput(1);
         remove.setEnabled(false);
+        refreshColumnGenButtons();
     }
 
 	public boolean isSelectedOneColumn() {
@@ -592,12 +608,13 @@ public class ViewGenColumn {
 	}
     
 	public boolean isCorFxAdded() {
-		return this.isConstantAdded;
+		return vcf.size()>0 ? true:false;
 	}
 	
 	public void refreshColumnGenButtons() {
 		int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
-        if ( numChecked == 0) {
+		if(!viewHasNoColumns()) {
+        if (numChecked == 0) {
             constant.setEnabled(false);
             formula.setEnabled(false);
             up.setEnabled(false);
@@ -621,6 +638,12 @@ public class ViewGenColumn {
             up.setEnabled(false);
             down.setEnabled(false);
             remove.setEnabled(true);
+        }}else {
+        	constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(false);
         }
    
 	}

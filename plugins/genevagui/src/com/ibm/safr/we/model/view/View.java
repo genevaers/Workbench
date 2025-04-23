@@ -19,6 +19,7 @@ package com.ibm.safr.we.model.view;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1816,6 +1817,13 @@ public class View extends SAFRActivatedComponent {
      */
     public void calculateStartPosition() {
         List<ViewColumn> activeViewColumns = this.viewColumns.getActiveItems();
+
+activeViewColumns.forEach(vc -> System.out.println("Before sorting: " + vc.getColumnNo()));
+
+        Collections.sort(activeViewColumns, (vc1, vc2) -> Integer.compare(vc1.getColumnNo(), vc2.getColumnNo()));
+
+activeViewColumns.forEach(vc -> System.out.println("After sorting: " + vc.getColumnNo()));
+
         if (outputFormat == OutputFormat.Format_Fixed_Width_Fields) {
             int prevStartPosition = 1;
             int prevLength = 0;
@@ -2985,12 +2993,13 @@ public class View extends SAFRActivatedComponent {
         setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
     }
     
-    public void overSourceAsConstant(Object[] checkedCols, ViewSource viewSrc, int sourceType) {
+    public void overSourceAsConstant(Object[] checkedCols, ViewSource viewSrc, int sourceType, List<ViewColumn> vcf) {
     	for(Object chCol : checkedCols) {
     		ViewColumn col = (ViewColumn) chCol;
             col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceType(SAFRApplication.getSAFRFactory().
                 getCodeSet(CodeCategories.COLSRCTYPE).getCode(sourceType));
-            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceValue(" ");            
+            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceValue(" ");  
+            vcf.add(col);
     	}
       
     }

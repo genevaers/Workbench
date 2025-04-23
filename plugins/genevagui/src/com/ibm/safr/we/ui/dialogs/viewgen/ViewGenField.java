@@ -453,6 +453,9 @@ public class ViewGenField {
                 } else if (mediator.isSelectedOneColumn()) {
                     enableAddition = true;
                     mediator.setInfoMessage("Add the selected fields");
+                } else if (mediator.viewHasNoColumns()) {
+                	enableAddition = true;
+                	mediator.setInfoMessage("Add the selected fields");
                 } else {
                 	mediator.setErrorMessage("Select only one position to insert in the columns table");
                 }
@@ -468,7 +471,8 @@ public class ViewGenField {
                     enableAddition = true;
                 }
             }
-        fieldAdd.setEnabled(enableAddition);        
+        fieldAdd.setEnabled(enableAddition);   
+        mediator.refreshColGenButtonState();
     }
  
     private boolean enoughRoomForColumns() {
