@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -1310,7 +1311,15 @@ public class View extends SAFRActivatedComponent {
             vc.setColumnNo(viewColumns.getActiveItems().size());
             calculateStartPosition();
         } else if (num >= 0) {
-            viewColumns.add(num, vc);
+        	List<ViewColumn> vcs= viewColumns.stream()
+        			.filter(v->v.getColumnNo()==num && !(v.getPersistence().name().equals("DELETED")))
+        			.collect(Collectors.toList());       	
+        	if(vcs.size()>0) {
+        		int i = viewColumns.lastIndexOf(vcs.get(0));
+        		viewColumns.add(i+1, vc);
+        	} else {
+        		viewColumns.add(num, vc);
+        	}      	
             vc.setColumnNo(index);
             calculateStartPosition();
         }
@@ -1327,7 +1336,7 @@ public class View extends SAFRActivatedComponent {
 
     }
 
-    /**
+	/**
      * This method is used to remove view column.
      * 
      * @param viewColumn
@@ -1346,7 +1355,7 @@ public class View extends SAFRActivatedComponent {
         markUpdated();
     }
 
-    /**
+	/**
      * Returns a list of all of the ViewColumnSources for this View.
      * 
      * @return the ViewColumnSources
@@ -1817,12 +1826,6 @@ public class View extends SAFRActivatedComponent {
      */
     public void calculateStartPosition() {
         List<ViewColumn> activeViewColumns = this.viewColumns.getActiveItems();
-
-activeViewColumns.forEach(vc -> System.out.println("Before sorting: " + vc.getColumnNo()));
-
-        Collections.sort(activeViewColumns, (vc1, vc2) -> Integer.compare(vc1.getColumnNo(), vc2.getColumnNo()));
-
-activeViewColumns.forEach(vc -> System.out.println("After sorting: " + vc.getColumnNo()));
 
         if (outputFormat == OutputFormat.Format_Fixed_Width_Fields) {
             int prevStartPosition = 1;

@@ -1,6 +1,9 @@
 package com.ibm.safr.we.ui.dialogs.viewgen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 /*
@@ -22,6 +25,7 @@ import java.util.Iterator;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -112,9 +116,18 @@ public class ViewGenColumn {
         }
 
         @Override
-        public Object[] getElements(Object inputElement) {
-            return view.getViewColumns().getActiveItems().toArray();
-        }        
+		public Object[] getElements(Object inputElement) {
+        	
+			Object[] array = view.getViewColumns().getActiveItems().toArray();
+
+			List<ViewColumn> list = Arrays.asList(array).stream().map(obj -> (ViewColumn) obj)
+					.collect(Collectors.toList());
+
+			Collections.sort(list, Comparator.comparingInt(ViewColumn::getColumnNo));
+
+			return list.toArray();
+
+		}        
     }
 
     private class ViewColumnLabelProvider extends ColumnLabelProvider {
@@ -521,12 +534,12 @@ public class ViewGenColumn {
 		ViewColumn vc = null;
 		int position = getInsertionPosition();
 		vc = generateConstant(position, sourceType);
-		columnsTableCheckboxViewer.setInput(1);
 		if (EditMode.INSERTAFTER.name().equals(mediator.getEditMode().name())) {
 			columnsTable.setSelection(position);
 		} else {
 			columnsTable.setSelection(position - 1);
 		}
+		columnsTableCheckboxViewer.setInput(view.getViewColumns().getActiveItems());
 		vcf.add(vc);
 		return vc;
 	}
@@ -569,6 +582,7 @@ public class ViewGenColumn {
         if (position > 0 && position < view.getViewColumns().getActiveItems().size()) {
             view.moveColumnRight(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
+            mediator.setErrorMessage(null);
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }
@@ -579,6 +593,7 @@ public class ViewGenColumn {
         if (position > 1 && position <= view.getViewColumns().getActiveItems().size()) { 
             view.moveColumnLeft(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
+            mediator.setErrorMessage(null);
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }
