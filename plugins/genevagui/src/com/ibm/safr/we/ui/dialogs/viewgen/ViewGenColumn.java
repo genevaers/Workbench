@@ -1,5 +1,11 @@
 package com.ibm.safr.we.ui.dialogs.viewgen;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -19,6 +25,7 @@ package com.ibm.safr.we.ui.dialogs.viewgen;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
@@ -45,6 +52,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.Codes;
+import com.ibm.safr.we.model.Code;
 import com.ibm.safr.we.model.LRField;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.view.View;
@@ -108,9 +116,18 @@ public class ViewGenColumn {
         }
 
         @Override
-        public Object[] getElements(Object inputElement) {
-            return view.getViewColumns().getActiveItems().toArray();
-        }        
+		public Object[] getElements(Object inputElement) {
+        	
+			Object[] array = view.getViewColumns().getActiveItems().toArray();
+
+			List<ViewColumn> list = Arrays.asList(array).stream().map(obj -> (ViewColumn) obj)
+					.collect(Collectors.toList());
+
+			Collections.sort(list, Comparator.comparingInt(ViewColumn::getColumnNo));
+
+			return list.toArray();
+
+		}        
     }
 
     private class ViewColumnLabelProvider extends ColumnLabelProvider {
@@ -175,6 +192,7 @@ public class ViewGenColumn {
     private Table columnsTable;
     private CheckboxTableViewer columnsTableCheckboxViewer;
     private int prevSelection=-1;
+    private List<ViewColumn> vcf = new ArrayList<>();
 
     public ViewGenColumn(
         ViewGenMediator mediator, 
@@ -215,23 +233,23 @@ public class ViewGenColumn {
         
         compositeButtons.setLayout(butLayout);
         
-        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add C ");
+        constant = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Constant ");
         constant.setEnabled(false);
         constant.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                putConstant();
+            	putConstant(Codes.CONSTANT);
             }
 
         });
-        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Add fx ");
+        formula = mediator.getGUIToolKit().createButton(compositeButtons, SWT.PUSH, "Formula ");
         formula.setEnabled(false);
         formula.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                putFormula();
+                putFormula(Codes.FORMULA);
             }
 
         });
@@ -274,8 +292,8 @@ public class ViewGenColumn {
         GridData tabData = new GridData(SWT.RIGHT, SWT.TOP, false, false);
         tabData.minimumWidth = 600;
         tabData.widthHint = 600;
-        tabData.minimumHeight = 340;
-        tabData.heightHint = 340;
+        tabData.minimumHeight = 350;
+        tabData.heightHint = 350;
         tabData.horizontalSpan = 2;
         columnsTable.setLayoutData(tabData);
         columnsTableCheckboxViewer = new CheckboxTableViewer(columnsTable);
@@ -338,14 +356,11 @@ public class ViewGenColumn {
                     Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
                     if(checked.length == 0) {
                         mediator.setErrorMessage("No columns selected");                        
-                    } else {
-                        writeCheckedPositions(checked);
                     }
                 } else {
-                    columnsTable.deselectAll();
-                    mediator.setErrorMessage("Selection event. Selected " + columnsTable.getSelectionIndex());                    
+                    columnsTable.deselectAll();                 
                 }
-              
+                mediator.refreshAddButtonState();
             }
 
         });
@@ -355,7 +370,8 @@ public class ViewGenColumn {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
-                if ( numChecked == 0) {
+                if(!viewHasNoColumns()) {
+                if (numChecked == 0) {
                     constant.setEnabled(false);
                     formula.setEnabled(false);
                     up.setEnabled(false);
@@ -367,12 +383,24 @@ public class ViewGenColumn {
                     up.setEnabled(true);
                     down.setEnabled(true);
                     remove.setEnabled(true);                    
+                } else if (numChecked>1 && (mediator.getEditMode().name().equalsIgnoreCase(EditMode.OVERSOURCE.name()))) {
+                    constant.setEnabled(true);
+                    formula.setEnabled(true);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
+                    remove.setEnabled(true);
                 } else {
-                    constant.setEnabled(false);
+                	constant.setEnabled(false);
                     formula.setEnabled(false);
                     up.setEnabled(false);
                     down.setEnabled(false);
                     remove.setEnabled(true);
+                }}else {
+                	constant.setEnabled(true);
+                    formula.setEnabled(true);
+                    up.setEnabled(false);
+                    down.setEnabled(false);
+                    remove.setEnabled(false);
                 }
             }
             
@@ -380,12 +408,6 @@ public class ViewGenColumn {
         columnsTableCheckboxViewer.setInput(1);
     }
     
-    private void writeCheckedPositions(Object[] checked) {
-        int first = ((ViewColumn)checked[0]).getColumnNo();
-        int last  =((ViewColumn)checked[checked.length - 1]).getColumnNo();
-        mediator.setErrorMessage("First col selected " + first + " last col " + last);
-    }
-
     public boolean isColumnSelected() {
         return columnsTableCheckboxViewer.getCheckedElements().length > 0;
     }
@@ -395,7 +417,7 @@ public class ViewGenColumn {
     }
 
     public int numberColumnsFromSelection() {        
-        return columnsTable.getItemCount() - columnsTable.getSelectionIndex();
+        return columnsTableCheckboxViewer.getCheckedElements().length;
     }    
 
     public void putFields(
@@ -411,9 +433,6 @@ public class ViewGenColumn {
                 break;
             case INSERTAFTER :
                 insertAfter(lrFields, lpFields);
-                break;
-            case OVERALL :
-                overAll(lrFields, lpFields);
                 break;
             case OVERSOURCE :
                 overSource(lrFields, lpFields);
@@ -466,36 +485,16 @@ public class ViewGenColumn {
         columnsTableCheckboxViewer.setInput(1);
         columnsTable.setSelection(newPos-1);
     }
-
-    private void overAll(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
-        int position = getInsertionPosition();
-        
-        //If total number of fields > number of columns it will overfow
-        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
-            mediator.setErrorMessage("Selection exceeds table size");
-        } else {
-            int newPos = view.overAllFieldsAsColumns(lrFields, position-1, viewSource);
-            // insert lookup path fields
-            for (FieldTreeNodeLeaf lpLeaf : lpFields) {
-                FieldTreeNodeLR lrNode = (FieldTreeNodeLR)lpLeaf.getParent();
-                FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
-                
-                view.overAllLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                    lrNode.getLrBean(), lpNode.getLPBean());            
-                newPos++;
-            }
-            columnsTableCheckboxViewer.setInput(1);
-            columnsTable.setSelection(newPos-1);
-        }
-    }
     
     private void overSource(List<LRField> lrFields, List<FieldTreeNodeLeaf> lpFields) {
         
         int position = getInsertionPosition();
-        if(position + lrFields.size() + lpFields.size() > columnsTable.getItems().length) {
-            mediator.setErrorMessage("Selection exceeds table size");
+        Object[] checkedElements = columnsTableCheckboxViewer.getCheckedElements();
+        if(lrFields.size() + lpFields.size() != checkedElements.length) {
+            mediator.setErrorMessage("Selected fields should match the number of checked columns in table");
         } else {
-            int newPos = view.overSourceFieldsAsColumns(lrFields, position-1, viewSource);
+        	
+            int newPos = view.overSourceFieldsAsColumns(lrFields, viewSource, checkedElements);
             
             // insert lookup path fields
             for (FieldTreeNodeLeaf lpLeaf : lpFields) {
@@ -503,11 +502,12 @@ public class ViewGenColumn {
                 FieldTreeNodeLP lpNode = (FieldTreeNodeLP)lrNode.getParent();
                 
                 view.overSourceLPFieldAsColumn(lpLeaf.getField(), newPos, viewSource,
-                    lrNode.getLrBean(), lpNode.getLPBean());            
+                    lrNode.getLrBean(), lpNode.getLPBean(), checkedElements);            
                 newPos++;
             }
             columnsTableCheckboxViewer.setInput(1);
-            columnsTable.setSelection(newPos-1);
+            columnsTable.setSelection(position-1);
+            mediator.setErrorMessage(null);
         }
     }
     
@@ -519,43 +519,43 @@ public class ViewGenColumn {
             
             switch (mode) {
                 case INSERTBEFORE :
-                case OVERALL:
                 case OVERSOURCE:
                     pos = ((ViewColumn)checked[0]).getColumnNo();
                     break;
                 case INSERTAFTER :
-                    pos =((ViewColumn)checked[checked.length - 1]).getColumnNo();
+                    pos =((ViewColumn)checked[0]).getColumnNo();
                     break;
             }
         }
         return pos;
     }
     
-    protected ViewColumn putConstant() {
-        ViewColumn vc = null;
-        int position = getInsertionPosition();
-        if(position > 0) {
-            vc = generateConstant(position);
-            columnsTableCheckboxViewer.setInput(1);
-            if (position >= columnsTableCheckboxViewer.getTable().getItemCount()-1) {
-                columnsTable.setSelection(position);                    
-            } else {
-                columnsTable.setSelection(position+1);                                
-            }
-        }
-        return vc;
-    }
+	protected ViewColumn putConstant(int sourceType) {
+		ViewColumn vc = null;
+		int position = getInsertionPosition();
+		vc = generateConstant(position, sourceType);
+		if (EditMode.INSERTAFTER.name().equals(mediator.getEditMode().name())) {
+			columnsTable.setSelection(position);
+		} else {
+			columnsTable.setSelection(position - 1);
+		}
+		columnsTableCheckboxViewer.setInput(view.getViewColumns().getActiveItems());
+		vcf.add(vc);
+		return vc;
+	}
 
-    private void putFormula() {
+    private void putFormula(int sourceType) {
         //put constant and then flip it to a formula
-        ViewColumn col = putConstant();
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSource.getSequenceNo()-1);
+    	ViewColumn col = putConstant(sourceType);
+    	if(col != null) {
+    	ViewColumnSource colSrc = col.getViewColumnSources().get(viewSource.getSequenceNo()-1);
         colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.FORMULA));
+            getCodeSet(CodeCategories.COLSRCTYPE).getCode(sourceType));
+    	}
         columnsTableCheckboxViewer.setInput(1);
     }
 
-    protected ViewColumn generateConstant(int position) {
+    protected ViewColumn generateConstant(int position, int sourceType) {
         ViewColumn vc = null;
         // get the edit mode
         EditMode mode = mediator.getEditMode();
@@ -568,11 +568,8 @@ public class ViewGenColumn {
                 vc = view.addViewColumn(position+1);
                 position++;
                 break;
-            case OVERALL :
-                view.overAllAsConstant(position-1, viewSource);
-                break;
             case OVERSOURCE :
-                view.overSourceAsConstant(position-1, viewSource);
+                view.overSourceAsConstant(columnsTableCheckboxViewer.getCheckedElements(), viewSource, sourceType, vcf);
                 break;
             default :
                 break;                    
@@ -585,7 +582,7 @@ public class ViewGenColumn {
         if (position > 0 && position < view.getViewColumns().getActiveItems().size()) {
             view.moveColumnRight(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
-            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
+            mediator.setErrorMessage(null);
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }
@@ -596,7 +593,7 @@ public class ViewGenColumn {
         if (position > 1 && position <= view.getViewColumns().getActiveItems().size()) { 
             view.moveColumnLeft(view.getViewColumns().getActiveItems().get(position-1));
             columnsTableCheckboxViewer.setInput(1);
-            writeCheckedPositions(columnsTableCheckboxViewer.getCheckedElements());
+            mediator.setErrorMessage(null);
         } else {
             mediator.setErrorMessage("Cannot move out of bounds");
         }
@@ -607,13 +604,64 @@ public class ViewGenColumn {
         Object[] checked = columnsTableCheckboxViewer.getCheckedElements();
         for (Object obj : checked) {
             ViewColumn col = (ViewColumn)obj;
+            for(Iterator<ViewColumn> iterator = vcf.iterator(); iterator.hasNext(); ){
+            	ViewColumn vc = iterator.next();
+            	if(vc.getColumnNo()==col.getColumnNo()) {
+            		iterator.remove();
+            	}
+            }
             view.removeViewColumn(col);
         }
         columnsTable.removeAll();
         columnsTableCheckboxViewer.setInput(1);
         remove.setEnabled(false);
+        refreshColumnGenButtons();
     }
+
+	public boolean isSelectedOneColumn() {
+		return columnsTableCheckboxViewer.getCheckedElements().length==1;
+	}
     
+	public boolean isCorFxAdded() {
+		return vcf.size()>0 ? true:false;
+	}
+	
+	public void refreshColumnGenButtons() {
+		int numChecked = columnsTableCheckboxViewer.getCheckedElements().length;
+		if(!viewHasNoColumns()) {
+        if (numChecked == 0) {
+            constant.setEnabled(false);
+            formula.setEnabled(false);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(false);
+        } else if (numChecked == 1) {
+            constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(true);
+            down.setEnabled(true);
+            remove.setEnabled(true);                    
+        } else if (numChecked>1 && (mediator.getEditMode().name().equalsIgnoreCase(EditMode.OVERSOURCE.name()))) {
+            constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(true);
+        } else {
+        	constant.setEnabled(false);
+            formula.setEnabled(false);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(true);
+        }}else {
+        	constant.setEnabled(true);
+            formula.setEnabled(true);
+            up.setEnabled(false);
+            down.setEnabled(false);
+            remove.setEnabled(false);
+        }
+   
+	}
     
     
 }

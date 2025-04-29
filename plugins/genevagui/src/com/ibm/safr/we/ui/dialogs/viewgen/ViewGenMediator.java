@@ -93,6 +93,11 @@ public class ViewGenMediator {
     public void refreshAddButtonState() {
         viewGenField.refreshAddButtonState();
     }
+    
+    public void refreshColGenButtonState() {
+        viewGenColumn.refreshColumnGenButtons();
+    }
+    
 
     // calls on viewGenColumn
     
@@ -108,13 +113,21 @@ public class ViewGenMediator {
         return viewGenColumn.viewHasNoColumns();
     }
 
-    public int numberColumnsFromSelection() {
+    public int numberColumnsSelected() {
         return viewGenColumn.numberColumnsFromSelection();
     }
     
     public void refreshDialog() {
     	//viewGenDialog.refresh();
     }
+    
+    public boolean isCorFxAdded() {
+    	return viewGenColumn.isCorFxAdded();
+    }
+
+	public boolean isSelectedOneColumn() {
+		return viewGenColumn.isSelectedOneColumn();
+	}
 
 
 

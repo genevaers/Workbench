@@ -32,11 +32,11 @@ import com.ibm.safr.we.model.view.ViewSource;
 
 public class ViewGenCriteria {
 
-    enum EditMode {INSERTBEFORE,INSERTAFTER,OVERALL,OVERSOURCE};
+    enum EditMode {INSERTBEFORE,INSERTAFTER,OVERSOURCE};
     
     private ViewGenMediator mediator;    
     private ViewSource source;
-    private EditMode editMode = EditMode.INSERTBEFORE;
+    private EditMode editMode;
 
     private Composite parent;
     private Composite compositeCriteria;
@@ -81,6 +81,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.INSERTBEFORE;
                 mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });
         Button insAftBut = mediator.getGUIToolKit().createRadioButton(eGroup, "Insert After");
@@ -89,14 +90,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.INSERTAFTER;
                 mediator.refreshAddButtonState();
-            }
-        });
-        Button overAllBut = mediator.getGUIToolKit().createRadioButton(eGroup, "Overwrite both Column and Column Source");
-        overAllBut.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                editMode = EditMode.OVERALL;
-                mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });
         Button overColSrc = mediator.getGUIToolKit().createRadioButton(eGroup, "Overwrite only Column Source");
@@ -105,6 +99,7 @@ public class ViewGenCriteria {
             public void widgetSelected(SelectionEvent e) {
                 editMode = EditMode.OVERSOURCE;
                 mediator.refreshAddButtonState();
+                mediator.refreshColGenButtonState();
             }
         });        
    }
