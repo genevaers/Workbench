@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import com.ibm.safr.we.SAFRUtilities;
 import com.ibm.safr.we.constants.SearchCriteria;
@@ -456,9 +457,9 @@ public class FindReplaceText {
 		DAOFactoryHolder.getDAOFactory().getViewDAO().replaceLogicText(environmentId, replacements);
 
 		// deactivate all changed Views
-        Set<Integer> mapKeySet = viewIdToFindTransListmap.keySet();        
+        List<Integer> mapKeySet = replacements.stream().map(rp -> rp.getViewId()).collect(Collectors.toList());        
         DAOFactoryHolder.getDAOFactory().getViewDAO().makeViewsInactive(
-            new ArrayList<Integer>(mapKeySet), environmentId);				
+           mapKeySet, environmentId);				
 	}
 
 	private String replaceComponentInLogicText(String logicText) {
