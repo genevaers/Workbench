@@ -55,9 +55,6 @@ public class Copybook2LR {
     private ObjectMapper yamlMapper;
     private ObjectNode copyRecord;
 
-    Copybook2LR() {
-    }
-
     public void processCopybook(Path fp) throws IOException {
         ANTLRInputStream input = new ANTLRInputStream(getReformattedInput(fp));
 
