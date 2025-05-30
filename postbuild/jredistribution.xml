@@ -1,0 +1,45 @@
+    <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+      <id>jredistribution</id>
+      <formats>
+        <format>zip</format>
+      </formats>
+      <includeBaseDirectory>false</includeBaseDirectory>
+        <!-- <dependencySets>
+          <dependencySet>
+            <includes>
+              <include>org.genevaers:wb</include>
+            </includes>
+            <unpack>true</unpack>
+            <outputDirectory>/</outputDirectory>
+          </dependencySet>
+        </dependencySets> -->
+          <!-- <files>
+            <file>
+              <source>
+                ${basedir}/../products/com.ibm.safr.we.product/target/products/wb-win32.win32.x86_64.zip
+                </source>
+                <outputDirectory>/</outputDirectory>
+            </file> 
+            <file>
+              <source>
+              ${env.GERS_JRE}
+              </source>
+              <outputDirectory>/</outputDirectory>
+            </file> 
+          </files> -->
+      <fileSets>
+          <fileSet>
+            <directory>${basedir}/../products/com.ibm.safr.we.product/target/products/wb/win32/win32/x86_64</directory>
+            <!-- <includes>
+                <include>wb-win32.win32.x86_64.zip</include>
+            </includes> -->
+            <outputDirectory>/</outputDirectory>
+          </fileSet>
+          <fileSet>
+            <directory>${env.GERS_JRE}</directory>
+            <outputDirectory>jre</outputDirectory>
+        </fileSet> 
+      </fileSets>
+    </assembly>

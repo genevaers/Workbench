@@ -50,6 +50,28 @@ under the License.
 	<build>
 		<plugins>
 			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>3.7.1</version>
+				<configuration>
+				<!-- <filters>
+					<filter>src/assembly/filter.properties</filter>
+				</filters> -->
+				<descriptors>
+					<descriptor>jredistribution.xml</descriptor>
+				</descriptors>
+				<finalName>wb-win32.win32.x86_64</finalName>
+				<outputDirectory>${basedir}/../products/com.ibm.safr.we.product/target/products</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+					<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
 				<version>3.1.0</version>
