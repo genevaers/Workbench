@@ -21,7 +21,6 @@ package com.ibm.safr.we.ui.editors.view;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -58,13 +57,9 @@ import com.ibm.safr.we.constants.ComponentType;
 import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.exceptions.SAFRException;
 import com.ibm.safr.we.exceptions.SAFRNotFoundException;
-import com.ibm.safr.we.exceptions.SAFRValidationException;
 import com.ibm.safr.we.model.ControlRecord;
-import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.query.ControlRecordQueryBean;
-import com.ibm.safr.we.model.query.EnvironmentalQueryBean;
-import com.ibm.safr.we.model.query.LogicalRecordQueryBean;
 import com.ibm.safr.we.model.query.ViewFolderQueryBean;
 import com.ibm.safr.we.model.view.View;
 import com.ibm.safr.we.model.view.View.Property;
@@ -103,7 +98,6 @@ public class ViewGeneralEditor {
         }
     
     }
-
     
     // member variables
     private ViewMediator mediator;
@@ -141,19 +135,9 @@ public class ViewGeneralEditor {
     private Label labelModifiedValue;
     private Label labelActivatedValue;
     private String defaultModStr = "-";
-    private Section sectionOutputLR;
-    private Button checkboxCreateView;
-    private Label labelOutputLR;
-    private TableComboViewer comboOutputLRViewer;
-    private TableCombo comboOutputLR;
-
-    // state
-    private EnvironmentalQueryBean prevLR;
     
     private String selectedControlRecord = "";
-    private String selectedLogicalRecord = "";
     
-    private Boolean toggleAccKey_l = true;
     private Boolean toggleAccKey_m = true;
     private Boolean toggleAccKey_n = true;
     
@@ -186,7 +170,6 @@ public class ViewGeneralEditor {
         createSectionOutput();
         createSectionViewFolder();
         createSectionGeneral();
-        createSectionOutputLR();
     }
     
     private void createSectionIdentity() {
@@ -429,7 +412,6 @@ public class ViewGeneralEditor {
             public void widgetSelected(SelectionEvent e) {
                 super.widgetSelected(e);
     
-                comboOutputLR.setEnabled(true);
                 if (!UIUtilities.isEqual(view.getOutputFormat(),OutputFormat.Format_Report)) {
                     mediator.setModified(true);
                     view.setOutputFormat(OutputFormat.Format_Report);
@@ -670,136 +652,6 @@ public class ViewGeneralEditor {
 
     }
 
-    private void createSectionOutputLR() {
-        // The section sectionOutputLR is visible only for a new View, not while
-        // editing an existing one.
-        sectionOutputLR = mediator.getGUIToolKit().createSection(compositeGeneral,Section.TITLE_BAR, "");
-        FormData dataSectionOutputLR = new FormData();
-        dataSectionOutputLR.left = new FormAttachment(sectionOutputFormat, 10);
-        dataSectionOutputLR.top = new FormAttachment(sectionGeneralProperties,10);
-        dataSectionOutputLR.bottom = new FormAttachment(100, 0);
-        dataSectionOutputLR.right = new FormAttachment(sectionGeneralProperties, 10);
-        sectionOutputLR.setLayoutData(dataSectionOutputLR);
-
-        Composite compositeOutputLR = mediator.getGUIToolKit().createComposite(sectionOutputLR, SWT.NONE);
-        compositeOutputLR.setLayout(new FormLayout());
-
-        sectionOutputLR.setClient(compositeOutputLR);
-        sectionOutputLR.setText("Create View based on Output Logical Record");
-
-        labelOutputLR = mediator.getGUIToolKit().createLabel(compositeOutputLR, SWT.NONE,
-                "Output &Logical Record:");
-        labelOutputLR.addTraverseListener(new TraverseListener() {
-
-            public void keyTraversed(TraverseEvent e) {
-                if (e.detail == SWT.TRAVERSE_MNEMONIC) {
-                    if (toggleAccKey_l) {
-                        e.doit = false;
-                        toggleAccKey_l = false;
-                    }
-                }
-            }
-
-        });
-        FormData dataLabelOutputLR = new FormData();
-        dataLabelOutputLR.top = new FormAttachment(checkboxCreateView, 10);
-        dataLabelOutputLR.left = new FormAttachment(0, 10);
-        labelOutputLR.setLayoutData(dataLabelOutputLR);
-
-        comboOutputLRViewer = mediator.getGUIToolKit().createTableComboForComponents(
-                compositeOutputLR, ComponentType.LogicalRecord);
-        comboOutputLR = comboOutputLRViewer.getTableCombo();
-        FormData dataComboOutputLR = new FormData();
-        dataComboOutputLR.top = new FormAttachment(checkboxCreateView, 10);
-        dataComboOutputLR.left = new FormAttachment(labelOutputLR, 10);
-        dataComboOutputLR.right = new FormAttachment(100, -10);
-        comboOutputLR.setLayoutData(dataComboOutputLR);
-
-        comboOutputLR.addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                if (!comboOutputLR.getText().equals(selectedLogicalRecord)) {
-                    LogicalRecordQueryBean logicalRecordBean = null;
-                    if (comboOutputLR.getTable().getSelection().length > 0) {
-                        logicalRecordBean = (LogicalRecordQueryBean) comboOutputLR
-                                .getTable().getSelection()[0].getData();
-                    }
-
-                    if (logicalRecordBean == null) {
-                        return;
-                    }
-
-                    EnvironmentalQueryBean bean = null;
-                    if (comboOutputLR.getTable().getSelectionCount() > 0) {
-                        bean = (EnvironmentalQueryBean) comboOutputLR
-                                .getTable().getSelection()[0].getData();
-                        prevLR = bean;
-                    } else {
-                        if (prevLR != null) {
-                            comboOutputLR.setText(UIUtilities.getComboString(
-                                prevLR.getName(), prevLR.getId()));
-                        } else {
-                            comboOutputLR.setText("");
-                        }
-                    }
-
-                    if (!view.getViewColumns().getActiveItems().isEmpty()) {
-                        MessageDialog dialog = new MessageDialog(
-                                mediator.getSite().getShell(),
-                                "Output Logical Record",
-                                null,
-                                "This action will remove existing View Columns from View.Do you want to continue?",
-                                MessageDialog.QUESTION, new String[] { "&OK",
-                                        "&Cancel" }, 0);
-                        int confirm = dialog.open();
-                        if (confirm == 1) {
-                            if (comboOutputLR.indexOf(selectedLogicalRecord) < 0) {
-                                comboOutputLR.getTable().deselectAll();
-                            } else {
-                                comboOutputLR.setText(selectedLogicalRecord);
-                            }
-                            return;
-                        }
-                    }
-                    try {
-                        LogicalRecord logicalRecord = SAFRApplication
-                                .getSAFRFactory().getLogicalRecord(
-                                        logicalRecordBean.getId());
-                        view.createViewColumns(logicalRecord);
-                    } catch (SAFRValidationException sve) {
-                        MessageDialog.openError(mediator.getSite().getShell(),
-                                "Create View based on Output Logical Record",
-                                sve.getMessageString());
-                        if (comboOutputLR.indexOf(selectedLogicalRecord) < 0) {
-                            comboOutputLR.getTable().deselectAll();
-                        } else {
-                            comboOutputLR.getTable().select(
-                                    comboOutputLR
-                                            .indexOf(selectedLogicalRecord));
-                        }
-                        return;
-                    } catch (SAFRException e1) {
-                        UIUtilities.handleWEExceptions(e1,"Create View based on Output Logical Record",null);
-                        if (comboOutputLR.indexOf(selectedLogicalRecord) < 0) {
-                            comboOutputLR.getTable().deselectAll();
-                        } else {
-                            comboOutputLR.getTable().select(
-                                    comboOutputLR
-                                            .indexOf(selectedLogicalRecord));
-                        }
-                        return;
-                    }
-                    mediator.setModified(true);
-                    selectedLogicalRecord = comboOutputLR.getText();
-                    mediator.refreshColumns();
-                }
-            }
-        });
-    }
-
-
     private void addControlRecOpenEditorMenu()
     {
         Text text = comboControlRecord.getTextControl();
@@ -821,7 +673,6 @@ public class ViewGeneralEditor {
 
     protected void populateCombos() {
         mediator.populateViewCombos(ComponentType.ControlRecord, comboControlRecord, comboControlRecordViewer, false);
-        mediator.populateViewCombos(ComponentType.LogicalRecord, comboOutputLR, comboOutputLRViewer, false);
     }
 
     protected void refreshControlsGeneral() {
@@ -840,19 +691,9 @@ public class ViewGeneralEditor {
             } else {
                 labelActivatedValue.setText(view.getActivatedBy() + " on "
                     + view.getActivatedTimeString() + " version " + view.getCompilerVersion());                
-            }
-            sectionOutputLR.setVisible(false);
-        } else {
-            sectionOutputLR.setVisible(true);
-        }
-
+            } 
+        } 
         loadSectionOutputFormat();
-
-        // if this is a new view then select output LR in combo
-        // this is required for the new toggle behaviour, so that the
-        // previously selected output LR is retained if the user comes back
-        // to view prop tab from the Grid tab.
-        comboOutputLR.setText(selectedLogicalRecord);
 
         try {
             // setting the Control Record combo
@@ -862,13 +703,6 @@ public class ViewGeneralEditor {
         } catch (SAFRNotFoundException snfe) {
             logger.log(Level.INFO, "", snfe);
             view.setControlRecord(null);
-        }
-
-        if (comboOutputLR.getTable().getSelection().length > 0) {
-            prevLR = (EnvironmentalQueryBean) comboOutputLR.getTable()
-                    .getSelection()[0].getData();
-        } else {
-            prevLR = null;
         }
         
         tableViewerViewFolders.setInput(view.getViewFolderAssociations());
@@ -944,9 +778,6 @@ public class ViewGeneralEditor {
     }
 
     protected void refreshExtractSource() {
-        comboOutputLR.clearSelection();
-        comboOutputLR.setEnabled(false);
-
         mediator.hideFormatPhase();
         mediator.hideFormatReport();
         mediator.hideFormatDelimited();

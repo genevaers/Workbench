@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -30,6 +32,7 @@ import java.util.Iterator;
  * Filtering defaults to not enabled.
  */
 public class CCB2Dot {
+    static transient Logger logger = Logger.getLogger("org.genevaers.ccb2lr.CCB2Dot");
     /**
      *
      */
@@ -48,10 +51,6 @@ public class CCB2Dot {
     private static String colour;
     private static String shape;
 
-    CCB2Dot() {
-
-    }
-
     public static void write(CobolCollection cobolCollection, Path dest) {
         try {
             fw = new FileWriter(dest.toFile());
@@ -59,8 +58,7 @@ public class CCB2Dot {
             fw.write("}\n");
             fw.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.severe("Cannot write COBOL File\n" + e.getMessage());
         }
     }
 
@@ -72,8 +70,7 @@ public class CCB2Dot {
             fw.write("}\n");
             fw.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.severe("Cannot write COBOL record\n" + e.getMessage());
         }
     }
 

@@ -1553,8 +1553,8 @@ public class DiffUtilityEditor extends SAFREditorPart implements IPartListener2 
                   }
                   if (parent1 != null && parent1 != parent2) {
                       Display.getCurrent().asyncExec(new Runnable() {
-                          public void run() {                                  
-                              getSite().getPage().hideView(viewPart);
+                          public void run() {
+                        	  viewPart.getSite().getPage().hideView(viewPart);
                           }
                       });                              
                   }

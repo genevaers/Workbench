@@ -182,7 +182,7 @@ public class ViewActivator {
 
 	private void checkRecordAggregation() {
         if (view.isFormatPhaseInUse() && view.isFormatPhaseRecordAggregationOn()) {
-        	for(ViewColumn c : view.getViewColumns()) {
+        	for(ViewColumn c : view.getViewColumns().getActiveItems()) {
         		if(c.isSortKey() == false && c.isNumeric() && c.getRecordAggregationCode() == null) {
         			WorkbenchCompiler.setCurrentColumnNumber(c.getColumnNo());
                 	WorkbenchCompiler.addViewPropertiesErrorMessage("Record Aggregation cannot be blank.");
@@ -381,7 +381,7 @@ public class ViewActivator {
     private void checkColumnDataTypes(Set<Integer> calcCols) {
         // Columns here are not indexed
         // process the other way around - crazy slow ?
-        for (ViewColumn c : view.getViewColumns()) {
+        for (ViewColumn c : view.getViewColumns().getActiveItems()) {
             if (calcCols.contains(c.getColumnNo())) {
                 if (c.isNumeric() == false) {
                     // The workbench disables this.... should not occur

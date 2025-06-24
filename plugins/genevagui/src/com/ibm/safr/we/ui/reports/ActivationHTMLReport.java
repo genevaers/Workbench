@@ -73,6 +73,7 @@ public class ActivationHTMLReport extends  GenevaHTMLReport  {
 				WorkbenchCompiler.setDotViews(prefs.get(UserPreferencesNodes.DOT_VIEWS, ""));
 				WorkbenchCompiler.setDotCols(prefs.get(UserPreferencesNodes.DOT_COLS, ""));
 			}
+			htmlPath.resolve("dots").toFile().mkdir();
 			WorkbenchCompiler.dotTo(htmlPath.resolve("dots").resolve("XLT" + viewName + ".dot"));
 		}
 	}

@@ -30,6 +30,8 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -44,7 +46,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class Copybook2LR {
+   	static transient Logger logger = Logger.getLogger("org.genevaers.ccb2lr.Copybook2LR");
 
+    
 	private GoalContext tree;
 	private ParseErrorListener errorListener;
     private CopybookListener ccbListener;
@@ -139,7 +143,7 @@ public class Copybook2LR {
             yamlMapper.writeValue(new File(filename), copyRecord);
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.severe("Cannot write yaml file\n" + e.getMessage());
         }
     }
 
@@ -204,7 +208,7 @@ public class Copybook2LR {
 			properties.load(resourceStream);
             ver = properties.getProperty("library.name") + ": " + properties.getProperty("build.version");
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.severe("Cannot get build version\n" + e.getMessage());
 		}
         return ver;
     }

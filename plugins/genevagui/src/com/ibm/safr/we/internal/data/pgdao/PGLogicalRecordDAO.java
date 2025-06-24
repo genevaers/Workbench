@@ -1916,7 +1916,7 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
 					+ schema
 					+ ".LOOKUPSTEP F "
 					+ "Where B.LRFIELDID IN (" + placeholders 
-					+ ") AND B.ENVIRONID = ?"
+					+ ") AND B.ENVIRONID = ? "
 					+ "AND C.LRFIELDID = B.LRFIELDID AND C.ENVIRONID = B.ENVIRONID "
 					+ "AND C.LRFIELDID = D.LRFIELDID AND D.ENVIRONID = B.ENVIRONID "
 					+ "AND E.LOGRECID=C.LOGRECID AND E.ENVIRONID = B.ENVIRONID "

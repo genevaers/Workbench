@@ -57,7 +57,7 @@ public class OpenEditorPopupState extends AbstractSourceProvider {
     public String[] getProvidedSourceNames() {
         return new String[] { 
             LOGICTEXTVIEW, PHYSICALFILE, LOGICALFILE, LOGICALRECORD, LOGICALRECORDV,
-            DEPCHECK, FINDREP, ACTLU, ACTVIEW, MIGRATE, GRPMEM, GRPPERM, ENVPERM, VIEWFOLDER
+            DEPCHECK, FINDREP, ACTLU, ACTVIEW, MIGRATE, GRPMEM, GRPPERM, ENVPERM, VIEWFOLDER, USRMEM
         };    
     }
 
@@ -114,6 +114,11 @@ public class OpenEditorPopupState extends AbstractSourceProvider {
     public void setGrpMem(boolean enabled) {
         String value = enabled ? ENABLED : DISABLED;
         fireSourceChanged(ISources.WORKBENCH, GRPMEM, value);        
+    }
+    
+    public void setUsrMem(boolean enabled) {
+        String value = enabled ? ENABLED : DISABLED;
+        fireSourceChanged(ISources.WORKBENCH, USRMEM, value);        
     }
 
     public void setGrpPerm(boolean enabled) {
