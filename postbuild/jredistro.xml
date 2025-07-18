@@ -1,0 +1,19 @@
+    <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 http://maven.apache.org/xsd/assembly-2.2.0.xsd">
+      <id>jredistro</id>
+      <formats>
+        <format>zip</format>
+      </formats>
+      <includeBaseDirectory>false</includeBaseDirectory>
+      <fileSets>
+          <fileSet>
+            <directory>${basedir}/../products/com.ibm.safr.we.product/target/products/wb/win32/win32/x86_64</directory>
+            <outputDirectory>/</outputDirectory>
+          </fileSet>
+          <fileSet>
+            <directory>${env.GERS_JRE}</directory>
+            <outputDirectory>jre</outputDirectory>
+        </fileSet> 
+      </fileSets>
+    </assembly>
