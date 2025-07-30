@@ -19,12 +19,14 @@ package com.ibm.safr.we.model.view;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import org.eclipse.ui.IWorkbenchPartSite;
 
@@ -1309,7 +1311,15 @@ public class View extends SAFRActivatedComponent {
             vc.setColumnNo(viewColumns.getActiveItems().size());
             calculateStartPosition();
         } else if (num >= 0) {
-            viewColumns.add(num, vc);
+        	List<ViewColumn> vcs= viewColumns.stream()
+        			.filter(v->v.getColumnNo()==num && !(v.getPersistence().name().equals("DELETED")))
+        			.collect(Collectors.toList());       	
+        	if(vcs.size()>0) {
+        		int i = viewColumns.lastIndexOf(vcs.get(0));
+        		viewColumns.add(i+1, vc);
+        	} else {
+        		viewColumns.add(num, vc);
+        	}      	
             vc.setColumnNo(index);
             calculateStartPosition();
         }
@@ -1326,7 +1336,7 @@ public class View extends SAFRActivatedComponent {
 
     }
 
-    /**
+	/**
      * This method is used to remove view column.
      * 
      * @param viewColumn
@@ -1345,7 +1355,7 @@ public class View extends SAFRActivatedComponent {
         markUpdated();
     }
 
-    /**
+	/**
      * Returns a list of all of the ViewColumnSources for this View.
      * 
      * @return the ViewColumnSources
@@ -1816,6 +1826,7 @@ public class View extends SAFRActivatedComponent {
      */
     public void calculateStartPosition() {
         List<ViewColumn> activeViewColumns = this.viewColumns.getActiveItems();
+
         if (outputFormat == OutputFormat.Format_Fixed_Width_Fields) {
             int prevStartPosition = 1;
             int prevLength = 0;
@@ -2968,61 +2979,32 @@ public class View extends SAFRActivatedComponent {
             setColumnAsField(lrField, vc);
         }
     }
-
-    public int overAllFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc) {
+    
+    public int overSourceFieldsAsColumns(List<LRField> lrFields, ViewSource viewSrc, Object[] checkedElements) {
         int i = 0;
         for (; i < lrFields.size(); i++) {
             LRField lrField = lrFields.get(i);
-            ViewColumn vc = viewColumns.get(startPos+i);
-            setColumnAsField(lrField, vc);
+            ViewColumn vc = (ViewColumn) checkedElements[i];
             setColumnSourceField(vc, lrField, viewSrc);
-        }      
-        return startPos+i;
-    }
-    
-    public void overAllLPFieldAsColumn(LRField field, int position, ViewSource viewSrc,
-        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean) {
-        ViewColumn vc = viewColumns.get(position);
-        setColumnAsField(field, vc);
-        setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
-    }
-    
-    public int overSourceFieldsAsColumns(List<LRField> lrFields, int startPos, ViewSource viewSrc) {
-        int i = 0;
-        for (; i < lrFields.size(); i++) {
-            LRField lrField = lrFields.get(i);
-            ViewColumn vc = viewColumns.get(startPos+i);
-            setColumnSourceField(vc, lrField, viewSrc);
-        }      
-        return startPos+i;
+        }
+        return i;
     }
     
     public void overSourceLPFieldAsColumn(LRField field, int position, ViewSource viewSrc,
-        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean) {
-        ViewColumn vc = viewColumns.get(position);
+        LogicalRecordQueryBean lrBean, LookupQueryBean lpBean, Object[] checkedElements) {
+        ViewColumn vc = (ViewColumn) checkedElements[position];
         setColumnLookupField(vc, field, viewSrc, lrBean, lpBean);
     }
-
-    public void overAllAsConstant(int position, ViewSource viewSrc) {
-        ViewColumn col = viewColumns.get(position);
-        
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSrc.getSequenceNo()-1);
-        colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.CONSTANT));
-        colSrc.setSourceValue(" ");
-        
-        resetColumn(col);  
-        
-        setPersistence(SAFRPersistence.MODIFIED);
-    }
     
-    public void overSourceAsConstant(int position, ViewSource viewSrc) {
-        ViewColumn col = viewColumns.get(position);
-        
-        ViewColumnSource colSrc = col.getViewColumnSources().get(viewSrc.getSequenceNo()-1);
-        colSrc.setSourceType(SAFRApplication.getSAFRFactory().
-            getCodeSet(CodeCategories.COLSRCTYPE).getCode(Codes.CONSTANT));
-        colSrc.setSourceValue(" ");        
+    public void overSourceAsConstant(Object[] checkedCols, ViewSource viewSrc, int sourceType, List<ViewColumn> vcf) {
+    	for(Object chCol : checkedCols) {
+    		ViewColumn col = (ViewColumn) chCol;
+            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceType(SAFRApplication.getSAFRFactory().
+                getCodeSet(CodeCategories.COLSRCTYPE).getCode(sourceType));
+            col.getViewColumnSources().get(viewSrc.getSequenceNo()-1).setSourceValue(" ");  
+            vcf.add(col);
+    	}
+      
     }
     
 

@@ -3509,7 +3509,7 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
                 try {
                     pst = con.prepareStatement(selectString);
                     pst.setInt(1, lRID);
-                    pst.setInt(1, environmentId);
+                    pst.setInt(2, environmentId);
                     rs = pst.executeQuery();
                     break;
                 } catch (SQLException se) {
