@@ -119,10 +119,14 @@ public class ViewLogicExtractCalc {
             formulaToCompile = generateColumnLogic(source, col, colSource);
             colSource.setExtractColumnAssignmentBasic(formulaToCompile);
         } else {
-        	String colName = extractColAssignement.substring(extractColAssignement.indexOf('{')+1,extractColAssignement.indexOf('}'));
-        	if(!StringUtils.isEmpty(extractColAssignement) && colSource.getLRField() != null && !colName.equalsIgnoreCase(colSource.getLRField().getName())) {
-        		formulaToCompile = generateColumnLogic(source, col, colSource);
-                colSource.setExtractColumnAssignmentBasic(formulaToCompile);
+        	int start = extractColAssignement.indexOf('{');
+        	int end = extractColAssignement.indexOf('}');
+        	if(start != -1 && end != -1 && start < end) {
+        		String colName = extractColAssignement.substring(extractColAssignement.indexOf('{')+1,extractColAssignement.indexOf('}'));
+            	if(!StringUtils.isEmpty(extractColAssignement) && colSource.getLRField() != null && !colName.equalsIgnoreCase(colSource.getLRField().getName())) {
+            		formulaToCompile = generateColumnLogic(source, col, colSource);
+                    colSource.setExtractColumnAssignmentBasic(formulaToCompile);
+            	}
         	}
             formulaToCompile = colSource.getExtractColumnAssignment();
         }
