@@ -20,7 +20,7 @@ This document was created on a Mac, but attempts to be inclusive of multiple pla
 1. Select debug config
 2. Select "Eclipse application" and then select "new" button (top left hand corner) to make a new configuration.
 3. Select "run a product" and select GenevaERS from drop down box
-4. Select Java 1.8 for execution environment
+4. Select Java 17 for execution environment
 5. Perhaps allow incoming connections
 
 ## Junit test configuration in Eclipse
