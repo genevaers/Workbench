@@ -22,4 +22,4 @@ bin.includes = plugin.xml,\
                lib/ccb2lr.jar, \
                lib/commons-csv-1.10.0.jar, \
                lib/rcapps-1.1.0_RC18-jar-with-dependencies.jar, \
-               lib/postgresql-42.2.16.jar, \
+               lib/postgresql-42.7.7.jar, \

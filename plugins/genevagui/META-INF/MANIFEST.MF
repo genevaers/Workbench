@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GenevaERS Plug-in
 Bundle-SymbolicName: GenevaERS;singleton:=true
 Bundle-Version: 4.21.1
-Bundle-ClassPath: lib/postgresql-42.2.16.jar,
+Bundle-ClassPath: lib/postgresql-42.7.7.jar,
  .,
  lib/sycadas-1.0.3.jar,
  lib/ccb2lr.jar,
