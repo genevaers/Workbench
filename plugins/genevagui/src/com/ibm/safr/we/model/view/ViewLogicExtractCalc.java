@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.genevaers.runcontrolgenerator.workbenchinterface.WorkbenchCompiler;
 
 import com.ibm.safr.we.constants.CodeCategories;
@@ -112,11 +113,21 @@ public class ViewLogicExtractCalc {
             throws SAFRViewActivationException, SAFRException, DAOException {
         ViewColumnSource colSource = col.getViewColumnSources().get(source.getSequenceNo() - 1);
         String formulaToCompile;
-        if ((colSource.getExtractColumnAssignment() == null || colSource.getExtractColumnAssignment().length() == 0)
+       String extractColAssignement = colSource.getExtractColumnAssignment();
+        if ((extractColAssignement == null || extractColAssignement.length() == 0)
                 || !colSource.getPersistence().equals(SAFRPersistence.OLD)) {
             formulaToCompile = generateColumnLogic(source, col, colSource);
             colSource.setExtractColumnAssignmentBasic(formulaToCompile);
         } else {
+        	int start = extractColAssignement.indexOf('{');
+        	int end = extractColAssignement.indexOf('}');
+        	if(start != -1 && end != -1 && start < end) {
+        		String colName = extractColAssignement.substring(extractColAssignement.indexOf('{')+1,extractColAssignement.indexOf('}'));
+            	if(!StringUtils.isEmpty(extractColAssignement) && colSource.getLRField() != null && !colName.equalsIgnoreCase(colSource.getLRField().getName())) {
+            		formulaToCompile = generateColumnLogic(source, col, colSource);
+                    colSource.setExtractColumnAssignmentBasic(formulaToCompile);
+            	}
+        	}
             formulaToCompile = colSource.getExtractColumnAssignment();
         }
         if (formulaToCompile == null) {

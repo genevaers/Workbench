@@ -46,16 +46,20 @@ under the License.
 	<dependencies>
 	</dependencies>
 
-
+<profiles>
+ <profile>
+		<id>include-jre</id>
+		<activation>
+			<property>
+			<name>env.GERS_JRE</name>
+			</property>
+		</activation>
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.7.1</version>
 				<configuration>
-				<!-- <filters>
-					<filter>src/assembly/filter.properties</filter>
-				</filters> -->
 				<descriptors>
 					<descriptor>jredistro.xml</descriptor>
 				</descriptors>
@@ -63,14 +67,20 @@ under the License.
 				<outputDirectory>${basedir}/../products/com.ibm.safr.we.product/target/products</outputDirectory>
 				</configuration>
 				<executions>
-					<execution>
+				<execution>
 					<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
+					<goals>
+					<goal>single</goal>
+					</goals>
+				</execution>
 				</executions>
 			</plugin>
+		</plugins>
+	</build>
+ </profile>
+</profiles>
+	<build>
+		<plugins>
 			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
