@@ -47,17 +47,10 @@ under the License.
 
    <plugins>
       <plugin id="GenevaERS"/>
-      <plugin id="ch.qos.logback.classic"/>
-      <plugin id="ch.qos.logback.core"/>
-      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.sun.jna"/>
       <plugin id="com.sun.jna.platform"/>
       <plugin id="jakarta.servlet-api"/>
-      <plugin id="javax.annotation"/>
-      <plugin id="javax.el"/>
-      <plugin id="javax.inject"/>
-      <plugin id="javax.servlet.jsp"/>
       <plugin id="org.apache.batik.constants"/>
       <plugin id="org.apache.batik.css"/>
       <plugin id="org.apache.batik.i18n"/>
@@ -69,12 +62,7 @@ under the License.
       <plugin id="org.apache.felix.gogo.shell"/>
       <plugin id="org.apache.felix.scr"/>
       <plugin id="org.apache.jasper.glassfish"/>
-      <plugin id="org.apache.lucene.analyzers-common"/>
-      <plugin id="org.apache.lucene.analyzers-smartcn"/>
-      <plugin id="org.apache.lucene.core"/>
       <plugin id="org.apache.xmlgraphics"/>
-      <plugin id="org.bouncycastle.bcpg"/>
-      <plugin id="org.bouncycastle.bcprov"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.compare"/>
       <plugin id="org.eclipse.compare.core"/>
