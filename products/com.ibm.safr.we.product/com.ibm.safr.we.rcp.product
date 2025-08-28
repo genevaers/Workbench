@@ -48,16 +48,11 @@ under the License.
    <plugins>
       <plugin id="GenevaERS"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.sun.jna"/>
-      <plugin id="com.sun.jna.platform"/>
       <plugin id="jakarta.servlet-api"/>
       <plugin id="org.apache.batik.constants"/>
       <plugin id="org.apache.batik.css"/>
       <plugin id="org.apache.batik.i18n"/>
       <plugin id="org.apache.batik.util"/>
-      <plugin id="org.apache.commons.io"/>
-      <plugin id="org.apache.commons.jxpath"/>
-      <plugin id="org.apache.commons.logging"/>
       <plugin id="org.apache.felix.gogo.runtime"/>
       <plugin id="org.apache.felix.gogo.shell"/>
       <plugin id="org.apache.felix.scr"/>
@@ -173,7 +168,6 @@ under the License.
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.urischeme"/>
-      <plugin id="org.slf4j.api"/>
       <plugin id="org.tukaani.xz"/>
       <plugin id="org.w3c.css.sac"/>
       <plugin id="org.w3c.dom.events"/>
