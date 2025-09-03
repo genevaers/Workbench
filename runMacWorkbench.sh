@@ -12,5 +12,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/x86_64/Eclipse.app
+# open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/x86_64/Eclipse.app
+open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/aarch64/Eclipse.app
 
