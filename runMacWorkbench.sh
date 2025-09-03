@@ -17,9 +17,9 @@ if uname -a | grep -q 'arm64'; then
     open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/aarch64/Eclipse.app
 else
     if uname -a | grep -q 'x86_64'; then
-        if uname -a | grep -q 'MSYS'; then
+        if uname -a | grep -q 'Msys'; then
             echo "Running on Windows x86_64"
-            open products/com.ibm.safr.we.product/target/products/wb/win32/win32/x86_64/GenevaERS.exe
+            ./products/com.ibm.safr.we.product/target/products/wb/win32/win32/x86_64/GenevaERS.exe
         else
             echo "Running on MacOS x86_64."
             open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/x86_64/Eclipse.app
