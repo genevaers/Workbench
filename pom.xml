@@ -99,42 +99,117 @@ under the License.
 				<version>${tycho.version}</version>
 				<extensions>true</extensions>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.tycho</groupId>
-				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho.version}</version>
-				<configuration>
-					<!--<pomDependencies>wrapAsBundle</pomDependencies>  -->
-					<target>
-						<artifact>
-							<groupId>org.genevaers</groupId>
-							<artifactId>target-platform</artifactId>
-							<version>4.21.1</version>
-						</artifact>
-					</target>
-					<environments>
-						<!--						<environment>
-							<os>linux</os>
-							<ws>gtk</ws>
-							<arch>x86_64</arch>
-						</environment> -->
-						<environment>
-							<os>win32</os>
-							<ws>win32</ws>
-							<arch>x86_64</arch>
-						</environment>
-						<environment>
-							<os>macosx</os>
-							<ws>cocoa</ws>
-							<arch>x86_64</arch>
-						</environment>
-					</environments>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 
+
 	<profiles>
+		<profile>
+			<id>windows</id>
+			<activation>
+				<os>
+					<family>windows</family>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<!--<pomDependencies>wrapAsBundle</pomDependencies>  -->
+							<target>
+								<artifact>
+									<groupId>org.genevaers</groupId>
+									<artifactId>target-platform</artifactId>
+									<version>4.21.1</version>
+								</artifact>
+							</target>
+							<environments>
+								<environment>
+									<os>win32</os>
+									<ws>win32</ws>
+									<arch>x86_64</arch>
+								</environment>
+							</environments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>macIntel</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>x86_64</arch>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<!--<pomDependencies>wrapAsBundle</pomDependencies>  -->
+							<target>
+								<artifact>
+									<groupId>org.genevaers</groupId>
+									<artifactId>target-platform</artifactId>
+									<version>4.21.1</version>
+								</artifact>
+							</target>
+							<environments>
+								<environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>x86_64</arch>
+								</environment>
+							</environments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<profile>
+			<id>macos-arm</id>
+			<activation>
+				<os>
+					<family>mac</family>
+					<arch>aarch64</arch>
+				</os>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>target-platform-configuration</artifactId>
+						<version>${tycho.version}</version>
+						<configuration>
+							<!--<pomDependencies>wrapAsBundle</pomDependencies>  -->
+							<target>
+								<artifact>
+									<groupId>org.genevaers</groupId>
+									<artifactId>target-platform</artifactId>
+									<version>4.21.1</version>
+								</artifact>
+							</target>
+							<environments>
+								<environment>
+									<os>macosx</os>
+									<ws>cocoa</ws>
+									<arch>aarch64</arch>
+								</environment>
+							</environments>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 		<profile>
 			<id>rat</id>
 			<build>
