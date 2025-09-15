@@ -30,10 +30,10 @@ under the License.
 	<name>GenevaERS Workbench</name>
 
 	<properties>
-		<tycho.version>2.5.0</tycho.version>
+		<tycho.version>4.0.12</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 
 	<modules>
@@ -126,7 +126,8 @@ under the License.
 						<environment>
 							<os>macosx</os>
 							<ws>cocoa</ws>
-							<arch>x86_64</arch>
+							<!-- <arch>x86_64</arch> -->
+							<arch>aarch64</arch>
 						</environment>
 					</environments>
 				</configuration>
