@@ -3,23 +3,22 @@
 This is designed only for Db2 running z/OS. This README
 will guide you to define a Stored Procedure.
 
-SAFR Stored Procedures are used by the SAFR Workbench 
-to access metadata in the SAFR DB2 database. These are native
-Stored Procedures so must use DB2 Z/OS Version 9 or above.
+Stored Procedures are used by the GENEVA Workbench to access
+related metadata in the DB2 database. These native Stored
+Procedures so must use DB2 Z/OS Version 11 or above.
+
 Native stored procedures are created directly in DB2.
 
 ## this activity is performed on a z/OS system.
 
-   The first step is to have the repo placed in a USS directory.
+   The first step is to clone the Workbench repository to USS.
 
-   This example shows a git clone action positioning the repo
-   in a USS directory
+   git clone git@github.com:genevaers/Workbench.git 
 
-   git clone git@github.ibm.com:SAFR/wb420.git 
+## allocate the z/OS PDS datasets
 
-## allocate a z/OS PDS
-
-   Here is a suggested batch JCL to allocate such a data set
+   The following JCL allocates datasets used to copy JCL, DDL
+   and SQL statements:
 <pre> 
 //* 
 //*   .   ensure variables are exportable
@@ -31,67 +30,61 @@ Native stored procedures are created directly in DB2.
 //*
 //* Question 1.  What is the High Level Qualifier for the 
 //*              PDS to hold DB2 data definition source.?
-//               SET HLQ1=GENEVA.GVBSTOR
+//               SET HLQ1=GENEVA
 //* 
-//*   .   Delete any prior existing dataset
+//*   .   Delete any prior existing datasets
 //*
 //DELETE     EXEC   PGM=IDCAMS
 //SYSPRINT   DD     SYSOUT=*
 //SYSIN      DD *,SYMBOLS=EXECSYS
- DELETE &HLQ1..GVBSTOR
+ DELETE &HLQ1..GVBSTOR.JCL
+ IF LASTCC > 0 THEN -
+   SET MAXCC = 0
+ DELETE &HLQ1..GVBSTOR.DDL
+ IF LASTCC > 0 THEN -
+   SET MAXCC = 0
+ DELETE &HLQ1..GVBSTOR.SQL
  IF LASTCC > 0 THEN -
    SET MAXCC = 0
 //*
-//*   .   Allocate dataset
+//*   .   Allocate datasets
 //* 
 //ALLOC    EXEC PGM=IEFBR14,
 //            COND=(0,LT)
 //SYSPRINT DD SYSOUT=* 
-//DBRM     DD DSN=&HLQ1..GVBSTOR,
+//DBRMJCL  DD DSN=&HLQ1..GVBSTOR.JCL,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,DSNTYPE=LIBRARY,
+//            SPACE=(TRK,(10,10),RLSE),
+//            DSORG=PO,RECFM=FB,LRECL=80
+//DBRMDDL  DD DSN=&HLQ1..GVBSTOR.DDL,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,DSNTYPE=LIBRARY,
+//            SPACE=(TRK,(10,10),RLSE),
+//            DSORG=PO,RECFM=FB,LRECL=80
+//DBRMSQL  DD DSN=&HLQ1..GVBSTOR.SQL,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,DSNTYPE=LIBRARY,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
-## move parts into a z/OS PDS
+## copy the JCL, DDL and SQL to the z/OS PDS datasets
 
-   Here is a suggested shell script to copy files from a USS folder 
-   to the newly allocated PDS.
+   Here are suggested shell script commands to copy files from the USS folders 
+   to the newly allocated PDS datasets.
 
-   The first parameter to the shell script ($1) is the high level
-   qualifier of the GVBDDL PDS
-
-   The second parameter to the shell script ($2) is USS directory 
-   where the the GVBDDL source resides
-
-   e.g. /u/user1/wb420
 <pre>
-#!/bin/bash  
-# 
-#   .   copyfiles into GVBSTOR  
-#
-for entry in `ls $2/StorProc`; do  
-    fullf=$entry 
-    fname=${fullf%%.*}
-    echo $fname 
-    cp -F nl $2/StorProc/$entry "//'$1.GVBSTOR($fname)'" 
-    if (( $? )); then 
-                echo "------------------------------------"
-                echo "$fname has not been moved to GVBSTOR"
-                echo "------------------------------------" 
-                exit 1 
-    fi 
-done 
-exit
+cp -vS d=.jcl ~/git/public/Workbench/database/db2/*.jcl "//'GENEVA.GVBSTOR.JCL'"
+cp -vS d=.ddl ~/git/public/Workbench/database/db2/*.ddl "//'GENEVA.GVBSTOR.DDL'"
+cp -vS d=.sql ~/git/public/Workbench/database/db2/StorProc/*.sql "//'GENEVA.GVBSTOR.SQL'"
 </pre>
 ## Update the DEFPROCS member 
 
-   This will add in the Db2 subsystem libraries, 
-   Language Environment libraries
-   and Db2 utility program names
-
-   The DEFPROCS member will have a variable block at its
-   begining to allow these changes to be done easily.
+   Add the Db2 subsystem libraries, Language Environment libraries
+   and Db2 utility program names in the Standard Variables section
+   of the JCL
   
 ## Run the DEFPROCS member to define the Db2 objects
    
+   Run DEFPROCS to remove from the DB2 database any existing stored procedures and to define
+   them again using the definitions provided for the current GENEVA version.
