@@ -30,6 +30,6 @@ DISABLE DEBUG MODE
 
 BEGIN
 
-SET SD_VER='SD&version.&major.&minor.&build';
+SET SD_VER='SD PG.4.17.261';
 
 END
