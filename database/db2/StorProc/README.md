@@ -74,9 +74,10 @@ Native stored procedures are created directly in DB2.
    to the newly allocated PDS datasets.
 
 <pre>
-cp -vS d=.jcl ~/git/public/Workbench/database/db2/*.jcl "//'GENEVA.GVBSTOR.JCL'"
-cp -vS d=.ddl ~/git/public/Workbench/database/db2/*.ddl "//'GENEVA.GVBSTOR.DDL'"
-cp -vS d=.sql ~/git/public/Workbench/database/db2/StorProc/*.sql "//'GENEVA.GVBSTOR.SQL'"
+cp -vS d=.JCL ~/git/public/Workbench/database/db2/*.JCL "//'GENEVA.GVBSTOR.JCL'"
+cp -vS d=.DDL ~/git/public/Workbench/database/db2/*.DDL "//'GENEVA.GVBSTOR.DDL'"
+cp -vS d=.SQL ~/git/public/Workbench/database/db2/StorProc/*.SQL "//'GENEVA.GVBSTOR.SQL'"
+cp -vS d=.JCL ~/git/public/Workbench/database/db2/StorProc/*.JCL "//'GENEVA.GVBSTOR.JCL'"
 </pre>
 ## Update the DEFPROCS member 
 
