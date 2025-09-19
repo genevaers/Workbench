@@ -2,18 +2,10 @@
 <?pde version="3.8"?>
 <target name="target-platform.target" sequenceNumber="15">
     <locations>
-        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<unit id="ch.qos.logback.slf4j" version="0.0.0"/>
-            <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
-		    <unit id="org.eclipse.equinox.simpleconfigurator" version="0.0.0"/>
-            <repository location="http://download.eclipse.org/releases/2021-09"/> 	
-        </location>
 	    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-		    <repository location="http://download.eclipse.org/releases/2021-09"/>
+		    <repository location="http://download.eclipse.org/releases/2023-09"/>
 		    <unit id="org.eclipse.platform.sdk" version="0.0.0"/>
 		    <unit id="org.eclipse.equinox.sdk.feature.group" version="0.0.0"/>
-			<unit id="org.junit.jupiter.api" version="0.0.0"/>
-			<unit id="org.junit.jupiter.engine" version="0.0.0"/>
 		    <unit id="org.eclipse.equinox.p2.sdk.feature.group" version="0.0.0"/>
 		    <unit id="org.eclipse.equinox.simpleconfigurator" version="0.0.0"/>
 		    <unit id="org.eclipse.draw2d" version="0.0.0"/>

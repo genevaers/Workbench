@@ -30,6 +30,8 @@ import org.eclipse.swt.widgets.MenuItem;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.SAFRLogger;
 
+import org.eclipse.core.runtime.Platform;
+
 public class OpenCurrentLogFile extends AbstractHandler {
 
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -38,7 +40,21 @@ public class OpenCurrentLogFile extends AbstractHandler {
 				// File logFile = new File(SAFRLogger.getLogPath() + File.separatorChar
 				// + fileClicked);
 		try {
-			Runtime.getRuntime().exec("Notepad.exe" + " " + logFile.getAbsolutePath());
+			String os = Platform.getOS(); 
+			if (Platform.OS_MACOSX.equals(os)) {
+				// Force TextEdit explicitly
+				// Equivalent to: open -a TextEdit /path/to/file.txt
+				Runtime.getRuntime().exec(new String[] { 
+					"open", 
+					"-a", 
+					"TextEdit", 
+					logFile.getAbsolutePath() 
+				});
+			}
+			else {
+				// Platform.OS_WIN32: use Notepad on Windows:
+				Runtime.getRuntime().exec("Notepad.exe" + " " + logFile.getAbsolutePath());
+			}
 		} catch (IOException re) {
 			UIUtilities.handleWEExceptions(re);
 		}
