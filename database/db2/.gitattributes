@@ -1,0 +1,4 @@
+# Default to ascii unless otherwise specified
+*.JCL              zos-working-tree-encoding=ibm-1047 git-encoding=iso8859-1
+*.DDL              zos-working-tree-encoding=ibm-1047 git-encoding=iso8859-1
+*.SQL              zos-working-tree-encoding=ibm-1047 git-encoding=iso8859-1

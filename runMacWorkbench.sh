@@ -12,5 +12,17 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/x86_64/Eclipse.app
-
+if uname -a | grep -q 'arm64'; then
+    echo "Running on MacOS arm64"
+    open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/aarch64/Eclipse.app
+else
+    if uname -a | grep -q 'x86_64'; then
+        if uname -a | grep -q 'Msys'; then
+            echo "Running on Windows x86_64"
+            ./products/com.ibm.safr.we.product/target/products/wb/win32/win32/x86_64/GenevaERS.exe
+        else
+            echo "Running on MacOS x86_64."
+            open products/com.ibm.safr.we.product/target/products/wb/macosx/cocoa/x86_64/Eclipse.app
+        fi
+    fi
+fi
