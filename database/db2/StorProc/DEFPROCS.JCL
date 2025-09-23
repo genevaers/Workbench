@@ -3,13 +3,13 @@
 //            CLASS=A,
 //            MSGLEVEL=(1,1),
 //            MSGCLASS=H
-//********************************************************************
+//*******************************************************************
 //*
 //* (C) COPYRIGHT IBM CORPORATION 2023.
 //*    Copyright Contributors to the GenevaERS Project.
 //*SPDX-License-Identifier: Apache-2.0
 //*
-//********************************************************************
+//*******************************************************************
 //*
 //*  Licensed under the Apache License, Version 2.0 (the "License");
 //*  you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@
 //   SET DB2PLAN1='DSNTIA13'
 //   SET DB2PLAN2='DSNTEP13'
 //*
-//********************************************************************
+//*******************************************************************
 //*
 //JOBLIB   DD DISP=SHR,DSN=&DB2PROC
 //         DD DISP=SHR,DSN=&DB2EXIT
