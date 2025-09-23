@@ -45,10 +45,8 @@
 //*******************************************************************
 //*   Standard Variables in use
 //*
-//   SET HLQ='GEBT.'
-//   SET VER='4'
-//   SET MAJ='18'
-//   SET MIN='000'
+//   SET HLQ='GENEVA'
+//   SET MLQ='GVBSTOR'
 //   SET DB2LOAD='DSN.V13R1M0.SDSNLOAD'
 //   SET DB2EXIT='DSN.V13R1M0.SDSNEXIT'
 //   SET DB2RUN='DSN131.RUNLIB.LOAD'
@@ -58,8 +56,8 @@
 //*
 //********************************************************************
 //*
-//JOBLIB   DD DISP=SHR,DSN=&DB2EXIT.
-//         DD DISP=SHR,DSN=&DB2LOAD.
+//JOBLIB   DD DISP=SHR,DSN=&DB2EXIT
+//         DD DISP=SHR,DSN=&DB2LOAD
 //         DD DISP=SHR,DSN=&DB2RUN
 //         DD DISP=SHR,DSN=CEE.SCEERUN
 //         DD DISP=SHR,DSN=CEE.SCEERUN2
@@ -77,5 +75,5 @@
   DSN SYSTEM(&DB2SYS)
   RUN PROGRAM(DSNTEP2) PLAN(DSNTEP13)
 //*
-//SYSIN    DD DISP=SHR,DSN=&HLQ..PM&VER.&MAJ.&MIN..GVBDDL(GVBQVWS)
+//SYSIN    DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQVWS)
 /*

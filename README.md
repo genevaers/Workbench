@@ -46,9 +46,9 @@ To build the GenevaERS workbench do the following:
 ## Build PreRequisite
 
 You will need to have installed Java and a version of Maven.  
-The Maven version used for development was 3.9.4.
+The Maven version used for development was 3.9.9.
 
-Your version of Java must be higher than 1.8.  The development version was 17.0.6.
+Your version of Java must be higher than 17.  The development version was 17.0.6.
 
 The final optional step of the build adds a JRE to the distributable zip.
 To do this the build script assumes you have [7Zip](https://www.7-zip.org/download.html) installed and available on your path.
