@@ -46,6 +46,9 @@ Native stored procedures are created directly in DB2.
  DELETE &HLQ1..GVBSTOR.SQL
  IF LASTCC > 0 THEN -
    SET MAXCC = 0
+ DELETE &HLQ1..GVBSTOR.PROC.JCL
+ IF LASTCC > 0 THEN -
+   SET MAXCC = 0
 //*
 //*   .   Allocate datasets
 //* 
@@ -67,6 +70,11 @@ Native stored procedures are created directly in DB2.
 //            UNIT=SYSDA,DSNTYPE=LIBRARY,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
+/DBRMDPP  DD DSN=&HLQ1..GVBSTOR.PROC.JCL,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,DSNTYPE=LIBRARY,
+//            SPACE=(TRK,(10,10),RLSE),
+//            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
 ## copy the JCL, DDL and SQL to the z/OS PDS datasets
 
@@ -77,7 +85,7 @@ Native stored procedures are created directly in DB2.
 cp -vS d=.JCL ~/git/public/Workbench/database/db2/*.JCL "//'GENEVA.GVBSTOR.JCL'"
 cp -vS d=.DDL ~/git/public/Workbench/database/db2/*.DDL "//'GENEVA.GVBSTOR.DDL'"
 cp -vS d=.SQL ~/git/public/Workbench/database/db2/StorProc/*.SQL "//'GENEVA.GVBSTOR.SQL'"
-cp -vS d=.JCL ~/git/public/Workbench/database/db2/StorProc/*.JCL "//'GENEVA.GVBSTOR.JCL'"
+cp -vS d=.JCL ~/git/public/Workbench/database/db2/StorProc/*.JCL "//'GENEVA.GVBSTOR.PROC.JCL'"
 </pre>
 ## Update the DEFPROCS member 
 
