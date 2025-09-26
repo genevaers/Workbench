@@ -43,7 +43,7 @@ while IFS= read -r line; do
   echo $line > "$FROM_DIR"/text.tmp;
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
-  echo "Staidx: $staidx Endidx: $endidx Line: $line";
+  # echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}"
@@ -54,7 +54,6 @@ while IFS= read -r line; do
 done < "$FILE"
 
 # Copy the processed files from preparation directory to MVS PDSE
-    # cp -S d=."$FROM_SUF" "$file"."$FROM_SUF" "$TO_PDS";
 cp -S d=."$FROM_SUF" "$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
 
 }
