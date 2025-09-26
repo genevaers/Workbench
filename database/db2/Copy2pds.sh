@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script to directory contents to MVS pds(e)
+# Invoked like: ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'"
 
 main() {
 
