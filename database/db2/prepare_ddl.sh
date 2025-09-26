@@ -21,11 +21,11 @@ MEMBER="$1";
 # member = "GVBQDRAL.DDL";
 
 # never mind the symbolics
-sed 's/&$DBUSER./"GERS_DBUSER"/g'    $MEMBER > prep/tmp1;
-sed 's/&$DBNAME./"$GERS_DBNAME"/g' prep/tmp1 > prep/tmp2;
-sed 's/&$DBSG./"$GERS_DBSG"/g'     prep/tmp2 > prep/tmp3;
-sed 's/&$DBSUB./"$GERS_DBSUB"/g'   prep/tmp3 > prep/tmp4;
-sed 's/&$DBSCH./"$GERS_DBSCH"/g'   prep/tmp4 > prep/$MEMBER;
+sed 's/&$DBUSER./$GERS_DBUSER/g'   $MEMBER > prep/tmp1;
+sed 's/&$DBNAME./$GERS_DBNAME/g' prep/tmp1 > prep/tmp2;
+sed 's/&$DBSG./$GERS_DBSG/g'     prep/tmp2 > prep/tmp3;
+sed 's/&$DBSUB./$GERS_DBSUB/g'   prep/tmp3 > prep/tmp4;
+sed 's/&$DBSCH./$GERS_DBSCH/g'   prep/tmp4 > prep/$MEMBER;
 
 }
 
