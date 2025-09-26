@@ -5,15 +5,16 @@
 main() {
 
 # Check if a directory and pattern are provided
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
   echo "Usage: $0 <directory> <suffix> <pds>";
-  echo "Example: $0 /u/usr1/sample  jcl  //'SMPL.JCL'";
+  echo "Example: $0 /u/usr1/sample  jcl  //'SMPL.JCL' [Y|N]";
   exit 1;
 fi
 
 FROM_DIR="$1";
 FROM_SUF="$2";
 TO_PDS="$3";
+SYM="$4";
 
 # Variables chosen by user
 export GERS_DBUSER=SAFRBLD
@@ -48,7 +49,9 @@ while IFS= read -r line; do
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}"
     echo "Preparing file: $file";
-    . ./prepare_ddl.sh "$file";
+    if [ "Y" -eq "$SYM" ]; then
+      ./prepare_ddl.sh "$file";
+    fi
   fi
 
 done < "$FILE"
