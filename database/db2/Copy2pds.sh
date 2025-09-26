@@ -12,7 +12,7 @@ FROM_DIR="$1";
 FROM_SUF="$2";
 TO_PDS="$3";
 
-echo "Copying files from directory: $FROM_DIR with suffix: $FROM_SUF to MVS dataset: $TO_PDS"
+echo "Preparing files in directory: $FROM_DIR with suffix: $FROM_SUF to MVS dataset: $TO_PDS"
 
 # Determine directory contents
 
@@ -39,8 +39,8 @@ while IFS= read -r line; do
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file=$(expr substr "$line" 1 $((endidx-1)) );
-    echo "Copying file: $file";
-      cp -S d=."$FROM_SUF" "$file"."$FROM_SUF" "$TO_PDS";
+    echo "Preparing file: $file";
+    # cp -S d=."$FROM_SUF" "$file"."$FROM_SUF" "$TO_PDS";
     # cp -S d=."$FROM_SUF" "$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
 
   fi
