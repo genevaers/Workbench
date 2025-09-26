@@ -35,12 +35,12 @@ while IFS= read -r line; do
   echo $line > "$FROM_DIR"/text.tmp;
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
-  echo "Staidx: $staidx Endidx: $endidx";
+  echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
 #    file=$(expr substr "$line" 1 $((endidx-1)) );
 #    file=$(expr substr "$line" $((staidx+1)) );
-    file="${line:3:5}"
+    file="${line:2}"
     echo "Preparing file: $file";
     # cp -S d=."$FROM_SUF" "$file"."$FROM_SUF" "$TO_PDS";
     # cp -S d=."$FROM_SUF" "$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
