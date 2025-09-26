@@ -12,7 +12,7 @@ FROM_DIR="$1";
 FROM_SUF="$2";
 TO_PDS="$3";
 
-echo "Preparing files in directory: $FROM_DIR with suffix: $FROM_SUF to MVS dataset: $TO_PDS"
+echo "Preparing files in directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
 
 # Determine directory contents
 
@@ -35,7 +35,7 @@ while IFS= read -r line; do
   echo $line > "$FROM_DIR"/text.tmp;
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
-  # echo "Staidx: $staidx Endidx: $endidx";
+  echo "Staidx: $staidx Endidx: $endidx";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file=$(expr substr "$line" 1 $((endidx-1)) );
