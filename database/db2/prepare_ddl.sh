@@ -28,11 +28,11 @@ mycmdstr4='s/&$DBSUB.'/${GERS_DBSUB}/'g'
 mycmdstr5='s/&$DBSCH.'/${GERS_DBSCH}/'g'
 
 # perform substitutions
-sed $mycmdstr1   $MEMBER > prep/tmp1;
-sed $mycmdstr2 prep/tmp1 > prep/tmp2;
-sed $mycmdstr3 prep/tmp2 > prep/tmp3;
-sed $mycmdstr4 prep/tmp3 > prep/tmp4;
-sed $mycmdstr5 prep/tmp4 > prep/$MEMBER;
+sed -W filecodeset=IBM-1047 $mycmdstr1   $MEMBER > prep/tmp1;
+sed -W filecodeset=IBM-1047 $mycmdstr2 prep/tmp1 > prep/tmp2;
+sed -W filecodeset=IBM-1047 $mycmdstr3 prep/tmp2 > prep/tmp3;
+sed -W filecodeset=IBM-1047 $mycmdstr4 prep/tmp3 > prep/tmp4;
+sed -W filecodeset=IBM-1047 $mycmdstr5 prep/tmp4 > prep/$MEMBER;
 
 }
 
