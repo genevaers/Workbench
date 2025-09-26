@@ -17,7 +17,7 @@ TO_PDS="$GERS_TO_PDS";
 echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDS"
 
 # ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
-./Copy2pds.sh . DDL $TO_PDS Y;
+./Copy2pds.sh . DDL $TO_PDS 1;
 
 }
 

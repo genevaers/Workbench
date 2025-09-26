@@ -49,7 +49,7 @@ while IFS= read -r line; do
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}"
     echo "Preparing file: $file";
-    if [ "Y" -eq "$SYM" ]; then
+    if [ 1 -eq "$SYM" ]; then
       ./prepare_ddl.sh "$file";
     fi
   fi
