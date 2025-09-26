@@ -4,17 +4,6 @@
 
 main() {
 
-# Check if a directory and pattern are provided
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <directory> <suffix> <pds>";
-  echo "Example: $0 /u/usr1/sample  jcl  //'SMPL.JCL'";
-  exit 1;
-fi
-
-FROM_DIR="$1";
-FROM_SUF="$2";
-TO_PDS="$3";
-
 # Variables chosen by user
 export GERS_DBUSER=SAFRBLD
 export GERS_DBNAME=SADBNEIL
