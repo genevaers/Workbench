@@ -25,8 +25,8 @@ mkdir prep;
 # Determine directory contents
 # echo "$FROM_DIR"/*."$FROM_SUF"
 
-ls "$FROM_DIR"/*."$FROM_SUF" > "$FROM_DIR"/list.tmp
-FILE="$FROM_DIR/list.tmp"; # File to parse to get directory contents
+ls "$FROM_DIR"/*."$FROM_SUF" > "$FROM_DIR"/prep/list.tmp
+FILE="$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
 if [ ! -f "$FILE" ]; then
   echo "Error: Temporary file '$FILE' not found.";
   exit 1;
@@ -34,9 +34,9 @@ fi
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo $line > "$FROM_DIR"/text.tmp;
-  staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
-  endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"text.tmp" );
+  echo $line > "$FROM_DIR"/prep/text.tmp;
+  staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
+  endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
   # echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
