@@ -24,7 +24,7 @@ TO_PDSSQL="//'$GERS_TO_PDS.SQL'";
 TO_PDSSQL="$TO_PDSSQL";
 echo "TO_PDSSQL: $TO_PDSSQL";
 
-echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDSDDL , $TO_PDSJCL , $TO_PDSSQL"
+echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
 
 # ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
