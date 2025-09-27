@@ -12,7 +12,7 @@ export GERS_DBSCH=SAFRNEIL
 export GERS_DBSUB=DM13
 export GERS_TO_PDS=GEBT.RTC23321; ## "//'GEBT.RTC23321'";
 
-TO_PDS="//'$GERS_TO_PDS.DLL'";
+TO_PDS='"//'$GERS_TO_PDS.DLL'"';
 echo "TO_PDS: $TO_PDS";
 
 echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDS"
