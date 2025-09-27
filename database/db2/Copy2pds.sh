@@ -59,8 +59,11 @@ while IFS= read -r line; do
 done < "$FILE"
 
 # Copy the processed files from preparation directory to MVS PDSE
-cp -S d=."$FROM_SUF" "$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
-
+if [ 1 -eq "$SYM" ]; then
+  cp -S d=."$FROM_SUF" "$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
+else
+  cp -S d=."$FROM_SUF" "$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
+fi
 }
 
 exitIfError() {
