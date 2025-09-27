@@ -50,7 +50,7 @@ while IFS= read -r line; do
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
       echo "Preparing file: $file";
-      ./prepare_ddl.sh "$file";
+      . ./prepare_ddl.sh "$file";
     fi
   fi
 
