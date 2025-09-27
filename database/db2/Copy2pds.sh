@@ -19,8 +19,8 @@ SYM="$4";
 echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
 
 # Remove data preparation directory and create fresh
-rm -Rf prep;
-mkdir prep;
+rm -Rf "$FROM_DIR"/prep;
+mkdir "$FROM_DIR"/prep;
 
 # Determine directory contents
 # echo "$FROM_DIR"/*."$FROM_SUF"
