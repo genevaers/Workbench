@@ -42,7 +42,7 @@ while IFS= read -r line; do
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
-      echo "Performing substitutions for file: $file";
+      echo "Performing substitutions and copying file: $file";
       . ./prepare_ddl.sh "$file";
     else
       echo "Copying file: $file";
