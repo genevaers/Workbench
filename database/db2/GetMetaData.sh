@@ -20,12 +20,16 @@ TO_PDSJCL="//'$GERS_TO_PDS.JCL'";
 TO_PDSJCL="$TO_PDSJCL";
 echo "TO_PDSJCL: $TO_PDSJCL";
 
+TO_PDSSQL="//'$GERS_TO_PDS.SQL'";
+TO_PDSSQL="$TO_PDSSQL";
+echo "TO_PDSSQL: $TO_PDSSQL";
+
 echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDSDDL"
 
 # ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
 ./Copy2pds.sh . JCL $TO_PDSJCL 0;
-# ./Copy2pds.sh StorProc/ SQL $TO_PDS.SQL 0;
+./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;
 
 }
 
