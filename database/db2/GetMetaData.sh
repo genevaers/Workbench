@@ -10,14 +10,16 @@ export GERS_DBNAME=SADBNEIL
 export GERS_DBSG=SASGNEIL
 export GERS_DBSCH=SAFRNEIL
 export GERS_DBSUB=DM13
-export GERS_TO_PDS="//'GEBT.RTC23321.DDL'";
+export GERS_TO_PDS="//'GEBT.RTC23321'";
 
 TO_PDS="$GERS_TO_PDS";
 
 echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDS"
 
 # ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
-./Copy2pds.sh . DDL $TO_PDS 1;
+./Copy2pds.sh . DDL $TO_PDS.DDL 1;
+./Copy2pds.sh . JCL $TO_PDS.JCL 0;
+./Copy2pds.sh StorProc/ SQL $TO_PDS.SQL 0;
 
 }
 
