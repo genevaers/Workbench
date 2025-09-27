@@ -12,15 +12,19 @@ export GERS_DBSCH=SAFRNEIL
 export GERS_DBSUB=DM13
 export GERS_TO_PDS=GEBT.RTC23321; ## "//'GEBT.RTC23321'";
 
-TO_PDS="//'$GERS_TO_PDS.DDL'";
-TO_PDS="$TO_PDS";
-echo "TO_PDS: $TO_PDS";
+TO_PDSDDL="//'$GERS_TO_PDS.DDL'";
+TO_PDSDDL="$TO_PDSDDL";
+echo "TO_PDSDDL: $TO_PDSDDL";
 
-echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDS"
+TO_PDSJCL="//'$GERS_TO_PDS.JCL'";
+TO_PDSJCL="$TO_PDSJCL";
+echo "TO_PDSJCL: $TO_PDSJCL";
+
+echo "Preparing metadatafiles for Workbench and exporting to: $TO_PDSDDL"
 
 # ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
-./Copy2pds.sh . DDL $TO_PDS 1;
-# ./Copy2pds.sh . JCL $TO_PDS.JCL 0;
+./Copy2pds.sh . DDL $TO_PDSDDL 1;
+./Copy2pds.sh . JCL $TO_PDSJCL.JCL 0;
 # ./Copy2pds.sh StorProc/ SQL $TO_PDS.SQL 0;
 
 }
