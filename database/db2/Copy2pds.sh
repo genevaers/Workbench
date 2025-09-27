@@ -16,13 +16,6 @@ FROM_SUF="$2";
 TO_PDS="$3";
 SYM="$4";
 
-# Variables chosen by user
-export GERS_DBUSER=SAFRBLD
-export GERS_DBNAME=SADBNEIL
-export GERS_DBSG=SASGNEIL
-export GERS_DBSCH=SAFRNEIL
-export GERS_DBSUB=DM13
-
 echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
 
 # Remove data preparation directory and create fresh
