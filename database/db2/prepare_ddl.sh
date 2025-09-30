@@ -34,7 +34,7 @@ sed $mycmdstr3 prep/tmp2 > prep/tmp3;
 sed $mycmdstr4 prep/tmp3 > prep/tmp4;
 sed $mycmdstr5 prep/tmp4 > prep/tmp5;
 
-#convert back to EBCDIC again
+#convert output back to EBCDIC again
 iconv -f ISO8859-1 -t IBM-1047 prep/tmp5 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
