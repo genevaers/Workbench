@@ -6,8 +6,8 @@ main() {
 
 # Check if a directory and pattern are provided
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
-  echo "Usage: $0 <directory> <suffix> <pds>";
-  echo "Example: $0 /u/usr1/sample  jcl  //'SMPL.JCL' [Y|N]";
+  echo "Usage: $0 <directory> <suffix> <pds> <substitutions required>";
+  echo "Example: $0 /u/usr1/sample  jcl  //'SMPL.JCL' [0|1]";
   exit 1;
 fi
 
