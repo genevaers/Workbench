@@ -684,6 +684,10 @@ public class SAFRLogin extends TitleAreaDialog {
 					currentUser.setUserPreferences(newDefEnvId, 0);
 				}
 			}
+			
+			Integer currentEnvId = envMap.get(comboEnvironment.getText());
+			DAOFactoryHolder.getDAOFactory().getMigrateDAO().logMigration(currentEnvId,
+					currentEnvId, ComponentType.Connection, 0, "");
 
 		} catch (Exception e) {
 		    logger.log(Level.SEVERE, "Failure during login", e);
@@ -721,9 +725,11 @@ public class SAFRLogin extends TitleAreaDialog {
 				currentUser = SAFRApplication.getSAFRFactory().getUser(userID.getText());			
 			} else {
 				currentUser = SAFRApplication.getSAFRFactory().getUser(userID.getText());
-				if (!currentUser.authenticate(pswd.getText()))
+				if (!currentUser.authenticate(pswd.getText())) {
 					throw new SAFRException("Password not valid.");
+				}
 			}
+		
 		} catch (SAFRException se) {
 			setErrorMessage(se.getMessage());
 			showConnectionFailureMesssage(se);
