@@ -91,6 +91,8 @@ public class DB2MigrateDAO implements MigrateDAO {
 			return "VIEW FOLDER";
 		case View :
 			return "VIEW";
+		case Connection:
+			return "CONNECTION";
 		default : {
 			logger.log(Level.SEVERE, "Invalid ComponentType for migration");
 			return null;
