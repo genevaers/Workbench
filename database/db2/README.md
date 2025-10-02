@@ -110,5 +110,18 @@ Procedures so must use DB2 Z/OS Version 11 or above.
 Native stored procedures are created directly in DB2.
 
 ## Replicating an existing GenevaERS environment
-
-T.B.D.
+This process differs necessarily from the one above.
+<pre>
+EXDSNMOD - change LOB file location <===
+EXMPNC2  - change schema
+DRPALL   - drop existing database schema if it exists
+BLDDB01  - create database, C_*, E_* and X_* tables
+BLDDB02  - create C_*, E_* and X_* indexes
+BLDDB03  - create Logic Table/LOB column and indexes
+LOAD01   - load database without E_LOGIC table
+LOAD02   - load E_LOGIC table
+BLDDB04  - create foreign keys
+BLDDB06  - create DB2 views
+REPAIR   - remove tablespaces check pending status
+INSTSP   - install stored procedures
+</pre>
