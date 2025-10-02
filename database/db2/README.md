@@ -89,7 +89,6 @@ First we'll start with building a new GenevaERS environment. A later section dea
 
 For a new environment run these job in the following sequence. Do not do this when replicating an existing environment.
 
-Procedures for non-SF database:
 <pre>
 DRPALL      - drop existing database schema if it exists
 BLDDB01     - create database, C_*, E_* and X_* tables
