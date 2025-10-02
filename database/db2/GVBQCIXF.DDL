@@ -34,13 +34,13 @@
 -- 3) Replace occurrences of schema &$DBSCH.
 --
 
-  SET CURRENT SQLID='SAFRBLD';               
-  CREATE UNIQUE INDEX SAFRNEIL.E_LOGICTBL    
-    ON SAFRNEIL.E_LOGICTBL                   
+  SET CURRENT SQLID='&$DBUSER.';
+  CREATE UNIQUE INDEX &$DBSCH..E_LOGICTBL    
+    ON &$DBSCH..E_LOGICTBL                   
      (ENVIRONID             ASC,             
       VIEWID                ASC,             
       TYPECD                ASC)             
-    USING STOGROUP SASGNEIL                  
+    USING STOGROUP &$DBSG.                  
     PRIQTY 48 SECQTY 720                     
     ERASE  NO                                
     FREEPAGE 0 PCTFREE 10                    
@@ -51,9 +51,9 @@
     COPY NO                                  
     PIECESIZE 2 G;                           
   COMMIT;                                    
-  CREATE UNIQUE INDEX SAFRNEIL.E_LOGICTBL_LOB
-    ON SAFRNEIL.E_LOGICTBL_LOB               
-    USING STOGROUP SASGNEIL                  
+  CREATE UNIQUE INDEX &$DBSCH..E_LOGICTBL_LOB
+    ON &$DBSCH..E_LOGICTBL_LOB               
+    USING STOGROUP &$DBSG.                  
     PRIQTY 48 SECQTY 720                     
     ERASE  NO                                
     FREEPAGE 0 PCTFREE 10                    
