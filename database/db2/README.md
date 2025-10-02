@@ -1,52 +1,61 @@
-# How to load a DB2 Database with Stored procedures
+# How to define a DB2 Database for GenevaERS
 
 This is designed only for Db2 running z/OS. This README
-will guide you to define a Stored Procedure.
+will guide you through the following steps:
 
-Stored Procedures are used by the GENEVA Workbench to access
-related metadata in the DB2 database. These native Stored
-Procedures so must use DB2 Z/OS Version 11 or above.
+1) cloning database/db2 directory contents to USS
+2) prepare your site db2 defaults to use with GenevaERS
+3) copying necessary JCL, DDL and SQL from USS to MVS datasets so that your site defaults are populated
+4) Building the DB2 Schema to contain GenevaERS objects
 
-Native stored procedures are created directly in DB2.
+## Cloning database/db2 directory contents to IBM USS
 
-## this activity is performed on a z/OS system.
+Logon to USS and using the bash shell enter one of the following commands, depending whether you are using ssh or https:
 
-   The first step is to clone the Workbench repository to USS.
+git clone git@github.com:genevaers/Workbench.git
 
-   git clone git@github.com:genevaers/Workbench.git 
+git clone https://github.com/genevaers/Workbench.git
 
-## allocate the z/OS PDS datasets
+Then "cd" to the directory database/ and then to db2/
 
-   The following JCL allocates datasets used to copy JCL, DDL
-   and SQL statements:
-<pre> 
-//* 
+## Prepare your site DB2 defaults
+
+Either using TSO option 3.17 or the "vi" editor open file GetMetaData.sh under directory database/db2/
+
+Locate the relevant section of the file and replace the following with your site defaults. You may eventually want more than one DB2 schemas so repeat the process with different target datasets in each case.
+<pre>
+export GERS_DBUSER=your-RACFID-for-DB2-administration
+export GERS_DBNAME=your-db2-8-character-database-name
+export GERS_DBSG=your-db2-8-character-storage-group
+export GERS_DBSCH=your-db2-8-character-schema
+export GERS_DBSUB=your-db2-4-character-subsystem
+export GERS_TO_PDS=your-hlq.your-mlq
+
+</pre>
+## Copy JCL, DDL and JCL to MVS PDS[E] dataset
+
+First create the following 3 datasets as shown:
+
+<pre>
 //*   .   ensure variables are exportable
 //*
 //         EXPORT SYMLIST=*
 //*
-//*   Please answer the following question before submitting
-//*   this job
-//*
-//* Question 1.  What is the High Level Qualifier for the 
-//*              PDS to hold DB2 data definition source.?
-//               SET HLQ1=GENEVA
+//         SET HLQ=GENEVA
+//         SET MLQ=MIDDLE
 //* 
 //*   .   Delete any prior existing datasets
 //*
 //DELETE     EXEC   PGM=IDCAMS
 //SYSPRINT   DD     SYSOUT=*
 //SYSIN      DD *,SYMBOLS=EXECSYS
- DELETE &HLQ1..GVBSTOR.JCL
+ DELETE &HLQ..&MLQ..JCL
  IF LASTCC > 0 THEN -
    SET MAXCC = 0
- DELETE &HLQ1..GVBSTOR.DDL
+ DELETE &HLQ..&MLQ..DDL
  IF LASTCC > 0 THEN -
    SET MAXCC = 0
- DELETE &HLQ1..GVBSTOR.SQL
- IF LASTCC > 0 THEN -
-   SET MAXCC = 0
- DELETE &HLQ1..GVBSTOR.PROC.JCL
+ DELETE &HLQ..MLQ..SQL
  IF LASTCC > 0 THEN -
    SET MAXCC = 0
 //*
@@ -55,45 +64,52 @@ Native stored procedures are created directly in DB2.
 //ALLOC    EXEC PGM=IEFBR14,
 //            COND=(0,LT)
 //SYSPRINT DD SYSOUT=* 
-//DBRMJCL  DD DSN=&HLQ1..GVBSTOR.JCL,
+//DBRMJCL  DD DSN=&HLQ..&MLQ..JCL,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,DSNTYPE=LIBRARY,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
-//DBRMDDL  DD DSN=&HLQ1..GVBSTOR.DDL,
+//DBRMDDL  DD DSN=&HLQ..&MLQ..DDL,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,DSNTYPE=LIBRARY,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
-//DBRMSQL  DD DSN=&HLQ1..GVBSTOR.SQL,
-//            DISP=(NEW,CATLG,DELETE),
-//            UNIT=SYSDA,DSNTYPE=LIBRARY,
-//            SPACE=(TRK,(10,10),RLSE),
-//            DSORG=PO,RECFM=FB,LRECL=80
-/DBRMDPP  DD DSN=&HLQ1..GVBSTOR.PROC.JCL,
+//DBRMSQL  DD DSN=&HLQ..&MLQ..SQL,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,DSNTYPE=LIBRARY,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
-## copy the JCL, DDL and SQL to the z/OS PDS datasets
-
-   Here are suggested shell script commands to copy files from the USS folders 
-   to the newly allocated PDS datasets.
-
+To copy the information to MVS type
 <pre>
-cp -vS d=.JCL ~/git/public/Workbench/database/db2/*.JCL "//'GENEVA.GVBSTOR.JCL'"
-cp -vS d=.DDL ~/git/public/Workbench/database/db2/*.DDL "//'GENEVA.GVBSTOR.DDL'"
-cp -vS d=.SQL ~/git/public/Workbench/database/db2/StorProc/*.SQL "//'GENEVA.GVBSTOR.SQL'"
-cp -vS d=.JCL ~/git/public/Workbench/database/db2/StorProc/*.JCL "//'GENEVA.GVBSTOR.PROC.JCL'"
+./GetMetaData.sh
 </pre>
-## Update the DEFPROCS member 
+## Building DB2 Schema to contain GenevaERS objects
+First we'll start with building a new GenevaERS environment. A later section deals with how to build a GenevaERS environment and populate it with data from an existing environment, for example replicating an environment you already have.
 
-   Add the Db2 subsystem libraries, Language Environment libraries
-   and Db2 utility program names in the Standard Variables section
-   of the JCL
-  
-## Run the DEFPROCS member to define the Db2 objects
-   
-   Run DEFPROCS to remove from the DB2 database any existing stored procedures and to define
-   them again using the definitions provided for the current GENEVA version.
+For a new environment run these job in the following sequence. Do not do this when replicating an existing environment.
+
+Procedures for non-SF database:
+<pre>
+DRPALL      - drop existing database schema if it exists
+BLDDB01     - create database, C_*, E_* and X_* tables
+BLDDB03     - create Logic Table/LOB column and indexes
+BLDDB02     - create C_*, E_* and X_* indexes
+BLDDB04     - create foreign keys
+BLDDB05     - load CODETABL and other tables
+BLDDB06     - create DB2 views
+REPAIR      - remove tablespaces check pending status
+INSTSP      - install stored procedures
+</pre>
+
+### Note on stored procedures - job INSTSP
+
+Stored Procedures are used by the GENEVA Workbench to access
+related metadata in the DB2 database. These native Stored
+Procedures so must use DB2 Z/OS Version 11 or above.
+
+Native stored procedures are created directly in DB2.
+
+## Replicating an existing GenevaERS environment
+
+T.B.D.
