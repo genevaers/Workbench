@@ -9,7 +9,7 @@ There are distinct and separate processes for either creating a new DB2 Schema f
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
 4A) Build the DB2 Schema to contain new GenevaERS objects, OR 
-4B) Replicate an existing GenevaERS DB2 Schema
+4B) Replicate an existing GenevaERS DB2 Schema and objects
 </pre>
 ## Clone database/db2 directory contents to IBM USS
 
@@ -105,7 +105,7 @@ REPAIR      - remove tablespaces check pending status
 INSTSP      - install stored procedures
 </pre>
 
-## Replicate an existing GenevaERS environment
+## Replicate an existing GenevaERS environment and objects
 
 This process differs necessarily from the one above, and is used only for replicating an existing GenevaERS DB2 schema.
 <pre>
