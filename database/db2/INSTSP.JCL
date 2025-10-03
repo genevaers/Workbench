@@ -37,11 +37,11 @@
 //   SET DB2PLAN=DSNTEP13                                                   
 //   SET DB2NAME=SADBNEIL                                              
 //   SET DB2SCH=SAFRNEIL                                               
+//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
+//   SET DB2RLIB=DSN131.RUNLIB.LOAD
 //*                                                                    
-//PROCLIB  JCLLIB ORDER=(GEBT.BUILD.SITE,                              
-//            GEBT.BUILD.PROC,                                         
-//            DSN.V13R1M0.PROCLIB,                                     
-//            GEBT.RTC23321.JCL)                                       
+//PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
+//            &HLQ..&MLQ..JCL)                                       
 //*                                                                    
 //JOBLIB   INCLUDE MEMBER=@INCLLIB                                     
 //*                                                                    
@@ -54,7 +54,7 @@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
  DSN SYSTEM(&DB2SYS)                                                   
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-         LIB('DSN131.RUNLIB.LOAD')                                     
+         LIB(&DB2RLIB)                                     
 //*                                                                    
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
 GRANT BINDADD TO &DB2SCH;                                              
@@ -72,7 +72,7 @@ GRANT CREATE IN COLLECTION &DB2SCH TO &DB2SCH;
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
  DSN SYSTEM(&DB2SYS)                                                   
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-         LIB('DSN131.RUNLIB.LOAD')                                     
+         LIB(&DB2RLIB)                                     
 //*                                                                    
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
 SET CURRENT SQLID = '&DB2SCH';                                         
@@ -94,7 +94,7 @@ SET CURRENT SQLID = '&DB2SCH';
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
    DSN SYSTEM(&DB2SYS)                                                 
        RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                           
-           LIB('DSN131.RUNLIB.LOAD')       -                           
+           LIB(&DB2RLIB)       -                           
            PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')                       
 //*                                                                    
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
@@ -115,7 +115,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
   DSN SYSTEM(&DB2SYS)                                                  
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                            
-          LIB('DSN131.RUNLIB.LOAD')       -                            
+          LIB(&DB2RLIB)       -                            
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')                        
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -136,7 +136,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -157,7 +157,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -178,7 +178,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                  
   DSN SYSTEM(&DB2SYS)                            
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -      
-          LIB('DSN131.RUNLIB.LOAD')       -      
+          LIB(&DB2RLIB)       -      
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')  
 //*                                              
 //SYSIN    DD *,SYMBOLS=EXECSYS                  
@@ -199,7 +199,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                  
   DSN SYSTEM(&DB2SYS)                            
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -      
-          LIB('DSN131.RUNLIB.LOAD')       -      
+          LIB(&DB2RLIB)       -      
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')  
 //*                                              
 //SYSIN    DD *,SYMBOLS=EXECSYS                  
@@ -220,7 +220,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                  
     DSN SYSTEM(&DB2SYS)                          
         RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-            LIB('DSN131.RUNLIB.LOAD')       -    
+            LIB(&DB2RLIB)       -    
             PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                              
 //SYSIN    DD *,SYMBOLS=EXECSYS                  
@@ -241,7 +241,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -262,7 +262,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -283,7 +283,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -304,7 +304,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -325,7 +325,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -346,7 +346,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -367,7 +367,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -388,7 +388,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -409,7 +409,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -430,7 +430,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -451,7 +451,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -472,7 +472,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -493,7 +493,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -514,7 +514,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -535,7 +535,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -556,7 +556,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -577,7 +577,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -598,7 +598,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -619,7 +619,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                
   DSN SYSTEM(&DB2SYS)                          
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -    
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                
@@ -640,7 +640,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
   DSN SYSTEM(&DB2SYS)                                                  
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                            
-          LIB('DSN131.RUNLIB.LOAD')       -                            
+          LIB(&DB2RLIB)       -                            
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')                        
 //*                                                                    
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
@@ -661,7 +661,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
   DSN SYSTEM(&DB2SYS)                                                  
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                            
-          LIB('DSN131.RUNLIB.LOAD')       -                            
+          LIB(&DB2RLIB)       -                            
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')                        
 //*                                                                    
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
@@ -687,7 +687,7 @@ SET CURRENT SQLID = '&DB2SCH'@
 //SYSTSIN  DD *,SYMBOLS=EXECSYS                                        
   DSN SYSTEM(&DB2SYS)                                                  
       RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                            
-          LIB('DSN131.RUNLIB.LOAD')       -    
+          LIB(&DB2RLIB)       -    
           PARMS('/SQLFORMAT(SQLPL),SQLTERM(@)')
 //*                                            
 //SYSIN    DD *,SYMBOLS=EXECSYS                

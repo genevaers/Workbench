@@ -34,11 +34,11 @@
 //   SET HLQ='GEBT'                                                    
 //   SET MLQ='RTC23321'
 //   SET DB2PLAN='DSNTEP13'                                                
+//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
+//   SET DB2RLIB=DSN131.RUNLIB.LOAD
 //*                                                                    
-//PROCLIB  JCLLIB ORDER=(GEBT.BUILD.SITE,                              
-//            GEBT.BUILD.PROC,                                         
-//            DSN.V13R1M0.PROCLIB,                                     
-//            GEBT.RTC23321.JCL)                                       
+//PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
+//            &HLQ..&MLQ..JCL)                                       
 //*                                                                    
 //JOBLIB   INCLUDE MEMBER=@INCLLIB                                     
 //*                                                                    
@@ -53,7 +53,7 @@
 //SYSTSIN DD *                                                         
  DSN SYSTEM(DM13)                                                      
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB('DSN131.RUNLIB.LOAD')                                  
+            LIB(&DB2RLIB)                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
 //SYSIN    DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQDRAL)                   
