@@ -5,13 +5,13 @@ There are distinct and separate processes for either creating a new DB2 Schema f
 
 ## Summary of steps involved
 <pre>
-1) cloning database/db2 directory contents to USS
+1) clone database/db2 directory contents to USS
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
-4A) Building the DB2 Schema to contain GenevaERS objects, OR 
-4B) Replicating an existing GenevaERS DB2 Schema
+4A) Build the DB2 Schema to contain new GenevaERS objects, OR 
+4B) Replicate an existing GenevaERS DB2 Schema
 </pre>
-## Cloning database/db2 directory contents to IBM USS
+## Clone database/db2 directory contents to IBM USS
 
 Logon to USS and using the bash shell enter one of the following commands, depending whether you are using ssh or https:
 
@@ -88,7 +88,7 @@ To copy the information to your newly allocated MVS datasets type the following 
 <pre>
 ./MakeDB2Schema.sh
 </pre>
-## Building DB2 Schema to contain GenevaERS objects
+## Build DB2 Schema to contain GenevaERS objects
 First we'll cover building a new GenevaERS environment. A later section deals with how to build a GenevaERS environment and populate it with data from an existing environment, i.e. replicating a GenevaERS environment you already have.
 
 For a new environment run these job in the following sequence. DO NOT use this when replicating an existing environment.
@@ -105,7 +105,7 @@ REPAIR      - remove tablespaces check pending status
 INSTSP      - install stored procedures
 </pre>
 
-## Replicating an existing GenevaERS environment
+## Replicate an existing GenevaERS environment
 
 This process differs necessarily from the one above, and is used only for replicating an existing GenevaERS DB2 schema.
 <pre>
