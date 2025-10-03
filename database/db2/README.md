@@ -95,7 +95,7 @@ BLDDB01     - create database, C_*, E_* and X_* tables
 BLDDB03     - create Logic Table/LOB column and indexes
 BLDDB02     - create C_*, E_* and X_* indexes
 BLDDB04     - create foreign keys
-BLDDB05     - load CODETABL and other tables
+BLDDB05     - load CODETABL and the other table
 BLDDB06     - create DB2 views
 REPAIR      - remove tablespaces check pending status
 INSTSP      - install stored procedures
