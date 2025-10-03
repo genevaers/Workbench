@@ -1,4 +1,4 @@
-//BLDDB01  JOB (ACCT),'BUILD DB STEP1',                                
+//BLDDB01  JOB (ACCT),'BUILD DB STEP1',  
 //            NOTIFY=&SYSUID.,                                         
 //            CLASS=A,                                                 
 //            MSGLEVEL=(1,1),                                          
@@ -33,7 +33,8 @@
 //*                                                                    
 //   SET HLQ='GEBT'                                                    
 //   SET MLQ='RTC23321'                                                
-//   SET DB2SYS=DM13                                                   
+//   SET DB2SYS=DM13
+//   SET DB2PLAN=DSNTEP13
 //*                                                                    
 //PROCLIB  JCLLIB ORDER=(GEBT.BUILD.SITE,                              
 //            GEBT.BUILD.PROC,                                         
@@ -49,7 +50,7 @@
 //SYSTSPRT DD SYSOUT=*                                                 
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
-     RUN PROGRAM(DSNTEP2) PLAN(DSNTEP13) -                             
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
             LIB('DSN131.RUNLIB.LOAD')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
@@ -62,7 +63,7 @@
 //SYSTSPRT DD SYSOUT=*                                                 
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
-     RUN PROGRAM(DSNTEP2) PLAN(DSNTEP13) -                             
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
             LIB('DSN131.RUNLIB.LOAD')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
@@ -75,7 +76,7 @@
 //SYSTSPRT DD SYSOUT=*                                                 
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
-     RUN PROGRAM(DSNTEP2) PLAN(DSNTEP13) -                             
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
             LIB('DSN131.RUNLIB.LOAD')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
@@ -88,7 +89,7 @@
 //SYSTSPRT DD SYSOUT=*                           
 //SYSTSIN DD *,SYMBOLS=EXECSYS                   
  DSN SYSTEM(&DB2SYS)                             
-     RUN PROGRAM(DSNTEP2) PLAN(DSNTEP13) -       
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -       
             LIB('DSN131.RUNLIB.LOAD')            
 //SYSPRINT DD SYSOUT=*                           
 //SYSUDUMP DD SYSOUT=*                           
