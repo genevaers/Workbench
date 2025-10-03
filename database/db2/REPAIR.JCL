@@ -35,11 +35,10 @@
 //   SET MLQ='RTC23321'                                                
 //   SET DB2SYS=DM13                                                   
 //   SET DB2NAME=SADBNEIL                                              
+//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
 //*                                                                    
-//PROCLIB  JCLLIB ORDER=(GEBT.BUILD.SITE,                              
-//            GEBT.BUILD.PROC,                                         
-//            DSN.V13R1M0.PROCLIB,                                     
-//            GEBT.RTC23321.JCL)                                       
+//PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
+//            &HLQ..&MLQ..JCL)                                       
 //*                                                                    
 //JOBLIB   INCLUDE MEMBER=@INCLLIB                                     
 //*                                                                    
