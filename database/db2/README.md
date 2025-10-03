@@ -1,13 +1,16 @@
 # How to define a DB2 Database for GenevaERS
 
-This is designed only for Db2 running z/OS. This README
-will guide you through the following steps:
+This is intended for Db2 running z/OS at DB2 version 11 and above.
+There are distinct and separate processes for either creating a new DB2 Schema for GenevaERS or for replicating an existing GenevaERS DB2 Schema. Ensure you follow the appropriate instructions.
 
+## Summary of steps involved
+<pre>
 1) cloning database/db2 directory contents to USS
 2) prepare your site db2 defaults to use with GenevaERS
-3) copying necessary JCL, DDL and SQL from USS to MVS datasets so that your site defaults are populated
-4) Building the DB2 Schema to contain GenevaERS objects
-
+3) copy JCL, DDL SQL to MVS datasets with your site defaults
+4A) Building the DB2 Schema to contain GenevaERS objects, OR 
+4B) Replicating an existing GenevaERS DB2 Schema
+</pre>
 ## Cloning database/db2 directory contents to IBM USS
 
 Logon to USS and using the bash shell enter one of the following commands, depending whether you are using ssh or https:
@@ -29,12 +32,13 @@ export GERS_DBNAME=your-db2-8-character-database-name
 export GERS_DBSG=your-db2-8-character-storage-group
 export GERS_DBSCH=your-db2-8-character-schema
 export GERS_DBSUB=your-db2-4-character-subsystem
-export GERS_TO_PDS=your-hlq.your-mlq
+export GERS_TO_PDS_HLQ=your-pds-hlq
+export GERS_TO_PDS_MLQ=your-pds-mlq
 
 </pre>
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 
-First create the following 3 datasets as shown:
+Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
 
 <pre>
 //*   .   ensure variables are exportable
@@ -80,14 +84,14 @@ First create the following 3 datasets as shown:
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
-To copy the information to MVS type
+To copy the information to your newly allocated MVS datasets type the following in USS:
 <pre>
-./GetMetaData.sh
+./MakeDB2Schema.sh
 </pre>
 ## Building DB2 Schema to contain GenevaERS objects
-First we'll start with building a new GenevaERS environment. A later section deals with how to build a GenevaERS environment and populate it with data from an existing environment, for example replicating an environment you already have.
+First we'll cover building a new GenevaERS environment. A later section deals with how to build a GenevaERS environment and populate it with data from an existing environment, i.e. replicating a GenevaERS environment you already have.
 
-For a new environment run these job in the following sequence. Do not do this when replicating an existing environment.
+For a new environment run these job in the following sequence. DO NOT use this when replicating an existing environment.
 
 <pre>
 DRPALL      - drop existing database schema if it exists
@@ -101,16 +105,9 @@ REPAIR      - remove tablespaces check pending status
 INSTSP      - install stored procedures
 </pre>
 
-### Note on stored procedures - job INSTSP
-
-Stored Procedures are used by the GENEVA Workbench to access
-related metadata in the DB2 database. These native Stored
-Procedures so must use DB2 Z/OS Version 11 or above.
-
-Native stored procedures are created directly in DB2.
-
 ## Replicating an existing GenevaERS environment
-This process differs necessarily from the one above.
+
+This process differs necessarily from the one above, and is used only for replicating an existing GenevaERS DB2 schema.
 <pre>
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
@@ -125,3 +122,12 @@ BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status
 INSTSP   - install stored procedures
 </pre>
+
+### Note on stored procedures - job INSTSP
+
+Stored Procedures are used by the GENEVA Workbench to access
+related metadata in the DB2 database. These native Stored
+Procedures so must use DB2 Z/OS Version 11 or above.
+
+Native stored procedures are created directly in DB2.
+
