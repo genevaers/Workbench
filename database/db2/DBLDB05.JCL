@@ -51,7 +51,7 @@
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB(&DB2RLIB)                                  
+            LIB('&DB2RLIB.')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
 //SYSIN DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQINCO)                      
@@ -64,7 +64,7 @@
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB(&DB2RLIB)                                  
+            LIB('&DB2RLIB.')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
 //SYSIN DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQINTB)                      
@@ -77,7 +77,7 @@
 //SYSTSIN DD *,SYMBOLS=EXECSYS                                         
  DSN SYSTEM(&DB2SYS)                                                   
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB(&DB2RLIB)                                  
+            LIB('&DB2RLIB.')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
 //SYSIN DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQINNX)

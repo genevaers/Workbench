@@ -1,4 +1,4 @@
-//DRPALL   JOB (ACCT),'DROP DATABASE',                                 
+//DROPALL  JOB (ACCT),'DROP DATABASE',                                 
 //            NOTIFY=&SYSUID.,                                         
 //            CLASS=A,                                                 
 //            MSGLEVEL=(1,1),                                          
@@ -50,10 +50,10 @@
 //*                                                                    
 //RUNTEP2 EXEC PGM=IKJEFT01,DYNAMNBR=20                                
 //SYSTSPRT DD SYSOUT=*                                                 
-//SYSTSIN DD *                                                         
+//SYSTSIN DD *,SYMBOLS=EXECSYS                                                         
  DSN SYSTEM(DM13)                                                      
      RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB(&DB2RLIB)                                  
+            LIB('&DB2RLIB.')                                  
 //SYSPRINT DD SYSOUT=*                                                 
 //SYSUDUMP DD SYSOUT=*                                                 
 //SYSIN    DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQDRAL)                   
