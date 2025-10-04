@@ -34,7 +34,11 @@ export GERS_DBSCH=your-db2-8-character-schema
 export GERS_DBSUB=your-db2-4-character-subsystem
 export GERS_TO_PDS_HLQ=your-pds-hlq
 export GERS_TO_PDS_MLQ=your-pds-mlq
-
+export GERS_JOB_CLASS=your-job-class
+export GERS_JOB_MSG_CLASS=your-msg-class
+export GERS_DB2_PROCLIB=your-DB2-proclib
+export GERS_DB2_RUNLIB=your-DB2-runlib
+export GERS_DB2_PLAN=your-DB2-administration-plan-used
 </pre>
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 
