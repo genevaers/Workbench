@@ -41,11 +41,15 @@ while IFS= read -r line; do
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
-    if [ 1 -eq "$SYM" ]; then
-      echo "Performing substitutions and copying file: $file";
+    if [ 1 -eq "$SYM" ] || [ 2 -eq "$SYM" ]; then
+      echo "Performing DDL substitutions and copying file: $file";
       . ./prepare_ddl.sh "$file";
     else
-      echo "Copying file: $file";
+      if [ 2 -eq "$SYM" ]; then
+        echo "Performing JCL substitutions and copying file: $file";
+      else
+        echo "Copying file: $file";
+      fi
     fi
   fi
 
