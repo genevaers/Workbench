@@ -103,7 +103,7 @@ First we'll cover building a new GenevaERS environment. A later section deals wi
 For a new environment run these job in the following sequence. DO NOT use this when replicating an existing environment.
 
 <pre>
-DRPALL      - drop existing database schema if it exists
+DROPALL     - drop existing database schema if it exists
 BLDDB01     - create database, C_*, E_* and X_* tables
 BLDDB03     - create Logic Table/LOB column and indexes
 BLDDB02     - create C_*, E_* and X_* indexes
@@ -120,7 +120,7 @@ This process differs necessarily from the one above, and is used only for replic
 <pre>
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
-DRPALL   - drop existing database schema if it exists
+DROPALL   - drop existing target database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
 BLDDB02  - create C_*, E_* and X_* indexes
 BLDDB03  - create Logic Table/LOB column and indexes
