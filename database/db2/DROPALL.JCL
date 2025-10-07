@@ -24,12 +24,12 @@
 //*  or implied.
 //*  See the License for the specific language governing permissions
 //*  and limitations under the License.
-//*                                                                   
+//*
 //********************************************************************
 //* drop database
 //********************************************************************
-//*  
-//   EXPORT SYMLIST=*                                                  
+//*
+//   EXPORT SYMLIST=*
 //*
 //   SET HLQ=&$PDSHLQ.
 //   SET MLQ=&$PDSMLQ.
@@ -37,25 +37,25 @@
 //   SET DB2PLIB=&$DB2PLIB.
 //   SET DB2RLIB=&$DB2RLIB.
 //*
-//PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
-//            &HLQ..&MLQ..JCL)                                       
-//*                                                                    
-//JOBLIB   INCLUDE MEMBER=@INCLLIB                                     
-//*                                                                    
-//*                                                                    
-//*                                                                    
+//PROCLIB  JCLLIB ORDER=(&DB2PLIB.,
+//            &HLQ..&MLQ..JCL)
+//*
+//JOBLIB   INCLUDE MEMBER=@INCLLIB
+//*
+//*
+//*
 //*********************************************************************
-//*   RUN SQL SCRIPT                                                   
+//*   RUN SQL SCRIPT
 //*********************************************************************
-//*                                                                    
-//RUNTEP2 EXEC PGM=IKJEFT01,DYNAMNBR=20                                
-//SYSTSPRT DD SYSOUT=*                                                 
-//SYSTSIN DD *,SYMBOLS=EXECSYS                                                         
- DSN SYSTEM(DM13)                                                      
-     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
-            LIB('&DB2RLIB.')                                  
-//SYSPRINT DD SYSOUT=*                                                 
-//SYSUDUMP DD SYSOUT=*                                                 
-//SYSIN    DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQDRAL)                   
-//*                                                                    
+//*
+//RUNTEP2 EXEC PGM=IKJEFT01,DYNAMNBR=20
+//SYSTSPRT DD SYSOUT=*
+//SYSTSIN DD *,SYMBOLS=EXECSYS
+ DSN SYSTEM(DM13)
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -
+            LIB('&DB2RLIB.')
+//SYSPRINT DD SYSOUT=*
+//SYSUDUMP DD SYSOUT=*
+//SYSIN    DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQDRAL)
+//*
 //

@@ -41,7 +41,7 @@ while IFS= read -r line; do
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
-    if [ 1 -eq "$SYM" ] || [ 2 -eq "$SYM" ]; then
+    if [ 1 -eq "$SYM" ]; then
       echo "Performing DDL substitutions and copying file: $file";
       . ./prepare_ddl.sh "$file";
     else
@@ -49,17 +49,16 @@ while IFS= read -r line; do
         echo "Performing JCL substitutions and copying file: $file";
         . ./prepare_jcl.sh "$file";
       else
-        echo "Logic error for file: $file";
+        echo "Copying file: $file";
       fi
     fi
   else
     echo "Copying file: $file";
   fi
-
 done < "$FILE"
 
 # Copy the processed files from preparation directory to MVS PDSE
-if [ 1 -eq "$SYM" ]; then
+if [ 1 -eq "$SYM" ] || [ 2 -eq "$SYM" ]; then
   cp -S d=."$FROM_SUF" "$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
 else
   cp -S d=."$FROM_SUF" "$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
