@@ -47,10 +47,13 @@ while IFS= read -r line; do
     else
       if [ 2 -eq "$SYM" ]; then
         echo "Performing JCL substitutions and copying file: $file";
+        . ./prepare_jcl.sh "$file";
       else
-        echo "Copying file: $file";
+        echo "Logic error for file: $file";
       fi
     fi
+  else
+    echo "Copying file: $file";
   fi
 
 done < "$FILE"
