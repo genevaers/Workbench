@@ -1,8 +1,8 @@
 //CHKALL   JOB (ACCT),'CHECK TABLESPACES',                             
 //            NOTIFY=&SYSUID.,                                         
-//            CLASS=A,                                                 
-//            MSGLEVEL=(1,1),                                          
-//            MSGCLASS=H                                               
+//            CLASS=&$JBCLASS.,
+//            MSGLEVEL=(1,1),
+//            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
 //*
@@ -31,12 +31,12 @@
 //*  
 //   EXPORT SYMLIST=*                                                  
 //*                                                                    
-//   SET HLQ='GEBT'                                                    
-//   SET MLQ='RTC23321'                                                
-//   SET DB2SYS=DM13                                                   
-//   SET DB2NAME=SADBNEIL                                              
-//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
-//*                                                                    
+//   SET HLQ=&$PDSHLQ.
+//   SET MLQ=&$PDSMLQ.
+//   SET DB2SYS=&$DBSUB.
+//   SET DB2NAME=&$DBNAME.
+//   SET DB2PLIB=&$DB2PLIB.
+//*
 //PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
 //            &HLQ..&MLQ..JCL)                                       
 //*                                                                    

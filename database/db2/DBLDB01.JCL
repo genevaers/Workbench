@@ -1,8 +1,8 @@
-//BLDDB01  JOB (ACCT),'BUILD DB STEP1',  
-//            NOTIFY=&SYSUID.,                                         
-//            CLASS=&$JBCLASS.,                                                 
-//            MSGLEVEL=(1,1),                                          
-//            MSGCLASS=&$MSGCLASS.                                               
+//BLDDB01  JOB (ACCT),'BUILD DB STEP1',
+//            NOTIFY=&SYSUID.,
+//            CLASS=&$JBCLASS.,
+//            MSGLEVEL=(1,1),
+//            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
 //*
@@ -31,8 +31,8 @@
 //*  
 //   EXPORT SYMLIST=*                                                  
 //*                                                                    
-//   SET HLQ=&$PDSHLQ.                                                    
-//   SET MLQ=&$PDSMLQ.                                                
+//   SET HLQ=&$PDSHLQ.
+//   SET MLQ=&$PDSMLQ.
 //   SET DB2SYS=&$DBSUB.
 //   SET DB2PLAN=&$DB2PLAN.
 //   SET DB2PLIB=&$DB2PLIB.

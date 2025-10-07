@@ -1,8 +1,8 @@
-//INSTSP  JOB (GILLIAN),'STORED PROC',REGION=0M,                      
-//            NOTIFY=&SYSUID.,                                         
-//            CLASS=A,                                                 
-//            MSGLEVEL=(1,1),                                          
-//            MSGCLASS=H                                               
+//INSTSP  JOB (ACCT),'STORED PROC',REGION=0M,
+//            NOTIFY=&SYSUID.,
+//            CLASS=&$JBCLASS.,
+//            MSGLEVEL=(1,1),
+//            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
 //*
@@ -30,16 +30,16 @@
 //********************************************************************
 //*  
 //   EXPORT SYMLIST=*                                                  
-//*                                                                    
-//   SET HLQ='GEBT'                                                    
-//   SET MLQ='RTC23321'                                                
-//   SET DB2SYS=DM13
-//   SET DB2PLAN=DSNTEP13                                                   
-//   SET DB2NAME=SADBNEIL                                              
-//   SET DB2SCH=SAFRNEIL                                               
-//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
-//   SET DB2RLIB=DSN131.RUNLIB.LOAD
-//*                                                                    
+//*
+//   SET HLQ=&$PDSHLQ.
+//   SET MLQ=&$PDSMLQ.
+//   SET DB2SYS=&$DBSUB.
+//   SET DB2PLAN=&$DB2PLAN.
+//   SET DB2NAME=&$DBNAME.
+//   SET DB2SCH=&$DBSCH.
+//   SET DB2PLIB=&$DB2PLIB.
+//   SET DB2RLIB=&$DB2RLIB.
+//*
 //PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
 //            &HLQ..&MLQ..JCL)                                       
 //*                                                                    

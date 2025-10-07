@@ -1,7 +1,7 @@
-//BLDDB03  JOB (ACCT),'BUILD DB STEP3',                                
-//            NOTIFY=&SYSUID.,                                         
+//BLDDB03  JOB (ACCT),'BUILD DB STEP3',
+//            NOTIFY=&SYSUID.,
 //            CLASS=&$JBCLASS.,
-//            MSGLEVEL=(1,1),                                          
+//            MSGLEVEL=(1,1),
 //            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
@@ -31,13 +31,13 @@
 //*  
 //   EXPORT SYMLIST=*                                                  
 //*                                                                    
-//   SET HLQ=&$PDSHLQ.                                                    
-//   SET MLQ=&$PDSHLQ.                                                
+//   SET HLQ=&$PDSHLQ.
+//   SET MLQ=&$PDSMLQ.
 //   SET DB2SYS=&$DBSUB.
 //   SET DB2PLAN=&$DB2PLAN.
 //   SET DB2PLIB=&$DB2PLIB.
 //   SET DB2RLIB=&$DB2RLIB.
-//*                                                                    
+//*
 //PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
 //            &HLQ..&MLQ..JCL)                                       
 //*                                                                    

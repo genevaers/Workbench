@@ -1,8 +1,8 @@
-//BLDDB04  JOB (ACCT),'BUILD DB STEP4',                                
-//            NOTIFY=&SYSUID.,                                         
-//            CLASS=A,                                                 
-//            MSGLEVEL=(1,1),                                          
-//            MSGCLASS=H
+//BLDDB04  JOB (ACCT),'BUILD DB STEP4',
+//            NOTIFY=&SYSUID.,
+//            CLASS=&$JBCLASS.,
+//            MSGLEVEL=(1,1),
+//            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
 //*
@@ -30,14 +30,14 @@
 //********************************************************************
 //*  
 //   EXPORT SYMLIST=*                                                  
-//*                                                                    
-//   SET HLQ='GEBT'                                                    
-//   SET MLQ='RTC23321'                                                
-//   SET DB2SYS=DM13
-//   SET DB2PLAN=DSNTEP13
-//   SET DB2PLIB=DSN.V13R1M0.PROCLIB
-//   SET DB2RLIB=DSN131.RUNLIB.LOAD
-//*                                                                    
+//*
+//   SET HLQ=&$PDSHLQ.
+//   SET MLQ=&$PDSMLQ.
+//   SET DB2SYS=&$DBSUB.
+//   SET DB2PLAN=&$DB2PLAN.
+//   SET DB2PLIB=&$DB2PLIB.
+//   SET DB2RLIB=&$DB2RLIB.
+//*
 //PROCLIB  JCLLIB ORDER=(&DB2PLIB.,                                     
 //            &HLQ..&MLQ..JCL)                                       
 //*                                                                    
