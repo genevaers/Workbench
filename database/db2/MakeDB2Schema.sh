@@ -41,7 +41,6 @@ echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDD
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
 ./Copy2pds.sh . JCL $TO_PDSJCL 2;
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;
-./Copy2pds.sh StorProc JCL $TO_PDSJCL 2;
 
 }
 
