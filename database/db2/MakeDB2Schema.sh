@@ -1,6 +1,5 @@
 #!/bin/bash
 # Script to directory contents to MVS pds(e)
-# Invoked like: ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'"
 
 main() {
 
@@ -16,8 +15,9 @@ export GERS_TO_PDS_MLQ=RTC23321;
 export GERS_JOB_CLASS=A;
 export GERS_JOB_MSG_CLASS=H;
 export GERS_DB2_PROCLIB=DSN.V13R1M0.PROCLIB;
-export GERS_DB2_RUNLIB=DSN131.RUNLIB.LOAD
+export GERS_DB2_LOADLIB=DSN.V13R1M0.SDSNLOAD
 export GERS_DB2_EXITLIB=DSN.V13R1M0.SDSNEXIT
+export GERS_DB2_RUNLIB=DSN131.RUNLIB.LOAD
 export GERS_DB2_PLAN=DSNTEP13;
 
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
@@ -37,7 +37,6 @@ echo "TO_PDSSQL: $TO_PDSSQL";
 
 echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
 
-# ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'";
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
 ./Copy2pds.sh . JCL $TO_PDSJCL 2;
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;
