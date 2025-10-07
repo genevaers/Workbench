@@ -42,6 +42,7 @@ mycmdstr9='s/&$DB2RLIB.'/${GERS_DB2_RUNLIB}/'g'
 mycmdstr10='s/&$DB2PLAN.'/${GERS_DB2_PLAN}/'g'
 mycmdstr11='s/&$PDSHLQ.'/${GERS_TO_PDS_HLQ}/'g'
 mycmdstr12='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
+mycmdstr13='s/&$DB2XLIB.'/${GERS_DB2_EXITLIB}/'g'
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
@@ -56,9 +57,10 @@ sed $mycmdstr9 prep/tmp8 > prep/tmp9;
 sed $mycmdstr10 prep/tmp9 > prep/tmp10;
 sed $mycmdstr11 prep/tmp10 > prep/tmp11;
 sed $mycmdstr12 prep/tmp11 > prep/tmp12;
+sed $mycmdstr12 prep/tmp12 > prep/tmp13;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp12 > prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp13 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
 }
