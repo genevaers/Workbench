@@ -23,6 +23,16 @@ export GERS_SCEERUN=CEE.SCEERUN;
 export GERS_SCEERUN2=CEE.SCEERUN2;
 export GERS_SCBCDLL=CBC.SCLBDLL;
 
+#optional variables when replicating GenevaERS metadata from another DB2 schema
+export GERS_FROM_DBUSER=SAFRBLD;
+export GERS_FROM_DBNAME=SADBNEIL;
+export GERS_FROM_DBSG=SASGNEIL;
+export GERS_FROM_DBSCH=SAFRNEIL;
+export GERS_FROM_DBSUB=DM13;
+export GERS_FROM_PDS_HLQ=GEBT;
+export GERS_FROM_PDS_MLQ=RTC23321;
+
+# mainline
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
 echo "GERS_TO_PDS stem: $GERS_TO_PDS";
 
