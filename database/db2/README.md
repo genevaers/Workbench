@@ -105,8 +105,8 @@ For a new environment run these job in the following sequence. DO NOT use this w
 <pre>
 DROPALL     - drop existing database schema if it exists
 BLDDB01     - create database, C_*, E_* and X_* tables
-BLDDB03     - create Logic Table/LOB column and indexes
-BLDDB02     - create C_*, E_* and X_* indexes
+BLDDB02     - create Logic Table/LOB column
+BLDDB03     - create C_*, E_* and X_* indexes
 BLDDB04     - create foreign keys
 BLDDB05     - load CODETABL and the other table
 BLDDB06     - create DB2 views
@@ -120,16 +120,13 @@ This process differs necessarily from the one above, and is used only for replic
 <pre>
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
-DROPALL   - drop existing target database schema if it exists
-BLDDB01  - create database, C_*, E_* and X_* tables
-BLDDB02  - create C_*, E_* and X_* indexes
-BLDDB03  - create Logic Table/LOB column and indexes
+DROPVIEW - new
+DROPFKEY - new
 LOAD01   - load database without E_LOGIC table
 LOAD02   - load E_LOGIC table
 BLDDB04  - create foreign keys
 BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status
-INSTSP   - install stored procedures
 </pre>
 
 ### Note on stored procedures - job INSTSP
