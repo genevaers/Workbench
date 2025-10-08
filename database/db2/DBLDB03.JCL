@@ -1,4 +1,4 @@
-//BLDDB02  JOB (ACCT),'BUILD DB STEP2',
+//BLDDB03  JOB (ACCT),'BUILD DB STEP3',
 //            NOTIFY=&SYSUID.,
 //            CLASS=&$JBCLASS.,
 //            MSGLEVEL=(1,1),
