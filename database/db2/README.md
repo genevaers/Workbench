@@ -1,7 +1,6 @@
 # How to define a DB2 Database for GenevaERS
 
-This is intended for Db2 running z/OS at DB2 version 11 and above.
-There are distinct and separate processes for either creating a new DB2 Schema for GenevaERS or for replicating an existing GenevaERS DB2 Schema. Ensure you follow the appropriate instructions.
+This is intended for Db2 running z/OS at DB2 version 11 and above. These instructions enable you to define a new DB2 schema to contain GenevaERS metadata, and optionally to replicate an existing GenevaERS environment to this new DB2 schema.
 
 ## Summary of steps involved
 <pre>
