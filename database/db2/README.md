@@ -118,10 +118,11 @@ INSTSP      - install stored procedures
 
 These additional steps populate the new environment. This will replicate metadata from an existing GenevaERS DB2 schema.
 <pre>
+UNLOAD   - unload GenevaERS data from existing DB2 schema             - new
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
-DROPVIEW - new
-DROPFKEY - new
+DROPVIEW - drop views                                                 - new
+DROPFKEY - drop foregin keys                                          - new
 LOAD01   - load database without E_LOGIC table
 LOAD02   - load E_LOGIC table
 BLDDB04  - create foreign keys
