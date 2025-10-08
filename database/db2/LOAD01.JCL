@@ -26,7 +26,7 @@
 //*  and limitations under the License.
 //*                                                                   
 //********************************************************************
-//*   LOAD CODETABL
+//*   JOB 1
 //********************************************************************
 //*  
 //   EXPORT SYMLIST=*
@@ -43,6 +43,9 @@
 //*
 //JOBLIB   INCLUDE MEMBER=@INCLLIB
 //*
+//*********************************************************************
+//*   LOAD CODETABL                                                    
+//********************************************************************* 
 //CODETABL EXEC DSNUPROC,UID=&SYSUID,
 //         SYSTEM=&DB2SYS
 //SYSUT1   DD DSN=GEBT.GENERS.D240708U.ALL.SYSUT1,
