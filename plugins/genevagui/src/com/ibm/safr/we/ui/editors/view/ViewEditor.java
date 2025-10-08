@@ -1539,7 +1539,8 @@ public class ViewEditor extends SAFREditorPart implements IPartListener2 {
 				}
 	        }	 
             ApplicationMediator.getAppMediator().updateStatusContribution(ApplicationMediator.STATUSBARVIEW, "", false);
-            activation.getContextService().deactivateContext(activation);
+            if(activation!=null)
+            	activation.getContextService().deactivateContext(activation);
 		}			
 	}
 
