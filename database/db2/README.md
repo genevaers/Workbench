@@ -8,8 +8,8 @@ There are distinct and separate processes for either creating a new DB2 Schema f
 1) clone database/db2 directory contents to USS
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
-4) Build DB2 Schema that is going to contain GenevaERS datadata
-5) Load replicated data from existing GenevaERS DB2 Schema into new schema
+4) build DB2 Schema that is going to contain GenevaERS datadata
+5) Optional, load replicated data from existing GenevaERS DB2 Schema into new schema
 </pre>
 ## Clone database/db2 directory contents to IBM USS
 
