@@ -100,7 +100,7 @@ To copy the information to your newly allocated MVS datasets type the following 
 ## Build DB2 Schema to contain GenevaERS objects
 First we'll cover building a new GenevaERS environment. A later section deals with how to build a GenevaERS environment and populate it with data from an existing environment, i.e. replicating a GenevaERS environment you already have.
 
-For a new environment run these job in the following sequence. DO NOT use this when replicating an existing environment.
+For a new environment run these job in the following sequence. To replicate and environment run the steps in the subsequent section also.
 
 <pre>
 DROPALL     - drop existing database schema if it exists
@@ -116,7 +116,7 @@ INSTSP      - install stored procedures
 
 ## Replicate an existing GenevaERS environment and objects
 
-This process differs necessarily from the one above, and is used only for replicating an existing GenevaERS DB2 schema.
+These additional steps populate the new environment. This will replicate metadata from an existing GenevaERS DB2 schema.
 <pre>
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
