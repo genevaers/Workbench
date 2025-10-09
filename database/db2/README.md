@@ -26,23 +26,31 @@ Either using TSO option 3.17 or the "vi" editor open file GetMetaData.sh under d
 
 Locate the relevant section of the file and replace the following with your site defaults. You may eventually want more than one DB2 schemas so repeat the process with different target datasets in each case.
 <pre>
-export GERS_DBUSER=your-RACFID-for-DB2-administration
-export GERS_DBNAME=your-db2-8-character-database-name
-export GERS_DBSG=your-db2-8-character-storage-group
-export GERS_DBSCH=your-db2-8-character-schema
-export GERS_DBSUB=your-db2-4-character-subsystem
-export GERS_TO_PDS_HLQ=your-pds-hlq
-export GERS_TO_PDS_MLQ=your-pds-mlq
+export GERS_DB2_DBUSER=your-RACFID-for-DB2-administration
+export GERS_DB2_DBNAME=your-db2-8-character-database-name
+export GERS_DB2_STGGRP=your-db2-8-character-storage-group
+export GERS_DB2_DBSCH=your-db2-8-character-schema
+export GERS_DB2_SUBSYSTEM=your-db2-4-character-subsystem
+export GERS_DB2_PLAN=your-DB2-administration-plan-used
+export GERS_DB2_PROCLIB=your-DB2-proclib
+export GERS_DB2_RUN_LIB=your-DB2-runlib
+export GERS_DB2_LOAD_LIB=your-DB2-loadlib
+export GERS_DB2_EXIT_LIB=your-DB2-exit-lib
 export GERS_JOB_CLASS=your-job-class
 export GERS_JOB_MSG_CLASS=your-msg-class
-export GERS_DB2_PROCLIB=your-DB2-proclib
-export GERS_DB2_LOADLIB=your-DB2-loadlib
-export GERS_DB2_EXITLIB=your-DB2-exit-lib
-export GERS_DB2_RUNLIB=your-DB2-runlib
-export GERS_DB2_PLAN=your-DB2-administration-plan-used
 export GERS_SCEERUN=your-CEE.SCEERUN
 export GERS_SCEERUN2=your-CEE.SCEERUN2
 export GERS_SCBCDLL=your-CBC.SCLBDLL
+export GERS_TO_PDS_HLQ=your-pds-hlq
+export GERS_TO_PDS_MLQ=your-pds-mlq
+- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+export GERS_FROM_PDS_HLQ=your-load-dataset-hlq
+export GERS_FROM_PDS_MLQ=your-load-dadaset-mlq
+export GERS_FROM_DB2_DBUSER=from-database-user
+export GERS_FROM_DB2_DBNAME=from-database-name
+export GERS_FROM_DB2_DBSG=your-unload-database-storage-group
+export GERS_FROM_DB2_DBSCH=your-unload-database-schema
+export GERS_FROM_DB2_DBSUB=your from database subsystem
 </pre>
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 

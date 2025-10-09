@@ -28,27 +28,34 @@ fi
 MEMBER="$1";
 
 # never mind the symbolics
-mycmdstr1='s/&$DBUSER.'/$GERS_DBUSER/'g';
-mycmdstr2='s/&$DBNAME.'/${GERS_DBNAME}/'g'
-mycmdstr3='s/&$DBSG.'/${GERS_DBSG}/'g'
-mycmdstr4='s/&$DBSUB.'/${GERS_DBSUB}/'g'
-mycmdstr5='s/&$DBSCH.'/${GERS_DBSCH}/'g'
+mycmdstr1='s/&$DBUSER.'/${GERS_DB2_DBUSER}/'g';
+mycmdstr2='s/&$DBNAME.'/${GERS_DB2_DBNAME}/'g'
+mycmdstr3='s/&$DBSG.'/${GERS_DB2_STGGRP}/'g'
+mycmdstr4='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g'
+mycmdstr5='s/&$DBSUB.'/${GERS_DB2_SUBSYSTEM}/'g'
+mycmdstr6='s/&$DB2PLAN.'/${GERS_DB2_PLAN}/'g'
+mycmdstr7='s/&$DB2PLIB.'/${GERS_DB2_PROCLIB}/'g'
+mycmdstr8='s/&$DB2RLIB.'/${GERS_DB2_RUN_LIB}/'g'
+mycmdstr9='s/&$DB2XLIB.'/${GERS_DB2_EXIT_LIB}/'g'
+mycmdstr10='s/&$DB2LLIB.'/${GERS_DB2_LOAD_LIB}/'g'
 
-mycmdstr6='s/&$JBCLASS.'/${GERS_JOB_CLASS}/'g'
-mycmdstr7='s/&$MSGCLASS.'/${GERS_JOB_MSG_CLASS}/'g'
-mycmdstr8='s/&$DB2PLIB.'/${GERS_DB2_PROCLIB}/'g'
-mycmdstr9='s/&$DB2RLIB.'/${GERS_DB2_RUNLIB}/'g'
-mycmdstr10='s/&$DB2PLAN.'/${GERS_DB2_PLAN}/'g'
-mycmdstr11='s/&$PDSHLQ.'/${GERS_TO_PDS_HLQ}/'g'
-mycmdstr12='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
-mycmdstr13='s/&$DB2XLIB.'/${GERS_DB2_EXITLIB}/'g'
-mycmdstr14='s/&$DB2LLIB.'/${GERS_DB2_LOADLIB}/'g'
+mycmdstr11='s/&$JBCLASS.'/${GERS_JOB_CLASS}/'g'
+mycmdstr12='s/&$MSGCLASS.'/${GERS_JOB_MSG_CLASS}/'g'
+mycmdstr13='s/&$SCEELIB.'/${GERS_LE_RUN_LIB}/'g'
+mycmdstr14='s/&$SCEE2LIB.'/${GERS_LE_RUN_LIB2}/'g'
+mycmdstr15='s/&$SCBCDLL.'/${GERS_SCBCDLL}/'g'
+mycmdstr16='s/&$PDSHLQ.'/${GERS_TO_PDS_HLQ}/'g'
+mycmdstr17='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
 
-mycmdstr15='s/&$SCEELIB.'/${GERS_SCEERUN}/'g'
-mycmdstr16='s/&$SCEE2LIB.'/${GERS_SCEERUN2}/'g'
-mycmdstr17='s/&$SCBCDLL.'/${GERS_SCBCDLL}/'g'
+#optional ones for replication
 mycmdstr18='s/&$FROMPDSHLQ.'/${GERS_FROM_PDS_HLQ}/'g'
 mycmdstr19='s/&$FROMPDSMLQ.'/${GERS_FROM_PDS_MLQ}/'g'
+mycmdstr20='s/&$FROMDBUSER.'/${GERS_FROM_DB2_DBUSER}/'g';
+mycmdstr21='s/&$FROMDBNAME.'/${GERS_FROM_DB2_DBNAME}/'g';
+mycmdstr22='s/&$FROMDBSG.'/${GERS_FROM_DB2_DBSG}/'g';
+mycmdstr23='s/&$FROMDBSCH.'/${GERS_FROM_DB2_DBSCH}/'g';
+mycmdstr24='s/&$FROMDBSUB.'/${GERS_FROM_DB2_DBSUB}/'g';
+
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
@@ -70,9 +77,14 @@ sed $mycmdstr16 prep/tmp15 > prep/tmp16;
 sed $mycmdstr17 prep/tmp16 > prep/tmp17;
 sed $mycmdstr18 prep/tmp17 > prep/tmp18;
 sed $mycmdstr19 prep/tmp18 > prep/tmp19;
+sed $mycmdstr20 prep/tmp19 > prep/tmp20;
+sed $mycmdstr21 prep/tmp20 > prep/tmp21;
+sed $mycmdstr22 prep/tmp21 > prep/tmp22;
+sed $mycmdstr23 prep/tmp22 > prep/tmp23;
+sed $mycmdstr24 prep/tmp23 > prep/tmp24;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp19 > prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp24 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
 }
