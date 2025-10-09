@@ -1,14 +1,14 @@
 # How to define a DB2 Database for GenevaERS
 
-This is intended for Db2 running z/OS at DB2 version 11 and above. These instructions enable you to define a new DB2 schema to contain GenevaERS metadata, and optionally to replicate an existing GenevaERS environment to this new DB2 schema.
+This is intended for Db2 running z/OS at DB2 version 11 and above. These instructions provide a procedure used to define a new DB2 schema to contain GenevaERS metadata. In addition there is an alternative procedure to create a new DB2 schema with the purpose of replicating an existing GenevaERS environment to the new DB2 schema.
 
 ## Summary of steps involved
 <pre>
 1) clone database/db2 directory contents to USS
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
-4) build DB2 Schema that is going to contain GenevaERS datadata
-5) Optional, load replicated data from existing GenevaERS DB2 Schema into new schema
+4) build DB2 Schema that is going to contain new GenevaERS data
+5) ALternatively, replicate an existing GenevaERS environment into a new DB2 schema
 </pre>
 ## Clone database/db2 directory contents to IBM USS
 
@@ -97,36 +97,37 @@ To copy the information to your newly allocated MVS datasets type the following 
 ./MakeDB2Schema.sh
 </pre>
 ## Build DB2 Schema to contain GenevaERS objects
-First we'll cover building a new GenevaERS environment. A later section deals with how to replicate a GenevaERS environment populating it with data from an existing environment, i.e. replicating a GenevaERS environment you already have.
-
-For a new environment run these job in the following sequence. To replicate and environment run the steps in the subsequent section also.
+First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment.
 
 <pre>
-DROPALL     - drop existing database schema if it exists
-BLDDB01     - create database, C_*, E_* and X_* tables
-BLDDB02     - create Logic Table/LOB column
-BLDDB03     - create C_*, E_* and X_* indexes
-BLDDB04     - create foreign keys
-BLDDB05     - load CODETABL and the other table
-BLDDB06     - create DB2 views
-REPAIR      - remove tablespaces check pending status
-INSTSP      - install stored procedures
+DROPALL  - drop existing database schema if it exists
+BLDDB01  - create database, C_*, E_* and X_* tables
+BLDDB02  - create Logic Table/LOB column
+BLDDB03  - create C_*, E_* and X_* indexes
+BLDDB04  - create foreign keys
+BLDDB05  - load CODETABL and the other table
+BLDDB06  - create DB2 views
+REPAIR   - remove tablespaces check pending status
+INSTSP   - install stored procedures
 </pre>
 
-## Replicate an existing GenevaERS environment and objects
+## Build schema and replicate an existing GenevaERS environment and objects
 
-These additional steps populate the new environment. This will replicate metadata from an existing GenevaERS DB2 schema.
+This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data.
 <pre>
 UNLOAD   - unload GenevaERS data from existing DB2 schema             - new
 EXDSNMOD - change LOB file location <===
 EXMPNC2  - change schema
-DROPVIEW - drop views                                                 - new
-DROPFKEY - drop foregin keys                                          - new
+DROPALL  - drop existing database schema if it exists
+BLDDB01  - create database, C_*, E_* and X_* tables
+BLDDB02  - create Logic Table/LOB column
+BLDDB03  - create C_*, E_* and X_* indexes
 LOAD01   - load database without E_LOGIC table
 LOAD02   - load E_LOGIC table
 BLDDB04  - create foreign keys
 BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status
+INSTSP   - install stored procedures
 </pre>
 
 ### Note on stored procedures - job INSTSP
