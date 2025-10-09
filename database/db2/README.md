@@ -18,7 +18,7 @@ git clone git@github.com:genevaers/Workbench.git
 
 git clone https://github.com/genevaers/Workbench.git
 
-Then "cd" to the directory database/ and then to db2/
+Then "cd" to the directory: database/db2/
 
 ## Prepare your site DB2 defaults
 
