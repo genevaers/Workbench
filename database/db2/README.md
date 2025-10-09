@@ -8,7 +8,7 @@ This is intended for Db2 running z/OS at DB2 version 11 and above. These instruc
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
 4) build DB2 Schema that is going to contain new GenevaERS data
-5) ALternatively, replicate an existing GenevaERS environment into a new DB2 schema
+5) Alternatively, replicate an existing GenevaERS environment into a new DB2 schema
 </pre>
 ## Clone database/db2 directory contents to IBM USS
 
