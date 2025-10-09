@@ -26,7 +26,6 @@ if [ -z "$1" ]; then
 fi
 
 MEMBER="$1";
-# member = "GVBQDRAL.DDL";
 
 # never mind the symbolics
 mycmdstr1='s/&$DBUSER.'/$GERS_DBUSER/'g';
@@ -48,6 +47,8 @@ mycmdstr14='s/&$DB2LLIB.'/${GERS_DB2_LOADLIB}/'g'
 mycmdstr15='s/&$SCEELIB.'/${GERS_SCEERUN}/'g'
 mycmdstr16='s/&$SCEE2LIB.'/${GERS_SCEERUN2}/'g'
 mycmdstr17='s/&$SCBCDLL.'/${GERS_SCBCDLL}/'g'
+mycmdstr18='s/&$FROMPDSHLQ.'/${GERS_FROM_PDS_HLQ}/'g'
+mycmdstr19='s/&$FROMPDSMLQ.'/${GERS_FROM_PDS_MLQ}/'g'
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
@@ -67,9 +68,11 @@ sed $mycmdstr14 prep/tmp13 > prep/tmp14;
 sed $mycmdstr15 prep/tmp14 > prep/tmp15;
 sed $mycmdstr16 prep/tmp15 > prep/tmp16;
 sed $mycmdstr17 prep/tmp16 > prep/tmp17;
+sed $mycmdstr18 prep/tmp17 > prep/tmp18;
+sed $mycmdstr19 prep/tmp18 > prep/tmp19;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp17 > prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp19 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
 }
