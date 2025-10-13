@@ -21,11 +21,11 @@ MEMBER="$1";
 # member = "GVBQDRAL.DDL";
 
 # never mind the symbolics
-mycmdstr1='s/&$DBUSER.'/$GERS_DBUSER/'g';
-mycmdstr2='s/&$DBNAME.'/${GERS_DBNAME}/'g'
-mycmdstr3='s/&$DBSG.'/${GERS_DBSG}/'g'
-mycmdstr4='s/&$DBSUB.'/${GERS_DBSUB}/'g'
-mycmdstr5='s/&$DBSCH.'/${GERS_DBSCH}/'g'
+mycmdstr1='s/&$DBUSER.'/{$GERS_DB2_DBUSER}/'g';
+mycmdstr2='s/&$DBNAME.'/${GERS_DB2_DBNAME}/'g';
+mycmdstr3='s/&$DBSG.'/${GERS_DB2_DBSG}/'g';
+mycmdstr4='s/&$DBSUB.'/${GERS_DB2_DBSUB}/'g';
+mycmdstr5='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g';
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
