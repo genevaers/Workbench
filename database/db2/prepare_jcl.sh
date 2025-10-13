@@ -28,7 +28,7 @@ fi
 MEMBER="$1";
 
 # never mind the symbolics
-mycmdstr1='s/&$DBUSER.'/$GERS_DB2_DBUSER/'g';
+mycmdstr1='s/&$DBUSER.'/${GERS_DB2_DBUSER}/'g';
 mycmdstr2='s/&$DBNAME.'/${GERS_DB2_DBNAME}/'g'
 mycmdstr3='s/&$DBSG.'/${GERS_DB2_STGGRP}/'g'
 mycmdstr4='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g'
