@@ -7,16 +7,19 @@ This is intended for Db2 running z/OS at DB2 version 11 and above. These instruc
 1) clone database/db2 directory contents to USS
 2) prepare your site db2 defaults to use with GenevaERS
 3) copy JCL, DDL SQL to MVS datasets with your site defaults
-4) build DB2 Schema that is going to contain new GenevaERS data
+4) build DB2 Schema that is going to contain new GenevaERS data, or
 5) Alternatively, replicate an existing GenevaERS environment into a new DB2 schema
 </pre>
 ## Clone database/db2 directory contents to IBM USS
 
 Logon to USS and using the bash shell enter one of the following commands, depending whether you are using ssh or https:
-
+<pre>
 git clone git@github.com:genevaers/Workbench.git
+</pre>
 
+<pre>
 git clone https://github.com/genevaers/Workbench.git
+</pre>
 
 Then "cd" to the directory: database/db2/
 
@@ -43,7 +46,9 @@ export GERS_SCEERUN2=your-CEE.SCEERUN2
 export GERS_SCBCDLL=your-CBC.SCLBDLL
 export GERS_TO_PDS_HLQ=your-pds-hlq
 export GERS_TO_PDS_MLQ=your-pds-mlq
-- - - - - - - - - - - - - - - - - - - - - - - - - - - 
+</pre>
+The following environment variables are needed in addition if you are replicating an existing GenevaERS environment to a new DB2 schema.
+<pre>
 export GERS_FROM_PDS_HLQ=your-load-dataset-hlq
 export GERS_FROM_PDS_MLQ=your-load-dadaset-mlq
 export GERS_FROM_DB2_DBUSER=from-database-user
