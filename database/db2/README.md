@@ -49,13 +49,13 @@ export GERS_TO_PDS_MLQ=your-pds-mlq
 </pre>
 The following environment variables are needed in addition if you are replicating an existing GenevaERS environment to a new DB2 schema.
 <pre>
-export GERS_FROM_PDS_HLQ=your-load-dataset-hlq
-export GERS_FROM_PDS_MLQ=your-load-dadaset-mlq
-export GERS_FROM_DB2_DBUSER=from-database-user
-export GERS_FROM_DB2_DBNAME=from-database-name
-export GERS_FROM_DB2_DBSG=your-unload-database-storage-group
-export GERS_FROM_DB2_DBSCH=your-unload-database-schema
-export GERS_FROM_DB2_DBSUB=your from database subsystem
+export GERS_FROM_PDS_HLQ=your-unload-dataset-hlq
+export GERS_FROM_PDS_MLQ=your-unload-dadaset-mlq
+export GERS_FROM_DB2_DBUSER=your-from-database-user
+export GERS_FROM_DB2_DBNAME=your-from-database-name
+export GERS_FROM_DB2_DBSG=your-from-database-storage-group
+export GERS_FROM_DB2_DBSCH=your-from-database-schema
+export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
 </pre>
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 
