@@ -75,13 +75,13 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 //SYSPRINT   DD     SYSOUT=*
 //SYSIN      DD *,SYMBOLS=EXECSYS
  DELETE &HLQ..&MLQ..JCL
- IF LASTCC > 0 THEN -
+ IF LASTCC > 0 THEN
    SET MAXCC = 0
  DELETE &HLQ..&MLQ..DDL
- IF LASTCC > 0 THEN -
+ IF LASTCC > 0 THEN
    SET MAXCC = 0
- DELETE &HLQ..MLQ..SQL
- IF LASTCC > 0 THEN -
+ DELETE &HLQ..&MLQ..SQL
+ IF LASTCC > 0 THEN
    SET MAXCC = 0
 //*
 //*   .   Allocate datasets
