@@ -139,7 +139,9 @@ public class Db2test2 {
                 nname = rs.getString(2);
                 vversion = rs.getString(3);
                 ttext = rs.getString(4);
+                
                 System.out.println(schema + " " + nname + " " + vversion ); // + "\n " + ttext);
+                //System.out.println("        spmap.put(\"" + nname + "\"," + "\"" + encodedHash+"\"); "); populate hash map
 
                 writer.write(schema+":"+nname+"============================================\n");
                 writer.write(ttext);
