@@ -34,7 +34,7 @@ export GERS_FROM_DB2_DBSCH=SAFRNCB2;
 export GERS_FROM_DB2_DBSUB=DM13;
 
 # variables for running optional smoke test with DB2
-export GERS_ENV_HLQ=NEILE;
+export GERS_ENV_HLQ='GEBT.NEILE';
 export GERS_DEMO_HLQ=GEBT;
 export GERS_DEMO_MLQ=GVBDEMO;
 export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
