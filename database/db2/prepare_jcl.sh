@@ -65,6 +65,8 @@ mycmdstr29='s/&$JZOSLIB.'/${GERS_JZOS_LOAD_LIB}/'g';
 mycmdstr30='s/&$DB2HOST.'/${GERS_DB2_HOST}/'g';
 mycmdstr31='s/&$DB2PORT.'/${GERS_DB2_PORT}/'g';
 mycmdstr32='s/&$DB2SENV.'/${GERS_DB2_SAFR_ENV}/'g';
+mycmdstr33='s/&$JAVAHOME.'/${GERS_JAVA_HOME}/'g';
+mycmdstr34='s/&$RCAJAR.'/${GERS_RCA_JAR_DIR}/'g';
 
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
@@ -100,9 +102,11 @@ sed $mycmdstr29 prep/tmp28 > prep/tmp29;
 sed $mycmdstr30 prep/tmp29 > prep/tmp30;
 sed $mycmdstr31 prep/tmp30 > prep/tmp31;
 sed $mycmdstr32 prep/tmp31 > prep/tmp32;
+sed $mycmdstr33 prep/tmp32 > prep/tmp33;
+sed $mycmdstr34 prep/tmp33 > prep/tmp34;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp32 > prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp34 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
 }
