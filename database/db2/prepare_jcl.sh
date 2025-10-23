@@ -65,8 +65,8 @@ mycmdstr29='s/&$JZOSLIB.'/${GERS_JZOS_LOAD_LIB}/'g';
 mycmdstr30='s/&$DB2HOST.'/${GERS_DB2_HOST}/'g';
 mycmdstr31='s/&$DB2PORT.'/${GERS_DB2_PORT}/'g';
 mycmdstr32='s/&$DB2SENV.'/${GERS_DB2_SAFR_ENV}/'g';
-mycmdstr33='s/&$JAVAHOME.'/${GERS_JAVA_HOME}/'g';
-mycmdstr34='s/&$RCAJAR.'/${GERS_RCA_JAR_DIR}/'g';
+mycmdstr33='s@&$JAVAHOME.'@${GERS_JAVA_HOME}@'g';
+mycmdstr34='s@&$RCAJAR.'@${GERS_RCA_JAR_DIR}@'g';
 
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
