@@ -56,6 +56,12 @@ mycmdstr22='s/&$FROMDBSG.'/${GERS_FROM_DB2_DBSG}/'g';
 mycmdstr23='s/&$FROMDBSCH.'/${GERS_FROM_DB2_DBSCH}/'g';
 mycmdstr24='s/&$FROMDBSUB.'/${GERS_FROM_DB2_DBSUB}/'g';
 
+#to run optional smoke test with DB2
+mycmdstr25='s/&$ENVHLQ.'/${GERS_ENV_HLQ}/'g';
+mycmdstr26='s/&$DEMOHLQ.'/${GERS_DEMO_HLQ}/'g';
+mycmdstr27='s/&$DEMOMLQ.'/${GERS_DEMO_MLQ}/'g';
+mycmdstr28='s/&$JVMPLIB.'/${GERS_JVM_PROC_LIB}/'g';
+mycmdstr29='s/&$JZOSLIB.'/${GERS_JZOS_LOAD_LIB}/'g';
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
@@ -82,9 +88,14 @@ sed $mycmdstr21 prep/tmp20 > prep/tmp21;
 sed $mycmdstr22 prep/tmp21 > prep/tmp22;
 sed $mycmdstr23 prep/tmp22 > prep/tmp23;
 sed $mycmdstr24 prep/tmp23 > prep/tmp24;
+sed $mycmdstr25 prep/tmp24 > prep/tmp25;
+sed $mycmdstr26 prep/tmp25 > prep/tmp26;
+sed $mycmdstr27 prep/tmp26 > prep/tmp27;
+sed $mycmdstr28 prep/tmp27 > prep/tmp28;
+sed $mycmdstr29 prep/tmp28 > prep/tmp29;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp24 > prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp29 > prep/$MEMBER;
 chtag -r prep/$MEMBER;
 
 }

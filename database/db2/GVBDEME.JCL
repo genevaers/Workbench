@@ -32,18 +32,17 @@
 //*
 //   EXPORT SYMLIST=*
 //*
-//   SET HLQ=&$PDSHLQ.
-//   SET MLQ=&$PDSMLQ.
+//   SET PDSHLQ=&$PDSHLQ.
+//   SET PDSMLQ=&$PDSMLQ.
 //   SET DB2SYS=&$DBSUB.
-//   SET DB2PLAN=&$DB2PLAN.
-//   SET DB2PLIB=&$DB2PLIB.
-//   SET DB2RLIB=&$DB2RLIB.
-//   SET HLQ=GEBT
-//   SET MLQ=GVBDEMO
-//   SET LOADLIB=GEBT.GVBDEMO.GVBLOAD
-//   SET JCLLIB=GEBT.RTC23321.STAGE2.JCL
+//   SET DEMOHLQ=&$DEMOHLQ.
+//   SET DEMOMLQ=&$DEMOMLQ.
+//   SET LOADLIB=&$ENVHLQ..GVBLOAD
+//   SET JZOSLIB=&$JZOSLIB.
 //*
-//   JCLLIB ORDER=AJV.V11R0M0.PROCLIB
+//   SET JCLLIB=&$PDSHLQ..&$PDSMLQ..JCL
+//*
+//   JCLLIB ORDER=&$JVMPLIB.
 //*
 //*********************************************************************
 //*
@@ -76,9 +75,9 @@
 //*
 //SYSIN    DD *,SYMBOLS=EXECSYS
 
- DELETE  &HLQ..&MLQ..PASS1C1.VDP PURGE
- DELETE  &HLQ..&MLQ..PASS1C1.JLT PURGE
- DELETE  &HLQ..&MLQ..PASS1C1.XLT PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1C1.VDP PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1C1.JLT PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1C1.XLT PURGE
 
  IF MAXCC LE 8 THEN         /* IF OPERATION FAILED,     */    -
      SET MAXCC = 0          /* PROCEED AS NORMAL ANYWAY */
@@ -106,8 +105,8 @@
 //*
 //JAVA EXEC PROC=JVMPRC16,
 // JAVACLS='org.genevaers.rcapps.Runner'
-//STEPLIB  DD DISP=SHR,DSN=AJV.V11R0M0.SIEALNKE
-//STDENV DD *
+//STEPLIB  DD DISP=SHR,DSN=&JZOSLIB
+//STDENV DD *,SYMBOLS=EXECSYS
 . /etc/profile
 export A2E=-ofrom=ISO8859-1,to=IBM-1047
 export JAVA_HOME=/Java/J17.0_64
@@ -123,7 +122,7 @@ LIBPATH="$LIBPATH":"$JAVA_HOME"/lib/j9vm
 export LIBPATH="$LIBPATH":
 
 // DD DISP=SHR,DSN=NBEESLE.JINFO
-// DD *
+// DD *,SYMBOLS=EXECSYS
 # Customize your CLASSPATH here
 # Add Application required jars to end of CLASSPATH
 CLASSPATH="$CLASSPATH":"$APP_HOME"/"$APP_NAME"
@@ -148,14 +147,14 @@ export IBM_JAVA_OPTIONS="$IJO "
 /*
 //*        INPUTS
 //*
-//RCAPARM  DD *
+//RCAPARM  DD *,SYMBOLS=EXECSYS
 # Input
 INPUT_TYPE=DB2
 ENVIRONMENT_ID=1
 DB_SCHEMA=SAFRNEIL
 DB_PORT=5036
 DB_SERVER=sp13.pok.stglabs.ibm.com
-DB_DATABASE=DM13
+DB_DATABASE=&DB2SYS
 LOG_LEVEL=FINEST
 COMPARE=N
 GENERATE_RC_FILES=Y
@@ -174,19 +173,19 @@ NUMBER_MODE=STANDARD
 /*
 //*        OUTPUT FILES
 //*
-//VDPNEW   DD DSN=&HLQ..&MLQ..PASS1C1.VDP,
+//VDPNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.VDP,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,
 //            SPACE=(CYL,(10,10),RLSE),
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=8192,BLKSIZE=0)
 //*                                                                     
-//JLTNEW   DD DSN=&HLQ..&MLQ..PASS1C1.JLT,
+//JLTNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.JLT,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,
 //            SPACE=(TRK,(10,10),RLSE),
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=4004,BLKSIZE=32036)
 //*
-//XLTNEW   DD DSN=&HLQ..&MLQ..PASS1C1.XLT,
+//XLTNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.XLT,
 //            DISP=(NEW,CATLG,DELETE),
 //            UNIT=SYSDA,
 //            SPACE=(CYL,(10,10),RLSE),
@@ -202,172 +201,171 @@ NUMBER_MODE=STANDARD
 //* IF THE PRIOR STEP SETS AN INVALID RETURN CODE, TERMINATE THE JOB
 //*********************************************************************
 //*
-//PSTEP206 EXEC PGM=GVBUT99,                                           
-//            COND=(0,GE),                                             
-//            PARM='1099'                                              
-//*           COND=(4,GE,JVMPRC16),                                    
-//STEPLIB  DD DISP=SHR,DSN=&LOADLIB                                    
-//SYSPRINT DD SYSOUT=*                                                 
-//*                                                                    
+//PSTEP206 EXEC PGM=GVBUT99,
+//            COND=(0,GE),
+//            PARM='1099'
+//STEPLIB  DD DISP=SHR,DSN=&LOADLIB
+//SYSPRINT DD SYSOUT=*
+//*
 //*********************************************************************
-//* DELETE THE FILE(S) CREATED IN NEXT STEP                            
+//* DELETE THE FILE(S) CREATED IN NEXT STEP
 //*********************************************************************
-//*                                                                    
-//PSTEP500 EXEC PGM=IDCAMS                                             
-//*                                                                    
-//SYSPRINT DD SYSOUT=*                                                 
-//*                                                                    
-//SYSIN    DD *,SYMBOLS=EXECSYS                                        
-                                                                       
- DELETE  &HLQ..&MLQ..PASS1D1.FILE001.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.FILE002.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.FILE003.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.FILE004.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.FILE005.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.FILE006.RED PURGE                         
- DELETE  &HLQ..&MLQ..PASS1D1.REH PURGE                                 
- DELETE  &HLQ..&MLQ..PASS1D1.RTH PURGE                                 
- DELETE  &HLQ..&MLQ..PASS1D1.SYSMDUMP PURGE                            
-                                                                       
- IF LASTCC > 0 THEN        /* IF OPERATION FAILED,     */    -         
-     SET MAXCC = 0          /* PROCEED AS NORMAL ANYWAY */             
-                                                                       
-//*                                                                    
+//*
+//PSTEP500 EXEC PGM=IDCAMS
+//*
+//SYSPRINT DD SYSOUT=*
+//*
+//SYSIN    DD *,SYMBOLS=EXECSYS
+
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE001.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE002.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE003.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE004.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE005.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.FILE006.RED PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.REH PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.RTH PURGE
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1D1.SYSMDUMP PURGE
+
+ IF LASTCC > 0 THEN        /* IF OPERATION FAILED,     */    -
+     SET MAXCC = 0          /* PROCEED AS NORMAL ANYWAY */
+
+//*
 //*********************************************************************
-//*   PREPARE REFERENCE DATA                                           
+//*   PREPARE REFERENCE DATA
 //*********************************************************************
-//*                                                                    
-//PSTEP505 EXEC PGM=GVBMR95R,                                          
-// REGION=0M                                                           
-//*                                                                    
-//*        <<< INPUT GENEVAERS FILES >>>                               
-//*                                                                    
-//STEPLIB  DD DISP=SHR,DSN=&LOADLIB                                    
-//REFRPARM DD *                                                        
-*                                                                      
-*   STANDARD OPTIONS                                                   
-*-------------------                                                   
-*                                                                      
-*DISK_THREAD_LIMIT=10                   DEFAULT: 9999                  
-*TAPE_THREAD_LIMIT=10                   DEFAULT: 9999                  
-*                                                                      
-*IO_BUFFER_LEVEL=8                      DEFAULT: 4                     
-*OPTIMIZE_PACKED_OUTPUT=N               DEFAULT: Y                 
-*PAGE_FIX_IO_BUFFERS=N                  DEFAULT: Y                 
-*TREAT_MISSING_VIEW_OUTPUTS_AS_DUMMY=Y  DEFAULT: N                 
-*ABEND_ON_CALCULATION_OVERFLOW=N        DEFAULT: Y                 
-*                                                                  
-*   DEBUGGING OPTIONS                                              
-*--------------------                                              
-*                                                                  
-*TRACE=Y                                DEFAULT: N                 
-*DUMP_LT_AND_GENERATED_CODE=Y           DEFAULT: N                 
-*SOURCE_RECORD_LIMIT=100                DEFAULT: (NO LIMIT)        
-*ABEND_ON_LOGIC_TABLE_ROW_NBR=57        DEFAULT: (NO ABEND)        
-*ABEND_ON_MESSAGE_NBR=149               DEFAULT: (NO ABEND)        
-*EXECUTE_IN_MAIN_TASK=1                 DEFAULT: N                 
+//*
+//PSTEP505 EXEC PGM=GVBMR95R,
+// REGION=0M
+//*
+//*        <<< INPUT GENEVAERS FILES >>>
+//*
+//STEPLIB  DD DISP=SHR,DSN=&LOADLIB
+//REFRPARM DD *
+*
+*   STANDARD OPTIONS
+*-------------------
+*
+*DISK_THREAD_LIMIT=10                   DEFAULT: 9999
+*TAPE_THREAD_LIMIT=10                   DEFAULT: 9999
+*
+*IO_BUFFER_LEVEL=8                      DEFAULT: 4
+*OPTIMIZE_PACKED_OUTPUT=N               DEFAULT: Y
+*PAGE_FIX_IO_BUFFERS=N                  DEFAULT: Y
+*TREAT_MISSING_VIEW_OUTPUTS_AS_DUMMY=Y  DEFAULT: N
+*ABEND_ON_CALCULATION_OVERFLOW=N        DEFAULT: Y
+*
+*   DEBUGGING OPTIONS
+*--------------------
+*
+*TRACE=Y                                DEFAULT: N
+*DUMP_LT_AND_GENERATED_CODE=Y           DEFAULT: N
+*SOURCE_RECORD_LIMIT=100                DEFAULT: (NO LIMIT)
+*ABEND_ON_LOGIC_TABLE_ROW_NBR=57        DEFAULT: (NO ABEND)
+*ABEND_ON_MESSAGE_NBR=149               DEFAULT: (NO ABEND)
+*EXECUTE_IN_MAIN_TASK=1                 DEFAULT: N
 *                                           1=1ST UNIT, A=ALL UNITS
-//*                                                                
-//REFRTPRM DD *                                                    
-*TRACE KEYWORDS:                                                   
-*VIEW=,FROMREC=,THRUREC=,FROMLTROW=,THRULTROW=,LTFUNC=,DDNAME=     
-*VPOS=,VLEN=,VALUE=                                                
-*                                                                  
-*TRACE EXAMPLES:                                                   
-*VIEW=4418,LTFUNC=WR                                               
-*VPOS=17,VLEN=10,VALUE=24CXA01501,VIEW=3424                        
-*VIEW=302                                                          
-//*                                                                
-//REFRENVV DD *                                                    
-//*                                                                
-//MR95VDP  DD DSN=&HLQ..&MLQ..PASS1C1.VDP,                         
-//            DISP=SHR                                             
-//*                                                                
-//REFRLTBL DD DSN=&HLQ..&MLQ..PASS1C1.JLT,                         
-//            DISP=SHR                                             
-//*                                                                
-//*        <<< INPUT REFERENCE FILES >>>                           
-//*                                                                
-//CUSTNAME DD DISP=SHR,DSN=&HLQ..&MLQ..CUSTNAME                    
-//CUSTOMER DD DISP=SHR,DSN=&HLQ..&MLQ..CUSTOMER                    
-//CUSTADDR DD DISP=SHR,DSN=&HLQ..&MLQ..CUSTADDR                    
-//ORDER001 DD DISP=SHR,DSN=&HLQ..&MLQ..ORDER                       
-//PRODDESC DD DISP=SHR,DSN=&HLQ..&MLQ..PRODDESC                    
-//STORE001 DD DISP=SHR,DSN=&HLQ..&MLQ..STOREADR                    
-//*                                                                
-//*        <<< OUTPUT GENEVAERS REFERENCE WORK FILES >>>           
-//*                                                                
-//REFRREH  DD DSN=&HLQ..&MLQ..PASS1D1.REH,                         
-//            DISP=(NEW,CATLG,DELETE),                             
-//            UNIT=SYSDA,                                          
-//            SPACE=(TRK,(10,1),RLSE),                             
-//            DCB=(DSORG=PS,RECFM=FB,LRECL=100)                    
-//*                                                                
-//REFRRTH  DD DSN=&HLQ..&MLQ..PASS1D1.RTH,                         
-//            DISP=(NEW,CATLG,DELETE),                             
-//            UNIT=SYSDA,                                          
-//            SPACE=(TRK,(10,1),RLSE),                             
-//            DCB=(DSORG=PS,RECFM=FB,LRECL=100)                    
-//*                                                                
-//REFR001  DD DSN=&HLQ..&MLQ..PASS1D1.FILE001.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFR002  DD DSN=&HLQ..&MLQ..PASS1D1.FILE002.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFR003  DD DSN=&HLQ..&MLQ..PASS1D1.FILE003.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFR004  DD DSN=&HLQ..&MLQ..PASS1D1.FILE004.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFR005  DD DSN=&HLQ..&MLQ..PASS1D1.FILE005.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFR006  DD DSN=&HLQ..&MLQ..PASS1D1.FILE006.RED,                     
-//            DISP=(NEW,CATLG,DELETE),                                 
-//            UNIT=(SYSDA,10),                                         
-//            SPACE=(TRK,(1,1000),RLSE),                               
-//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)                       
-//*                                                                    
-//REFRRPT  DD SYSOUT=*                                                 
-//REFRLOG  DD SYSOUT=*                                                 
-//REFRTRAC DD SYSOUT=*                                                 
-//SNAPDATA DD SYSOUT=*                                                 
-//SYSOUT   DD SYSOUT=*                                                 
-//*                                                                    
-//SYSMDUMP DD DSN=&HLQ..&MLQ..PASS1D1.SYSMDUMP,                        
-//            DISP=(NEW,DELETE,CATLG),                                 
-//            UNIT=SYSDA,                                              
-//            SPACE=(TRK,(1000,1000),RLSE),                            
-//            DCB=(DSORG=PS,RECFM=FBS,LRECL=4160)                      
-//*                                                                    
+//*
+//REFRTPRM DD *
+*TRACE KEYWORDS:
+*VIEW=,FROMREC=,THRUREC=,FROMLTROW=,THRULTROW=,LTFUNC=,DDNAME=
+*VPOS=,VLEN=,VALUE=
+*
+*TRACE EXAMPLES:
+*VIEW=4418,LTFUNC=WR
+*VPOS=17,VLEN=10,VALUE=24CXA01501,VIEW=3424
+*VIEW=302
+//*
+//REFRENVV DD *
+//*
+//MR95VDP  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.VDP,
+//            DISP=SHR
+//*
+//REFRLTBL DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.JLT,
+//            DISP=SHR
+//*
+//*        <<< INPUT REFERENCE FILES >>>
+//*
+//CUSTNAME DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..CUSTNAME
+//CUSTOMER DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..CUSTOMER
+//CUSTADDR DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..CUSTADDR
+//ORDER001 DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..ORDER
+//PRODDESC DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PRODDESC
+//STORE001 DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..STOREADR
+//*
+//*        <<< OUTPUT GENEVAERS REFERENCE WORK FILES >>>
+//*
+//REFRREH  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.REH,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(TRK,(10,1),RLSE),
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=100)
+//*
+//REFRRTH  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.RTH,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(TRK,(10,1),RLSE),
+//            DCB=(DSORG=PS,RECFM=FB,LRECL=100)
+//*
+//REFR001  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE001.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFR002  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE002.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFR003  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE003.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFR004  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE004.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFR005  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE005.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFR006  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE006.RED,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=(SYSDA,10),
+//            SPACE=(TRK,(1,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4144)
+//*
+//REFRRPT  DD SYSOUT=*
+//REFRLOG  DD SYSOUT=*
+//REFRTRAC DD SYSOUT=*
+//SNAPDATA DD SYSOUT=*
+//SYSOUT   DD SYSOUT=*
+//*
+//SYSMDUMP DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.SYSMDUMP,
+//            DISP=(NEW,DELETE,CATLG),
+//            UNIT=SYSDA,
+//            SPACE=(TRK,(1000,1000),RLSE),
+//            DCB=(DSORG=PS,RECFM=FBS,LRECL=4160)
+//*
 //*********************************************************************
-//* IF THE PRIOR STEP SETS AN INVALID RETURN CODE, TERMINATE THE JOB   
+//* IF THE PRIOR STEP SETS AN INVALID RETURN CODE, TERMINATE THE JOB
 //*********************************************************************
-//*                                                                    
-//PSTEP506 EXEC PGM=GVBUT99,                                           
-//            COND=(1,GE,PSTEP505),                                    
-//            PARM='1099'                                              
-//STEPLIB  DD DISP=SHR,DSN=&LOADLIB                                    
-//*                                                                    
+//*
+//PSTEP506 EXEC PGM=GVBUT99,
+//            COND=(1,GE,PSTEP505),
+//            PARM='1099'
+//STEPLIB  DD DISP=SHR,DSN=&LOADLIB
+//*
 //*********************************************************************
-//* DELETE THE FILE(S) CREATED IN NEXT STEP                            
+//* DELETE THE FILE(S) CREATED IN NEXT STEP
 //*********************************************************************
 //*                                                                    
 //PSTEP700 EXEC PGM=IDCAMS                                             
@@ -378,20 +376,20 @@ NUMBER_MODE=STANDARD
 //SYSIN    DD *,SYMBOLS=EXECSYS                                        
  /* VIEW DATA SETS: */                                                 
                                                                        
- DELETE  &HLQ..&MLQ..PASS1E1.OUTPUT01 PURGE                            
- DELETE  &HLQ..&MLQ..PASS1E1.OUTPUT02 PURGE                            
- DELETE  &HLQ..&MLQ..PASS1E1.OUTPUT03 PURGE                            
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT01 PURGE                            
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT02 PURGE                            
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT03 PURGE                            
                                                                        
                                                                        
  /* DATA SETS  GOING TO FORMAT PHASE */                                
                                                                        
- DELETE  &HLQ..&MLQ..PASS1E1.FILE001.EXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.FILE001.SXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.FILE002.EXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.FILE002.SXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.FILE003.EXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.FILE003.SXT PURGE                         
- DELETE  &HLQ..&MLQ..PASS1E1.SYSMDUMP PURGE                            
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE001.EXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE001.SXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE002.EXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE002.SXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE003.EXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.FILE003.SXT PURGE                         
+ DELETE  &DEMOHLQ..&DEMOMLQ..PASS1E1.SYSMDUMP PURGE                            
                                                                        
  IF LASTCC > 0 THEN        /* IF OPERATION FAILED,     */    -         
      SET MAXCC = 0          /* PROCEED AS NORMAL ANYWAY */             
@@ -461,52 +459,52 @@ $QUAL=SDATRT01
 //*                                                                
 //*        <<< INPUT GENEVAERS REFERENCE WORK FILES >>>            
 //*                                                                
-//REFR001  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE001.RED         
-//REFR002  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE002.RED         
-//REFR003  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE003.RED         
-//REFR004  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE004.RED         
-//REFR005  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE005.RED         
-//REFR006  DD DISP=SHR,DSN=&HLQ..&MLQ..PASS1D1.FILE006.RED         
+//REFR001  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE001.RED         
+//REFR002  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE002.RED         
+//REFR003  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE003.RED         
+//REFR004  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE004.RED         
+//REFR005  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE005.RED         
+//REFR006  DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..PASS1D1.FILE006.RED         
 //*                                                                
 //*        <<< INPUT SOURCE FILES >>>                              
 //*                                                                
-//ORDIT001 DD DISP=SHR,DSN=&HLQ..&MLQ..ORDITM01                    
-//ORDIT002 DD DISP=SHR,DSN=&HLQ..&MLQ..ORDITM02                    
-//ORDIT003 DD DISP=SHR,DSN=&HLQ..&MLQ..ORDITM03                    
+//ORDIT001 DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..ORDITM01                    
+//ORDIT002 DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..ORDITM02                    
+//ORDIT003 DD DISP=SHR,DSN=&DEMOHLQ..&DEMOMLQ..ORDITM03                    
 //*                                                                
 //*        <<< OUTPUT FILES GOING TO FORMAT PHASE >>>              
 //*                                                                
-//EXTR001  DD DSN=&HLQ..&MLQ..PASS1E1.FILE001.EXT,                 
+//EXTR001  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE001.EXT,                 
 //            DISP=(NEW,CATLG,DELETE),                             
 //            UNIT=(SYSDA,10),                                     
 //            SPACE=(TRK,(1,1000),RLSE),                           
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=8192)      
 //*                                                   
-//SORT001  DD DSN=&HLQ..&MLQ..PASS1E1.FILE001.SXT,    
+//SORT001  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE001.SXT,    
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=SYSDA,                             
 //            SPACE=(TRK,(1,1),RLSE),                 
 //            DCB=(DSORG=PS,RECFM=FB,LRECL=80)        
 //*                                                   
-//EXTR002  DD DSN=&HLQ..&MLQ..PASS1E1.FILE002.EXT,    
+//EXTR002  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE002.EXT,    
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=(SYSDA,10),                        
 //            SPACE=(TRK,(1,1000),RLSE),              
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=8192)      
 //*                                                   
-//SORT002  DD DSN=&HLQ..&MLQ..PASS1E1.FILE002.SXT,    
+//SORT002  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE002.SXT,    
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=SYSDA,                             
 //            SPACE=(TRK,(1,1),RLSE),                 
 //            DCB=(DSORG=PS,RECFM=FB,LRECL=80)        
 //*                                                   
-//EXTR003  DD DSN=&HLQ..&MLQ..PASS1E1.FILE003.EXT,    
+//EXTR003  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE003.EXT,    
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=(SYSDA,10),                        
 //            SPACE=(TRK,(1,1000),RLSE),              
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=8192)      
 //*                                                   
-//SORT003  DD DSN=&HLQ..&MLQ..PASS1E1.FILE003.SXT,    
+//SORT003  DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.FILE003.SXT,    
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=SYSDA,                             
 //            SPACE=(TRK,(1,1),RLSE),                 
@@ -514,19 +512,19 @@ $QUAL=SDATRT01
 //*                                                   
 //*        <<< OUTPUT FILES FOR EXTRACT ONLY VIEWS >>>
 //*                                                   
-//OUTPUT01 DD DSN=&HLQ..&MLQ..PASS1E1.OUTPUT01,       
+//OUTPUT01 DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT01,       
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=VT3592,                            
 //            SPACE=(TRK,(5000,500),RLSE),            
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=1004)      
 //*                                                   
-//OUTPUT02 DD DSN=&HLQ..&MLQ..PASS1E1.OUTPUT02,       
+//OUTPUT02 DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT02,       
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=VT3592,                            
 //            SPACE=(TRK,(5000,500),RLSE),            
 //            DCB=(DSORG=PS,RECFM=VB,LRECL=1004)      
 //*                                                   
-//OUTPUT03 DD DSN=&HLQ..&MLQ..PASS1E1.OUTPUT03,       
+//OUTPUT03 DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.OUTPUT03,       
 //            DISP=(NEW,CATLG,DELETE),                
 //            UNIT=VT3592,                            
 //            SPACE=(TRK,(5000,500),RLSE),            
@@ -542,7 +540,7 @@ $QUAL=SDATRT01
 //*                                                                  
 //IDIOFF   DD DUMMY                                                  
 //*                                                                  
-//SYSMDUMP DD DSN=&HLQ..&MLQ..PASS1E1.SYSMDUMP,                      
+//SYSMDUMP DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1E1.SYSMDUMP,                      
 //            DISP=(NEW,DELETE,CATLG),                               
 //            UNIT=SYSDA,                                            
 //            SPACE=(TRK,(1000,1000),RLSE),                          

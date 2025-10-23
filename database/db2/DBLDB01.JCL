@@ -46,18 +46,18 @@
 //*********************************************************************
 //*   BUILD DATABASE                                                   
 //*********************************************************************
-//BUILDDB EXEC PGM=IKJEFT01,DYNAMNBR=20                                
-//SYSTSPRT DD SYSOUT=*                                                 
-//SYSTSIN DD *,SYMBOLS=EXECSYS                                         
- DSN SYSTEM(&DB2SYS)                                                   
-     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -                             
+//BUILDDB EXEC PGM=IKJEFT01,DYNAMNBR=20
+//SYSTSPRT DD SYSOUT=*
+//SYSTSIN DD *,SYMBOLS=EXECSYS
+ DSN SYSTEM(&DB2SYS)
+     RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -
             LIB('&DB2RLIB.')
-//SYSPRINT DD SYSOUT=*                                                 
-//SYSUDUMP DD SYSOUT=*                                                 
-//SYSIN DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQCDBT)                      
-//*                                                                    
+//SYSPRINT DD SYSOUT=*
+//SYSUDUMP DD SYSOUT=*
+//SYSIN DD DISP=SHR,DSN=&HLQ..&MLQ..DDL(GVBQCDBT)
+//*
 //*********************************************************************
-//*   BUILD C_ TABLES                                                  
+//*   BUILD C_ TABLES
 //*********************************************************************
 //BLDCTB  EXEC PGM=IKJEFT01,DYNAMNBR=20                                
 //SYSTSPRT DD SYSOUT=*                                                 
