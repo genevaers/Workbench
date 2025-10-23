@@ -42,8 +42,8 @@ export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
 export GERS_DB2_HOST='sp13.pok.stglabs.ibm.com';
 export GERS_DB2_PORT='5036';
 export GERS_DB2_SAFR_ENV='1';
-export GERS_JAVA_HOME="/Java/J17.0_64"
-export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
+export GERS_JAVA_HOME="\/Java\/J17.0_64"
+export GERS_RCA_JAR_DIR="\/u\/nbeesle\/git\/public\/RCA_jar"
 
 # mainline
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
