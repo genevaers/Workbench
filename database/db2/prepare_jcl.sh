@@ -101,8 +101,11 @@ sed $mycmdstr28 prep/tmp27 > prep/tmp28;
 sed $mycmdstr29 prep/tmp28 > prep/tmp29;
 sed $mycmdstr30 prep/tmp29 > prep/tmp30;
 sed $mycmdstr31 prep/tmp30 > prep/tmp31;
+echo "mycmdstr32: $mycmdstr32";
 sed $mycmdstr32 prep/tmp31 > prep/tmp32;
+echo "mycmdstr33: $mycmdstr33";
 sed $mycmdstr33 prep/tmp32 > prep/tmp33;
+echo "mycmdstr34: $mycmdstr34";
 sed $mycmdstr34 prep/tmp33 > prep/tmp34;
 
 #convert output back to EBCDIC again
