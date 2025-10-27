@@ -11,7 +11,9 @@ Bundle-ClassPath: lib/postgresql-42.7.7.jar,
  lib/db2jcc_license_cisuz.jar,
  lib/db2jcc_license_ccu.jar,
  lib/commons-csv-1.10.0.jar,
- lib/rcapps-1.1.0_RC20-jar-with-dependencies.jar
+ lib/rcapps-1.1.0_RC20-jar-with-dependencies.jar,
+ lib/rcapps-1.1.0_RC20-jar-with-dependencies.jar,
+ lib/bcprov-jdk18on-1.78.1.jar
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.nebula.widgets.grid;bundle-version="1.0.0",
  org.eclipse.nebula.widgets.tablecombo;bundle-version="1.0.0",
@@ -441,6 +443,9 @@ Export-Package: COM.ibm.db2.app,
  org.antlr.v4.runtime.tree.gui,
  org.antlr.v4.runtime.tree.pattern,
  org.antlr.v4.runtime.tree.xpath,
+ org.bouncycastle.crypto;version="1.78.1",
+ org.bouncycastle.crypto.params;version="1.78.1",
+ org.bouncycastle.util;version="1.78.1",
  org.genevaers.ccb2lr,
  org.genevaers.ccb2lr.grammar,
  org.postgresql,
@@ -491,5 +496,3 @@ Export-Package: COM.ibm.db2.app,
  sqlj.runtime.profile.util,
  sqlj.runtime.ref,
  sqlj.runtime.util
-
-

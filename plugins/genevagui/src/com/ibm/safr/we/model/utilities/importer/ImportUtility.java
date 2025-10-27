@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -243,6 +244,7 @@ public class ImportUtility extends SAFRObject {
 
 	private void parseAndImportXML(ComponentImporter importer, ImportFile file) {
 		try {
+			
 			// Parse the XML
 		    if (file.getStream() == null) {
 		        document = builder.parse(file.getFile());			        
@@ -495,9 +497,13 @@ public class ImportUtility extends SAFRObject {
 	
 	private void initXMLFactories() throws ParserConfigurationException {
 		// Create document builder to be used later
-		DocumentBuilderFactory docBuilder = DocumentBuilderFactory
+		DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
 				.newInstance();
-		builder = docBuilder.newDocumentBuilder();
+		 // XXE prevention by disabling parsing features
+		docBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		builder = docBuilderFactory.newDocumentBuilder();
 		// Create XPath object to be used later
 		XPathFactory xpathFact = XPathFactory.newInstance();
 		xpath = xpathFact.newXPath();

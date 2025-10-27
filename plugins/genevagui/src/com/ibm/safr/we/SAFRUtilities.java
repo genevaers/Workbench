@@ -20,27 +20,22 @@ package com.ibm.safr.we;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.security.AlgorithmParameters;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.text.NumberFormat;
 import java.util.Base64;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
+import org.bouncycastle.crypto.params.Argon2Parameters;
 
 import com.ibm.safr.we.constants.ClientConstants;
 import com.ibm.safr.we.exceptions.SAFRFatalException;
@@ -54,8 +49,6 @@ import com.ibm.safr.we.exceptions.SAFRFatalException;
 public class SAFRUtilities {
 
 	private static String WEVersion = "";
-
-	private static final String algorithm = "AES/CBC/PKCS5Padding";;
 
 	private static final byte[] HEXCHAR = new byte[] { '0', '1', '2', '3', '4',
 			'5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -89,7 +82,10 @@ public class SAFRUtilities {
 			} catch (IllegalBlockSizeException e) {
 				decrypted = "";
 			} catch (Exception e) {
-				throw new SAFRFatalException(e.getMessage());
+				if("Tag mismatch".equals(e.getMessage())) {
+					decrypted = "";
+				}else
+					throw new SAFRFatalException(e.getMessage());
 			}
 		}
 		return decrypted;
@@ -209,27 +205,34 @@ public class SAFRUtilities {
 
 	public static SecretKeySpec createSecretKey()
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] salt = ClientConstants.getSaltvalue().getBytes(); 
-		int iterationCount = 400;
-		int keyLength = 128;
-		String mkey = ClientConstants.getMkeyvalue();
-		SecretKeyFactory keyFactory = SecretKeyFactory
-				.getInstance("PBKDF2WithHmacSHA512");
-		PBEKeySpec keySpec = new PBEKeySpec(mkey.toCharArray(), salt,
-				iterationCount, keyLength);
-		SecretKey keyTmp = keyFactory.generateSecret(keySpec);
-		return new SecretKeySpec(keyTmp.getEncoded(), "AES");
+		
+		byte[] salt = ClientConstants.getSaltvalue().getBytes(StandardCharsets.UTF_8); 
+		byte[] mkey = ClientConstants.getMkeyvalue().getBytes(StandardCharsets.UTF_8);
+		Argon2Parameters params = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
+		        .withSalt(salt)
+		        .withParallelism(1)
+		        .withMemoryAsKB(65536)  // 64 MB
+		        .withIterations(3)
+		        .build();
+
+		Argon2BytesGenerator generator = new Argon2BytesGenerator();
+		generator.init(params);
+		byte[] key = new byte[32]; // 256 bits
+		generator.generateBytes(mkey, key);
+		return new SecretKeySpec(key, "AES");
 	}
 
 	public static String encrypt(String dataToEncrypt, SecretKeySpec key)
 			throws GeneralSecurityException, UnsupportedEncodingException {
-		Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		pbeCipher.init(Cipher.ENCRYPT_MODE, key);
-		AlgorithmParameters parameters = pbeCipher.getParameters();
-		IvParameterSpec ivParameterSpec = parameters
-				.getParameterSpec(IvParameterSpec.class);
-		byte[] cryptoText = pbeCipher.doFinal(dataToEncrypt.getBytes("UTF-8"));
-		byte[] iv = ivParameterSpec.getIV();
+		byte[] iv = new byte[12];
+		SecureRandom secureRandom = new SecureRandom();
+		secureRandom.nextBytes(iv);
+		
+		Cipher gcmCipher = Cipher.getInstance("AES/GCM/NoPadding");
+		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
+		gcmCipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
+
+		byte[] cryptoText = gcmCipher.doFinal(dataToEncrypt.getBytes("UTF-8"));
 		return base64Encode(iv) + ":" + base64Encode(cryptoText);
 	}
 
@@ -241,12 +244,12 @@ public class SAFRUtilities {
 			throws GeneralSecurityException, IOException {
 		String[] splits = inStr.split(":");
 		if(splits.length == 2) {
-			String iv =splits[0];
-			String property = inStr.split(":")[1];
-			Cipher pbeCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			pbeCipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(
-					base64Decode(iv)));
-			return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
+			 byte[] iv = base64Decode(splits[0]);
+			 byte[] cipherText = base64Decode(splits[1]);
+			Cipher pbeCipher = Cipher.getInstance("AES/GCM/NoPadding");
+			GCMParameterSpec spec = new GCMParameterSpec(128, iv);
+			pbeCipher.init(Cipher.DECRYPT_MODE, key, spec);
+			return new String(pbeCipher.doFinal(cipherText), "UTF-8");
 		} else {
 			return "";
 		}

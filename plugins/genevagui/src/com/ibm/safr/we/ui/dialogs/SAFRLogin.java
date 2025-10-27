@@ -385,6 +385,7 @@ public class SAFRLogin extends TitleAreaDialog {
                     try {
                         SAFRPreferences.getSAFRPreferences().put(
                             UserPreferencesNodes.LAST_CONNECTION,currentConnectionName);
+                        DAOFactoryHolder.setDaoFactory(null);
                         SAFRPreferences.getSAFRPreferences().flush();
                         SAFRPreferences.getSAFRPreferences().sync();
                     } catch (BackingStoreException e1) {
