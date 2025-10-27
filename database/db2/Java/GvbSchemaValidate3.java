@@ -44,6 +44,23 @@ public class GvbSchemaValidate3 {
 
         System.out.println ("**** Running GvbSchemaValidate3: checking index definitions");
 
+        Integer nArgs =args.length;
+        Integer n;
+        Boolean makeHash = false;
+
+        for (n = 0; n < nArgs; n++) {
+            if (args[n].substring(0,1).equals("-")) {
+                switch( args[n].substring(1,2)) {
+                    case "A":
+                        makeHash = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        System.out.println("Option to generate hashmap code lines from DB2 catalog: " + makeHash);
+
         try {
             reader = new BufferedReader(new FileReader(System.getenv("HOMEPATH")+"\\password.txt"));
 			String line = reader.readLine();
@@ -171,19 +188,27 @@ public class GvbSchemaValidate3 {
                     if (sb.length() > 0 ) {
                         byte[] hashedBytes = md.digest((sb.toString()).getBytes());
                         String encodedHash = Base64.getEncoder().encodeToString(hashedBytes);
-                        System.out.println("Table: " + tname + " Digest: " + digestType + ": " + encodedHash);
-                        //System.out.println("        spmap.put(\"" + tname + "\"," + "\"" + encodedHash+"\"); "); populate hash map
-                        String hashvalue = spmap.get(tname);
-                        if ( hashvalue.equals(encodedHash))
-                        {
-                            System.out.println("HASH value matches for table: " + tname);
+
+                        if (!makeHash) {
+                            System.out.println("Table: " + tname + " Digest: " + digestType + ": " + encodedHash);
                         }
-                        else
-                        {
-                            System.out.println("HASH value mismatch for table: " + tname);
-                            System.out.println("Stored hash value: " + hashvalue);
-                            System.out.println("====================================================================================");
-                            ii = 1;
+                        else{
+                            System.out.println("        spmap.put(\"" + tname + "\"," + "\"" + encodedHash+"\"); "); //populate hash map
+                        }
+
+                        if (!makeHash) {
+                            String hashvalue = spmap.get(tname);
+                            if ( hashvalue.equals(encodedHash))
+                            {
+                                System.out.println("HASH value matches for table: " + tname);
+                            }
+                            else
+                            {
+                                System.out.println("HASH value mismatch for table: " + tname);
+                                System.out.println("Stored hash value: " + hashvalue);
+                                System.out.println("====================================================================================");
+                                ii = 1;
+                            }
                         }
                     }
 
@@ -215,7 +240,7 @@ public class GvbSchemaValidate3 {
             con.close();
             System.out.println("**** Disconnected from data source");
 
-            System.out.println("**** JDBC Exit from class EzJava - no errors");
+            System.out.println("**** JDBC completed - no errors");
         } catch (SQLException e) {
             e.printStackTrace();
             return;
@@ -227,14 +252,18 @@ public class GvbSchemaValidate3 {
             e.printStackTrace();
         }
         
-
-        if ( ii == 0 )
-        {
-            System.out.println("\nAll index definitions match.\n");
+        if (!makeHash) {
+            if ( ii == 0 )
+            {
+                System.out.println("\nAll index definitions match.\n");
+            }
+            else
+            {
+                System.out.println("\nOne or more indexes do not match expected definitions !!!\n");
+            }
         }
-        else
-        {
-            System.out.println("\nOne or more indexes do not match expected definitions !!!\n");
+        else {
+            System.out.println("\nLines of code generated for hashmap\n");
         }
     }
 }

@@ -42,6 +42,23 @@ public class GvbSchemaValidate1 {
 
         System.out.println ("**** Running GvbSchemaValidate1: checking stored procedures");
 
+        Integer nArgs =args.length;
+        Integer n;
+        Boolean makeHash = false;
+
+        for (n = 0; n < nArgs; n++) {
+            if (args[n].substring(0,1).equals("-")) {
+                switch( args[n].substring(1,2)) {
+                    case "A":
+                        makeHash = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        System.out.println("Option to generate hashmap code lines from DB2 catalog: " + makeHash);
+
         try {
             reader = new BufferedReader(new FileReader(System.getenv("HOMEPATH")+"\\password.txt"));
 			String line = reader.readLine();
@@ -140,28 +157,34 @@ public class GvbSchemaValidate1 {
                 vversion = rs.getString(3);
                 ttext = rs.getString(4);
                 
-                System.out.println(schema + " " + nname + " " + vversion ); // + "\n " + ttext);
-                //System.out.println("        spmap.put(\"" + nname + "\"," + "\"" + encodedHash+"\"); "); populate hash map
+                byte[] hashedBytes = md.digest(ttext.getBytes());
+                String encodedHash = Base64.getEncoder().encodeToString(hashedBytes);
+
+                if (!makeHash) {
+                    System.out.println(schema + " " + nname + " " + vversion ); // + "\n " + ttext);
+                    System.out.println(digestType + ": " + encodedHash);
+                }
+                else
+                {
+                    System.out.println("        spmap.put(\"" + nname + "\"," + "\"" + encodedHash+"\"); "); //populate hash map
+                }
 
                 writer.write(schema+":"+nname+"============================================\n");
                 writer.write(ttext);
                 writer.write("\n");
 
-                byte[] hashedBytes = md.digest(ttext.getBytes());
-                String encodedHash = Base64.getEncoder().encodeToString(hashedBytes);
-                System.out.println(digestType + ": " + encodedHash);
-
-                String hashvalue = spmap.get(nname);
-                if ( hashvalue.equals(encodedHash))
-                {
-                    System.out.println("HASH value matches for stored procedure: " + nname);
-                }
-                else
-                {
-                    System.out.println("HASH value mismatch for stored procedure: " + nname);
-                    System.out.println("Stored hash value: " + hashvalue);
-                    System.out.println("====================================================================================");
-                    ii = 1;
+                if (!makeHash) {
+                    String hashvalue = spmap.get(nname);
+                    if ( hashvalue.equals(encodedHash)) {
+                        System.out.println("HASH value matches for stored procedure: " + nname);
+                    }
+                    else
+                    {
+                        System.out.println("HASH value mismatch for stored procedure: " + nname);
+                        System.out.println("Stored hash value: " + hashvalue);
+                        System.out.println("====================================================================================");
+                        ii = 1;
+                    }
                 }
             }
             writer.close();
@@ -183,7 +206,7 @@ public class GvbSchemaValidate1 {
             con.close();
             System.out.println("**** Disconnected from data source");
 
-            System.out.println("**** JDBC Exit from class EzJava - no DB2 errors");
+            System.out.println("**** JDBC completed - no DB2 errors");
         } catch (SQLException e) {
             e.printStackTrace();
             return;
@@ -195,13 +218,17 @@ public class GvbSchemaValidate1 {
             e.printStackTrace();
         }
 
-        if ( ii == 0 )
-        {
-            System.out.println("\nAll stored procedure definitions match.\n");
-        }
-        else
-        {
-            System.out.println("\nOne or more stored procedures do not match expected definitions !!!\n");
+        if (!makeHash) {
+            if ( ii == 0 )
+            {
+                System.out.println("\nAll stored procedure definitions match.\n");
+            }
+            else
+            {
+                System.out.println("\nOne or more stored procedures do not match expected definitions !!!\n");
+            }
+        } else {
+            System.out.println("\nLines of code generated for hashmap\n");
         }
     }
 }
