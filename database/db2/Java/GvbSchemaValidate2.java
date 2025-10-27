@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import java.sql.*;
  
-public class Db2test3 {
+public class GvbSchemaValidate2 {
     public static void main(String[] args)
     {
         HashMap<String, String> spmap = new HashMap<>(100);
