@@ -40,6 +40,8 @@ public class GvbSchemaValidate1 {
         Statement stmt;
         ResultSet rs;
 
+        System.out.println ("**** Running GvbSchemaValidate1: checking stored procedures");
+
         try {
             reader = new BufferedReader(new FileReader(System.getenv("HOMEPATH")+"\\password.txt"));
 			String line = reader.readLine();
@@ -106,8 +108,6 @@ public class GvbSchemaValidate1 {
         spmap.put("UPDVIEWCOL","LQrgSsvV2kW/alGTazBZhLJlL3/By3e/ZDyDANy6BVJ5W5etr6CGvRCFaLhYNEoy10yrguYDhuO1wlZKR7ux9Q==");
         spmap.put("UPDVIEWCOLSRC","zZXmNUz0i1PfCNKIQJOv4Qo4Xp9vQBYGG5eDdV2Tr5zzoZlHIzEmWCAjdqYUVPdXSerUkH9z4sDJ/arkpKeDKA==");
         spmap.put("UPDVWLOGIC","DrQz7pOzu+krRHV2lw2QXtxuwKoMw8OiXOfGD7pSRkIXDwlYRfkwkdj5FQfIvt3XHWE81U7ynK1cwhLJg90NoA==");
-
-        System.out.println ("**** Enter class EzJava");
 
         try {
             Class.forName("com.ibm.db2.jcc.DB2Driver");

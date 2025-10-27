@@ -42,6 +42,8 @@ public class GvbSchemaValidate3 {
         Statement stmt;
         ResultSet rs;
 
+        System.out.println ("**** Running GvbSchemaValidate3: checking index definitions");
+
         try {
             reader = new BufferedReader(new FileReader(System.getenv("HOMEPATH")+"\\password.txt"));
 			String line = reader.readLine();
@@ -128,8 +130,6 @@ public class GvbSchemaValidate3 {
         spmap.put("X_VIEWLRFLD_LRFLD","5Q9p6gHmuqU20iXCNOV4/BBVdcm+IzvnCxGNrbIx0m12jx6WTuUS5Mwie7yH1EGo+BwaRaHXg0EmnJvYyYUhtg==");
         spmap.put("X_VIEWSORTKEYTBL","0NSZ7JeCfoBkyzKIM0g+LcOXAmm8orUQagUMuWGxMKOnX05/zQb3MStY8MRPonnlftuwF51h4gvpiyFsl4qwJQ==");
         spmap.put("X_VIEWSRCLRFILETBL","/ItFcqrWtKtGbK7YIUfBDLkVQPvw76yLFvUPd0COf7s+2EglW0AIB4hPs7b/l9Sg0S4i3RmXZpqEaiZvoVomNQ==");
-
-        System.out.println ("**** Enter class EzJava");
 
         try {
             Class.forName("com.ibm.db2.jcc.DB2Driver");

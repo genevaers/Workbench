@@ -42,6 +42,8 @@ public class GvbSchemaValidate4 {
         Statement stmt;
         ResultSet rs;
 
+        System.out.println ("**** Running GvbSchemaValidate1: foreign keys");
+
         try {
             reader = new BufferedReader(new FileReader(System.getenv("HOMEPATH")+"\\password.txt"));
 			String line = reader.readLine();
@@ -110,8 +112,6 @@ public class GvbSchemaValidate4 {
         spmap.put("X_VIEWLRFLD_LRFLD","e1N/TkBYbMvVORwlngLY+Z2jpuk1HjLrrfmHJc7H4zqMS97YBTptVkHPRd7Jw68d898QR/+AXjsiecukb3tzCw==");
         spmap.put("X_VIEWSORTKEYTBL","lZ0yn9TVO8zIuKE5kO39Yv3BqtFg4DlXsRZpCnJcQgoA5hujTs3xzRF8I1vDVxiUBunq7JrV7MupCau50caLew==");
         spmap.put("X_VIEWSRCLRFILETBL","ANWzHO7UOZJ/ZhMnsLYxUqkO0r2ERwBo6RDpm5w/lTtoOR7rM9e00wW94xn4PoXuu27Rzjzt7EwiYXZa3W3Awg==");
-
-        System.out.println ("**** Enter class EzJava");
 
         try {
             Class.forName("com.ibm.db2.jcc.DB2Driver");
