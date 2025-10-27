@@ -128,15 +128,15 @@ INSTSP   - install stored procedures
 
 This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data.
 <pre>
-UNLOAD   - unload GenevaERS data from existing DB2 schema             - new
-EXDSNMOD - change LOB file location <===
-EXMPNC2  - change schema
+UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
+EXDSNMOD - change LOB file location                                   - Todo
+EXMPNC2  - change schema                                              - Todo
 DROPALL  - drop existing database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
 BLDDB02  - create Logic Table/LOB column
 BLDDB03  - create C_*, E_* and X_* indexes
-LOAD01   - load database without E_LOGIC table
-LOAD02   - load E_LOGIC table
+LOAD01   - load database without E_LOGIC table                         - Todo
+LOAD02   - load E_LOGIC table                                          - Todo
 BLDDB04  - create foreign keys
 BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status
