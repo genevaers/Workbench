@@ -16,7 +16,7 @@ import java.util.Base64;
 
 import java.sql.*;
  
-public class GvbSchemaValidate {
+public class GvbSchemaValidate1 {
     public static void main(String[] args)
     {
         HashMap<String, String> spmap = new HashMap<>(30);
