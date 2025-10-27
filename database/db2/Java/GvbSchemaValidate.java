@@ -16,7 +16,7 @@ import java.util.Base64;
 
 import java.sql.*;
  
-public class Db2test2 {
+public class GvbSchemaValidate {
     public static void main(String[] args)
     {
         HashMap<String, String> spmap = new HashMap<>(30);
