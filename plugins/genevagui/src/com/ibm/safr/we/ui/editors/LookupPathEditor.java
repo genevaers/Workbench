@@ -851,7 +851,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		FormData dataTableSource = new FormData();
 		dataTableSource.left = new FormAttachment(0, 0);
 		dataTableSource.top = new FormAttachment(labelSourceLFText, 10);
-		dataTableSource.width = 600;
+		dataTableSource.width = 700;
 		dataTableSource.height = 80;
 		tableSource.setLayoutData(dataTableSource);
 
@@ -1546,7 +1546,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		FormData dataComboSourceLR = new FormData();
 		dataComboSourceLR.left = new FormAttachment(labelSourceLR, 65);
 		dataComboSourceLR.top = new FormAttachment(radiofield, 5);
-		dataComboSourceLR.width = 305;
+		dataComboSourceLR.width = LR_DATA_WIDTH;
 		comboSourceLR.setLayoutData(dataComboSourceLR);	
 		comboSourceLR.setVisible(true);
 		
@@ -1573,7 +1573,7 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 		FormData dataComboLRField = new FormData();
 		dataComboLRField.top = new FormAttachment(labelSourceLR, 17);
 		dataComboLRField.left = new FormAttachment(labelDummy, 12);
-		dataComboLRField.width = 305;
+		dataComboLRField.width = LR_DATA_WIDTH;
 		comboLRField.setLayoutData(dataComboLRField);
 
 		addLRFieldOpenEditorMenu();
