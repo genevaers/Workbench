@@ -805,6 +805,7 @@ public class ImportUtilityEditor extends SAFREditorPart {
                         // hourglass while the View Folders combo is
                         // being populated
                         getSite().getShell().setCursor(getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_WAIT));
+                        loadComponentFiles();
                         tableViewerXmlFiles.refresh();
                         checkEnableImport();
                     } finally {

@@ -443,7 +443,6 @@ public class MigrationEditor extends SAFREditorPart {
 		@Override
 		public Color getForeground(Object element, int columnIndex) {
 			
-        	System.out.println("venkatesh" + element.toString());
         	switch (columnIndex) {
 
             case 1:

@@ -138,7 +138,7 @@ public class WBCompilerDataStore {
         }
         cd.setExtractAreaValue(vc.getExtractAreaCode().getGeneralId());
         cd.setExtractAreaPosition(vc.getExtractAreaPosition() != null ? vc.getExtractAreaPosition() : 1);
-        if(vc.getExtractAreaCode().getGeneralId() == Codes.SORTKEY) {
+        if(vc.getExtractAreaCode().getGeneralId() == Codes.SORTKEY && vc.getViewSortKey()!=null) {
             ViewSortKey vsk = vc.getViewSortKey();
             cd.setLength(vsk.getLength());
         } else {
