@@ -153,21 +153,17 @@ If a DB2 schema is completely empty, such as in the case above (see **Build DB2 
 
 ![Alt text](Image/Import_to_empty_environment.jpg)
 
-More.............
-
-![Alt text](https://github.com/genevaers/Workbench/blob/Stage2_DB2_database_work/database/db2/Image/Import_to_empty_environment.jpg)
-
 ### Importing to a DB2 schema which contains existing Workbench views
 
 You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
 
-![Alt text](https://github.com/genevaers/Workbench/blob/Stage2_DB2_database_work/database/db2/Image/NEW_environment.jpg)
+![Alt text](Image/NEW_environment.jpg)
 
 ### Avoiding a clash in the control record
 
 If you encounter the following problem, see screen shot, it means there is a conflicting control record already in the empty environment you are trying to use for the import. Therefore you must first create an empty environment using the option to not create a control record.
 
-![Alt text](https://github.com/genevaers/Workbench/blob/Stage2_DB2_database_work/database/db2/Image/Control_Record_clash.jpg)
+![Alt text](Image/Control_Record_clash.jpg)
 
 ### Note on stored procedures - job INSTSP
 
