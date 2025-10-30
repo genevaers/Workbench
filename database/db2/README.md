@@ -151,6 +151,10 @@ The following scenarios are provided to demonstrate re-importing exported Workbe
 
 If a DB2 schema is completely empty, such as in the case above (see **Build DB2 Schema to contain GenevaERS objects**) it will contain a single *environment* named Development. This default environment is installed by the process described above. You can import an XMLformat view folder such as Demo_Open_Source.XML into this view folder as is, see the following screenshot.
 
+![Alt text](Image/Import_to_empty_environment.jpg)
+
+More.............
+
 ![Alt text](https://github.com/genevaers/Workbench/blob/Stage2_DB2_database_work/database/db2/Image/Import_to_empty_environment.jpg)
 
 ### Importing to a DB2 schema which contains existing Workbench views
