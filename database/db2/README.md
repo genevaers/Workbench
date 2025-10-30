@@ -155,7 +155,7 @@ If a DB2 schema is completely empty, such as in the case above (see **Build DB2 
 
 ### Importing to a DB2 schema which contains existing Workbench views
 
-You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
+You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. Under Administration select New Environment. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
 
 ![Alt text](Image/NEW_environment.jpg)
 
