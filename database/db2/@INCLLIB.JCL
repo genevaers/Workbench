@@ -1,0 +1,6 @@
+//JOBLIB   DD DISP=SHR,DSN=&$DB2XLIB.
+//         DD DISP=SHR,DSN=&$DB2LLIB.
+//         DD DISP=SHR,DSN=&$DB2RLIB.
+//         DD DISP=SHR,DSN=&$SCEELIB.
+//         DD DISP=SHR,DSN=&$SCEE2LIB.        
+//         DD DISP=SHR,DSN=&$SCBCDLL.
