@@ -219,7 +219,7 @@ public class SAFRUtilities {
 		generator.init(params);
 		byte[] key = new byte[32]; // 256 bits
 		generator.generateBytes(mkey, key);
-		return new SecretKeySpec(key, "AES");
+		return new SecretKeySpec(key, ClientConstants.AES);
 	}
 
 	public static String encrypt(String dataToEncrypt, SecretKeySpec key)
@@ -228,7 +228,7 @@ public class SAFRUtilities {
 		SecureRandom secureRandom = new SecureRandom();
 		secureRandom.nextBytes(iv);
 		
-		Cipher gcmCipher = Cipher.getInstance("AES/GCM/NoPadding");
+		Cipher gcmCipher = Cipher.getInstance(ClientConstants.AES_ALGORITHM);
 		GCMParameterSpec gcmSpec = new GCMParameterSpec(128, iv);
 		gcmCipher.init(Cipher.ENCRYPT_MODE, key, gcmSpec);
 
@@ -246,7 +246,7 @@ public class SAFRUtilities {
 		if(splits.length == 2) {
 			 byte[] iv = base64Decode(splits[0]);
 			 byte[] cipherText = base64Decode(splits[1]);
-			Cipher pbeCipher = Cipher.getInstance("AES/GCM/NoPadding");
+			Cipher pbeCipher = Cipher.getInstance(ClientConstants.AES_ALGORITHM);
 			GCMParameterSpec spec = new GCMParameterSpec(128, iv);
 			pbeCipher.init(Cipher.DECRYPT_MODE, key, spec);
 			return new String(pbeCipher.doFinal(cipherText), "UTF-8");
