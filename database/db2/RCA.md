@@ -1,24 +1,24 @@
 # JCL and parameters to run RCA
 
-This is intended executing GeneversERS RCA on ZOS. Run Control Application can take input either from the DB2 schema defined for GenevaERS or from XML files exported via Workbench. For example JCL see GenevaERS Workbench repository and file GVBDEME.JCL in directory database/db2.
+These instructions are intended for executing GeneversERS RCA on ZOS. The Run Control Application can take input either from data contained in a DB2 schema defined for GenevaERS, or from XML files exported via Workbench. For example JCL, see GenevaERS Workbench repository and file GVBDEME.JCL in directory database/db2.
 
 ## Job steps involved
 <pre>
 1) delete output files from last run
-2) generate the output run control file
+2) generate the output run control file -- or compare old and new run control files
 </pre>
 
 ## Assign symbolic variables in JCL
 <pre>
-//   EXPORT SYMLIST=*                                                  
-//   SET PDSHLQ=GEBT                                                   
-//   SET PDSMLQ=RTC23321                                               
-//   SET DB2SYS=DM13                                                   
-//   SET DEMOHLQ=GEBT                                                  
-//   SET DEMOMLQ=GVBDEMO                                               
-//   SET LOADLIB=GEBT.NEILE.GVBLOAD                                    
-//   SET JZOSLIB=AJV.V11R0M0.SIEALNKE                                  
-//   SET DB2SCH=SAFRNEIL               
+//   EXPORT SYMLIST=*
+//   SET PDSHLQ=GENEVA
+//   SET PDSMLQ=GVBDEMO
+//   SET DB2SYS=my-db2-subsystem
+//   SET DEMOHLQ=GENEVA
+//   SET DEMOMLQ=GVBDEMO
+//   SET LOADLIB=GENEVA.GVBDEMO.GVBLOAD
+//   SET JZOSLIB=AJV.V11R0M0.SIEALNKE
+//   SET DB2SCH=my-db2-schema
 </pre>
 
 ## Job step delete output files from last run
@@ -65,10 +65,10 @@ Note: Since rcapps-latest.jar is an alias pointing to your latest main Java clas
 //STDENV DD *,SYMBOLS=EXECSYS
 . /etc/profile
 export A2E=-ofrom=ISO8859-1,to=IBM-1047
-export JAVA_HOME=&$JAVAHOME.
+export JAVA_HOME=/Java/J17.0_64
 export IBM_JAVA_OPTIONS="-Dfile.encoding=ISO8859-1"
 
-export APP_HOME=&$RCAJAR.
+export APP_HOME=/u/user01/git/public/RCA_jar
 export APP_NAME=rcapps-latest.jar
 export CLASSPATH=$APP_HOME:"$JAVA_HOME"/lib
 
@@ -119,10 +119,10 @@ Generalized parameters follow such as LOG_LEVEL and directions whether RCA is to
 //RCAPARM  DD *,SYMBOLS=EXECSYS
 # Input
 INPUT_TYPE=DB2
-ENVIRONMENT_ID=&$DB2SENV.
+ENVIRONMENT_ID=environment_ID, i.e. 1 for GVBDEMO
 DB_SCHEMA=&DB2SCH
-DB_PORT=&$DB2PORT.
-DB_SERVER=&$DB2HOST.
+DB_PORT=db2-port-number
+DB_SERVER=db2-host-ip-address
 DB_DATABASE=&DB2SYS
 LOG_LEVEL=FINEST
 COMPARE=N
@@ -136,7 +136,7 @@ NUMBER_MODE=STANDARD
 </pre>
 
 ### DBVIEWS parameter
-These specifiy the GenevaERS view numbers to be processed
+These specifiy the GenevaERS view numbers to be processed. These view numbers are for GVBDEMO
 <pre>
 //DBVIEWS DD *
 10700
