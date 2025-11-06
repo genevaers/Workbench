@@ -57,11 +57,10 @@ This specifies the cataloged procedure for running Java in batch and the name of
 //STEPLIB  DD DISP=SHR,DSN=&JZOSLIB                                     
 </pre>
 
-### STDENV parameters
+### STDENV parameters defining application and Java itself
 The section of the JCL sets the STDENV parameters, importantly APP_HOME and APP_NAME along with appending the CLASSPATH.Also important is the A2E, JAVA_HOME and IBM_JAVA_OPTIONS for your site. The LIBPATH is adjusted for your Java installation.
 
-#### Use of aliases
-Since rcapps-latest.jar is an alias pointing to your latest main Java class for RCA you must define the alisas on the same machine where you run RCA. The alias cannot be copied from another LPAR or machine.
+Note: Since rcapps-latest.jar is an alias pointing to your latest main Java class for RCA you must define the alisas on the same machine where you run RCA. The alias cannot be copied from a machine with a different file system.
 <pre>
 //STDENV DD *,SYMBOLS=EXECSYS
 . /etc/profile
@@ -79,7 +78,37 @@ LIBPATH="$LIBPATH":"$JAVA_HOME"/lib/j9vm
 export LIBPATH="$LIBPATH":
 </pre>
 
-...more...
+### STDENV parameters defining userID and password
+In order not to include your userID and password in stream, these are provided to STDENV using a RACF protected file.
+<pre>
+// DD DISP=SHR,DSN=USER01.PRIVATE
+</pre>
+
+### Miscellaneous STDENV parameters
+<pre>
+// DD *,SYMBOLS=EXECSYS
+# Customize your CLASSPATH here
+# Add Application required jars to end of CLASSPATH
+CLASSPATH="$CLASSPATH":"$APP_HOME"/"$APP_NAME"
+echo $CLASSPATH
+export CLASSPATH="$CLASSPATH":
+
+# Set JZOS specific options
+# Use this variable to specify encoding for DD STDOUT and STDERR
+#export JZOS_OUTPUT_ENCODING=Cp1047
+# Use this variable to prevent JZOS from handling MVS operator commands
+#export JZOS_ENABLE_MVS_COMMANDS=false
+# Use this variable to supply additional arguments to main
+#export JZOS_MAIN_ARGS=""
+
+# Configure JVM options
+IJO="-Xms16m -Xmx128m"
+# Uncomment the following to aid in debugging "Class Not Found" problems
+#IJO="$IJO -verbose:class"
+# Uncomment the following if you want to run with Ascii file encoding..
+IJO="$IJO -Dfile.encoding=ISO8859-1"
+export IBM_JAVA_OPTIONS="$IJO "
+</pre>
 
 ![Alt text](Image/Import_to_empty_environment.jpg)
 
