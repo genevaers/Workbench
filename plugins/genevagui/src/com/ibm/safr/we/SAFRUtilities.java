@@ -82,7 +82,7 @@ public class SAFRUtilities {
 			} catch (IllegalBlockSizeException e) {
 				decrypted = "";
 			} catch (Exception e) {
-				if("Tag mismatch".equals(e.getMessage())) {
+				if(e.getMessage().contains("Tag mismatch")) {
 					decrypted = "";
 				}else
 					throw new SAFRFatalException(e.getMessage());

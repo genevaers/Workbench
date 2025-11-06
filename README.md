@@ -50,10 +50,6 @@ The Maven version used for development was 3.9.9.
 
 Your version of Java must be higher than 17.  The development version was 17.0.6.
 
-The final optional step of the build adds a JRE to the distributable zip.
-To do this the build script assumes you have [7Zip](https://www.7-zip.org/download.html) installed and available on your path.
-If you want to use a different zip utiltity edit the shell script postbuild/postbuild.sh.
-
 ## Environment Variables
 
 There are two key environment variables used by the build.
@@ -72,10 +68,9 @@ export GERS_JARS=~/gersjars
 ```
 ## GERS_GRAMMAR and GERS_RUNCONTROL
 
-If you wish to point to a custom location for GenevaERS Grammar and the GenevaERS Run Control Apps, pre-requisites for the Workbench, set this environment variable to the location of your desired repo.
+If you wish to point to a custom location for the GenevaERS Run Control Apps, pre-requisites for the Workbench, set this environment variable to the location of your desired repo.
 
 ```
-export GERS_GRAMMAR="https://github.com/genevaers/Grammar.git"
 export GERS_RUNCONTROL="https://github.com/genevaers/Run-Control-Apps.git"
 ```
 
