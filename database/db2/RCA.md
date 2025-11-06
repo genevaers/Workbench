@@ -85,6 +85,7 @@ In order not to include your userID and password in stream, these are provided t
 </pre>
 
 ### Miscellaneous STDENV parameters
+These complete the definition of CLASSPATH, JZOS specific features and JVM options, such as memory size which can be increased from the 128 megabyte maximum limit as required.
 <pre>
 // DD *,SYMBOLS=EXECSYS
 # Customize your CLASSPATH here
@@ -110,25 +111,70 @@ IJO="$IJO -Dfile.encoding=ISO8859-1"
 export IBM_JAVA_OPTIONS="$IJO "
 </pre>
 
-![Alt text](Image/Import_to_empty_environment.jpg)
+### RCAPARM parameters
+These deal with parameters specific to the RCA application, such as whether the input is read from DB2 or XML files exported from the Workbench. The GenevaraERS environment number is specified here along with the DB2 schema, in the case of reading input from DB2. The server and port are specified for TCP/IP communication through JDBC with DB2. Further DB2 details include the name of the DB2 database.
 
-### Importing to a DB2 schema which contains existing Workbench views
+Generalized parameters follow such as LOG_LEVEL and directions whether RCA is to generate run control files, or to compare two sets of run control files, and the type of reports required.
+<pre>
+//RCAPARM  DD *,SYMBOLS=EXECSYS
+# Input
+INPUT_TYPE=DB2
+ENVIRONMENT_ID=&$DB2SENV.
+DB_SCHEMA=&DB2SCH
+DB_PORT=&$DB2PORT.
+DB_SERVER=&$DB2HOST.
+DB_DATABASE=&DB2SYS
+LOG_LEVEL=FINEST
+COMPARE=N
+GENERATE_RC_FILES=Y
+REPORT_FORMAT=TXT
+VDP_REPORT=Y
+JLT_REPORT=Y
+XLT_REPORT=Y
+NUMBER_MODE=STANDARD
+/*
+</pre>
 
-You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. Under Administration select New Environment. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
+### DBVIEWS parameter
+These specifiy the GenevaERS view numbers to be processed
+<pre>
+//DBVIEWS DD *
+10700
+10689
+10702
+10714
+10715
+/*
+</pre>
 
-![Alt text](Image/NEW_environment.jpg)
+### Output dataset definition statements
+Here the 3 output files are defined for the VDP, XLT and JLT. In the case of a compare there will also be VDPOLD, XLTOLD and JLTOLD data definition statements used for the comparison.
+<pre>
+//VDPNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.VDP,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(CYL,(10,10),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=8192,BLKSIZE=0)
+//*                                                                     
+//JLTNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.JLT,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(TRK,(10,10),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4004,BLKSIZE=32036)
+//*
+//XLTNEW   DD DSN=&DEMOHLQ..&DEMOMLQ..PASS1C1.XLT,
+//            DISP=(NEW,CATLG,DELETE),
+//            UNIT=SYSDA,
+//            SPACE=(CYL,(10,10),RLSE),
+//            DCB=(DSORG=PS,RECFM=VB,LRECL=4004,BLKSIZE=32036)
+</pre>
 
-### Avoiding a clash in the control record
-
-If you encounter the following problem, see screen shot, it means there is a conflicting control record already in the empty environment you are trying to use for the import. Therefore you must first create an empty environment using the option to not create a control record.
-
-![Alt text](Image/Control_Record_clash.jpg)
-
-### Note on stored procedures - job INSTSP
-
-Stored Procedures are used by the GENEVA Workbench to access
-related metadata in the DB2 database. These native Stored
-Procedures so must use DB2 Z/OS Version 11 or above.
-
-Native stored procedures are created directly in DB2.
-
+### Output report datasets
+The RCA run report and log datasets are specified here, along with the 3 separate VDP, XLT and JLT output reports.
+<pre>
+//RCARPT  DD SYSOUT=*,DCB=(RECFM=VB,LRECL=255)
+//RCALOG  DD SYSOUT=*,DCB=(RECFM=VB,LRECL=255)
+//VDPRPT  DD SYSOUT=*,DCB=(RECFM=VB,LRECL=255)
+//XLTRPT  DD SYSOUT=*,DCB=(RECFM=VB,LRECL=255)
+//JLTRPT  DD SYSOUT=*,DCB=(RECFM=VB,LRECL=255)
+</pre>
