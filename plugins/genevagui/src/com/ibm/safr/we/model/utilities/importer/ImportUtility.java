@@ -501,8 +501,18 @@ public class ImportUtility extends SAFRObject {
 				.newInstance();
 		 // XXE prevention by disabling parsing features
 		docBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-		docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-		docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		 	try {
+		        docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+		    } catch (IllegalArgumentException e) {
+		        logger.log(Level.WARNING, "ACCESS_EXTERNAL_DTD not supported: " + e.getMessage());
+		    }
+
+		    try {
+		        docBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+		    } catch (IllegalArgumentException e) {
+		        // Ignore for parsers that don't recognize it (e.g., IBM J9)
+		    	logger.log(Level.WARNING, "ACCESS_EXTERNAL_STYLESHEET not supported: " + e.getMessage());
+		    }
 		builder = docBuilderFactory.newDocumentBuilder();
 		// Create XPath object to be used later
 		XPathFactory xpathFact = XPathFactory.newInstance();
