@@ -153,6 +153,13 @@ If a DB2 schema is completely empty, such as in the case above (see **Build DB2 
 
 ![Alt text](Image/Import_to_empty_environment.jpg)
 
+Also included in the prepared JCL are the jobs for running the views in **Demo_Open_Source**. These jobs read the GenevaERS metadata directly from the DB2 database -- so are able to validate the functionality of the defined DB2 schema.
+
+GVBDEME.JCL
+GVBDEMF1.JCL
+GVBDEMF2.JCL
+GVBDEMF3.JCL
+
 ### Importing to a DB2 schema which contains existing Workbench views
 
 You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. Under Administration select New Environment. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
