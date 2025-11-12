@@ -57,6 +57,20 @@ export GERS_FROM_DB2_DBSG=your-from-database-storage-group
 export GERS_FROM_DB2_DBSCH=your-from-database-schema
 export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
 </pre>
+The following variables are for running an optional smoke test of RCA and Performance engine with DB2
+<pre>
+export GERS_ENV_HLQ=same-as-GERS_ENV_HLQ-in-.gers.profile
+export GERS_DEMO_HLQ=your-GVBDEMO-hlq
+export GERS_DEMO_MLQ=your GVBDEMO-mlq
+export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
+export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
+export GERS_DB2_HOST=host-name-DB2-database
+export GERS_DB2_PORT=port-number-DB2-database
+export GERS_DB2_SAFR_ENV='1';
+export GERS_JAVA_HOME="/Java/J17.0_64"
+export GERS_RCA_JAR_DIR=same-as-GERS_RCA_JAR_DIR-in-.gers.profile
+</pre>
+
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 
 Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
@@ -153,12 +167,14 @@ If a DB2 schema is completely empty, such as in the case above (see **Build DB2 
 
 ![Alt text](Image/Import_to_empty_environment.jpg)
 
-Also included in the prepared JCL are the jobs for running the views in **Demo_Open_Source**. These jobs read the GenevaERS metadata directly from the DB2 database -- so are able to validate the functionality of the defined DB2 schema.
+Also included in the prepared JCL are the jobs for running the views in **Demo_Open_Source**. These jobs read the GenevaERS metadata directly from the DB2 database -- so are able to perform an optional smoke test of the defined DB2 schema.
 
-GVBDEME.JCL
-GVBDEMF1.JCL
-GVBDEMF2.JCL
-GVBDEMF3.JCL
+<pre>
+GVBDEME.JCL     Runs RCA and Performance Engine
+GVBDEMF1.JCL    Runs subsequest format job
+GVBDEMF2.JCL    Runs subsequest format job
+GVBDEMF3.JCL    Runs subsequest format job
+</pre>
 
 ### Importing to a DB2 schema which contains existing Workbench views
 
