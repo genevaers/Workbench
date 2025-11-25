@@ -28,7 +28,6 @@ public class ClientConstants{
 
 	private static final String SALTVALUE = "ICWasHere";
 	private static final String MKEYVALUE = "GERSForever";
-	public static final String AES_ALGORITHM = "AES/GCM/NoPadding";
 	public static final String AES = "AES";
 
 	public static String getMkeyvalue() {
