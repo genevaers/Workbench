@@ -119,7 +119,7 @@ public class PhysicalFile extends SAFREnvironmentalComponent {
 	 * when the PhysicalFile object is persisted via its <code>store()</code>
 	 * method.
 	 */
-	PhysicalFile(Integer environmentId) {
+	public PhysicalFile(Integer environmentId) {
 		super(environmentId);
 		List<Code> fcodeList = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.FILETYPE).getCodes();
 		fileTypeCode = fcodeList.get(1);

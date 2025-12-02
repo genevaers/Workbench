@@ -99,7 +99,7 @@ public class LogicalRecord extends SAFRActivatedComponent {
 
 	private ModelTransferProvider provider;
 
-	LogicalRecord(Integer environmentId) {
+	public LogicalRecord(Integer environmentId) {
 		super(environmentId);
 		logicalFileAssociations = new SAFRAssociationList<ComponentAssociation>();
 	}

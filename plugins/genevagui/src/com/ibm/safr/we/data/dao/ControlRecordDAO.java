@@ -50,8 +50,8 @@ public interface ControlRecordDAO {
 	 *             It throws an exception if no Control Record is there with the
 	 *             specified Id.
 	 */
-	ControlRecordTransfer getControlRecord(Integer id, Integer environmentId)
-			throws DAOException;
+    ControlRecordTransfer getControlRecord(Integer id, Integer environmentId) throws DAOException;
+    ControlRecordTransfer getControlRecord(String name, Integer environmentId) throws DAOException;
 
 	/**
 	 * This method is called from the respective model class. This later calls

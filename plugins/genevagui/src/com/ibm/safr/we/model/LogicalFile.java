@@ -70,7 +70,7 @@ public class LogicalFile extends SAFREnvironmentalComponent {
 	 * when the Logical File object is persisted via its <code>store()</code>
 	 * method.
 	 */
-	LogicalFile(Integer environmentId) {
+	public LogicalFile(Integer environmentId) {
 		super(environmentId);
 		logicalRecordAssociations = new SAFRAssociationList<ComponentAssociation>();
 		physicalFileAssociations = new SAFRAssociationList<FileAssociation>();

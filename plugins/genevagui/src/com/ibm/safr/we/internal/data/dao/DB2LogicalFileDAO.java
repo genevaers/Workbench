@@ -135,52 +135,94 @@ public class DB2LogicalFileDAO implements LogicalFileDAO {
 		return result;
 	}
 
-	public LogicalFileTransfer getLogicalFile(Integer id, Integer environmentId)
-			throws DAOException {
-		LogicalFileTransfer result = null;
-		try {
-			List<String> idNames = new ArrayList<String>();
-			idNames.add(COL_ID);
-			idNames.add(COL_ENVID);
+    public LogicalFileTransfer getLogicalFile(Integer id, Integer environmentId)
+            throws DAOException {
+        LogicalFileTransfer result = null;
+        try {
+            List<String> idNames = new ArrayList<String>();
+            idNames.add(COL_ID);
+            idNames.add(COL_ENVID);
 
-			String selectString = generator.getSelectStatement(params
-					.getSchema(), TABLE_NAME, idNames, null);
-			PreparedStatement pst = null;
-			ResultSet rs = null;
-			while (true) {
-				try {
-					pst = con.prepareStatement(selectString);
-					if(id!=null){
-						pst.setInt(1, id);
-					}
-					else{
-						continue;
-					}
-					pst.setInt(2, environmentId);
-					rs = pst.executeQuery();
-					break;
-				} catch (SQLException se) {
-					if (con.isClosed()) {
-						// lost database connection, so reconnect and retry
-						con = DAOFactoryHolder.getDAOFactory().reconnect();
-					} else {
-						throw se;
-					}
-				}
-			}
-			if (rs.next()) {
-				result = generateTransfer(rs);
-			} else {
-				logger.info("No such Logical File in Env " + environmentId + " with id : " + id);
-			}
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			throw DataUtilities.createDAOException(
-					"Database error occurred while retrieving the Logical File with id ["+ id + "]", e);
-		}
-		return result;
-	}
+            String selectString = generator.getSelectStatement(params
+                    .getSchema(), TABLE_NAME, idNames, null);
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                    if(id!=null){
+                        pst.setInt(1, id);
+                    }
+                    else{
+                        continue;
+                    }
+                    pst.setInt(2, environmentId);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            if (rs.next()) {
+                result = generateTransfer(rs);
+            } else {
+                logger.info("No such Logical File in Env " + environmentId + " with id : " + id);
+            }
+            pst.close();
+            rs.close();
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException(
+                    "Database error occurred while retrieving the Logical File with id ["+ id + "]", e);
+        }
+        return result;
+    }
+
+    public LogicalFileTransfer getLogicalFile(String name, Integer environmentId)
+            throws DAOException {
+        LogicalFileTransfer result = null;
+        try {
+            List<String> idNames = new ArrayList<String>();
+            idNames.add(COL_ID);
+            idNames.add(COL_ENVID);
+
+            String selectString = generator.getSelectStatement(params
+                    .getSchema(), TABLE_NAME, idNames, null);
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                    pst.setString(1, name);
+                    pst.setInt(2, environmentId);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            if (rs.next()) {
+                result = generateTransfer(rs);
+            } else {
+                logger.info("No such Logical File in Env " + environmentId + " with id : " + name);
+            }
+            pst.close();
+            rs.close();
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException(
+                    "Database error occurred while retrieving the Logical File with id ["+ name + "]", e);
+        }
+        return result;
+    }
 
 	public LogicalFileTransfer persistLogicalFile(
 			LogicalFileTransfer logicalFileTransfer) throws DAOException,

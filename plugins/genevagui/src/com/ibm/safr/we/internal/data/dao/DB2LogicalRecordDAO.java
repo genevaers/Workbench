@@ -159,6 +159,49 @@ public class DB2LogicalRecordDAO implements LogicalRecordDAO {
 		return result;
 	}
 
+	   public LogicalRecordTransfer getLogicalRecord(String name,
+	            Integer environmentId) throws DAOException {
+	        LogicalRecordTransfer result = null;
+	        try {
+	            List<String> idNames = new ArrayList<String>();
+	            idNames.add(COL_NAME);
+	            idNames.add(COL_ENVID);
+
+	            String selectString = generator.getSelectStatement(params.getSchema(), TABLE_NAME, idNames, null);
+	            PreparedStatement pst = null;
+	            ResultSet rs = null;
+	            while (true) {
+	                try {
+
+	                    pst = con.prepareStatement(selectString);
+	                    pst.setString(1, name);
+	                    pst.setInt(2, environmentId);
+	                    rs = pst.executeQuery();
+	                    break;
+	                } catch (SQLException se) {
+	                    if (con.isClosed()) {
+	                        // lost database connection, so reconnect and retry
+	                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+	                    } else {
+	                        throw se;
+	                    }
+	                }
+	            }
+	            if (rs.next()) {
+	                result = generateTransfer(rs);
+	            } else {
+	                logger.info("No such Logical Record in Env " + environmentId + " with id : " + name);
+	            }
+	            pst.close();
+	            rs.close();
+	        } catch (SQLException e) {
+	            throw DataUtilities.createDAOException(
+	                "Database error occurred while retrieving the Logical Record with id ["+ name + "]", e);
+	        }
+	        return result;
+	    }
+
+
 	public List<LogicalRecordQueryBean> queryAllLogicalRecords(
 			Integer environmentId, SortType sortType) throws DAOException {
 		List<LogicalRecordQueryBean> result = new ArrayList<LogicalRecordQueryBean>();

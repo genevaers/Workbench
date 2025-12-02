@@ -54,7 +54,7 @@ public class LRField extends SAFRField {
 	private ModelTransferProvider provider;
     public static String[] EffectiveDate = { "", "Start Date", "End Date" };
 
-	LRField(LogicalRecord parentLR) throws SAFRException {
+	public LRField(LogicalRecord parentLR) throws SAFRException {
 		super(parentLR.getEnvironment());
 		this.logicalRecord = parentLR;
 		this.logicalRecordId = parentLR.getId();

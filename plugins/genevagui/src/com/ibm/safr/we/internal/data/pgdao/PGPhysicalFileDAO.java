@@ -875,7 +875,7 @@ public class PGPhysicalFileDAO implements PhysicalFileDAO {
                 "AND C.ENVIRONID=D.ENVIRONID " +
                 "AND C.PHYFILEID=D.PHYFILEID " +
                 "AND A.LOGICTYPECD=5 " +
-                "AND D.ENVIRONID=?" +
+                "AND D.ENVIRONID=? " +
                 "AND D.PHYFILEID=?";
             while (true) {
                 try {

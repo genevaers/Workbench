@@ -34,6 +34,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 
 import com.ibm.safr.we.SAFRUtilities;
+import com.ibm.safr.we.cli.ScriptProcessor;
 import com.ibm.safr.we.ui.utilities.LogErrorManager;
 import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.utilities.SAFRLogger;
@@ -46,6 +47,8 @@ public class Application implements IApplication {
 
 	public static final String PLUGIN_ID = "GenevaERS";
 	private Logger logger;  
+	private String scriptName;
+	private boolean scriptFlag = false;
 	
 	public Object start(IApplicationContext context) throws Exception {
 
@@ -57,7 +60,6 @@ public class Application implements IApplication {
 		// The log files will appear under:
 		// @user.home/Application data/SAFR/Workbench
 		// Eclipse/workspace/.metadata
-
 		
 		Display display = PlatformUI.createDisplay();
 		
@@ -84,8 +86,30 @@ public class Application implements IApplication {
 	        SAFRLogger.logAllSeparator(logger, Level.INFO, "Java runtime " + System.getProperty("java.runtime.name"));
 	        SAFRLogger.logAllSeparator(logger, Level.INFO, "Java runtime version " + System.getProperty("java.runtime.version"));
 	        
-	        int returnCode;
+	        SAFRLogger.logAllSeparator(logger, Level.INFO, "Args ...\n");
+	        String[] args = (String[]) context.getArguments().get(IApplicationContext.APPLICATION_ARGS);
+            SAFRLogger.logAllSeparator(logger, Level.INFO, "Num Args " + Integer.toString(args.length));
+            scriptName = "";
+            scriptFlag = false;
+	        if(args.length > 0) {
+	            for(int i=0; i<args.length; i++) {
+				    scriptName = args[i];
+	                SAFRLogger.logAllSeparator(logger, Level.INFO, args[i] + "\n");
+	            }
+	        }
+            if(scriptName.endsWith(".grs")) {
+                SAFRLogger.logAllSeparator(logger, Level.INFO, "Found GenevaERS script " + scriptName);
+                scriptFlag = true;
+            }
+        int returnCode;
 	        
+        //Move this stuff to after login... use login to setup database connection?
+        // Script could be called from login...
+        // or menu option
+		if (scriptFlag) {	
+			SAFRLogger.logAllSeparator(logger, Level.INFO, "Processing GenevaERS script " + scriptName);
+			ScriptProcessor.readFile(scriptName);
+		} else {
 	        // try block for WE setup
 	        try {
 
@@ -126,12 +150,13 @@ public class Application implements IApplication {
 	            UIUtilities.disposeImages();
 	            display.dispose();
 	        }
-		    	
+		}    	
 	    // no log file to write to
 	    } catch (Exception e) {
             MessageDialog.openError(Display.getCurrent().getActiveShell(), "Log Access Failed",
                     "Failed to access log file " + e.getMessage());	        
 	    }
+	
         SAFRLogger.logAllStamp(logger, Level.INFO, "Stopped Workbench " + UIUtilities.getVersionDetails().split("\n")[0]);
 		return IApplication.EXIT_OK;
 	}

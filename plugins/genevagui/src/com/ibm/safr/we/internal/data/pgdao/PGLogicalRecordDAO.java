@@ -171,8 +171,7 @@ public class PGLogicalRecordDAO implements LogicalRecordDAO {
 		return result;
 	}
 
-	public LogicalRecordTransfer getLogicalRecord(String name,
-			Integer environmentId) throws DAOException {
+	public LogicalRecordTransfer getLogicalRecord(String name,	Integer environmentId) throws DAOException {
 		LogicalRecordTransfer result = null;
 		try {
 			List<String> idNames = new ArrayList<String>();

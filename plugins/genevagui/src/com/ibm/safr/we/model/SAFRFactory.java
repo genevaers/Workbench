@@ -332,20 +332,35 @@ public class SAFRFactory extends SAFRObject {
 	 *             database.
 	 * @throws SAFRException
 	 */
-	public ControlRecord getControlRecord(Integer id, Integer environId)
-			throws SAFRException {
-		ControlRecord controlRecord = null;
-		ControlRecordTransfer controlRecordTransfer = null;
-		controlRecordTransfer = DAOFactoryHolder.getDAOFactory()
-				.getControlRecordDAO().getControlRecord(id, environId);
-		if (controlRecordTransfer == null) {
-			throw new SAFRNotFoundException("Control Record '" + id
-					+ "' not found in Environment '" + environId + "'.", id);
-		} else {
-			controlRecord = new ControlRecord(controlRecordTransfer);
-		}
-		return controlRecord;
-	}
+    public ControlRecord getControlRecord(Integer id, Integer environId)
+            throws SAFRException {
+        ControlRecord controlRecord = null;
+        ControlRecordTransfer controlRecordTransfer = null;
+        controlRecordTransfer = DAOFactoryHolder.getDAOFactory()
+                .getControlRecordDAO().getControlRecord(id, environId);
+        if (controlRecordTransfer == null) {
+            throw new SAFRNotFoundException("Control Record '" + id
+                    + "' not found in Environment '" + environId + "'.", id);
+        } else {
+            controlRecord = new ControlRecord(controlRecordTransfer);
+        }
+        return controlRecord;
+    }
+
+    public ControlRecord getControlRecord(String id, Integer environId)
+            throws SAFRException {
+        ControlRecord controlRecord = null;
+        ControlRecordTransfer controlRecordTransfer = null;
+        controlRecordTransfer = DAOFactoryHolder.getDAOFactory()
+                .getControlRecordDAO().getControlRecord(id, environId);
+        if (controlRecordTransfer == null) {
+            throw new SAFRNotFoundException("Control Record '" + id
+                    + "' not found in Environment '" + environId + "'.");
+        } else {
+            controlRecord = new ControlRecord(controlRecordTransfer);
+        }
+        return controlRecord;
+    }
 
 	/**
 	 * Returns the CodeSet for the specified code category.
@@ -659,9 +674,9 @@ public class SAFRFactory extends SAFRObject {
 	 *             database.
 	 * @throws SAFRException
 	 */
-	public LogicalFile getLogicalFile(Integer id) throws SAFRException {
-		return getLogicalFile(id, getCurrentEnvironmentId());
-	}
+    public LogicalFile getLogicalFile(Integer id) throws SAFRException {
+        return getLogicalFile(id, getCurrentEnvironmentId());
+    }
 
 	// public LogicalFile getLogicalFile(String name) throws SAFRException {
 	// 	return getLogicalFile(name, getCurrentEnvironmentId());
@@ -698,18 +713,18 @@ public class SAFRFactory extends SAFRObject {
 		return logicalFile;
 	}
 
-	// public LogicalFile getLogicalFile(String name, Integer environId) {
-	// 	LogicalFile logicalFile = null;
-	// 	LogicalFileTransfer logicalFileTransfer = null;
-	// 	logicalFileTransfer = DAOFactoryHolder.getDAOFactory()
-	// 			.getLogicalFileDAO().getLogicalFile(name, environId);
+	public LogicalFile getLogicalFile(String name, Integer environId) {
+	 	LogicalFile logicalFile = null;
+	 	LogicalFileTransfer logicalFileTransfer = null;
+	 	logicalFileTransfer = DAOFactoryHolder.getDAOFactory()
+	 			.getLogicalFileDAO().getLogicalFile(name, environId);
 
-	// 	if (logicalFileTransfer != null) {
-	// 		logicalFile = new LogicalFile(logicalFileTransfer);
-	// 	}
+	 	if (logicalFileTransfer != null) {
+	 		logicalFile = new LogicalFile(logicalFileTransfer);
+	 	}
 
-	// 	return logicalFile;
-	// }
+	 	return logicalFile;
+     }
 
 	/**
 	 * Creates new Logical Record in the current Environment.
@@ -755,9 +770,24 @@ public class SAFRFactory extends SAFRObject {
 	 *             database.
 	 * @throws SAFRException
 	 */
-	public LogicalRecord getLogicalRecord(Integer id) throws SAFRException {
-		return getLogicalRecord(id, getCurrentEnvironmentId());
-	}
+    public LogicalRecord getLogicalRecord(Integer id) throws SAFRException {
+        return getLogicalRecord(id, getCurrentEnvironmentId());
+    }
+
+    public LogicalRecord getLogicalRecord(String name) throws SAFRException {
+        LogicalRecord logicalRecord = null;
+        LogicalRecordTransfer logicalRecordTransfer = null;
+        logicalRecordTransfer = DAOFactoryHolder.getDAOFactory()
+                .getLogicalRecordDAO().getLogicalRecord(name, getCurrentEnvironmentId());
+        if (logicalRecordTransfer == null) {
+            throw new SAFRNotFoundException("Logical Record '" + name
+                    + "' not found.");
+        } else {
+            logicalRecord = new LogicalRecord(logicalRecordTransfer);
+        }
+
+        return logicalRecord;
+    }
 
 	// public LogicalRecord getLogicalRecord(String name) throws SAFRException {
 	// 	return getLogicalRecord(name, getCurrentEnvironmentId());

@@ -52,8 +52,10 @@ public interface LogicalFileDAO {
 	 *             It throws an exception if no Logical File is there with the
 	 *             specified Id.
 	 */
-	LogicalFileTransfer getLogicalFile(Integer id, Integer environmentId)
-			throws DAOException;
+    LogicalFileTransfer getLogicalFile(Integer id, Integer environmentId)
+            throws DAOException;
+    LogicalFileTransfer getLogicalFile(String name, Integer environmentId)
+            throws DAOException;
 
 	/**
 	 * This method is called from the respective model class. This later calls

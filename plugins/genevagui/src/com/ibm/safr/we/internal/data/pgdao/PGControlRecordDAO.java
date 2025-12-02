@@ -173,48 +173,91 @@ public class PGControlRecordDAO implements ControlRecordDAO {
 		}
 	}
 
-	public ControlRecordTransfer getControlRecord(Integer id,
-			Integer environmentId) throws DAOException {
-		ControlRecordTransfer result = null;
-		try {
-			List<String> idNames = new ArrayList<String>();
-			idNames.add(COL_ID);
-			idNames.add(COL_ENVID);
+    public ControlRecordTransfer getControlRecord(Integer id,
+            Integer environmentId) throws DAOException {
+        ControlRecordTransfer result = null;
+        try {
+            List<String> idNames = new ArrayList<String>();
+            idNames.add(COL_ID);
+            idNames.add(COL_ENVID);
 
-			String selectString = generator.getSelectStatement(params
-					.getSchema(), TABLE_NAME, idNames, null);
-			PreparedStatement pst = null;
-			ResultSet rs = null;
+            String selectString = generator.getSelectStatement(params
+                    .getSchema(), TABLE_NAME, idNames, null);
+            PreparedStatement pst = null;
+            ResultSet rs = null;
 
-			while (true) {
-				try {
-					pst = con.prepareStatement(selectString);
-					pst.setInt(1, id);
-					pst.setInt(2, environmentId);
-					rs = pst.executeQuery();
-					break;
-				} catch (SQLException se) {
-					if (con.isClosed()) {
-						// lost database connection, so reconnect and retry
-						con = DAOFactoryHolder.getDAOFactory().reconnect();
-					} else {
-						throw se;
-					}
-				}
-			}
-			if (rs.next()) {
-				result = generateTransfer(rs);
-			} else {
-				logger.info("No such Control Record in Env " + environmentId + " with id : "+ id);
-			}
-			pst.close();
-			rs.close();
-		} catch (SQLException e) {
-			throw DataUtilities.createDAOException(
-					"Database error occurred while retrieving the Control Record with id ["+ id + "]", e);
-		}
-		return result;
-	}
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                    pst.setInt(1, id);
+                    pst.setInt(2, environmentId);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            if (rs.next()) {
+                result = generateTransfer(rs);
+            } else {
+                logger.info("No such Control Record in Env " + environmentId + " with id : "+ id);
+            }
+            pst.close();
+            rs.close();
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException(
+                    "Database error occurred while retrieving the Control Record with id ["+ id + "]", e);
+        }
+        return result;
+    }
+
+    public ControlRecordTransfer getControlRecord(String id,
+            Integer environmentId) throws DAOException {
+        ControlRecordTransfer result = null;
+        try {
+            List<String> idNames = new ArrayList<String>();
+            idNames.add("Name");
+            idNames.add(COL_ENVID);
+
+            String selectString = generator.getSelectStatement(params
+                    .getSchema(), TABLE_NAME, idNames, null);
+            PreparedStatement pst = null;
+            ResultSet rs = null;
+
+            while (true) {
+                try {
+                    pst = con.prepareStatement(selectString);
+                    pst.setString(1, id);
+                    pst.setInt(2, environmentId);
+                    rs = pst.executeQuery();
+                    break;
+                } catch (SQLException se) {
+                    if (con.isClosed()) {
+                        // lost database connection, so reconnect and retry
+                        con = DAOFactoryHolder.getDAOFactory().reconnect();
+                    } else {
+                        throw se;
+                    }
+                }
+            }
+            if (rs.next()) {
+                result = generateTransfer(rs);
+            } else {
+                logger.info("No such Control Record in Env " + environmentId + " with id : "+ id);
+            }
+            pst.close();
+            rs.close();
+        } catch (SQLException e) {
+            throw DataUtilities.createDAOException(
+                    "Database error occurred while retrieving the Control Record with id ["+ id + "]", e);
+        }
+        return result;
+    }
 
 	public ControlRecordTransfer persistControlRecord(ControlRecordTransfer crec)
 			throws DAOException, SAFRNotFoundException {

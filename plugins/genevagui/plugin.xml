@@ -518,6 +518,11 @@ under the License.
                name="Options">
          </command>
          <command
+               defaultHandler="com.ibm.safr.we.ui.commands.ScriptHandler"
+               id="SAFRWE.script"
+               name="Script">
+         </command>
+         <command
                defaultHandler="com.ibm.safr.we.ui.commands.HelpHandler"
                id="SAFRWE.helpcommand"
                name="HelpContentsinMenu">
@@ -708,6 +713,13 @@ under the License.
                   commandId="SAFRWE.ResetWindowState"
                   label="Default &amp;Window State"
                   style="push">
+            </command>
+            <command
+                  commandId="SAFRWE.script"
+                  label="Run Script"
+                  style="push"
+                  
+                  checkEnabled="true">
             </command>
             <command
                   commandId="SAFRWE.options"

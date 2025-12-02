@@ -54,8 +54,10 @@ public interface LogicalRecordDAO {
 	 *         the fields for the Logical Record retrieved from LOGREC table.
 	 * @throws DAOException
 	 */
-	LogicalRecordTransfer getLogicalRecord(Integer id, Integer environmentId)
-			throws DAOException;
+    LogicalRecordTransfer getLogicalRecord(Integer id, Integer environmentId)
+            throws DAOException;
+    LogicalRecordTransfer getLogicalRecord(String name, Integer environmentId)
+            throws DAOException;
 
 	/**
 	 * This function is used to retrieve all the Logical Records from LOGREC
