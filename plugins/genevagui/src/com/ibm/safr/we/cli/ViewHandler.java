@@ -2,23 +2,21 @@ package com.ibm.safr.we.cli;
 
 import java.util.Iterator;
 
+import com.ibm.safr.we.cli.SetHandler;
 import com.ibm.safr.we.constants.CodeCategories;
-import com.ibm.safr.we.constants.ComponentType;
-import com.ibm.safr.we.model.view.View;
-import com.ibm.safr.we.model.view.ViewColumn;
-import com.ibm.safr.we.model.view.ViewSource;
-import com.ibm.safr.we.ui.utilities.UIUtilities;
 import com.ibm.safr.we.model.CodeSet;
 import com.ibm.safr.we.model.ControlRecord;
-import com.ibm.safr.we.model.LRField;
-import com.ibm.safr.we.model.LogicalFile;
 import com.ibm.safr.we.model.LogicalRecord;
 import com.ibm.safr.we.model.SAFRApplication;
 import com.ibm.safr.we.model.SAFRAssociationList;
-import com.ibm.safr.we.model.SAFRField;
 import com.ibm.safr.we.model.associations.ComponentAssociation;
 import com.ibm.safr.we.model.associations.SAFRAssociationFactory;
 import com.ibm.safr.we.model.base.SAFRComponent;
+import com.ibm.safr.we.model.view.View;
+import com.ibm.safr.we.model.view.ViewColumn;
+import com.ibm.safr.we.model.view.ViewColumnSource;
+import com.ibm.safr.we.model.view.ViewSource;
+import com.ibm.safr.we.ui.utilities.UIUtilities;
 
 public class ViewHandler extends SetHandler{
 
@@ -28,6 +26,7 @@ public class ViewHandler extends SetHandler{
     private static ViewColumn currentColumn;
     private static ViewSource currentViewSource;
     private static String vsRecord;
+    private static ViewColumnSource currentViewColumnSource;
 
     // need to parse the field name and call the appropriate function
     // ... so SetHandler per Component? - derived from this
@@ -43,9 +42,9 @@ public class ViewHandler extends SetHandler{
                     cmnts.append(" " + words[nextWord++]);
                 }
                 value = cmnts.toString();
-            } else if(words[nextWord].equalsIgnoreCase("column")) {
-                name = words[nextWord++];
-                setColumnValue(name, words[nextWord++]);
+//            } else if(words[nextWord].equalsIgnoreCase("column")) {
+//                name = words[nextWord++];
+//                setColumnValue(name, words[nextWord++]);
             } else if(words[nextWord].equalsIgnoreCase("logical")) {
                 nextWord++;
                 name = words[nextWord++];
@@ -64,9 +63,12 @@ public class ViewHandler extends SetHandler{
                 }
             }
 
-       if(currentColumn != null) {
-           setColumnValue(name, words[nextWord++]);
-       }
+            if(currentColumn != null) {
+                setColumnValue(name, words[nextWord++]);
+            }
+            if(currentViewColumnSource != null) {
+                setViewColumnSourceValue(name, words[words.length - 1]);
+            }
             
             
         //}
@@ -79,6 +81,27 @@ public class ViewHandler extends SetHandler{
         case "comments":
             vw.setComment(value);
             break;
+        }
+    }
+
+    //Little bit tricky here
+    //Do we want to lookup fields by name
+    //Or always set to a formula with the correct logic
+    //Then don't need to lookup field name
+    private static void setViewColumnSourceValue(String name, String value) {
+        if(currentViewColumnSource != null) {
+            CodeSet sourceTypeSet = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.COLSRCTYPE);
+            currentViewColumnSource.setSourceType(sourceTypeSet.getCode("FRMLA"));
+            switch(name.toLowerCase()) {
+            case "type source field":
+                currentViewColumnSource.setExtractColumnAssignmentBasic("COLUMN = {" + value + "}");
+                break;
+            case "type constant":
+                currentViewColumnSource.setExtractColumnAssignmentBasic("COLUMN = " + value + "");
+                break;
+            }
+        } else {
+            //Yikes
         }
     }
 
@@ -101,6 +124,7 @@ public class ViewHandler extends SetHandler{
             //Add the association to the viewSource
             if(ourLrLfAssoc != null) {
                 currentViewSource.setLrFileAssociation(ourLrLfAssoc);
+                currentViewSource.setExtractRecordOutput("WRITE(SOURCE=DATA,DEST=DEFAULT)");
             } else {
                 //In trouble again
                 System.err.printf("Cannot set view source for view %s lr %s lf %s\n", vw.getName(), vsRecord, lf);
@@ -123,7 +147,13 @@ public class ViewHandler extends SetHandler{
         } else if(words[2].equalsIgnoreCase("source")) {
             currentViewSource = vw.addViewSource();
             currentColumn = null;
+            currentViewColumnSource = null;
+            columnIndex = 0;
             return currentViewSource;
+        } else if(words[2].equalsIgnoreCase("column")) {
+            currentViewColumnSource = vw.getViewColumnSources().get(columnIndex);
+            columnIndex++;
+            return currentViewColumnSource;
         } else {
             return null;            
         }

@@ -2,6 +2,7 @@ package com.ibm.safr.we.cli;
 
 import com.ibm.safr.we.constants.CodeCategories;
 import com.ibm.safr.we.constants.ComponentType;
+import com.ibm.safr.we.constants.OutputFormat;
 import com.ibm.safr.we.model.CodeSet;
 import com.ibm.safr.we.model.ControlRecord;
 import com.ibm.safr.we.model.LogicalFile;
@@ -53,6 +54,7 @@ public class CreateHandler {
         } else if(ComponentType.View.getLabel().equals(name)) {
             View vw = new View(SAFRApplication.getUserSession().getEnvironment().getId());
             vw.setName(words[nextWord]);
+            vw.setOutputFormat(OutputFormat.Extract_Fixed_Width_Fields);
 //            CodeSet lrTypeSet = SAFRApplication.getSAFRFactory().getCodeSet(CodeCategories.LRTYPE);
 //            vw.setLRTypeCode(lrTypeSet.getCode("FILE"));
 //            vw.setActive(true);
