@@ -1,5 +1,7 @@
 package com.ibm.safr.we.ui;
 
+import java.io.File;
+
 /*
  * Copyright Contributors to the GenevaERS Project. SPDX-License-Identifier: Apache-2.0 (c) Copyright IBM Corporation 2008.
  * 
@@ -108,7 +110,7 @@ public class Application implements IApplication {
         // or menu option
 		if (scriptFlag) {	
 			SAFRLogger.logAllSeparator(logger, Level.INFO, "Processing GenevaERS script " + scriptName);
-			ScriptProcessor.readFile(scriptName);
+			ScriptProcessor.readFile(new File(scriptName));
 		} else {
 	        // try block for WE setup
 	        try {

@@ -1,5 +1,6 @@
 package com.ibm.safr.we.cli;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +17,7 @@ public class ScriptProcessor {
     private static boolean useAdded = false;
 
     //simple parser for the moment... more a POC.
-    public static void readFile(String fname) {
-        String currentWorkingDir = System.getProperty("user.dir");
+    public static void readFile(File fname) {
         try (FileReader fr = new FileReader(fname)) {
             BufferedReader br = new BufferedReader(fr); 
             String line;

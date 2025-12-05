@@ -46,6 +46,7 @@ public class UserPreferencesNodes {
     public static final String COMPARE_PATH = "Compare-Path";
     public static final String ENV_CHECK_PATH = "Env-Check-Path";
     public static final String META_EXPORT_PATH = "Meta-Export-Path";
+    public static final String SCRIPT_PATH = "Script-Path";
     public static final String SORT = "Sort";    
     public static final String SORT_COLUMN = "Column";    
     public static final String SORT_ORDER = "Order";    
