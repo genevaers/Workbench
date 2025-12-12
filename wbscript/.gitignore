@@ -1,0 +1,9 @@
+# Ignore bin
+bin
+.jazzignore
+.classpath
+.settings
+.project
+src/main/antlr/org/genevaers/grammar/.antlr
+target/**
+/target/
