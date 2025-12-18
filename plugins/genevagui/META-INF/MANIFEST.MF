@@ -5,8 +5,8 @@ Bundle-SymbolicName: GenevaERS;singleton:=true
 Bundle-Version: 4.21.1
 Bundle-ClassPath: lib/postgresql-42.7.7.jar,
  .,
- lib/sycadas-1.0.3.jar,
  lib/ccb2lr.jar,
+ lib/wbscript.jar,
  lib/db2jcc4.jar,
  lib/db2jcc_license_cisuz.jar,
  lib/db2jcc_license_ccu.jar,

@@ -18,34 +18,41 @@ public class ScriptProcessor {
 
     //simple parser for the moment... more a POC.
     public static void readFile(File fname) {
-        try (FileReader fr = new FileReader(fname)) {
-            BufferedReader br = new BufferedReader(fr); 
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                String[] words = line.split("\\s+");
-                switch(words[0].toLowerCase()) {
-                case "create":
-                    processCreate(words);
-                    break;
-                case "set":
-                    processSet(words);
-                    break;
-                case "add":
-                    processAdd(words);
-                    break;
-                case "save":
-                    processSave();
-                    break;
-                }
-
-                for (String word : words) {
-                    System.out.println(word);
-                }
-            }
+        CliProcessor clip = new CliProcessor();
+        try {
+            clip.processScript(fname);
         } catch (IOException e) {
+            // TODO Auto-generated catch block
             SAFRLogger.logAll(logger, Level.INFO, "Error reading " + fname + ": " + e.getMessage());
         }
+//        try (FileReader fr = new FileReader(fname)) {
+//            BufferedReader br = new BufferedReader(fr); 
+//            String line;
+//            while ((line = br.readLine()) != null) {
+//                line = line.trim();
+//                String[] words = line.split("\\s+");
+//                switch(words[0].toLowerCase()) {
+//                case "create":
+//                    processCreate(words);
+//                    break;
+//                case "set":
+//                    processSet(words);
+//                    break;
+//                case "add":
+//                    processAdd(words);
+//                    break;
+//                case "save":
+//                    processSave();
+//                    break;
+//                }
+//
+//                for (String word : words) {
+//                    System.out.println(word);
+//                }
+//            }
+//        } catch (IOException e) {
+//            SAFRLogger.logAll(logger, Level.INFO, "Error reading " + fname + ": " + e.getMessage());
+//        }
     }
 
     private static void processSave() {

@@ -39,6 +39,7 @@ under the License.
 	<modules>
 		<module>prebuild</module>
 		<module>ccb2lr</module>
+		<module>wbscript</module>
 		<module>plugins</module>
 		<module>products</module>
 		<module>releng</module>

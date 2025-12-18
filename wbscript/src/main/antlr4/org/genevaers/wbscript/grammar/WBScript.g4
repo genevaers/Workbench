@@ -28,7 +28,10 @@ stmt            : createStatement
                 ;
 
 createStatement : CREATE component
+                  savestment
                 ;
+
+savestment      : SAVE;
 
 //Make component for each type so we can then list the appropriate property names for adds and setStatement
 //demand  a SAVE at the close of the CREATE
@@ -48,11 +51,15 @@ cr              : CONTROL_RECORD META_REF
 crsets          : SET crfields;
 
 crfields        : NAME META_REF
-                | FIRST_FISCAL NUM
-                | BEGINNING_PERIOD NUM
-                | ENDING_PERIOD NUM
+                | first_fiscal
+                | begin_period
+                | end_period 
 //                | COMMENTS COMMENT
                 ;
+
+begin_period    : BEGINNING_PERIOD NUM;
+first_fiscal    : FIRST_FISCAL NUM;
+end_period      : ENDING_PERIOD NUM;
 
 addStatement :  ADD STRING
                 ;

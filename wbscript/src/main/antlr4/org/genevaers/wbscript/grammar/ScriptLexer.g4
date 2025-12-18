@@ -22,6 +22,7 @@ lexer grammar ScriptLexer;
 CREATE:                 C R E A T E;
 ADD:                    A D D;
 SET:                    S E T;
+SAVE:                   S A V E;
 
 //component Names
 CONTROL_RECORD:        C O N T R O L ' ' R E C O R D;
