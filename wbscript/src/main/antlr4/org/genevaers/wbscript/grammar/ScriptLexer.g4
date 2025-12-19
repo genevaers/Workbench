@@ -43,6 +43,7 @@ INPUT_DD_NAME:         I N P U T ' ' D D ' ' N A M E;
 OUTPUT_DD_NAME:        O U T P U T ' ' D D ' ' N A M E;
 MIN_RECORD_LENGTH:     M I N ' ' R E C O R D ' ' L E N G T H;
 
+
 //Logical File Fields
 
 //Logical Record Fields

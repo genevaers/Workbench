@@ -74,25 +74,39 @@ pfsets          : SET pf_fields;
 //But will help a user
 //META_REF -> TEXT_VAL or something?
 
-pf_fields       : FILE_TYPE META_REF
-                | ACCESS_METHOD META_REF
-                | INPUT_DD_NAME META_REF
-                | OUTPUT_DD_NAME META_REF
-                | MIN_RECORD_LENGTH NUM
+pf_fields       : pf_file_type 
+                | pf_access_method
+                | pf_input_dd
+                | pf_output_dd
+                | pf_min_rec_len
                 ;
+
+pf_file_type    : FILE_TYPE META_REF;
+pf_access_method: ACCESS_METHOD META_REF;
+pf_input_dd     : INPUT_DD_NAME META_REF;
+pf_output_dd    : OUTPUT_DD_NAME META_REF;
+pf_min_rec_len  : MIN_RECORD_LENGTH NUM;
+
 
 lf              : LOGICAL_FILE META_REF
                   (lfadds)+
                 ;
 
-lfadds          : ADD META_REF;
+lfadds          : ADD lf_pf;
+lf_pf           : META_REF;
 
 lr              : LOGICAL_RECORD META_REF
                   (lradds)+
                 ;
 
-lradds          : ADD FIELD META_REF
-                | ADD LOGICAL_FILE META_REF;
+lradds          : ADD lradditem;
+
+lradditem       : lraddifeld
+                | lraddlf;
+
+lraddifeld      : FIELD META_REF;
+
+lraddlf         : LOGICAL_FILE META_REF;
 
 view            : VIEW META_REF
                   (viewadds)*
@@ -100,10 +114,12 @@ view            : VIEW META_REF
 
 viewadds        : ADD view_add_fields;
 
-view_add_fields : CONTROL_RECORD META_REF
+view_add_fields : vw_add_cr
                 | column
                 | view_source
                 | column_source;
+
+vw_add_cr       : CONTROL_RECORD META_REF;
 
 column          : COLUMN
                 (columnsets)*
@@ -111,26 +127,39 @@ column          : COLUMN
 
 columnsets      : SET columnfields;
 
-columnfields    : DATA_TYPE META_REF
-                | LENGTH NUM
+columnfields    : col_fld_data
+                | col_length
                 ;
+
+col_fld_data    : DATA_TYPE META_REF;
+col_length      : LENGTH NUM;
 
 view_source     : VIEW_SOURCE
                   (vs_sets)*;
 
 vs_sets         : SET vs_set_fields;
 
-vs_set_fields   : LOGICAL_RECORD META_REF
-                | LOGICAL_FILE META_REF;
+vs_set_fields   : vs_log_rec
+                | vs_log_file
+                ;
+
+vs_log_rec      : LOGICAL_RECORD META_REF;
+vs_log_file     : LOGICAL_FILE META_REF;
 
 column_source   : COLUMN_SOURCE
-                cs_set;
+                (cs_set)*;
 
 cs_set          : SET cs_src_type;
 
 cs_src_type     : TYPE cs_type;
 
-cs_type         : CONSTANT META_REF
-                | SOURCE_FILE_FIELD META_REF
-                | FORMULA
-                | LOOKUP_FIELD;
+cs_type         : cs_const
+                | cs_field
+                | cs_formula 
+                | cs_lookup
+                ; 
+
+cs_const        : CONSTANT META_REF;
+cs_field        : SOURCE_FILE_FIELD META_REF;
+cs_formula      : FORMULA;
+cs_lookup       : LOOKUP_FIELD;
