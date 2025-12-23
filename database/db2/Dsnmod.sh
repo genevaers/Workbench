@@ -20,14 +20,12 @@ diff=$((len1-len2));
 if (( diff > 0)); then
   echo "bigger";
   for (( i=0; i<$diff; i++)); do
-    echo "!";
     str2+=" ";
   done
   len2=${#str2};
 elif (( diff < 0)); then
   echo "smaller";
   for (( i=$diff; i<0; i++)); do
-    echo "!";
     str1+=" ";
   done
   len1=${#str1};
@@ -38,7 +36,7 @@ fi
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
 for (( i=1; i<6; i++)); do
-  infile="$HLQOLD$intype[]"
+  infile="$HLQOLD$intype[$(i)]"
   echo "Infile: $infile";
 done
 
