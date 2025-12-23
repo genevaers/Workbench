@@ -44,7 +44,7 @@ echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
 for intype in "${intypes[@]}"; do
   infile="//'$HLQNEW$intype'";
-  outfile="//'$HLQNEW$(intype)2'";
+  outfile="//'$HLQNEW$intype.MOD'";
   echo "File: $infile -- $outfile";
 done
 
