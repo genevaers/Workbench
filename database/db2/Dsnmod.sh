@@ -39,10 +39,9 @@ fi
 
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
-# infile="$HLQOLD$intype[$i]"
-
 for intype in "${intypes[@]}"; do
-  echo "This input type is: $intype"
+  infile="$HLQOLD$intype";
+  echo "This input type is: $infile";
 done
 
 # perform substitutions
