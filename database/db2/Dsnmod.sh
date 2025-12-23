@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# targetfiles
+
+HLQOLD="C02888.GENERS.D251114U.";
+HLQNEW="GEBT.GENERS.D251114U.";
+
+intype=("LOGIC.DATA" "VIEWCOL.DATA" "VIEWSRC.DATA" "VIEWTS.DATA" "VWCOLSRC.DATA");
+
 str1="TEXT";
 str2="NEW TEXT";
 
@@ -29,6 +36,11 @@ else
 fi
 
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
+
+for (( i=0; i<5; i++)); do
+  infile="${HLQOLD}, ${intype}"
+  echo "Infile: $infile";
+done
 
 # perform substitutions
 # convert back to EBCDIC
