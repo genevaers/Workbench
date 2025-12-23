@@ -5,11 +5,11 @@
 HLQOLD="C02888.GENERS.D251114U.";
 HLQNEW="GEBT.GENERS.D251114U.";
 
-intype[1]="LOGIC.DATA";
-intype[2]="VIEWCOL.DATA";
-intype[3]="VIEWSRC.DATA";
-intype[4]="VIEWTS.DATA";
-intype[5]="VWCOLSRC.DATA";
+intypes[1]="LOGIC.DATA";
+intypes[2]="VIEWCOL.DATA";
+intypes[3]="VIEWSRC.DATA";
+intypes[4]="VIEWTS.DATA";
+intypes[5]="VWCOLSRC.DATA";
 
 str1="TEXT";
 str2="NEW TEXT";
@@ -41,9 +41,8 @@ echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
 # infile="$HLQOLD$intype[$i]"
 
-for (( i=1; i<6; i++)); do
-  infile=$intype[$(i)];
-  echo "Infile: $infile";
+for intype in "${intypes[@]}"; do
+  echo "This input type is: $intype"
 done
 
 # perform substitutions
