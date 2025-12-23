@@ -11,8 +11,11 @@ intypes[3]="VIEWSRC.DATA";
 intypes[4]="VIEWTS.DATA";
 intypes[5]="VWCOLSRC.DATA";
 
-str1="TEXT";
-str2="NEW TEXT";
+str1=$HLQOLD;
+str2=$HLQNEW;
+
+echo "HLQOLD: $str1";
+echo "HLQNEW: $str2";
 
 # make both strings equal length so don't need to bother with padding
 
@@ -40,8 +43,8 @@ fi
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
 for intype in "${intypes[@]}"; do
-  infile="//'$HLQOLD$intype'";
-  outfile="//'$HLQNEW$intype'";
+  infile="//'$HLQNEW$intype'";
+  outfile="//'$HLQNEW$(intype)2'";
   echo "File: $infile -- $outfile";
 done
 
