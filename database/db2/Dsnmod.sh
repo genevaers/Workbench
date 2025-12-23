@@ -5,7 +5,11 @@
 HLQOLD="C02888.GENERS.D251114U.";
 HLQNEW="GEBT.GENERS.D251114U.";
 
-intype=("LOGIC.DATA" "VIEWCOL.DATA" "VIEWSRC.DATA" "VIEWTS.DATA" "VWCOLSRC.DATA");
+intype[1]="LOGIC.DATA";
+intype[2]="VIEWCOL.DATA";
+intype[3]="VIEWSRC.DATA";
+intype[4]="VIEWTS.DATA";
+intype[5]="VWCOLSRC.DATA";
 
 str1="TEXT";
 str2="NEW TEXT";
@@ -35,8 +39,10 @@ fi
 
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
+# infile="$HLQOLD$intype[$i]"
+
 for (( i=1; i<6; i++)); do
-  infile="$HLQOLD$intype[$i]"
+  infile=$(intype[i]);
   echo "Infile: $infile";
 done
 
