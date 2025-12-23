@@ -37,7 +37,7 @@ fi
 
 echo "Length 1: $len1, length 2: $len2, difference: $diff";
 
-for (( i=0; i<5; i++)); do
+for (( i=1; i<6; i++)); do
   infile="${HLQOLD}${intype[]}"
   echo "Infile: $infile";
 done
