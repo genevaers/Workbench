@@ -3,10 +3,11 @@
 # targetfiles
 
 HLQOLD="C02888.GENERS.D251114U.";
-HLQNEW="GEBT.GENERS.D251114U.";
+HLQNEW="GEBT.GENERS.D251222U.";
 
 intypes[1]="LOGIC.DATA";
 intypes[2]="VIEWCOL.DATA";
+# extra F on end of VIEWSRC when substituting
 intypes[3]="VIEWSRC.DATA";
 intypes[4]="VIEWTS.DATA";
 intypes[5]="VWCOLSRC.DATA";
@@ -47,6 +48,25 @@ for intype in "${intypes[@]}"; do
   outfile="//'$HLQNEW$intype.MOD'";
   echo "File: $infile -- $outfile";
 done
+
+### read and write file
+
+FILE="//'GEBT.GENERS.D250101U.LOGIC.DATA'";
+
+if [ ! -f "$FILE" ]; then
+  echo "Error: File '$FILE' not found.";
+  exit 1;
+fi
+
+while IFS= read -r line; do
+  # Process each line (record) here
+  # echo "Record: $line";
+
+    if [[ $line =~ $HLQOLD ]]; then
+      echo "Found HLQOLD in record"
+    fi
+
+done < "$FILE"
 
 # perform substitutions
 # convert back to EBCDIC
