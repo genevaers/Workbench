@@ -170,10 +170,10 @@ If a DB2 schema is completely empty, such as in the case above (see **Build DB2 
 Also included in the prepared JCL are the jobs for running the views in **Demo_Open_Source**. These jobs read the GenevaERS metadata directly from the DB2 database -- so are able to perform an optional smoke test of the defined DB2 schema.
 
 <pre>
-GVBDEME.JCL     Runs RCA and Performance Engine
-GVBDEMF1.JCL    Runs subsequest format job
-GVBDEMF2.JCL    Runs subsequest format job
-GVBDEMF3.JCL    Runs subsequest format job
+GVBDEME.JCL     Runs RCA and Performance Engine extract phase
+GVBDEMF1.JCL    Runs subsequent format phase job
+GVBDEMF2.JCL    Runs subsequent format phase job
+GVBDEMF3.JCL    Runs subsequent format phase job
 </pre>
 
 ### Importing to a DB2 schema which contains existing Workbench views
