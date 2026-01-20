@@ -57,6 +57,20 @@ export GERS_FROM_DB2_DBSG=your-from-database-storage-group
 export GERS_FROM_DB2_DBSCH=your-from-database-schema
 export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
 </pre>
+The following variables are for running an optional smoke test of RCA and Performance engine with DB2
+<pre>
+export GERS_ENV_HLQ=same-as-GERS_ENV_HLQ-in-.gers.profile
+export GERS_DEMO_HLQ=your-GVBDEMO-hlq
+export GERS_DEMO_MLQ=your GVBDEMO-mlq
+export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
+export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
+export GERS_DB2_HOST=host-name-DB2-database
+export GERS_DB2_PORT=port-number-DB2-database
+export GERS_DB2_SAFR_ENV='1';
+export GERS_JAVA_HOME="/Java/J17.0_64"
+export GERS_RCA_JAR_DIR=same-as-GERS_RCA_JAR_DIR-in-.gers.profile
+</pre>
+
 ## Copy JCL, DDL and JCL to MVS PDS[E] dataset
 
 Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
@@ -142,6 +156,37 @@ BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status
 INSTSP   - install stored procedures
 </pre>
+
+## Importing XML into DB2 Schema
+
+The following scenarios are provided to demonstrate re-importing exported Workbench views along with all their constituent parts into a DB2 schema
+
+### Importing to an empty DB2 schema containing an environment with no existing Workbench metadata
+
+If a DB2 schema is completely empty, such as in the case above (see **Build DB2 Schema to contain GenevaERS objects**) it will contain a single *environment* named Development. This default environment is installed by the process described above. You can import an XMLformat view folder such as Demo_Open_Source.XML into this view folder as is, see the following screenshot.
+
+![Alt text](Image/Import_to_empty_environment.jpg)
+
+Also included in the prepared JCL are the jobs for running the views in **Demo_Open_Source**. These jobs read the GenevaERS metadata directly from the DB2 database -- so are able to perform an optional smoke test of the defined DB2 schema.
+
+<pre>
+GVBDEME.JCL     Runs RCA and Performance Engine extract phase
+GVBDEMF1.JCL    Runs subsequent format phase job
+GVBDEMF2.JCL    Runs subsequent format phase job
+GVBDEMF3.JCL    Runs subsequent format phase job
+</pre>
+
+### Importing to a DB2 schema which contains existing Workbench views
+
+You cannot import an XMLformat view folder into an environment containing existing Workbench objects. Therefore a new *environment* must be created for the import to work. Under Administration select New Environment. In order to avoid a clash of Control Records it is recommended you un-tick the box that says **Generate a Control Record** before proceeding. See the screenshot below.
+
+![Alt text](Image/NEW_environment.jpg)
+
+### Avoiding a clash in the control record
+
+If you encounter the following problem, see screen shot, it means there is a conflicting control record already in the empty environment you are trying to use for the import. Therefore you must first create an empty environment using the option to not create a control record.
+
+![Alt text](Image/Control_Record_clash.jpg)
 
 ### Note on stored procedures - job INSTSP
 
