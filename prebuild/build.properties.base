@@ -21,6 +21,6 @@ bin.includes = plugin.xml,\
                splash.bmp,\
                lib/ccb2lr.jar, \
                lib/commons-csv-1.10.0.jar, \
-               lib/rcapps-1.1.0_RC21-jar-with-dependencies.jar, \
+               lib/rcapps-4.1.0_RC21-jar-with-dependencies.jar, \
                lib/postgresql-42.7.7.jar, \
                lib/bcprov-jdk18on-1.78.1.jar, \
