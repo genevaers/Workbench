@@ -19,7 +19,7 @@ while IFS= read -r line; do
       echo "RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) - " >> "$DEST_FILE";    
     fi
   else
-    if [[ "$lastline" != "" && "$lastline" != *"LIB('&DB2RLIB.')"* ]]; then
+    if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
       echo "$lastline" >> "$DEST_FILE";
     fi
   fi
