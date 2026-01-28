@@ -1,7 +1,14 @@
 #!/bin/bash
 
-SOURCE_FILE="file.txt";
-DEST_FILE="out.txt";
+# SOURCE_FILE="file.txt";
+# DEST_FILE="out.txt";
+
+SOURCE_FILE="$1";
+DEST_FILE="temp/$SOURCE_FILE";
+
+echo "Input file : $SOURCE_FILE";
+echo "Output file: $DEST_FILE";
+
 lastline="";
 
 # Clear the destination file if it exists, or create a new one
