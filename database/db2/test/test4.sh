@@ -4,7 +4,7 @@ FILE_LIST="jcllist";
 DEST_FILE="out.txt";
 
 # list of JCL files
-ls *.JCL > "FILE_LIST";
+ls *.JCL > "$FILE_LIST";
 
 while IFS= read -r line; do
   echo "Processing file: $line";
