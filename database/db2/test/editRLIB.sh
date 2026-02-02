@@ -1,9 +1,13 @@
 #!/bin/bash
+# context sensitive removal of DB2RLIB from JCL member.
 
 main() {
 
-# SOURCE_FILE="file.txt";
-# DEST_FILE="out.txt";
+# Check if file name is provided
+if [ -z "$1" ]; then
+  echo "Usage: $0 <name of file to edit>";
+  exit 1;
+fi
 
 SOURCE_FILE="$1";
 DEST_FILE="temp/$SOURCE_FILE";
@@ -17,8 +21,6 @@ lastline="";
 > "$DEST_FILE"
 
 while IFS= read -r line; do
-  # Example condition: Check if the line contains "process" or starts with "user:"
-  # if [[ "$line" == *"DB2RLIB"* ]] || [[ "$line" == user:* ]]; then
   if [[ "$lastline" == *"RUN PROGRAM(DSNTEP2) PLAN(&DB2PLAN) -"* ]]; then
     # echo "line detected";
     if [[ "$line" == *"LIB('&DB2RLIB.')"* ]]; then

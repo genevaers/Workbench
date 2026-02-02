@@ -1,16 +1,21 @@
 #!/bin/bash
+# remove DB2RLIB from JCL in context sensistive manner
 
 main() {
 
 FILE_LIST="jcllist";
 DEST_FILE="out.txt";
 
+# Clear the destination file if it exists, or create a new one
+> "$FILE_LIST"
+
 # list of JCL files
 ls *.JCL > "$FILE_LIST";
 
 while IFS= read -r line; do
   echo "Processing file: $line";
-  ./editRLIB.sh "$line"; 
+  ./editRLIB.sh "$line";
+    exitIfError;
 done < "$FILE_LIST"
 
 }
