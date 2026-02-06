@@ -3,10 +3,7 @@
 
 main() {
 
-# reset from previous run
-VARIABLE_NAME="";
-
-# Variables chosen by user
+#variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
 export GERS_DB2_DBNAME=SADBNEIL;
 export GERS_DB2_STGGRP=SASGNEIL;
@@ -17,7 +14,7 @@ export GERS_DB2_PROCLIB=DSN.V13R1M0.PROCLIB;
 export GERS_DB2_RUN_LIB=DSN131.RUNLIB.LOAD;
 export GERS_DB2_LOAD_LIB=DSN.V13R1M0.SDSNLOAD;
 export GERS_DB2_EXIT_LIB=DSN.V13R1M0.SDSNEXIT;
-
+export GERS_INCLUDE_DB2_RUNLIB=N;
 
 export GERS_JOB_CLASS=A;
 export GERS_JOB_MSG_CLASS=H;
