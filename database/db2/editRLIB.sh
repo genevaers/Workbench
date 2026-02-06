@@ -38,9 +38,6 @@ while IFS= read -r line; do
 done < "$SOURCE_FILE"
 echo "$lastline" >> "$DEST_FILE"
 
-echo "File $SOURCE_FILE copied from /temp back to /prep with DB2RLIB removed if it was present";
-cp "$DEST_FILE" "prep/$SOURCE_FILE";
-
 }
 
 exitIfError() {

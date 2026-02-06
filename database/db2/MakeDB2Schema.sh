@@ -3,6 +3,9 @@
 
 main() {
 
+# reset from previous run
+unset GERS_DB2_RUN_LIB;
+
 # Variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
 export GERS_DB2_DBNAME=SADBNEIL;

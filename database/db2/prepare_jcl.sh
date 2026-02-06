@@ -115,6 +115,8 @@ chtag -r prep/$MEMBER;
 if [ -z "$GERS_DB2_RUN_LIB" ]; then
   echo "Removing references to DB2RLIB";
   ./RemoveRLIB.sh
+  echo "File $MEMBER copied from /temp back to /prep with DB2RLIB removed if it was present";
+  cp "temp/$MEMBER" "prep/$MEMBER";
 fi
 
 exitIfError() {
