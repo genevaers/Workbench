@@ -4,7 +4,7 @@
 main() {
 
 # reset from previous run
-VARIABLE_NAME=""
+VARIABLE_NAME="";
 
 # Variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
