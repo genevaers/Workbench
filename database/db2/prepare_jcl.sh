@@ -112,7 +112,7 @@ chtag -r prep/$MEMBER;
 }
 
 # Remove DB2RLIB contextualy, if variable not set
-echo "GERS_DB2_RUN_LIB: $GERS_DB2_RUN_LIB";
+echo "GERS_INCLUDE_DB2_RUNLIB: $GERS_INCLUDE_DB2_RUNLIB";
 if [[ "$GERS_INCLUDE_DB2_RUNLIB" == "Y" ]]; then
   echo "Removing references to DB2RLIB";
   ./RemoveRLIB.sh
