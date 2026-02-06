@@ -3,8 +3,7 @@
 
 main() {
 
-FILE_LIST="jcllist";
-DEST_FILE="out.txt";
+FILE_LIST="prep/jcllist";
 
 # Clear the destination file if it exists, or create a new one
 > "$FILE_LIST"

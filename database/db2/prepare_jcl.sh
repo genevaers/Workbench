@@ -111,6 +111,12 @@ chtag -r prep/$MEMBER;
 
 }
 
+# Remove DB2RLIB contextualy, if variable not set
+if [ -z "$GERS_DB2_RUN_LIB" ]; then
+  echo "Removing references to DB2RLIB";
+  ./RemoveRLIB.sh
+fi
+
 exitIfError() {
 
 if [ $? != 0 ]
