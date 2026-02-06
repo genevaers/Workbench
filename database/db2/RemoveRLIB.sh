@@ -7,7 +7,7 @@ FILE_LIST="temp/jcllist";
 
 # Remove temp directory and create fresh
 rm -Rf "temp";
-mkdir "temp;
+mkdir "temp";
 
 # list of JCL files
 ls *.JCL > "$FILE_LIST";
