@@ -107,13 +107,11 @@ sed $mycmdstr34 prep/tmp33 > prep/tmp34;
 # last tmp file is referenced below several times
 
 # Remove DB2RLIB contextualy, if variable not set
-echo "GERS_INCLUDE_DB2_RUNLIB: $GERS_INCLUDE_DB2_RUNLIB";
 if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
-  echo "Removing references to DB2RLIB";
-  echo "Processing file: $MEMBER";
+  echo "Processing file: $MEMBER to remove any references to DB2RLIB";
   ./editRLIB.sh prep/tmp34;
     exitIfError;
-  echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
+  # echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
   cp -f prep/tmp34.tmp prep/tmp34;
 fi
 

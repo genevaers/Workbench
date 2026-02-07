@@ -12,8 +12,8 @@ fi
 SOURCE_FILE="$1";
 DEST_FILE="$SOURCE_FILE.tmp";
 
-echo "Input file : $SOURCE_FILE";
-echo "Output file: $DEST_FILE";
+# echo "Input file : $SOURCE_FILE";
+# echo "Output file: $DEST_FILE";
 
 lastline="";
 
