@@ -114,7 +114,7 @@ if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
   ./editRLIB.sh prep/tmp34;
     exitIfError;
   echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
-  cp -f prep/tmp34.tmp prep/$tmp34;
+  cp -f prep/tmp34.tmp prep/tmp34;
 fi
 
 #convert output back to EBCDIC again
