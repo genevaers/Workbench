@@ -44,10 +44,12 @@ while IFS= read -r line; do
   echo $line > "$FROM_DIR"/prep/text.tmp;
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
-  # echo "Staidx: $staidx Endidx: $endidx Line: $line";
+  echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
+    echo "File: $file";
+    member="${file:0:$endidx}";
     if [ 1 -eq "$SYM" ]; then
       echo "Performing DDL substitutions and copying file: $file";
       . ./prepare_ddl.sh "$file";
