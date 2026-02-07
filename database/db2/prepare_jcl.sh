@@ -104,16 +104,17 @@ sed $mycmdstr31 prep/tmp30 > prep/tmp31;
 sed $mycmdstr32 prep/tmp31 > prep/tmp32;
 sed $mycmdstr33 prep/tmp32 > prep/tmp33;
 sed $mycmdstr34 prep/tmp33 > prep/tmp34;
+# last tmp file is referenced below several times
 
 # Remove DB2RLIB contextualy, if variable not set
 echo "GERS_INCLUDE_DB2_RUNLIB: $GERS_INCLUDE_DB2_RUNLIB";
 if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
   echo "Removing references to DB2RLIB";
   echo "Processing file: $MEMBER";
-  ./editRLIB.sh $MEMBER;
+  ./editRLIB.sh prep/tmp34;
     exitIfError;
   echo "File $MEMBER copied from /temp back to /prep with DB2RLIB removed if it was present";
-  cp -f temp/$MEMBER prep/$MEMBER;
+  cp -f temp/tmp34 prep/$tmp34;
 fi
 
 #convert output back to EBCDIC again
