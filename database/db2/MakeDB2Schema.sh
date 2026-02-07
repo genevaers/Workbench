@@ -3,7 +3,7 @@
 
 main() {
 
-echo "Preparing DB2 metadata artifacts for Workbench and exporting to MVS PDS/E";
+echo "Preparing DB2 metadata artifacts for Workbench and exporting then to MVS PDS/E";
 
 #variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
