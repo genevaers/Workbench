@@ -105,10 +105,6 @@ sed $mycmdstr32 prep/tmp31 > prep/tmp32;
 sed $mycmdstr33 prep/tmp32 > prep/tmp33;
 sed $mycmdstr34 prep/tmp33 > prep/tmp34;
 
-#convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp34 > prep/$MEMBER;
-chtag -r prep/$MEMBER;
-
 # Remove DB2RLIB contextualy, if variable not set
 echo "GERS_INCLUDE_DB2_RUNLIB: $GERS_INCLUDE_DB2_RUNLIB";
 if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
@@ -119,6 +115,10 @@ if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
   echo "File $MEMBER copied from /temp back to /prep with DB2RLIB removed if it was present";
   cp "temp/$MEMBER" "prep/$MEMBER";
 fi
+
+#convert output back to EBCDIC again
+iconv -f ISO8859-1 -t IBM-1047 prep/tmp34 > prep/$MEMBER;
+chtag -r prep/$MEMBER;
 
 }
 
