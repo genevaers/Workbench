@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
 fi
 
 SOURCE_FILE="$1";
-DEST_FILE="temp/$SOURCE_FILE";
+DEST_FILE="../temp/$SOURCE_FILE";
 
 echo "Input file : $SOURCE_FILE";
 echo "Output file: $DEST_FILE";
