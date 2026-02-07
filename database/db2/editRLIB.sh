@@ -9,7 +9,7 @@ if [ -z "$1" ]; then
   exit 1;
 fi
 
-SOURCE_FILE="$1";
+SOURCE_FILE="prep/$1";
 DEST_FILE="temp/$SOURCE_FILE";
 
 echo "Input file : $SOURCE_FILE";
