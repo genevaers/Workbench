@@ -9,9 +9,11 @@ if [ -z "$1" ]; then
   exit 1;
 fi
 
-SOURCE_FILE="prep/$1";
-DEST_FILE="temp/$SOURCE_FILE";
+MEMBER="$1";
 
+SOURCE_FILE="prep/$MEMBER";
+DEST_FILE="temp/$MEMBER";
+echo "Member: $MEMBER";
 echo "Input file : $SOURCE_FILE";
 echo "Output file: $DEST_FILE";
 
