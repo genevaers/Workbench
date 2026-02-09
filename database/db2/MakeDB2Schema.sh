@@ -63,7 +63,7 @@ if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
   echo "All references to DB2 RUN library will be omitted";
 fi
 
-if [[ -z $GERS_INCLUDE_DB2_RUNLIB ]]; then
+if [[ -z "$GERS_INCLUDE_DB2_RUNLIB" ]]; then
   echo "All references to DB2 RUN library will be omitted again";
 fi
 
