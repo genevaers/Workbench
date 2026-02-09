@@ -44,6 +44,7 @@ export GERS_DB2_PROCLIB=your-DB2-proclib
 export GERS_DB2_RUN_LIB=your-DB2-runlib
 export GERS_DB2_LOAD_LIB=your-DB2-loadlib
 export GERS_DB2_EXIT_LIB=your-DB2-exit-lib
+export GERS_INCLUDE_DB2_RUNLIB=[Y|N] whether explicit DB2 runlib is needed in JCL at your site
 export GERS_JOB_CLASS=your-job-class
 export GERS_JOB_MSG_CLASS=your-msg-class
 export GERS_SCEERUN=your-CEE.SCEERUN

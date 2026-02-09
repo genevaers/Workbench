@@ -108,7 +108,7 @@ sed $mycmdstr34 prep/tmp33 > prep/tmp34;
 
 # Remove DB2RLIB contextualy, if variable not set
 if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
-  echo "Processing file: $MEMBER to remove any references to DB2RLIB";
+  echo "Processing file: $MEMBER to remove references to DB2RLIB";
   ./editRLIB.sh prep/tmp34;
     exitIfError;
   # echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
