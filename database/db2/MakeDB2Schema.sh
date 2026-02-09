@@ -8,6 +8,7 @@ echo "Preparing DB2 metadata artifacts for Workbench and exporting them to MVS P
 #initialize crucial variable
 export GERS_DB2_RUN_LIB="";
 export GERS_FROM_PDS_HLQ="";
+export GERS_INCLUDE_DB2_RUNLIB="";
 
 #variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
@@ -20,7 +21,6 @@ export GERS_DB2_PROCLIB=DSN.V13R1M0.PROCLIB;
 export GERS_DB2_RUN_LIB=DSN131.RUNLIB.LOAD;
 export GERS_DB2_LOAD_LIB=DSN.V13R1M0.SDSNLOAD;
 export GERS_DB2_EXIT_LIB=DSN.V13R1M0.SDSNEXIT;
-export GERS_INCLUDE_DB2_RUNLIB=N;
 
 export GERS_JOB_CLASS=A;
 export GERS_JOB_MSG_CLASS=H;
@@ -59,12 +59,10 @@ else
   echo "Preparing JCL to define GenedvaERS schema and import data from DB2 export files";
 fi
 
-if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
-  echo "All references to DB2 RUN library will be omitted";
-fi
 
 if [[ -z "$GERS_DB2_RUN_LIB" ]]; then
-  echo "All references to DB2 RUN library will be omitted again";
+  echo "All references to DB2 RUN library in JCL will be omitted entirely";
+  export GERS_INCLUDE_DB2_RUNLIB=N;
 fi
 
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
