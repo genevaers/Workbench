@@ -49,10 +49,18 @@ export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
 
 # mainline
 
-if [ -z "GERS_FROM_PDS_HLQ" ]; then
+if [[ -z "$GERS_FROM_PDS_HLQ" ]]; then
   echo "Preparing JCL to define GenedvaERS schema only";
 else
   echo "Preparing JCL to define GenedvaERS schema and import data from DB2 export files";
+fi
+
+if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
+  echo "All references to DB2 RUN library will be omitted";
+fi
+
+if [[ -z $GERS_INCLUDE_DB2_RUNLIB ]]; then
+  echo "All references to DB2 RUN library will be omitted again";
 fi
 
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
