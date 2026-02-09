@@ -1,9 +1,10 @@
 #!/bin/bash
-# Script to directory contents to MVS pds(e)
+# Script to tailor JCL, DDL and SQL statements needed to define DB2 schema and copy to MVS pds(e)'s
+# This script is intended to be run after cloning the Workbench repository to USS file system
 
 main() {
 
-echo "Preparing DB2 metadata artifacts for Workbench and exporting them to MVS PDS/E";
+echo "Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
 
 #initialize crucial variable
 export GERS_DB2_RUN_LIB="";
@@ -54,14 +55,13 @@ export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
 # mainline
 
 if [[ -z "$GERS_FROM_PDS_HLQ" ]]; then
-  echo "Preparing JCL to define GenedvaERS schema only";
+  echo "Preparing JCL to define the GenedvaERS schema only";
 else
-  echo "Preparing JCL to define GenedvaERS schema and import data from DB2 export files";
+  echo "Preparing JCL to define the GenedvaERS schema and import data from DB2 export files";
 fi
 
-
 if [[ -z "$GERS_DB2_RUN_LIB" ]]; then
-  echo "All references to DB2 RUN library in JCL will be omitted entirely";
+  echo "All references to DB2 RUN library in JCL will be suppressed";
   export GERS_INCLUDE_DB2_RUNLIB=N;
 fi
 

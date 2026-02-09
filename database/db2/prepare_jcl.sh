@@ -1,5 +1,5 @@
 #!/bin/sh
-# prepare_ddl.sh - Prepare data management statements for user preferences
+# prepare_ddl.sh - Prepare JCL jobs for user preferences
 ########################################################
 
 main() {
