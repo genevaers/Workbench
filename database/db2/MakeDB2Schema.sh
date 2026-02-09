@@ -5,6 +5,10 @@ main() {
 
 echo "Preparing DB2 metadata artifacts for Workbench and exporting them to MVS PDS/E";
 
+#initialize crucial variable
+export GERS_DB2_RUN_LIB="";
+export GERS_FROM_PDS_HLQ="";
+
 #variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
 export GERS_DB2_DBNAME=SADBNEIL;
@@ -81,11 +85,13 @@ TO_PDSSQL="//'$GERS_TO_PDS.SQL'";
 TO_PDSSQL="$TO_PDSSQL";
 # echo "TO_PDSSQL: $TO_PDSSQL";
 
-echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
+# echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
 
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
 ./Copy2pds.sh . JCL $TO_PDSJCL 2;
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;
+
+echo "DB2 metadata artifacts for Workbench prepared successfully and exported to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL";
 
 }
 
