@@ -31,45 +31,45 @@ export GERS_SCBCDLL=CBC.SCLBDLL;
 export GERS_TO_PDS_HLQ=GEBT;
 export GERS_TO_PDS_MLQ=RTC23321;
 
-#optional variables when replicating GenevaERS metadata from another DB2 schema
-export GERS_FROM_PDS_HLQ=GEBT;
-export GERS_FROM_PDS_MLQ=RTC23321.FROM;
-export GERS_FROM_DB2_DBUSER=SAFRBLD;
-export GERS_FROM_DB2_DBNAME=SADBNCB2;
-export GERS_FROM_DB2_DBSG=SASGNCB2;
-export GERS_FROM_DB2_DBSCH=SAFRNCB2;
-export GERS_FROM_DB2_DBSUB=DM13;
+## Optional variables when replicating GenevaERS metadata from another DB2 schema
+# export GERS_FROM_PDS_HLQ=GEBT;
+# export GERS_FROM_PDS_MLQ=RTC23321.FROM;
+# export GERS_FROM_DB2_DBUSER=SAFRBLD;
+# export GERS_FROM_DB2_DBNAME=SADBNCB2;
+# export GERS_FROM_DB2_DBSG=SASGNCB2;
+# export GERS_FROM_DB2_DBSCH=SAFRNCB2;
+# export GERS_FROM_DB2_DBSUB=DM13;
 
-# variables for running optional smoke test with DB2
-export GERS_ENV_HLQ='GEBT.NEILE';
-export GERS_DEMO_HLQ=GEBT;
-export GERS_DEMO_MLQ=GVBDEMO;
-export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
-export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
-export GERS_DB2_HOST='sp13.pok.stglabs.ibm.com';
-export GERS_DB2_PORT='5036';
-export GERS_DB2_SAFR_ENV='1';
-export GERS_JAVA_HOME="/Java/J17.0_64"
-export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
+## Optional variables for running GVBDEMO smoke test against DB2
+# export GERS_ENV_HLQ='GEBT.NEILE';
+# export GERS_DEMO_HLQ=GEBT;
+# export GERS_DEMO_MLQ=GVBDEMO;
+# export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
+# export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
+# export GERS_DB2_HOST='sp13.pok.stglabs.ibm.com';
+# export GERS_DB2_PORT='5036';
+# export GERS_DB2_SAFR_ENV='1';
+# export GERS_JAVA_HOME="/Java/J17.0_64"
+# export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
 
 # mainline
 
 if [[ -z "$GERS_FROM_PDS_HLQ" ]]; then
   echo "Preparing JCL to define the GenedvaERS schema only";
+  GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
+  echo "GERS_TO_PDS stem: $GERS_TO_PDS";
 else
   echo "Preparing JCL to define the GenedvaERS schema and import data from DB2 export files";
+  GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
+  echo "GERS_TO_PDS stem: $GERS_TO_PDS";
+  GERS_FROM_PDS=$GERS_FROM_PDS_HLQ'.'$GERS_FROM_PDS_MLQ;
+  echo "GERS_FROM_PDS stem: $GERS_FROM_PDS";
 fi
 
 if [[ -z "$GERS_DB2_RUN_LIB" ]]; then
   echo "All references to DB2 RUN library in JCL will be suppressed";
   export GERS_INCLUDE_DB2_RUNLIB=N;
 fi
-
-GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
-echo "GERS_TO_PDS stem: $GERS_TO_PDS";
-
-GERS_FROM_PDS=$GERS_FROM_PDS_HLQ'.'$GERS_FROM_PDS_MLQ;
-echo "GERS_FROM_PDS stem: $GERS_FROM_PDS";
 
 TO_PDSDDL="//'$GERS_TO_PDS.DDL'";
 TO_PDSDDL="$TO_PDSDDL";
