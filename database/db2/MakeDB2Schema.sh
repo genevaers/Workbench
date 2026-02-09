@@ -3,7 +3,7 @@
 
 main() {
 
-echo "Preparing DB2 metadata artifacts for Workbench and exporting then to MVS PDS/E";
+echo "Preparing DB2 metadata artifacts for Workbench and exporting them to MVS PDS/E";
 
 #variables chosen by user
 export GERS_DB2_DBUSER=SAFRBLD;
@@ -48,6 +48,13 @@ export GERS_JAVA_HOME="/Java/J17.0_64"
 export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
 
 # mainline
+
+if [ -z "GERS_FROM_PDS_HLQ" ]; then
+  echo "Preparing JCL to define GenedvaERS schema only";
+else
+  echo "Preparing JCL to define GenedvaERS schema and import data from DB2 export files";
+fi
+
 GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
 echo "GERS_TO_PDS stem: $GERS_TO_PDS";
 
@@ -56,15 +63,15 @@ echo "GERS_FROM_PDS stem: $GERS_FROM_PDS";
 
 TO_PDSDDL="//'$GERS_TO_PDS.DDL'";
 TO_PDSDDL="$TO_PDSDDL";
-echo "TO_PDSDDL: $TO_PDSDDL";
+# echo "TO_PDSDDL: $TO_PDSDDL";
 
 TO_PDSJCL="//'$GERS_TO_PDS.JCL'";
 TO_PDSJCL="$TO_PDSJCL";
-echo "TO_PDSJCL: $TO_PDSJCL";
+# echo "TO_PDSJCL: $TO_PDSJCL";
 
 TO_PDSSQL="//'$GERS_TO_PDS.SQL'";
 TO_PDSSQL="$TO_PDSSQL";
-echo "TO_PDSSQL: $TO_PDSSQL";
+# echo "TO_PDSSQL: $TO_PDSSQL";
 
 echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
 
