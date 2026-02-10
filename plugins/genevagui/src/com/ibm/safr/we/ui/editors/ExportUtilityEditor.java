@@ -1211,26 +1211,31 @@ public class ExportUtilityEditor extends SAFREditorPart implements ISearchablePa
         try {
             List<?> componentList;
             modelList = new ArrayList<ExportComponent>();
-            if (componentType == ComponentType.LogicalFile) {
-                componentList = SAFRQuery.queryAllLogicalFiles(currentEnvID, SortType.SORT_BY_NAME);
-            } else if (componentType == ComponentType.LookupPath) {
-                componentList = SAFRQuery.queryAllLookups(currentEnvID, SortType.SORT_BY_NAME);
-            } else if (componentType == ComponentType.LogicalRecord) {
-                componentList = SAFRQuery.queryAllLogicalRecords(currentEnvID, SortType.SORT_BY_NAME);
-            } else if (componentType == ComponentType.PhysicalFile) {
-                componentList = SAFRQuery.queryAllPhysicalFiles(currentEnvID, SortType.SORT_BY_NAME);
-            } else if (componentType == ComponentType.View) {
-                componentList = SAFRQuery.queryAllViews(currentEnvID, SortType.SORT_BY_NAME);
-            } else if (componentType == ComponentType.ViewFolder) {
-                componentList = SAFRQuery.queryAllViewFolders(currentEnvID, SortType.SORT_BY_NAME);
-            } else {
-                componentList = null;
+			if (componentType != null) {
+				if (componentType == ComponentType.LogicalFile) {
+					componentList = SAFRQuery.queryAllLogicalFiles(currentEnvID, SortType.SORT_BY_NAME);
+				} else if (componentType == ComponentType.LookupPath) {
+					componentList = SAFRQuery.queryAllLookups(currentEnvID, SortType.SORT_BY_NAME);
+				} else if (componentType == ComponentType.LogicalRecord) {
+					componentList = SAFRQuery.queryAllLogicalRecords(currentEnvID, SortType.SORT_BY_NAME);
+				} else if (componentType == ComponentType.PhysicalFile) {
+					componentList = SAFRQuery.queryAllPhysicalFiles(currentEnvID, SortType.SORT_BY_NAME);
+				} else if (componentType == ComponentType.View) {
+					componentList = SAFRQuery.queryAllViews(currentEnvID, SortType.SORT_BY_NAME);
+				} else if (componentType == ComponentType.ViewFolder) {
+					componentList = SAFRQuery.queryAllViewFolders(currentEnvID, SortType.SORT_BY_NAME);
+				} else {
+					componentList = null;
+				}
+				for (Object obj : componentList) {
+					EnvironmentalQueryBean component = (EnvironmentalQueryBean) obj;
+					exportComponent = new ExportComponent(component);
+					modelList.add(exportComponent);
+				}
+			} else {
+            	MessageDialog.openError(getSite().getShell(), "Component Type is not selected", "Select Component Type to export");
             }
-            for (Object obj : componentList) {
-                EnvironmentalQueryBean component = (EnvironmentalQueryBean) obj;
-                exportComponent = new ExportComponent(component);
-                modelList.add(exportComponent);
-            }
+            
 
         } catch (DAOException e1) {
             UIUtilities.handleWEExceptions(e1);
