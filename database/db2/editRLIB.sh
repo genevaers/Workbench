@@ -31,13 +31,18 @@ while IFS= read -r line; do
     fi
   else
     if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
-      pre=$(expr substr "$lastline" 24 4);
-      dsn=$(expr substr "$lastline" 28 8);
-      if [[ "$pre" == "DSN=" ]]; then
-        echo "prefix is dsn : $dsn : "
-#        if [[ -z "$dsn" ]]; then
-#         echo "empty dataset";
-#        fi
+      len = $(lastline);
+      if [[ $len > 32 ]]; then
+        pre = ${lastline:24:5};
+        dsn = ${lastline:28:8};
+#        pre=$(expr substr "$lastline" 24 4);
+#        dsn=$(expr substr "$lastline" 28 4);
+        if [[ "$pre" == "DSN=" ]]; then
+          echo "prefix is dsn : $dsn : length $len";
+#          if [[ -z "$dsn" ]]; then
+#           echo "empty dataset";
+#          fi
+        fi
       fi
       echo "$lastline" >> "$DEST_FILE";
     fi
