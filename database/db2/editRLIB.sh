@@ -35,6 +35,7 @@ while IFS= read -r line; do
       pre=${lastline:23:4};
       dsn=${lastline:27:8};
 #      echo "prefix is: $pre , dsn: $dsn , length: $len";
+#      remove line that was DSN=<nothing>
       if [[ "$pre" != "DSN=" || $len > 27 ]]; then
         echo "$lastline" >> "$DEST_FILE";
       else
