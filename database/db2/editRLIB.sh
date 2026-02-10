@@ -32,9 +32,9 @@ while IFS= read -r line; do
   else
     if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
       len=${#lastline};
-      if [[ $len > 32 ]]; then
-        pre = ${lastline:24:4};
-        dsn = ${lastline:28:8};
+#      if [[ $len > 32 ]]; then
+        pre=${lastline:24:4};
+        dsn=${lastline:28:8};
 #        pre=$(expr substr "$lastline" 24 4);
 #        dsn=$(expr substr "$lastline" 28 4);
         if [[ "$pre" == "DSN=" ]]; then
@@ -43,7 +43,7 @@ while IFS= read -r line; do
 #           echo "empty dataset";
 #          fi
         fi
-      fi
+#      fi
       echo "$lastline" >> "$DEST_FILE";
     fi
   fi
