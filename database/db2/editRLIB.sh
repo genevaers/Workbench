@@ -31,9 +31,9 @@ while IFS= read -r line; do
     fi
   else
     if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
-      if [[ "$lastline" != *"DISP=SHR,DSN=  "* ]]; then
-        echo "$lastline" >> "$DEST_FILE";
-      fi
+      dsn=$(expr substr "$lastline" 2 4);
+      echo "DSN $dsn";
+      echo "$lastline" >> "$DEST_FILE";
     fi
   fi
   lastline=$line;
