@@ -33,7 +33,7 @@ while IFS= read -r line; do
     if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
       len=${#lastline};
       if [[ $len > 32 ]]; then
-        pre = ${lastline:24:5};
+        pre = ${lastline:24:4};
         dsn = ${lastline:28:8};
 #        pre=$(expr substr "$lastline" 24 4);
 #        dsn=$(expr substr "$lastline" 28 4);
