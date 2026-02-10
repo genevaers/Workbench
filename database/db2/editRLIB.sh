@@ -33,6 +33,7 @@ while IFS= read -r line; do
     if [[ "$lastline" != "" && "$lastline" != *"DB2RLIB"* ]]; then
       if [["$lastline" != *"DSN= "*]]; then
         echo "$lastline" >> "$DEST_FILE";
+      fi
     fi
   fi
   lastline=$line;
