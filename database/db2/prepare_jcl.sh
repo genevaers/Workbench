@@ -1,5 +1,5 @@
 #!/bin/sh
-# prepare_ddl.sh - Prepare data management statements for user preferences
+# prepare_ddl.sh - Prepare JCL jobs for user preferences
 ########################################################
 
 main() {
@@ -104,6 +104,16 @@ sed $mycmdstr31 prep/tmp30 > prep/tmp31;
 sed $mycmdstr32 prep/tmp31 > prep/tmp32;
 sed $mycmdstr33 prep/tmp32 > prep/tmp33;
 sed $mycmdstr34 prep/tmp33 > prep/tmp34;
+# last tmp file is referenced below several times
+
+# Remove DB2RLIB contextualy, if variable not set
+if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
+  echo "Processing file: $MEMBER to remove references to DB2RLIB";
+  ./editRLIB.sh prep/tmp34;
+    exitIfError;
+  # echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
+  cp -f prep/tmp34.tmp prep/tmp34;
+fi
 
 #convert output back to EBCDIC again
 iconv -f ISO8859-1 -t IBM-1047 prep/tmp34 > prep/$MEMBER;
