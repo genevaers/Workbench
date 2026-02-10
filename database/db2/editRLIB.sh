@@ -38,9 +38,8 @@ while IFS= read -r line; do
       if [[ "$pre" != "DSN=" || $len > 27 ]]; then
         echo "$lastline" >> "$DEST_FILE";
       else
-        echo "XXXXXX dsn : $dsn : length $len";
+        echo "Skipping Include for DB2 Run Library";
       fi
-#      echo "$lastline" >> "$DEST_FILE";
     fi
   fi
   lastline=$line;
