@@ -34,12 +34,11 @@ while IFS= read -r line; do
       pre=$(expr substr "$lastline" 24 4);
       dsn=$(expr substr "$lastline" 28 8);
       if [[ "$pre" == "DSN=" ]]; then
-        echo "prefix is dsn";
+        echo "prefix is dsn : $dsn";
         if [[ -z "$dsn" ]]; then
          echo "empty dataset";
         fi
       fi
-      echo "DSN $dsn";
       echo "$lastline" >> "$DEST_FILE";
     fi
   fi
