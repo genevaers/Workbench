@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to directory contents to MVS pds(e)
+# Script to copy directory contents to MVS pds(e)
 # Invoked like: ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'"
 
 main() {
@@ -21,6 +21,13 @@ echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copyi
 # Remove data preparation directory and create fresh
 rm -Rf "$FROM_DIR"/prep;
 mkdir "$FROM_DIR"/prep;
+
+# Remove temp directory and create fresh if JCL
+if [ 2 -eq "$SYM" ]; then
+  rm -Rf "temp";
+  mkdir "temp";
+
+fi
 
 # Determine directory contents
 # echo "$FROM_DIR"/*."$FROM_SUF"

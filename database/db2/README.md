@@ -25,9 +25,14 @@ Then "cd" to the directory: database/db2/
 
 ## Prepare your site DB2 defaults
 
-Either using TSO option 3.17 or the "vi" editor open file GetMetaData.sh under directory database/db2/
+Either using TSO option 3.17 or the "vi" editor open file MakeDB2Schema.sh under directory database/db2/
 
 Locate the relevant section of the file and replace the following with your site defaults. You may eventually want more than one DB2 schemas so repeat the process with different target datasets in each case.
+
+### Note: DB2 Run Library varition
+
+If your site's JCL does not require the DB2 Run Library, e.g. DSN131.RUNLIB.LOAD then do not assign GERS_DB2_RUN_LIB
+
 <pre>
 export GERS_DB2_DBUSER=your-RACFID-for-DB2-administration
 export GERS_DB2_DBNAME=your-db2-8-character-database-name
@@ -36,7 +41,7 @@ export GERS_DB2_DBSCH=your-db2-8-character-schema
 export GERS_DB2_SUBSYSTEM=your-db2-4-character-subsystem
 export GERS_DB2_PLAN=your-DB2-administration-plan-used
 export GERS_DB2_PROCLIB=your-DB2-proclib
-export GERS_DB2_RUN_LIB=your-DB2-runlib
+export GERS_DB2_RUN_LIB=your-DB2-runlib (optional)
 export GERS_DB2_LOAD_LIB=your-DB2-loadlib
 export GERS_DB2_EXIT_LIB=your-DB2-exit-lib
 export GERS_JOB_CLASS=your-job-class
