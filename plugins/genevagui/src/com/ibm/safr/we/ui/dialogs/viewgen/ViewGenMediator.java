@@ -20,7 +20,9 @@ package com.ibm.safr.we.ui.dialogs.viewgen;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.RGB;
 
 import com.ibm.safr.we.model.LRField;
 import com.ibm.safr.we.ui.dialogs.viewgen.ViewGenCriteria.EditMode;
@@ -63,6 +65,15 @@ public class ViewGenMediator {
         viewGenDialog.setMessage(string);
     }
     
+    public void setInfoMessage(String string) {
+        viewGenDialog.setErrorMessage(null);
+        viewGenDialog.setMessage(string, SWT.ICON_INFORMATION);
+    }
+    
+    public void setErrorMessage(String string) {
+        viewGenDialog.setErrorMessage(string);
+   }
+    
     public Font getFont() {
         return viewGenDialog.getFont();
     }
@@ -82,6 +93,11 @@ public class ViewGenMediator {
     public void refreshAddButtonState() {
         viewGenField.refreshAddButtonState();
     }
+    
+    public void refreshColGenButtonState() {
+        viewGenColumn.refreshColumnGenButtons();
+    }
+    
 
     // calls on viewGenColumn
     
@@ -97,14 +113,20 @@ public class ViewGenMediator {
         return viewGenColumn.viewHasNoColumns();
     }
 
-    public int numberColumnsFromSelection() {
+    public int numberColumnsSelected() {
         return viewGenColumn.numberColumnsFromSelection();
     }
     
     public void refreshDialog() {
     	//viewGenDialog.refresh();
     }
+    
+    public boolean isCorFxAdded() {
+    	return viewGenColumn.isCorFxAdded();
+    }
 
-
+	public boolean isSelectedOneColumn() {
+		return viewGenColumn.isSelectedOneColumn();
+	}
 
 }
