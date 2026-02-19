@@ -26,9 +26,11 @@ fi
 
 # determine if user wants to explicitly mentiom DB2 RUNLIB.LOAD in JCL, etc.
 
-if [[ -z "$GERS_DB2_RUN_LIB" || $GERS_DB2_RUN_LIB == "" ]]; then
+if [[ -z "$GERS_DB2_RUN_LIB" || "$GERS_DB2_RUN_LIB" == "" ]]; then
   echo "All references to DB2 RUN library in JCL will be suppressed";
   export GERS_INCLUDE_DB2_RUNLIB=N;
+else
+  export GERS_INCLUDE_DB2_RUNLIB=Y;  
 fi
 
 # determine name of MVS dataset to contain DDL's
