@@ -84,7 +84,7 @@ export GERS_JAVA_HOME="/Java/J17.0_64"
 export GERS_RCA_JAR_DIR=same-as-GERS_RCA_JAR_DIR-in-.gers.profile
 </pre>
 
-## Create JCL, DDL and SQL to MVS PDS[E] dataset
+## Create JCL, DDL and SQL MVS PDS[E] datasets
 
 Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
 
@@ -134,7 +134,7 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 </pre>
 
 
-## Copy JCL, DDL and JCL to MVS PDS[E] dataset
+## Customize and copy JCL, DDL and SQL to MVS PDS[E] dataset
 
 To copy all the information to your newly allocated MVS datasets change directory to SH then invoke the following bash script on command line.
 <pre>
