@@ -7,7 +7,7 @@ main() {
 echo "Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
 
 # Re-read DB2Schema.profile in case anything changed
-source ~/.DB2Schema.profile ;
+source ~/.gers.DB2Schema.profile ;
 exitIfError;
 
 # prepare JCL jobs to define DB2 Schema

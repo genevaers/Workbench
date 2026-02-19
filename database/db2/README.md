@@ -25,14 +25,14 @@ Then "cd" to the directory: database/db2/
 
 ## Prepare your site DB2 defaults
 
-Copy the provided example .DB2Schema.profile from directory Workbench/database/db2/ to your home directory.
+Copy the provided example .gers.DB2Schema.profile from directory Workbench/database/db2/ to your home directory.
 <pre>
-cp Workbench/database/db2/.DB2Schema.profile ~/
+cp Workbench/database/db2/.gers.DB2Schema.profile ~/
 </pre>
 
-Then using either TSO option 3.17 or the "vi" editor open file .DB2Schema.profile you copied to your home directory.
+Then using either TSO option 3.17 or the "vi" editor open file .gers.DB2Schema.profile you copied to your home directory.
 
-Review the relevant sections of the .profile and replace the following with your site defaults and preferences. You may eventually want more than one DB2 schemas so repeat the entire process with different target datasets in each case.
+Review the relevant sections of this profile and replace the following with your site defaults and preferences. You may eventually want more than one DB2 schemas so repeat the entire process with different target datasets in each case.
 
 ### Note: DB2 Run Library variation
 
