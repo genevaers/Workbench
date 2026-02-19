@@ -6,7 +6,7 @@ main() {
 
 echo "Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
 
-# Re-read DB2Schema.profile in case anything changed
+# Re-read .gers.DB2Schema.profile in case anything changed
 source ~/.gers.DB2Schema.profile ;
 exitIfError;
 

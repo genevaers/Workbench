@@ -84,7 +84,7 @@ export GERS_JAVA_HOME="/Java/J17.0_64"
 export GERS_RCA_JAR_DIR=same-as-GERS_RCA_JAR_DIR-in-.gers.profile
 </pre>
 
-## Copy JCL, DDL and JCL to MVS PDS[E] dataset
+## Create JCL, DDL and SQL to MVS PDS[E] dataset
 
 Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
 
@@ -132,10 +132,16 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
-To copy the information to your newly allocated MVS datasets type the following in USS:
+
+
+## Copy JCL, DDL and JCL to MVS PDS[E] dataset
+
+To copy all the information to your newly allocated MVS datasets change directory to SH then invoke the following bash script on command line.
 <pre>
+cd Workbench/database/db2/SH
 ./MakeDB2Schema.sh
 </pre>
+
 ## Build DB2 Schema to contain GenevaERS objects
 First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment.
 
