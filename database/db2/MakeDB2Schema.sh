@@ -7,7 +7,7 @@ main() {
 echo "Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
 
 # Re-read DB2Schema.profile in case anything changed
-source .DB2Schema.profile ;
+source ~/.DB2Schema.profile ;
 exitIfError;
 
 # prepare JCL jobs to define DB2 Schema
@@ -50,12 +50,15 @@ TO_PDSSQL="$TO_PDSSQL";
 
 # process DDL's
 ./Copy2pds.sh . DDL $TO_PDSDDL 1;
+exitIfError;
 
 # process JCL's
 ./Copy2pds.sh . JCL $TO_PDSJCL 2;
+exitIfError;
 
 # process SQL
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;
+exitIfError;
 
 echo "DB2 metadata artifacts for Workbench prepared successfully and exported to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL";
 

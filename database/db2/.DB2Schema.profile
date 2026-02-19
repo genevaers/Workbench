@@ -1,5 +1,5 @@
 
-#variables chosen by user for setting up a basic DB2 Schema for GenevaERS
+##variables chosen by user for setting up a basic DB2 Schema for GenevaERS
 
 export GERS_DB2_DBUSER=SAFRBLD;
 export GERS_DB2_DBNAME=SADBNEIL;
@@ -8,10 +8,15 @@ export GERS_DB2_DBSCH=SAFRNEIL;
 export GERS_DB2_SUBSYSTEM=DM13;
 export GERS_DB2_PLAN=DSNTEP13;
 export GERS_DB2_PROCLIB=DSN.V13R1M0.PROCLIB;
+#
+# choose if you want DB2 RUNLIB explicitly in JCL or not
+#
 export GERS_DB2_RUN_LIB=DSN131.RUNLIB.LOAD;
+# export GERS_DB2_RUN_LIB=DSN131.RUNLIB.LOAD="";           
+#
 export GERS_DB2_LOAD_LIB=DSN.V13R1M0.SDSNLOAD;
 export GERS_DB2_EXIT_LIB=DSN.V13R1M0.SDSNEXIT;
-
+#
 export GERS_JOB_CLASS=A;
 export GERS_JOB_MSG_CLASS=H;
 export GERS_LE_RUN_LIB=CEE.SCEERUN;

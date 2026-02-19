@@ -25,13 +25,18 @@ Then "cd" to the directory: database/db2/
 
 ## Prepare your site DB2 defaults
 
-Either using TSO option 3.17 or the "vi" editor open file .MakeDB2Schema.profile under the directory database/db2/
+Copy the provided example .DB2Schema.profile from directory Workbench/database/db2/ to your home directory.
+<pre>
+cp Workbench/database/db2/.DB2Schema.profile ~/
+</pre>
+
+Then using either TSO option 3.17 or the "vi" editor open file .DB2Schema.profile you copied to your home directory.
 
 Review the relevant sections of the .profile and replace the following with your site defaults and preferences. You may eventually want more than one DB2 schemas so repeat the entire process with different target datasets in each case.
 
 ### Note: DB2 Run Library variation
 
-If your site's JCL does not require the DB2 Run Library, e.g. DSN131.RUNLIB.LOAD then do not assign GERS_DB2_RUN_LIB
+If your site's JCL does not require the DB2 Run Library, e.g. DSN131.RUNLIB.LOAD then do not assign GERS_DB2_RUN_LIB, or assign it GERS_DB2_RUN_LIB="";
 
 ### Sections of .profile
 
