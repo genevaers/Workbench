@@ -27,6 +27,9 @@ mycmdstr3='s/&$DBSG.'/${GERS_DB2_STGGRP}/'g';
 mycmdstr4='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g';
 mycmdstr5='s/&$DBSUB.'/${GERS_DB2_SUBSYSTEM}/'g';
 
+
+echo "sed $mycmdstr1   $MEMBER > prep/tmp1;"
+
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1   $MEMBER > prep/tmp1;
 sed $mycmdstr2 prep/tmp1 > prep/tmp2;
