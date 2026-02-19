@@ -13,9 +13,9 @@ SOURCE_FILE="$1";
 FROM_DIR="$2";
 DEST_FILE="$SOURCE_FILE.tmp";
 
-echo "Input file : $SOURCE_FILE";
-echo "From dir   : $FROM_DIR";
-echo "Output file: $DEST_FILE";
+# echo "Input file : $SOURCE_FILE";
+# echo "From dir   : $FROM_DIR";
+# echo "Output file: $DEST_FILE";
 
 lastline="";
 
