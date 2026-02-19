@@ -69,7 +69,7 @@ mycmdstr32='s/&$DB2SENV.'/${GERS_DB2_SAFR_ENV}/'g';
 mycmdstr33='s@&$JAVAHOME.'@${GERS_JAVA_HOME}@'g';
 mycmdstr34='s@&$RCAJAR.'@${GERS_RCA_JAR_DIR}@'g';
 
-echo "sed $mycmdstr1   ../$FROM_DIR/$MEMBER > ../"$FROM_DIR"/prep/tmp1;"
+# echo "sed $mycmdstr1   ../$FROM_DIR/$MEMBER > ../"$FROM_DIR"/prep/tmp1;"
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
 sed $mycmdstr1 ../"$FROM_DIR"/"$MEMBER" > ../"$FROM_DIR"/prep/tmp1;
