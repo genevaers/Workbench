@@ -49,11 +49,11 @@ TO_PDSSQL="$TO_PDSSQL";
 # echo "Obtaining DB2 metadata artifacts for Workbench and exporting to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL"
 
 # process DDL's
-./Copy2pds.sh . DDL $TO_PDSDDL 1;
+./Copy2pds.sh DDL DDL $TO_PDSDDL 1;
 exitIfError;
 
 # process JCL's
-./Copy2pds.sh . JCL $TO_PDSJCL 2;
+./Copy2pds.sh JCL JCL $TO_PDSJCL 2;
 exitIfError;
 
 # process SQL
