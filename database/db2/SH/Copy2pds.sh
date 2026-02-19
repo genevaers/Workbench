@@ -30,7 +30,7 @@ if [ 2 -eq "$SYM" ]; then
 fi
 
 # Determine directory contents
-# echo "$FROM_DIR"/*."$FROM_SUF"
+echo "$FROM_DIR"/*."$FROM_SUF"
 
 ls "$FROM_DIR"/*."$FROM_SUF" > "$FROM_DIR"/prep/list.tmp
 FILE="$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
