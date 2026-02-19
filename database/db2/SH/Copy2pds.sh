@@ -22,12 +22,12 @@ echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copyi
 rm -Rf ../"$FROM_DIR"/prep;
 mkdir ../"$FROM_DIR"/prep;
 
-# Remove temp directory and create fresh if JCL
-if [ 2 -eq "$SYM" ]; then
-  rm -Rf "temp";
-  mkdir "temp";
-
-fi
+## Remove temp directory and create fresh if JCL
+# if [ 2 -eq "$SYM" ]; then
+#  rm -Rf "temp";
+#  mkdir "temp";
+#
+# fi
 
 # Determine directory contents
 echo "$FROM_DIR"/*."$FROM_SUF"
