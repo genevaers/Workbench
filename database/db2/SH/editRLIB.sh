@@ -5,15 +5,17 @@ main() {
 
 # Check if file name is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <name of file to edit>";
+  echo "Usage: $0 <name of file to edit><name of from directory>";
   exit 1;
 fi
 
 SOURCE_FILE="$1";
+FROM_DIR="$2";
 DEST_FILE="$SOURCE_FILE.tmp";
 
-# echo "Input file : $SOURCE_FILE";
-# echo "Output file: $DEST_FILE";
+echo "Input file : $SOURCE_FILE";
+echo "From dir   : $FROM_DIR";
+echo "Output file: $DEST_FILE";
 
 lastline="";
 

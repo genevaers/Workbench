@@ -52,11 +52,11 @@ TO_PDSSQL="$TO_PDSSQL";
 ./Copy2pds.sh DDL DDL $TO_PDSDDL 1;
 exitIfError;
 
-exit 1;
-
 # process JCL's
 ./Copy2pds.sh JCL JCL $TO_PDSJCL 2;
 exitIfError;
+
+exit 1;
 
 # process SQL
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0;

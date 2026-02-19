@@ -20,12 +20,13 @@ main() {
 
 # Check if member name is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <name of file to prepare";
+  echo "Usage: $0 <name of file to prepare> <name of from directory>";
   echo "Example: $0 GVBQDRAL.DDL";
   exit 1;
 fi
 
 MEMBER="$1";
+FROM_DIR="$2";
 
 # never mind the symbolics
 mycmdstr1='s/&$DBUSER.'/${GERS_DB2_DBUSER}/'g';
@@ -68,56 +69,57 @@ mycmdstr32='s/&$DB2SENV.'/${GERS_DB2_SAFR_ENV}/'g';
 mycmdstr33='s@&$JAVAHOME.'@${GERS_JAVA_HOME}@'g';
 mycmdstr34='s@&$RCAJAR.'@${GERS_RCA_JAR_DIR}@'g';
 
+echo "sed $mycmdstr1   ../$FROM_DIR/$MEMBER > ../"$FROM_DIR"/prep/tmp1;"
 
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
-sed $mycmdstr1   $MEMBER > prep/tmp1;
-sed $mycmdstr2 prep/tmp1 > prep/tmp2;
-sed $mycmdstr3 prep/tmp2 > prep/tmp3;
-sed $mycmdstr4 prep/tmp3 > prep/tmp4;
-sed $mycmdstr5 prep/tmp4 > prep/tmp5;
-sed $mycmdstr6 prep/tmp5 > prep/tmp6;
-sed $mycmdstr7 prep/tmp6 > prep/tmp7;
-sed $mycmdstr8 prep/tmp7 > prep/tmp8;
-sed $mycmdstr9 prep/tmp8 > prep/tmp9;
-sed $mycmdstr10 prep/tmp9 > prep/tmp10;
-sed $mycmdstr11 prep/tmp10 > prep/tmp11;
-sed $mycmdstr12 prep/tmp11 > prep/tmp12;
-sed $mycmdstr13 prep/tmp12 > prep/tmp13;
-sed $mycmdstr14 prep/tmp13 > prep/tmp14;
-sed $mycmdstr15 prep/tmp14 > prep/tmp15;
-sed $mycmdstr16 prep/tmp15 > prep/tmp16;
-sed $mycmdstr17 prep/tmp16 > prep/tmp17;
-sed $mycmdstr18 prep/tmp17 > prep/tmp18;
-sed $mycmdstr19 prep/tmp18 > prep/tmp19;
-sed $mycmdstr20 prep/tmp19 > prep/tmp20;
-sed $mycmdstr21 prep/tmp20 > prep/tmp21;
-sed $mycmdstr22 prep/tmp21 > prep/tmp22;
-sed $mycmdstr23 prep/tmp22 > prep/tmp23;
-sed $mycmdstr24 prep/tmp23 > prep/tmp24;
-sed $mycmdstr25 prep/tmp24 > prep/tmp25;
-sed $mycmdstr26 prep/tmp25 > prep/tmp26;
-sed $mycmdstr27 prep/tmp26 > prep/tmp27;
-sed $mycmdstr28 prep/tmp27 > prep/tmp28;
-sed $mycmdstr29 prep/tmp28 > prep/tmp29;
-sed $mycmdstr30 prep/tmp29 > prep/tmp30;
-sed $mycmdstr31 prep/tmp30 > prep/tmp31;
-sed $mycmdstr32 prep/tmp31 > prep/tmp32;
-sed $mycmdstr33 prep/tmp32 > prep/tmp33;
-sed $mycmdstr34 prep/tmp33 > prep/tmp34;
+sed $mycmdstr1 ../"$FROM_DIR"/"$MEMBER" > ../"$FROM_DIR"/prep/tmp1;
+sed $mycmdstr2 ../"$FROM_DIR"/prep/tmp1 > ../"$FROM_DIR"/prep/tmp2;
+sed $mycmdstr3 ../"$FROM_DIR"/prep/tmp2 > ../"$FROM_DIR"/prep/tmp3;
+sed $mycmdstr4 ../"$FROM_DIR"/prep/tmp3 > ../"$FROM_DIR"/prep/tmp4;
+sed $mycmdstr5 ../"$FROM_DIR"/prep/tmp4 > ../"$FROM_DIR"/prep/tmp5;
+sed $mycmdstr6 ../"$FROM_DIR"/prep/tmp5 > ../"$FROM_DIR"/prep/tmp6;
+sed $mycmdstr7 ../"$FROM_DIR"/prep/tmp6 > ../"$FROM_DIR"/prep/tmp7;
+sed $mycmdstr8 ../"$FROM_DIR"/prep/tmp7 > ../"$FROM_DIR"/prep/tmp8;
+sed $mycmdstr9 ../"$FROM_DIR"/prep/tmp8 > ../"$FROM_DIR"/prep/tmp9;
+sed $mycmdstr10 ../"$FROM_DIR"/prep/tmp9 > ../"$FROM_DIR"/prep/tmp10;
+sed $mycmdstr11 ../"$FROM_DIR"/prep/tmp10 > ../"$FROM_DIR"/prep/tmp11;
+sed $mycmdstr12 ../"$FROM_DIR"/prep/tmp11 > ../"$FROM_DIR"/prep/tmp12;
+sed $mycmdstr13 ../"$FROM_DIR"/prep/tmp12 > ../"$FROM_DIR"/prep/tmp13;
+sed $mycmdstr14 ../"$FROM_DIR"/prep/tmp13 > ../"$FROM_DIR"/prep/tmp14;
+sed $mycmdstr15 ../"$FROM_DIR"/prep/tmp14 > ../"$FROM_DIR"/prep/tmp15;
+sed $mycmdstr16 ../"$FROM_DIR"/prep/tmp15 > ../"$FROM_DIR"/prep/tmp16;
+sed $mycmdstr17 ../"$FROM_DIR"/prep/tmp16 > ../"$FROM_DIR"/prep/tmp17;
+sed $mycmdstr18 ../"$FROM_DIR"/prep/tmp17 > ../"$FROM_DIR"/prep/tmp18;
+sed $mycmdstr19 ../"$FROM_DIR"/prep/tmp18 > ../"$FROM_DIR"/prep/tmp19;
+sed $mycmdstr20 ../"$FROM_DIR"/prep/tmp19 > ../"$FROM_DIR"/prep/tmp20;
+sed $mycmdstr21 ../"$FROM_DIR"/prep/tmp20 > ../"$FROM_DIR"/prep/tmp21;
+sed $mycmdstr22 ../"$FROM_DIR"/prep/tmp21 > ../"$FROM_DIR"/prep/tmp22;
+sed $mycmdstr23 ../"$FROM_DIR"/prep/tmp22 > ../"$FROM_DIR"/prep/tmp23;
+sed $mycmdstr24 ../"$FROM_DIR"/prep/tmp23 > ../"$FROM_DIR"/prep/tmp24;
+sed $mycmdstr25 ../"$FROM_DIR"/prep/tmp24 > ../"$FROM_DIR"/prep/tmp25;
+sed $mycmdstr26 ../"$FROM_DIR"/prep/tmp25 > ../"$FROM_DIR"/prep/tmp26;
+sed $mycmdstr27 ../"$FROM_DIR"/prep/tmp26 > ../"$FROM_DIR"/prep/tmp27;
+sed $mycmdstr28 ../"$FROM_DIR"/prep/tmp27 > ../"$FROM_DIR"/prep/tmp28;
+sed $mycmdstr29 ../"$FROM_DIR"/prep/tmp28 > ../"$FROM_DIR"/prep/tmp29;
+sed $mycmdstr30 ../"$FROM_DIR"/prep/tmp29 > ../"$FROM_DIR"/prep/tmp30;
+sed $mycmdstr31 ../"$FROM_DIR"/prep/tmp30 > ../"$FROM_DIR"/prep/tmp31;
+sed $mycmdstr32 ../"$FROM_DIR"/prep/tmp31 > ../"$FROM_DIR"/prep/tmp32;
+sed $mycmdstr33 ../"$FROM_DIR"/prep/tmp32 > ../"$FROM_DIR"/prep/tmp33;
+sed $mycmdstr34 ../"$FROM_DIR"/prep/tmp33 > ../"$FROM_DIR"/prep/tmp34;
 # last tmp file is referenced below several times
 
 # Remove DB2RLIB contextualy, if variable not set
 if [[ $GERS_INCLUDE_DB2_RUNLIB == "N" ]]; then
   echo "Processing file: $MEMBER to remove references to DB2RLIB";
-  ./editRLIB.sh prep/tmp34;
+  ./editRLIB.sh ../"$FROM_DIR"/prep/tmp34 "$FROM_DIR";
     exitIfError;
   # echo "File $MEMBER copied from .tmp back to original name with DB2RLIB removed if it was present";
-  cp -f prep/tmp34.tmp prep/tmp34;
+  cp -f ../"$FROM_DIR"/prep/tmp34.tmp ../"$FROM_DIR"/prep/tmp34;
 fi
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp34 > prep/$MEMBER;
-chtag -r prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 ../"$FROM_DIR"/prep/tmp34 > ../"$FROM_DIR"/prep/$MEMBER;
+chtag -r ../"$FROM_DIR"/prep/$MEMBER;
 
 }
 

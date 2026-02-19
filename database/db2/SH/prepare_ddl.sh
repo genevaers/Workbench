@@ -18,7 +18,7 @@ if [ -z "$1" ]; then
 fi
 
 MEMBER="$1";
-FROM_DIR="$2"
+FROM_DIR="$2";
 
 # member = "GVBQDRAL.DDL";
 
