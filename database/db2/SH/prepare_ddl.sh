@@ -40,7 +40,7 @@ sed $mycmdstr4 ../"$FROM_DIR"/prep/tmp3 > ../"$FROM_DIR"/prep/tmp4;
 sed $mycmdstr5 ../"$FROM_DIR"/prep/tmp4 > ../"$FROM_DIR"/prep/tmp5;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 ../"$FROM_DIR"prep/tmp5 > ../"$FROM_DIR"/prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 ../"$FROM_DIR"/prep/tmp5 > ../"$FROM_DIR"/prep/$MEMBER;
 chtag -r ../"$FROM_DIR"/prep/$MEMBER;
 
 }
