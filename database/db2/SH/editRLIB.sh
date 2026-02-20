@@ -1,11 +1,11 @@
 #!/bin/bash
-# context sensitive removal of DB2RLIB from JCL member.
+# context sensitive removal of DB2RLIB from JCL members and include.
 
 main() {
 
 # Check if file name is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <name of file to edit><name of from directory>";
+  echo "Usage: $0 <name of file to edit><name of from directory><name of destination directory>";
   exit 1;
 fi
 

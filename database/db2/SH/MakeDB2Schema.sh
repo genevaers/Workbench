@@ -1,6 +1,6 @@
 #!/bin/bash
-# Script to tailor JCL, DDL and SQL statements needed to define DB2 schema and copy to MVS pds(e)'s
-# This script is intended to be run after cloning the Workbench repository to USS file system
+# Script to tailor JCL, DDL and SQL statements needed to define DB2 schema and copy these to MVS pds(e)'s
+# This script is intended to be run after cloning the Workbench repository to the USS file system
 
 main() {
 

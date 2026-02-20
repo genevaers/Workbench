@@ -1,6 +1,6 @@
 #!/bin/sh
-# prepare_ddl.sh - Prepare data definition statements for user preferences
-########################################################
+# prepare_ddl.sh - Prepare DDL statements for user preferences
+##############################################################
 
 main() {
 

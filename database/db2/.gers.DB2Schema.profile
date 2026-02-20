@@ -1,4 +1,8 @@
-
+# Environment variables for setting up GenevaERS DB2 Schema on ZOS
+# This should be copied to user home directory and tailored to
+# user requirements. It is invoked from user home directory.
+# ---------------------------------------------------------------------
+# 
 ##variables chosen by user for setting up a basic DB2 Schema for GenevaERS
 
 export GERS_DB2_DBUSER=SAFRBLD;

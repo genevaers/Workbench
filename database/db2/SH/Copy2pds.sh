@@ -1,6 +1,9 @@
 #!/bin/bash
 # Script to copy directory contents to MVS pds(e)
-# Invoked like: ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'"
+# Invoked like: ./Copy2pds.sh DDL DDL "//'GEBT.RTC23321.DDL'" 1
+# Invoked like: ./Copy2pds.sh JCL JCL "//'GEBT.RTC23321.JCL'" 2
+# Invoked like: ./Copy2pds.sh StorProc SQL "//'GEBT.RTC23321.SQL'" 0
+
 
 main() {
 
