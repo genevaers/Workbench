@@ -15,8 +15,8 @@ main() {
 # &$DB2PLIB.  DB2 PROCLIB -- GERS_DB2_PROCLIB=DSN.V13R1M0.PROCLIB;
 # &$DB2RLIB.  DB2 RUNLIB  -- GERS_DB2_RUNLIB=DSN131.RUNLIB.LOAD;
 # &$DB2PLAN.  DB2 PLAN    -- GERS_DB2_PLAN=DSNTEP13;
-# &$PDSHLQ.   HLQ         --
-# &$PDSMLQ.   MLQ         --
+# &$PDSHLQ.   HLQ         -- HLQ MVS dataset to receive DDL, JCL and SQL
+# &$PDSMLQ.   MLQ         -- MLQ MVS dataset to receive DDL, JCL and SQL
 
 # Check if member name is provided
 if [ -z "$1" ]; then
