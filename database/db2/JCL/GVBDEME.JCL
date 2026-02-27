@@ -122,7 +122,9 @@ LIBPATH="$LIBPATH":"$JAVA_HOME"/lib
 LIBPATH="$LIBPATH":"$JAVA_HOME"/lib/j9vm
 export LIBPATH="$LIBPATH":
 
-// DD DISP=SHR,DSN=NBEESLE.JINFO
+//* place your RACF userid and password in private dataset below
+//* to allow JDBC access to DB2
+// DD DISP=SHR,DSN=<userid>.PRIVATE.JINFO
 // DD *,SYMBOLS=EXECSYS
 # Customize your CLASSPATH here
 # Add Application required jars to end of CLASSPATH

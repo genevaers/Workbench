@@ -143,7 +143,7 @@ cd Workbench/database/db2/SH
 </pre>
 
 ## Build DB2 Schema to contain GenevaERS objects
-First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment.
+First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment. Go to the newly generated JCL data set, check and submit the following jobs.
 
 <pre>
 DROPALL  - drop existing database schema if it exists
@@ -159,7 +159,7 @@ INSTSP   - install stored procedures
 
 ## Build schema and replicate an existing GenevaERS environment and objects
 
-This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data.
+This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data. Go to the newly generated JCL data set, check and submit the following jobs.
 <pre>
 UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
 EXDSNMOD - change LOB file location                                   - Todo
