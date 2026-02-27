@@ -25,9 +25,22 @@ Then "cd" to the directory: database/db2/
 
 ## Prepare your site DB2 defaults
 
-Either using TSO option 3.17 or the "vi" editor open file GetMetaData.sh under directory database/db2/
+Copy the provided example .gers.DB2Schema.profile from directory Workbench/database/db2/ to your home directory.
+<pre>
+cp Workbench/database/db2/.gers.DB2Schema.profile ~/
+</pre>
 
-Locate the relevant section of the file and replace the following with your site defaults. You may eventually want more than one DB2 schemas so repeat the process with different target datasets in each case.
+Then using either TSO option 3.17 or the "vi" editor open file .gers.DB2Schema.profile you copied to your home directory.
+
+Review the relevant sections of this profile and replace the following with your site defaults and preferences. You may eventually want more than one DB2 schemas so repeat the entire process with different target datasets in each case.
+
+### Note: DB2 Run Library variation
+
+If your site's JCL does not require the DB2 Run Library, e.g. DSN131.RUNLIB.LOAD then do not assign GERS_DB2_RUN_LIB, or assign it GERS_DB2_RUN_LIB="";
+
+### Sections of .profile
+
+Basic environment variables
 <pre>
 export GERS_DB2_DBUSER=your-RACFID-for-DB2-administration
 export GERS_DB2_DBNAME=your-db2-8-character-database-name
@@ -36,7 +49,7 @@ export GERS_DB2_DBSCH=your-db2-8-character-schema
 export GERS_DB2_SUBSYSTEM=your-db2-4-character-subsystem
 export GERS_DB2_PLAN=your-DB2-administration-plan-used
 export GERS_DB2_PROCLIB=your-DB2-proclib
-export GERS_DB2_RUN_LIB=your-DB2-runlib
+export GERS_DB2_RUN_LIB=your-DB2-runlib (optional)
 export GERS_DB2_LOAD_LIB=your-DB2-loadlib
 export GERS_DB2_EXIT_LIB=your-DB2-exit-lib
 export GERS_JOB_CLASS=your-job-class
@@ -71,7 +84,7 @@ export GERS_JAVA_HOME="/Java/J17.0_64"
 export GERS_RCA_JAR_DIR=same-as-GERS_RCA_JAR_DIR-in-.gers.profile
 </pre>
 
-## Copy JCL, DDL and JCL to MVS PDS[E] dataset
+## Create JCL, DDL and SQL MVS PDS[E] datasets
 
 Logon to TSO and copy the following JCL into an existing jobs library, using your own jobcard. Ensure you set the HLQ and MLQ symbolics as you require:
 
@@ -119,12 +132,18 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 //            SPACE=(TRK,(10,10),RLSE),
 //            DSORG=PO,RECFM=FB,LRECL=80
 </pre>
-To copy the information to your newly allocated MVS datasets type the following in USS:
+
+
+## Customize and copy JCL, DDL and SQL to MVS PDS[E] dataset
+
+To copy all the information to your newly allocated MVS datasets change directory to SH then invoke the following bash script on command line.
 <pre>
+cd Workbench/database/db2/SH
 ./MakeDB2Schema.sh
 </pre>
+
 ## Build DB2 Schema to contain GenevaERS objects
-First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment.
+First we'll cover building a new GenevaERS environment. A later section deals with an alternative process for replicating a GenevaERS environment. Go to the newly generated JCL data set, check and submit the following jobs.
 
 <pre>
 DROPALL  - drop existing database schema if it exists
@@ -140,7 +159,7 @@ INSTSP   - install stored procedures
 
 ## Build schema and replicate an existing GenevaERS environment and objects
 
-This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data.
+This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data. Go to the newly generated JCL data set, check and submit the following jobs.
 <pre>
 UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
 EXDSNMOD - change LOB file location                                   - Todo
