@@ -52,11 +52,11 @@ while IFS= read -r line; do
         echo "Performing JCL substitutions and copying file: $file";
         . ./prepare_jcl.sh "$file" "$FROM_DIR" 2> >(tee -a $err_log) > >(tee -a $out_log);
       else
-        echo "Copying file: $file";
+        echo "Copying file: $file" 2> >(tee -a $err_log) > >(tee -a $out_log);
       fi
     fi
   else
-    echo "Copying file: $file";
+    echo "Copying file: $file" 2> >(tee -a $err_log) > >(tee -a $out_log);
   fi
 done < "$FILE"
 
