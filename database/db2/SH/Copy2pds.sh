@@ -46,11 +46,11 @@ while IFS= read -r line; do
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
       echo "Performing DDL substitutions and copying file: $file";
-      . ./prepare_ddl.sh "$file" "$FROM_DIR";
+      . ./prepare_ddl.sh "$file" "$FROM_DIR" 2> >(tee -a $err_log) > >(tee -a $out_log);
     else
       if [ 2 -eq "$SYM" ]; then
         echo "Performing JCL substitutions and copying file: $file";
-        . ./prepare_jcl.sh "$file" "$FROM_DIR";
+        . ./prepare_jcl.sh "$file" "$FROM_DIR" 2> >(tee -a $err_log) > >(tee -a $out_log);
       else
         echo "Copying file: $file";
       fi
@@ -72,7 +72,7 @@ exitIfError() {
 
 if [ $? != 0 ]
 then
-    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error message above";
+    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error log $err_log";
     exit 1;
 fi
 
