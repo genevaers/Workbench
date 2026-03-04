@@ -4,7 +4,7 @@
 
 main() {
 
-echo "Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
+echo "$(date) ${BASH_SOURCE##*/} Preparing DB2 metadata artifacts for Workbench and exporting these to MVS PDS/E datasets";
 
 # Re-read .gers.DB2Schema.profile in case anything changed
 source ~/.gers.DB2Schema.profile ;
@@ -16,21 +16,21 @@ exitIfError;
 # prepare JCL jobs to define DB2 Schema
 
 if [[ -z "$GERS_FROM_PDS_HLQ" ]]; then
-  echo "Preparing JCL to define the GenedvaERS schema only";
+  echo "$(date) ${BASH_SOURCE##*/} Preparing JCL to define the GenedvaERS schema only";
   GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
-  echo "GERS_TO_PDS stem: $GERS_TO_PDS";
+  echo "$(date) ${BASH_SOURCE##*/} GERS_TO_PDS stem: $GERS_TO_PDS";
 else
-  echo "Preparing JCL to define the GenedvaERS schema and import data from DB2 export files";
+  echo "$(date) ${BASH_SOURCE##*/} Preparing JCL to define the GenedvaERS schema and import data from DB2 export files";
   GERS_TO_PDS=$GERS_TO_PDS_HLQ'.'$GERS_TO_PDS_MLQ;
-  echo "GERS_TO_PDS stem: $GERS_TO_PDS";
+  echo "$(date) ${BASH_SOURCE##*/} GERS_TO_PDS stem: $GERS_TO_PDS";
   GERS_FROM_PDS=$GERS_FROM_PDS_HLQ'.'$GERS_FROM_PDS_MLQ;
-  echo "GERS_FROM_PDS stem: $GERS_FROM_PDS";
+  echo "$(date) ${BASH_SOURCE##*/} GERS_FROM_PDS stem: $GERS_FROM_PDS";
 fi
 
 # determine if user wants to explicitly mention DB2 RUNLIB.LOAD in JCL, etc.
 
 if [[ -z "$GERS_DB2_RUN_LIB" || "$GERS_DB2_RUN_LIB" == "" ]]; then
-  echo "All references to DB2 RUN library in JCL will be suppressed";
+  echo "$(date) ${BASH_SOURCE##*/} All references to DB2 RUN library in JCL will be suppressed";
   export GERS_INCLUDE_DB2_RUNLIB=N;
 else
   export GERS_INCLUDE_DB2_RUNLIB=Y;  
@@ -68,7 +68,7 @@ exitIfError;
 ./Copy2pds.sh StorProc SQL $TO_PDSSQL 0 2> >(tee -a $err_log) > >(tee -a $out_log);
 exitIfError;
 
-echo "DB2 metadata artifacts for Workbench prepared successfully and exported to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL";
+echo "$(date) ${BASH_SOURCE##*/} DB2 metadata artifacts for Workbench prepared successfully and exported to: $TO_PDSDDL  $TO_PDSJCL  $TO_PDSSQL";
 
 }
 
