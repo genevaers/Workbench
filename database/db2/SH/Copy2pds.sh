@@ -46,17 +46,17 @@ while IFS= read -r line; do
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
       echo "Performing DDL substitutions and copying file: $file";
-      . ./prepare_ddl.sh "$file" "$FROM_DIR" 2> >(tee -a $err_log) > >(tee -a $out_log);
+      . ./prepare_ddl.sh "$file" "$FROM_DIR";
     else
       if [ 2 -eq "$SYM" ]; then
         echo "Performing JCL substitutions and copying file: $file";
-        . ./prepare_jcl.sh "$file" "$FROM_DIR" 2> >(tee -a $err_log) > >(tee -a $out_log);
+        . ./prepare_jcl.sh "$file" "$FROM_DIR";
       else
-        echo "Copying file: $file" 2> >(tee -a $err_log) > >(tee -a $out_log);
+        echo "Copying file: $file";
       fi
     fi
   else
-    echo "Copying file: $file" 2> >(tee -a $err_log) > >(tee -a $out_log);
+    echo "Copying file: $file";
   fi
 done < "$FILE"
 
