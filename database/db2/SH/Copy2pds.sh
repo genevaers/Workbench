@@ -19,7 +19,7 @@ FROM_SUF="$2";
 TO_PDS="$3";
 SYM="$4";
 
-echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
+echo "$(date) ${BASH_SOURCE##*/} Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
 
 # Remove data preparation directory and create fresh
 rm -Rf ../"$FROM_DIR"/prep;
@@ -31,7 +31,7 @@ mkdir ../"$FROM_DIR"/prep;
 ls ../"$FROM_DIR"/*."$FROM_SUF" > ../"$FROM_DIR"/prep/list.tmp
 FILE=../"$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
 if [ ! -f "$FILE" ]; then
-  echo "Error: Temporary file '$FILE' not found.";
+  echo "$(date) ${BASH_SOURCE##*/} Error: Temporary file '$FILE' not found.";
   exit 1;
 fi
 
@@ -45,18 +45,18 @@ while IFS= read -r line; do
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
-      echo "Performing DDL substitutions and copying file: $file";
+      echo "$(date) ${BASH_SOURCE##*/} Performing DDL substitutions and copying file: $file";
       . ./prepare_ddl.sh "$file" "$FROM_DIR";
     else
       if [ 2 -eq "$SYM" ]; then
-        echo "Performing JCL substitutions and copying file: $file";
+        echo "$(date) ${BASH_SOURCE##*/} Performing JCL substitutions and copying file: $file";
         . ./prepare_jcl.sh "$file" "$FROM_DIR";
       else
-        echo "Copying file: $file";
+        echo "$(date) ${BASH_SOURCE##*/} Copying file: $file";
       fi
     fi
   else
-    echo "Copying file: $file";
+    echo "$(date) ${BASH_SOURCE##*/} Copying file: $file";
   fi
 done < "$FILE"
 
@@ -72,7 +72,7 @@ exitIfError() {
 
 if [ $? != 0 ]
 then
-    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error message above";
+    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error log $err_log";
     exit 1;
 fi
 

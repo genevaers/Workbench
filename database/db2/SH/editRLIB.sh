@@ -41,7 +41,7 @@ while IFS= read -r line; do
       if [[ "$pre" != "DSN=" || $len > 27 ]]; then
         echo "$lastline" >> "$DEST_FILE";
       else
-        echo "Skipping Include for DB2 Run Library";
+        echo "$(date) ${BASH_SOURCE##*/} Skipping Include for DB2 Run Library";
       fi
     fi
   fi
@@ -55,7 +55,7 @@ exitIfError() {
 
 if [ $? != 0 ]
 then
-    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error message above";
+    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error log $err_log";
     exit 1;
 fi
 
