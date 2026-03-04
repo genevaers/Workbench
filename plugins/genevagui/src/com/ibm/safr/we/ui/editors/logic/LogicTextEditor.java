@@ -549,11 +549,31 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	                revisedCaretPosition -= editorText.length();
 	            }
 	        }
-	        text.setCaretOffset(text.getCaretOffset() + revisedCaretPosition);
-
-	        updateLineStatus();	        
+			final int delta = revisedCaretPosition;
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						if (text.isDisposed()) return;
+						int newOffset = text.getCaretOffset() + delta;
+						if (newOffset < 0) {
+							newOffset = 0;
+						}
+						int maxOffset = Math.max(0, text.getCharCount());
+						if (newOffset > maxOffset) {
+							newOffset = maxOffset;
+						}
+						text.setCaretOffset(newOffset);
+						updateLineStatus();
+					} catch (IllegalArgumentException iae) {
+							if (text.isDisposed()) return;
+							int safe = Math.max(0, Math.min(text.getCharCount(), Math.max(0, text.getCaretOffset())));
+							text.setCaretOffset(safe);
+							updateLineStatus();
+					}      
+				}
+			});
 		}
-
+		
     }
 
 	@Override
