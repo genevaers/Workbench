@@ -70,7 +70,7 @@ export GERS_FROM_DB2_DBSG=your-from-database-storage-group
 export GERS_FROM_DB2_DBSCH=your-from-database-schema
 export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
 </pre>
-The following variables are for running an optional smoke test of RCA and Performance engine with DB2
+The following variables are for running an optional smoke test of RCA and Performance engine using DB2 as the repository for Workbench. This consists of running GVMDEMO and will require you to run the GVBDEMO data generator to create the input data.
 <pre>
 export GERS_ENV_HLQ=same-as-GERS_ENV_HLQ-in-.gers.profile
 export GERS_DEMO_HLQ=your-GVBDEMO-hlq

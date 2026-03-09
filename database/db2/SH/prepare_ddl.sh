@@ -49,7 +49,7 @@ exitIfError() {
 
 if [ $? != 0 ]
 then
-    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error message above";
+    echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error log $err_log";
     exit 1;
 fi
 
