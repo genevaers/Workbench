@@ -1,6 +1,6 @@
 #!/bin/sh
-# prepare_ddl.sh - Prepare data management statements for user preferences
-########################################################
+# prepare_ddl.sh - Prepare DDL statements for user preferences
+##############################################################
 
 main() {
 
@@ -12,12 +12,14 @@ main() {
 
 # Check if member name is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <name of file to prepare";
+  echo "Usage: $0 <name of file to prepare> <name of from directory";
   echo "Example: $0 GVBQDRAL.DDL";
   exit 1;
 fi
 
 MEMBER="$1";
+FROM_DIR="$2";
+
 # member = "GVBQDRAL.DDL";
 
 # never mind the symbolics
@@ -27,16 +29,19 @@ mycmdstr3='s/&$DBSG.'/${GERS_DB2_STGGRP}/'g';
 mycmdstr4='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g';
 mycmdstr5='s/&$DBSUB.'/${GERS_DB2_SUBSYSTEM}/'g';
 
+
+# echo "sed $mycmdstr1   ../$FROM_DIR/$MEMBER > ../"$FROM_DIR"/prep/tmp1;"
+
 # perform substitutions which unfortunately still converts to ACII with -W filecodeset=IBM-1047 
-sed $mycmdstr1   $MEMBER > prep/tmp1;
-sed $mycmdstr2 prep/tmp1 > prep/tmp2;
-sed $mycmdstr3 prep/tmp2 > prep/tmp3;
-sed $mycmdstr4 prep/tmp3 > prep/tmp4;
-sed $mycmdstr5 prep/tmp4 > prep/tmp5;
+sed $mycmdstr1 ../"$FROM_DIR"/"$MEMBER" > ../"$FROM_DIR"/prep/tmp1;
+sed $mycmdstr2 ../"$FROM_DIR"/prep/tmp1 > ../"$FROM_DIR"/prep/tmp2;
+sed $mycmdstr3 ../"$FROM_DIR"/prep/tmp2 > ../"$FROM_DIR"/prep/tmp3;
+sed $mycmdstr4 ../"$FROM_DIR"/prep/tmp3 > ../"$FROM_DIR"/prep/tmp4;
+sed $mycmdstr5 ../"$FROM_DIR"/prep/tmp4 > ../"$FROM_DIR"/prep/tmp5;
 
 #convert output back to EBCDIC again
-iconv -f ISO8859-1 -t IBM-1047 prep/tmp5 > prep/$MEMBER;
-chtag -r prep/$MEMBER;
+iconv -f ISO8859-1 -t IBM-1047 ../"$FROM_DIR"/prep/tmp5 > ../"$FROM_DIR"/prep/$MEMBER;
+chtag -r ../"$FROM_DIR"/prep/$MEMBER;
 
 }
 

@@ -1,6 +1,9 @@
 #!/bin/bash
-# Script to directory contents to MVS pds(e)
-# Invoked like: ./Copy2pds.sh . DDL "//'GEBT.RTC23321.DDL'"
+# Script to copy directory contents to MVS pds(e)
+# Invoked like: ./Copy2pds.sh DDL DDL "//'GEBT.RTC23321.DDL'" 1
+# Invoked like: ./Copy2pds.sh JCL JCL "//'GEBT.RTC23321.JCL'" 2
+# Invoked like: ./Copy2pds.sh StorProc SQL "//'GEBT.RTC23321.SQL'" 0
+
 
 main() {
 
@@ -19,14 +22,14 @@ SYM="$4";
 echo "Preparing files from directory: $FROM_DIR with suffix: $FROM_SUF and copying to MVS dataset: $TO_PDS"
 
 # Remove data preparation directory and create fresh
-rm -Rf "$FROM_DIR"/prep;
-mkdir "$FROM_DIR"/prep;
+rm -Rf ../"$FROM_DIR"/prep;
+mkdir ../"$FROM_DIR"/prep;
 
 # Determine directory contents
 # echo "$FROM_DIR"/*."$FROM_SUF"
 
-ls "$FROM_DIR"/*."$FROM_SUF" > "$FROM_DIR"/prep/list.tmp
-FILE="$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
+ls ../"$FROM_DIR"/*."$FROM_SUF" > ../"$FROM_DIR"/prep/list.tmp
+FILE=../"$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
 if [ ! -f "$FILE" ]; then
   echo "Error: Temporary file '$FILE' not found.";
   exit 1;
@@ -34,20 +37,20 @@ fi
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo $line > "$FROM_DIR"/prep/text.tmp;
-  staidx=$(awk -F"/" '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
-  endidx=$(awk -F"." '{print length($0) - length($NF)}' "$FROM_DIR"/"prep/text.tmp" );
+  echo $line > ../"$FROM_DIR"/prep/text.tmp;
+  staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"prep/text.tmp" );
+  endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"prep/text.tmp" );
   # echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     file="${line:$staidx}";
     if [ 1 -eq "$SYM" ]; then
       echo "Performing DDL substitutions and copying file: $file";
-      . ./prepare_ddl.sh "$file";
+      . ./prepare_ddl.sh "$file" "$FROM_DIR";
     else
       if [ 2 -eq "$SYM" ]; then
         echo "Performing JCL substitutions and copying file: $file";
-        . ./prepare_jcl.sh "$file";
+        . ./prepare_jcl.sh "$file" "$FROM_DIR";
       else
         echo "Copying file: $file";
       fi
@@ -59,9 +62,9 @@ done < "$FILE"
 
 # Copy the processed files from preparation directory to MVS PDSE
 if [ 1 -eq "$SYM" ] || [ 2 -eq "$SYM" ]; then
-  cp -S d=."$FROM_SUF" "$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
+  cp -S d=."$FROM_SUF" ../"$FROM_DIR"/prep/*."$FROM_SUF" "$TO_PDS";
 else
-  cp -S d=."$FROM_SUF" "$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
+  cp -S d=."$FROM_SUF" ../"$FROM_DIR"/*."$FROM_SUF" "$TO_PDS";
 fi
 }
 
