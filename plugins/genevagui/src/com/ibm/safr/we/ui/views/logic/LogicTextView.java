@@ -384,6 +384,7 @@ public class LogicTextView extends ViewPart {
             case FILES_CHILDLF:
             case FILES_CHILDLF_CHILDPF:
             case LOOKUPPATHS_CHILD:
+            case LOOKUPPATHS_CHILD_FIELD:
             case LOOKUPSYMBOLS_CHILD:
             case PROCEDURES_CHILD:
             case USEREXITROUTINES_CHILD:
