@@ -79,6 +79,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -958,7 +959,8 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 	private void addSourceLROpenEditorMenu()
 	{
         Text text = comboSourceLRGeneral.getTextControl();
-	    Menu menu = text.getMenu();
+        Menu menu = new Menu(text);
+        text.setMenu(menu);
 	    opEdSourceLRItem = new MenuItem(menu, SWT.PUSH);
 	    opEdSourceLRItem.setText("Open Editor");
 	    opEdSourceLRItem.addListener(SWT.Selection, new Listener()
@@ -1014,8 +1016,9 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
     private void addTargetLROpenEditorMenu()
     {
-        Text text = comboTargetLR.getTextControl();
-        Menu menu = text.getMenu();
+		Text text = comboTargetLR.getTextControl();
+		Menu menu = new Menu(text);
+		text.setMenu(menu);
         opEdTargetLRItem = new MenuItem(menu, SWT.PUSH);
         opEdTargetLRItem.setText("Open Editor");
         opEdTargetLRItem.addListener(SWT.Selection, new Listener()
@@ -1071,8 +1074,9 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 
     private void addTargetLFOpenEditorMenu()
     {
-        Text text = comboTargetLF.getTextControl();
-        Menu menu = text.getMenu();
+		Text text = comboTargetLF.getTextControl();
+		Menu menu = new Menu(text);
+		text.setMenu(menu);
         opEdTargetLFItem = new MenuItem(menu, SWT.PUSH);
         opEdTargetLFItem.setText("Open Editor");
         opEdTargetLFItem.addListener(SWT.Selection, new Listener()
@@ -1630,87 +1634,68 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
 			}
 
 		});
+		
+		comboSourceLR.getTable().addListener(SWT.Selection, e -> {
+			TableItem item = comboSourceLR.getTable().getSelection()[0];
+			prevSrcLR = (EnvironmentalQueryBean) item.getData();
 
-		comboSourceLR.addFocusListener(new FocusListener() {
+			String value = UIUtilities.getComboString(prevSrcLR.getName(), prevSrcLR.getId());
 
-			public void focusGained(FocusEvent e) {
-			}
+			comboSourceLR.setText(value);
+			selectedSourceLR = value;
+			comboLRField.setText("");
+		});
+		
+			comboSourceLR.addFocusListener(new FocusListener() {
+				public void focusGained(FocusEvent e) {				
+				}
 
-			public void focusLost(FocusEvent e) {
-				try {
-					getSite().getShell().setCursor(
-							getSite().getShell().getDisplay().getSystemCursor(
-									SWT.CURSOR_WAIT));
-
-					if (selectedSourceLR.equals(comboSourceLR.getText())) {
+				public void focusLost(FocusEvent e) {
+					if (prevSrcLR == null)
 						return;
-					}
-					EnvironmentalQueryBean bean = null;
 
-					if (comboSourceLR.getTable().getSelectionCount() > 0) {
-					    
-						bean = (EnvironmentalQueryBean) comboSourceLR
-								.getTable().getSelection()[0].getData();
-						boolean flag = true;
-						try {
-							// only the first step's source LR is editable.
-							if(currentStep.getSequenceNumber()==1){
-								lookupPath.setSourceLR(selectedGeneralLR,currentStep);
-							}
-							else{
-								lookupPath.setSourceLR(getLogicalRecordFromCombo(comboSourceLR),currentStep);
-							}
-						} catch (SAFRValidationException sve) {
-							flag = false;
-							DependencyMessageDialog.openDependencyDialog(
-								getSite().getShell(),
-								"GenevaERS Workbench",
-								"You cannot change this source Logical Record as it is being used in the source fields of the current step and/or subsequent steps as indicated below:",
-								sve.getMessageString(),
-								MessageDialog.ERROR,
-								new String[] { IDialogConstants.OK_LABEL },
-								0);
-							// condition to select back the grayed out
-							// element
-							// CQ8755
-
-							if ((comboSourceLR.indexOf(selectedSourceLR)) > 0 && comboSourceLR!=null && prevSrcLR!=null) {
-								comboSourceLR.select(comboSourceLR.indexOf(
-								    UIUtilities.getComboString(prevSrcLR.getName(),prevSrcLR.getId())));
-
-							} else {
-								if(comboSourceLR!=null && step1lr!=null) {
-									comboSourceLR.setText(UIUtilities.getComboString(step1lrname,step1lrid));
-								}
-								
-							}
-
-						} catch (SAFRException e1) {
-							UIUtilities.handleWEExceptions(e1);
+					try {
+						// Validate selection for current step
+						if (currentStep.getSequenceNumber() == 1) {
+							lookupPath.setSourceLR(selectedGeneralLR, currentStep);
+						} else {
+							lookupPath.setSourceLR(getLogicalRecordFromCombo(comboSourceLR), currentStep);
 						}
-						if (flag) {
-							prevSrcLR = bean;
-						}
-
-						populateLRField(currentStep,comboSourceLR.getText());
-						//populateSourceLogicalRecord(currentStep);
+						populateLRField(currentStep, comboSourceLR.getText());
 						tableViewerStepsList.refresh();
 						setDirty(true);
-					} else {
-						if (prevSrcLR != null) {
-							comboSourceLR.setText(UIUtilities.getComboString(
-									prevSrcLR.getName(), prevSrcLR.getId()));
-						} else {
-							comboSourceLR.setText("");
-						}
-					}
 
-					selectedSourceLR = comboSourceLR.getText();
-				} finally {
-					getSite().getShell().setCursor(null);
+					} catch (SAFRValidationException sve) {
+						// Restore previous selection if invalid
+						String value = UIUtilities.getComboString(prevSrcLR.getName(), prevSrcLR.getId());
+						int index = comboSourceLR.indexOf(value);
+						if (index >= 0) {
+							Table table = comboSourceLR.getTable();
+							table.setSelection(index);
+							comboSourceLR.select(index);
+							comboSourceLR.setText(value);
+						}
+
+						DependencyMessageDialog.openDependencyDialog(getSite().getShell(), "GenevaERS Workbench",
+								"This Source LR cannot be changed as it is being used in the source fields of the current step and/or subsequent steps as indicated below:",
+								sve.getMessageString(), MessageDialog.ERROR, new String[] { IDialogConstants.OK_LABEL },
+								0);
+						if (comboSourceLR != null && prevSrcLR != null) {
+							comboSourceLR.select(comboSourceLR
+									.indexOf(UIUtilities.getComboString(prevSrcLR.getName(), prevSrcLR.getId())));
+
+						} else {
+							if (comboSourceLR != null && step1lr != null) {
+								comboSourceLR.setText(UIUtilities.getComboString(step1lrname, step1lrid));
+							}
+
+						}
+					} catch (SAFRException e1) {
+						UIUtilities.handleWEExceptions(e1);
+					}
 				}
-			}
-		});
+			});
+
 		radioConstant = safrGuiToolkit.createRadioButton(compositeFieldSource,
 				"Con&stant:");
 		radioConstant.setData(SAFRLogger.USER, "Source Field Type Constant");        				
@@ -1945,7 +1930,9 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
     private void addLRFieldOpenEditorMenu()
     {
         Text text = comboLRField.getTextControl();
-        Menu menu = text.getMenu();
+//		Menu menu = text.getMenu();
+		Menu menu = new Menu(text);
+		text.setMenu(menu);
         opEdSourceFldItem = new MenuItem(menu, SWT.PUSH);
         opEdSourceFldItem.setText("Open Editor");
         opEdSourceFldItem.addListener(SWT.Selection, new Listener()
@@ -2008,6 +1995,21 @@ public class LookupPathEditor extends SAFREditorPart implements IPartListener2 {
             
         });      
     }       
+
+	private void removeCopyFromMenu(Menu menu) {
+		if (menu == null) return;
+		try {
+			for (MenuItem item : menu.getItems()) {
+				if (item == null) continue;
+				String txt = item.getText();
+				if (txt != null && txt.equals("Copy")) {
+					item.dispose();
+				}
+			}
+		} catch (Exception e) {
+			// ignore unexpected menu state
+		}
+	}
 	
 	private void createSectionDataAttributes(Composite compositeAddField) {
 		sectionDataAttributes = safrGuiToolkit.createSection(compositeAddField,
