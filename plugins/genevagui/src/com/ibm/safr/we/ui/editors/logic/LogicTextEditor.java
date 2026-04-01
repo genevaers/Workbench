@@ -693,13 +693,20 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		try {
 			validateErrors = null;
 			if (text.getText().trim().length() > 0) {
-				((LogicTextEditorInput) getEditorInput()).validateLogicText(text.getText());
-			}	
+				View view = ((LogicTextEditorInput) getEditorInput()).getView();
+				if(view.isPersistent()) {
+					((LogicTextEditorInput) getEditorInput()).validateLogicText(text.getText());
+				}else {
+					throw new SAFRValidationException();
+				}	
+			}
+		} catch(SAFRValidationException sve) {
+			UIUtilities.handleWEExceptions(sve,"View must be saved to validate Logic Text",null);
 		} catch (SAFRViewActivationException sva) {
 			validateErrors = sva;			
 		} catch (SAFRException e) {
 			// show user message.
-			UIUtilities.handleWEExceptions(e,"Unexpected error occurred while validating the Logic Text.",null);
+			UIUtilities.handleWEExceptions(e,"Error occurred while validating the Logic Text.",null);
 		}
 	}
 
