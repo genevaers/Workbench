@@ -12,6 +12,7 @@
 //* This job searches through the files that reference the PDS LOB
 //* files of the unloaded GeenevaERS Schema and updates the files
 //* referenced to the new file names.
+//* See parameters for specification of "old" and "new" file names.
 //*********************************************************************
 //*   DELETE DATA SETS
 //*********************************************************************
@@ -28,7 +29,6 @@
   DELETE  GEBT.RTC22589.VWCOLSRC.DATA2 PURGE
   IF LASTCC > 0  THEN        /* IF OPERATION FAILED,     */    -
       SET MAXCC = 0          /* PROCEED AS NORMAL ANYWAY */
-
 
 //*******************************************************************
 //*
