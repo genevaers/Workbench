@@ -10,7 +10,7 @@
 //*
 //*********************************************************************
 //* This job searches through the files that reference the PDS LOB
-//* files of the unloaded GeenevaERS Schema and updates the files
+//* files of the unloaded GenevaERS Schema and updates the files
 //* referenced to the new file names.
 //* See parameters for specification of "old" and "new" file names.
 //*********************************************************************
