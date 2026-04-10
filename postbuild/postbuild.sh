@@ -17,7 +17,7 @@
 # Add the JRE zip if built and variable set
 main() {
     cd ../products/com.ibm.safr.we.product/target/products
-    if [ -d "../products/com.ibm.safr.we.product/target/products" ]; then
+    if [ -d "." ]; then
         echo "Build Complete"
     else
         echo "Build Failed"
