@@ -55,7 +55,7 @@ under the License.
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.11.1</version>
+        <version>4.13.2</version>
         <configuration>
           <libDirectory>src/main/antlr4/org/genevaers/ccb2lr/grammar</libDirectory>
         </configuration>
