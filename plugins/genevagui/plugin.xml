@@ -4314,10 +4314,16 @@ under the License.
    <extension
          id="OpenEditor"
          point="org.eclipse.ui.handlers">
-      <handler
-            class="com.ibm.safr.we.ui.commands.LogicTextViewOpenEditor"
-            commandId="SAFRWE.logicTextViewOpenEditor">
-      </handler>
+         <handler
+             class="com.ibm.safr.we.ui.commands.LogicTextViewOpenEditor"
+             commandId="SAFRWE.logicTextViewOpenEditor">
+             <enabledWhen>
+                  <with variable="com.ibm.safr.we.logictextview.enabled">
+                        <equals value="ENABLED">
+                        </equals>
+                  </with>
+             </enabledWhen>
+          </handler>
       <handler
             class="com.ibm.safr.we.ui.commands.PhysicalFileOpenEditor"
             commandId="SAFRWE.physicalFileOpenEditor">

@@ -922,12 +922,6 @@ INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','MAX', 3,
 INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','MIN', 4,
                               'Minimum',
                               NULL,NULL,NULL,0);
-INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','FIRST',5,
-                              'First',
-                              NULL,NULL,NULL,0);
-INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','LAST', 6,
-                              'Last',
-                              NULL,NULL,NULL,0);
 INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','DCALC',7,
                               'Detail Calculation',
                               NULL,NULL,NULL,0);
@@ -940,11 +934,6 @@ INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','DMAX', 10,
 INSERT INTO &$DBSCH..CODETABLE VALUES ('SUBTOT','DMIN', 11,
                               'Detail Minimum',
                               NULL,NULL,NULL,0);
-
-INSERT INTO &$DBSCH..CODETABLE VALUES('SUBTOT','DFRST',12,
-                           'Detail First',NULL,NULL,NULL,0);
-INSERT INTO &$DBSCH..CODETABLE VALUES('SUBTOT','DLAST',13,
-                   'Detail Last',NULL,NULL,NULL,0);
 
 INSERT INTO &$DBSCH..CODETABLE VALUES ('VIEWSTATUS','ACTVE',1,
                               'Active',

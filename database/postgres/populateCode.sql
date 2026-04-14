@@ -630,10 +630,6 @@ INSERT INTO :schemaV.CODE VALUES ('SUBTOT','MAX', 3,
                               'Maximum');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','MIN', 4,
                               'Minimum');
-INSERT INTO :schemaV.CODE VALUES ('SUBTOT','FIRST',5,
-                              'First');
-INSERT INTO :schemaV.CODE VALUES ('SUBTOT','LAST', 6,
-                              'Last');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','DCALC',7,
                               'Detail Calculation');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','BCALC',8,
@@ -642,11 +638,6 @@ INSERT INTO :schemaV.CODE VALUES ('SUBTOT','DMAX', 10,
                               'Detail Maximum');
 INSERT INTO :schemaV.CODE VALUES ('SUBTOT','DMIN', 11,
                               'Detail Minimum');
-
-INSERT INTO :schemaV.CODE VALUES('SUBTOT','DFRST',12,
-                           'Detail First');
-INSERT INTO :schemaV.CODE VALUES('SUBTOT','DLAST',13,
-                   'Detail Last');
 
 INSERT INTO :schemaV.CODE VALUES ('VIEWSTATUS','ACTVE',1,
                               'Active');

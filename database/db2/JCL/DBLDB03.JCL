@@ -2,7 +2,7 @@
 //            NOTIFY=&SYSUID.,
 //            CLASS=&$JBCLASS.,
 //            MSGLEVEL=(1,1),
-//            MSGCLASS=&$JBCLASS.
+//            MSGCLASS=&$MSGCLASS.
 //*
 //********************************************************************
 //*

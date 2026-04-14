@@ -605,7 +605,7 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		LogicTextViewTreeNode monthsbetween = 	new LogicTextViewTreeNode(TreeItemId.MONTHSBETWEEN, "MONTHSBETWEEN()", functions, "MONTHSBETWEEN()", 14, "MONTHSBETWEEN({Fieldame} | DateFunction() | DateText, {Fieldame} | DateFunction() | DateText)", null);								
 		LogicTextViewTreeNode yearsbetween = 	new LogicTextViewTreeNode(TreeItemId.YEARSBETWEEN, "YEARSBETWEEN()", functions, "YEARSBETWEEN()", 13, "YEARSBETWEEN({Fieldame} | DateFunction() | DateText, {Fieldame} | DateFunction() | DateText)", null);		
 		LogicTextViewTreeNode batchDate = 		new LogicTextViewTreeNode(TreeItemId.BATCHDATE, "BATCHDATE()", functions,	"BATCHDATE()", 10, "BATCHDATE([integer])", null);
-        LogicTextViewTreeNode timestamp = 		new LogicTextViewTreeNode(TreeItemId.TIMESTAMP, "TIMESTAMP()", functions, "TIMESTAMP()", 10, "TIMESTAMP([integer])", null);		
+//        LogicTextViewTreeNode timestamp = 		new LogicTextViewTreeNode(TreeItemId.TIMESTAMP, "TIMESTAMP()", functions, "TIMESTAMP()", 10, "TIMESTAMP([integer])", null);		
 		LogicTextViewTreeNode fiscalDay = 		new LogicTextViewTreeNode(TreeItemId.FISCALDAY, "FISCALDAY()", functions,	"FISCALDAY()", 10, "FISCALDAY([integer])", null);
 		LogicTextViewTreeNode fiscalMonth = 	new LogicTextViewTreeNode(TreeItemId.FISCALMONTH, "FISCALMONTH()", functions, "FISCALMONTH()", 12, "FISCALMONTH([integer])", null);
 		LogicTextViewTreeNode fiscalYear = 		new LogicTextViewTreeNode(TreeItemId.FISCALYEAR, "FISCALYEAR()", functions, "FISCALYEAR()", 11, "FISCALYEAR([integer])", null);
@@ -667,7 +667,7 @@ public class LogicTextViewTreeContentProvider implements ITreeContentProvider {
 		functionsChildren.add(prior);
 		functionsChildren.add(right);
 		functionsChildren.add(substr);
-        functionsChildren.add(timestamp);            
+//      functionsChildren.add(timestamp);            
 		functionsChildren.add(yearsbetween);
 		functionsChildren.add(repeat);
 		functionsChildren.add(runDay);

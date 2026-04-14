@@ -5,4 +5,4 @@ Bundle-SymbolicName: ccb2lr
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.genevaers.ccb2lr
 Automatic-Module-Name: ccb2lr
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-21

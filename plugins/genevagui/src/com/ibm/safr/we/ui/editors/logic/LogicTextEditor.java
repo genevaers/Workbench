@@ -549,11 +549,31 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 	                revisedCaretPosition -= editorText.length();
 	            }
 	        }
-	        text.setCaretOffset(text.getCaretOffset() + revisedCaretPosition);
-
-	        updateLineStatus();	        
+			final int delta = revisedCaretPosition;
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						if (text.isDisposed()) return;
+						int newOffset = text.getCaretOffset() + delta;
+						if (newOffset < 0) {
+							newOffset = 0;
+						}
+						int maxOffset = Math.max(0, text.getCharCount());
+						if (newOffset > maxOffset) {
+							newOffset = maxOffset;
+						}
+						text.setCaretOffset(newOffset);
+						updateLineStatus();
+					} catch (IllegalArgumentException iae) {
+							if (text.isDisposed()) return;
+							int safe = Math.max(0, Math.min(text.getCharCount(), Math.max(0, text.getCaretOffset())));
+							text.setCaretOffset(safe);
+							updateLineStatus();
+					}      
+				}
+			});
 		}
-
+		
     }
 
 	@Override
@@ -673,13 +693,20 @@ public class LogicTextEditor extends SAFREditorPart implements IPartListener2 {
 		try {
 			validateErrors = null;
 			if (text.getText().trim().length() > 0) {
-				((LogicTextEditorInput) getEditorInput()).validateLogicText(text.getText());
-			}	
+				View view = ((LogicTextEditorInput) getEditorInput()).getView();
+				if(view.isPersistent()) {
+					((LogicTextEditorInput) getEditorInput()).validateLogicText(text.getText());
+				}else {
+					throw new SAFRValidationException();
+				}	
+			}
+		} catch(SAFRValidationException sve) {
+			UIUtilities.handleWEExceptions(sve,"View must be saved to validate Logic Text",null);
 		} catch (SAFRViewActivationException sva) {
 			validateErrors = sva;			
 		} catch (SAFRException e) {
 			// show user message.
-			UIUtilities.handleWEExceptions(e,"Unexpected error occurred while validating the Logic Text.",null);
+			UIUtilities.handleWEExceptions(e,"Error occurred while validating the Logic Text.",null);
 		}
 	}
 

@@ -20,6 +20,8 @@ package com.ibm.safr.we.ui.commands;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.jface.action.IContributionItem;
@@ -44,13 +46,13 @@ public class LogFilesContributionItem extends CompoundContributionItem {
         } catch (SAFRException e) {
             UIUtilities.handleWEExceptions(e, "", "");
         }
-
-		CommandContributionItemParameter param = new CommandContributionItemParameter(
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow(),
-				"SAFRWE.mnuLogFileList", "SAFRWE.logFileList",
-				CommandContributionItem.STYLE_PUSH);
+        CommandContributionItemParameter param = new CommandContributionItemParameter(
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow(), "SAFRWE.mnuLogFileList",
+				"SAFRWE.logFileList", CommandContributionItem.STYLE_PUSH);
+        File[] files = logDir.listFiles();
+        Arrays.sort(files, Comparator.comparing(File::lastModified).reversed());
 		List<IContributionItem> mItems = new ArrayList<IContributionItem>();
-		for (File file : logDir.listFiles()) {
+		for (File file : files) {
 			// match WE log file pattern eg. WE.0.log or WE.0.log.1
 			if (file.getName().matches("WE.*\\d\\.log(\\.\\d+){0,1}")) {
 				// add to list
@@ -59,8 +61,7 @@ public class LogFilesContributionItem extends CompoundContributionItem {
 				} else {
 					param.label = file.getName();
 				}
-				CommandContributionItem mItem = new CommandContributionItem(
-						param);
+				CommandContributionItem mItem = new CommandContributionItem(param);
 				mItems.add(mItem);
 			}
 		}
