@@ -136,7 +136,7 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 
 ## Customize and copy JCL, DDL and SQL to MVS PDS[E] dataset
 
-To copy all the information to your newly allocated MVS datasets change directory to SH then invoke the following bash script on command line.
+Now logon to USS to copy all the information to your newly allocated MVS datasets. Change directory to Workbench/database/db2/SH then invoke the following bash script on command line.
 <pre>
 cd Workbench/database/db2/SH
 ./MakeDB2Schema.sh
