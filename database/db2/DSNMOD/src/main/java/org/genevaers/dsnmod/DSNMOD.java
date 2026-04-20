@@ -261,6 +261,6 @@ public class DSNMOD {
     }
 
     public static boolean isWithinRange(int num, int min, int max) {
-    return (num >= min && num <= max);
-}
+        return (num >= min && num <= max);
+    }
 }
