@@ -5,7 +5,7 @@ This is intended for Db2 running z/OS at DB2 version 11 and above. These instruc
 ## Summary of steps involved
 <pre>
 1) clone Workbench/database/db2 directory contents to USS
-2) customize your site db2 defaults to use with GenevaERS
+2) customize your site specific values to use with GenevaERS
 3) replicate JCL, DDL SQL to MVS datasets with your site defaults
 4) build DB2 Schema that is going to contain new GenevaERS data, or
 5) Alternatively, replicate an existing GenevaERS environment into a new DB2 schema
@@ -25,13 +25,13 @@ git clone https://github.com/genevaers/Workbench.git
 
 Then "cd" to the sub directory: Workbench/database/db2/
 
-Note: the actual workbench directory may have a different name depending on the Github or Gitlab specifics at your site and the chosen location of the repository clone in your USS directory structure.
+Note: the actual workbench directory may have a different name depending on the Github or Gitlab specifics at your site and the chosen location of the cloned repository in your USS directory structure.
 
 ## Customize your site DB2 defaults
 
 Copy the provided example .gers.DB2Schema.profile from the directory containing the clone of your work bench repository on USS to your home directory, for example.
 <pre>
-cp ../Workbench/database/db2/.gers.DB2Schema.profile ~/
+cp Workbench/database/db2/.gers.DB2Schema.profile ~/
 </pre>
 
 Then using either TSO option 3.17 or the "vi" editor open file .gers.DB2Schema.profile you copied to your home directory and customize it.
@@ -141,7 +141,7 @@ Logon to TSO and copy the following JCL into an existing jobs library, using you
 
 ## Customize and copy JCL, DDL and SQL to MVS PDS[E] dataset
 
-Now logon to USS to replicate all the information to your newly allocated MVS datasets. Change directory, for example to ../Workbench/database/db2/SH then invoke the following bash script on command line, for example.
+Now logon to USS to customize and copy all the information to your newly allocated MVS datasets. Change directory, for example to the location of your cloned work bench repository then invoke the following bash scripts on the command line, for example.
 <pre>
 cd Workbench/database/db2/SH
 ./MakeDB2Schema.sh
