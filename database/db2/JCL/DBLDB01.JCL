@@ -42,9 +42,9 @@
 //            &HLQ..&MLQ..JCL)                                       
 //*                                                                    
 //JOBLIB   INCLUDE MEMBER=@INCLLIB                                     
-//*                                                                    
+//*
 //*********************************************************************
-//*   BUILD DATABASE                                                   
+//*   BUILD DATABASE
 //*********************************************************************
 //BUILDDB EXEC PGM=IKJEFT01,DYNAMNBR=20
 //SYSTSPRT DD SYSOUT=*
