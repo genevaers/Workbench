@@ -4,9 +4,9 @@
 //          MSGLEVEL=(1,1),
 //          MSGCLASS=H
 //*
-//         JCLLIB ORDER=AJV.V11R0M0.PROCLIB
+//         JCLLIB ORDER=AJV.V21R0M0.PROCLIB
 //*
-//JOBLIB   DD DISP=SHR,DSN=AJV.V11R0M0.SIEALNKE
+//JOBLIB   DD DISP=SHR,DSN=AJV.V21R0M0.SIEALNKE
 //*
 //*********************************************************************
 //* This job searches through the files that reference the PDS LOB
@@ -49,7 +49,7 @@
 //* 6.) Modify JAVACLS and ARGS to launch desired Java class
 //*
 //*******************************************************************
-//JAVA EXEC PROC=JVMPRC16,
+//JAVA EXEC PROC=JVMPRC21,
 // JAVACLS='DSNMOD'
 //STDENV DD *
 . /etc/profile
@@ -57,8 +57,8 @@ export A2E=-ofrom=ISO8859-1,to=IBM-1047
 export JAVA_HOME=/Java/J17.0_64
 export IBM_JAVA_OPTIONS="-Dfile.encoding=ISO8859-1"
 
-export APP_HOME=/u/nbeesle/git/IBM/Performance-Engine-and-Java/Java
-export APP_NAME=DSNMOD
+export APP_HOME=/u/nbeesle/git/public/RCA_jar
+export APP_NAME=dsnmod-latest.jar
 export CLASSPATH=$APP_HOME:"$JAVA_HOME"/lib
 
 LIBPATH=/lib:/usr/lib:"$JAVA_HOME"/bin
