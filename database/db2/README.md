@@ -62,13 +62,10 @@ export GERS_TO_PDS_MLQ=your-pds-mlq
 </pre>
 The following environment variables are needed in addition if you are replicating an existing GenevaERS environment to a new DB2 schema.
 <pre>
-export GERS_FROM_PDS_HLQ=your-unload-dataset-hlq
-export GERS_FROM_PDS_MLQ=your-unload-dadaset-mlq
-export GERS_FROM_DB2_DBUSER=your-from-database-user
-export GERS_FROM_DB2_DBNAME=your-from-database-name
-export GERS_FROM_DB2_DBSG=your-from-database-storage-group
-export GERS_FROM_DB2_DBSCH=your-from-database-schema
-export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
+export GERS_UNLD_HLQ=your-unload-dataset-hlq
+export GERS_UNLD_MLQ=your-unload-dadaset-mlq
+export GERS_LOAD_HLQ=your-load-dataset-hlq
+export GERS_LOAD_MLQ=your-load-dadaset-mlq
 </pre>
 The following variables are for running an optional smoke test of RCA and Performance engine using DB2 as the repository for Workbench. This consists of running GVMDEMO and will require you to run the GVBDEMO data generator to create the input data.
 <pre>

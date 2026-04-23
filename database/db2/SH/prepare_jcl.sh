@@ -49,13 +49,13 @@ mycmdstr16='s/&$PDSHLQ.'/${GERS_TO_PDS_HLQ}/'g'
 mycmdstr17='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
 
 #optional ones for replication
-mycmdstr18='s/&$FROMPDSHLQ.'/${GERS_FROM_PDS_HLQ}/'g'
-mycmdstr19='s/&$FROMPDSMLQ.'/${GERS_FROM_PDS_MLQ}/'g'
-mycmdstr20='s/&$FROMDBUSER.'/${GERS_FROM_DB2_DBUSER}/'g';
-mycmdstr21='s/&$FROMDBNAME.'/${GERS_FROM_DB2_DBNAME}/'g';
-mycmdstr22='s/&$FROMDBSG.'/${GERS_FROM_DB2_DBSG}/'g';
-mycmdstr23='s/&$FROMDBSCH.'/${GERS_FROM_DB2_DBSCH}/'g';
-mycmdstr24='s/&$FROMDBSUB.'/${GERS_FROM_DB2_DBSUB}/'g';
+mycmdstr18='s/&$UNLDHLQ.'/${GERS_UNLD_HLQ}/'g'
+mycmdstr19='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
+mycmdstr20='s/&$UNLDHLQ.'/${GERS_UNLD_HLQ}/'g'
+mycmdstr21='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
+mycmdstr22='s/&$FROMDBSG.'/${GERS_UNUSED}/'g';
+mycmdstr23='s/&$FROMDBSCH.'/${GERS_UNUSED}/'g';
+mycmdstr24='s/&$FROMDBSUB.'/${GERS_UNUSED}/'g';
 
 #to run optional smoke test with DB2
 mycmdstr25='s/&$ENVHLQ.'/${GERS_ENV_HLQ}/'g';

@@ -31,13 +31,11 @@ export GERS_TO_PDS_MLQ=GVBDEMO;
 
 ## Optional variables when replicating GenevaERS metadata from another DB2 schema
 
-# export GERS_FROM_PDS_HLQ=GENEVA;
-# export GERS_FROM_PDS_MLQ=GVBDEMO.FROM;
-# export GERS_FROM_DB2_DBUSER=SAFRBLD;
-# export GERS_FROM_DB2_DBNAME=SADBBLD2;
-# export GERS_FROM_DB2_DBSG=SASGBLD2;
-# export GERS_FROM_DB2_DBSCH=SAFRBLD2;
-# export GERS_FROM_DB2_DBSUB=DM13;
+# export GERS_UNLD_HLQ=;
+# export GERS_UNLD_MLQ=;
+# export GERS_LOAD_HLQ=;
+# export GERS_LOAD_MLQ=;
+# export GERS_UNUSED=UNUSED;
 
 ## Optional variables for running GVBDEMO smoke test against DB2
 
