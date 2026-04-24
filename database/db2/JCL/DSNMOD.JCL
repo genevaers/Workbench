@@ -166,7 +166,8 @@ Cp1047
 //            LIKE=&LOADHLQ..&LOADMLQ..VWCOLSRC.DATA
 //*
 //*******************************************************************
-//*
+//
+//
 //REPLACE1 EXEC PGM=IEBGENER
 //SYSPRINT DD SYSOUT=*
 //SYSUT1 DD DSN=&LOADHLQ..&LOADMLQ..LOGIC.DATA2,
