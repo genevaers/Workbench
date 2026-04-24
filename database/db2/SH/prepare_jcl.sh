@@ -51,8 +51,8 @@ mycmdstr17='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
 #optional ones for replication
 mycmdstr18='s/&$UNLDHLQ.'/${GERS_UNLD_HLQ}/'g'
 mycmdstr19='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
-mycmdstr20='s/&$UNLDHLQ.'/${GERS_UNLD_HLQ}/'g'
-mycmdstr21='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
+mycmdstr20='s/&$LOADHLQ.'/${GERS_LOAD_HLQ}/'g'
+mycmdstr21='s/&$LOADMLQ.'/${GERS_LOAD_MLQ}/'g'
 mycmdstr22='s/&$FROMDBSG.'/${GERS_UNUSED}/'g';
 mycmdstr23='s/&$FROMDBSCH.'/${GERS_UNUSED}/'g';
 mycmdstr24='s/&$FROMDBSUB.'/${GERS_UNUSED}/'g';
