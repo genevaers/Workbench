@@ -60,7 +60,12 @@ export GERS_SCBCDLL=your-CBC.SCLBDLL
 export GERS_TO_PDS_HLQ=your-pds-hlq
 export GERS_TO_PDS_MLQ=your-pds-mlq
 </pre>
-The following environment variables are needed in addition if you are replicating an existing GenevaERS environment to a new DB2 schema.
+Java PROC and load LIBRARIES needed for the following 2 optional steps
+<pre>
+export GERS_JVM_PROC_LIB='AJV.V21R0M0.PROCLIB';
+export GERS_JZOS_LOAD_LIB='AJV.V21R0M0.SIEALNKE';
+</pre>
+The following environment variables are needed in addition if you are **replicating** an existing GenevaERS environment to a new DB2 schema.
 <pre>
 export GERS_UNLD_HLQ=your-unload-dataset-hlq
 export GERS_UNLD_MLQ=your-unload-dadaset-mlq
@@ -72,8 +77,6 @@ The following variables are for running an optional smoke test of RCA and Perfor
 export GERS_ENV_HLQ=same-as-GERS_ENV_HLQ-in-.gers.profile
 export GERS_DEMO_HLQ=your-GVBDEMO-hlq
 export GERS_DEMO_MLQ=your GVBDEMO-mlq
-export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
-export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
 export GERS_DB2_HOST=host-name-DB2-database
 export GERS_DB2_PORT=port-number-DB2-database
 export GERS_DB2_SAFR_ENV='1';
@@ -159,7 +162,7 @@ INSTSP   - install stored procedures
 This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data. Go to the newly generated JCL data set, check and submit the following jobs.
 <pre>
 UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
-EXDSNMOD - change LOB file location                                   - Todo
+DSNMOD   - change LOB file location                                   - Todo
 EXMPNC2  - change schema                                              - Todo
 DROPALL  - drop existing database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
