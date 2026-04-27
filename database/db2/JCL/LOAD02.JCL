@@ -1,8 +1,8 @@
-//LOAD02  JOB (ACCT),'LOAD DB STEP12,
+//LOAD02  JOB (ACCT),'LOAD DB STEP2',
 //            NOTIFY=&SYSUID.,
-//            CLASS=&$JBCLASS.,
+//            CLASS=A,
 //            MSGLEVEL=(1,1),
-//            MSGCLASS=&$MSGCLASS.
+//            MSGCLASS=H
 //*
 //********************************************************************
 //*
