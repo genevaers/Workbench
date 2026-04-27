@@ -28,7 +28,12 @@ export GERS_LE_RUN_LIB2=CEE.SCEERUN2;
 export GERS_SCBCDLL=CBC.SCLBDLL;
 export GERS_TO_PDS_HLQ=GENEVA;
 export GERS_TO_PDS_MLQ=GVBDEMO;
-
+#
+## Java PROC and load LIBRARIES needed for the following 2 optional steps
+#
+# export GERS_JVM_PROC_LIB='AJV.V12R0M0.PROCLIB';
+# export GERS_JZOS_LOAD_LIB='AJV.V21R0M0.SIEALNKE';
+#
 ## Optional variables when replicating GenevaERS metadata from another DB2 schema
 
 # export GERS_UNLD_HLQ=;
