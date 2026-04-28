@@ -26,7 +26,7 @@
 //*  See the License for the specific language governing permissions
 //*  and limitations under the License.
 //*
-//*************************************************************
+//********************************************************************
 //*   THIS JOB IS USED TO RESTORE ORIGINAL DATABASE UNLOAD
 //*   FILES THAT WERE PACKAGED INTO A SINGLE FILE BY RECURMIT
 //*   
