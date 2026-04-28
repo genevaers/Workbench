@@ -44,6 +44,16 @@
 //JOBLIB   INCLUDE MEMBER=@INCLLIB
 //*
 //*********************************************************************
+//*   FORCE TERMINATE TO START LOAD FROM BEGINNING
+//*********************************************************************
+//TERMSTEP EXEC PGM=IKJEFT01                 
+//SYSTSPRT DD SYSOUT=*                       
+//SYSTSIN  DD *                              
+  DSN SYSTEM(DM13)                           
+  -TERM UTILITY(&$DBUSER.)                     
+  END                                        
+/*
+//*********************************************************************
 //*   LOAD CODETABL                                                    
 //********************************************************************* 
 //CODETABL EXEC DSNUPROC,UID=&SYSUID,
