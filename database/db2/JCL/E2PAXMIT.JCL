@@ -39,8 +39,8 @@
 //* 
 //*************************************************************
 //   EXPORT SYMLIST=*
-//   SET HLQ='GEBT'
-//   SET MLQ='GENERS.D240708U'
+//   SET HLQ='&$LOADHLQ.'
+//   SET MLQ='&$LOADMLQ.'
 //*
 //*************************************************************
 //*   DELETE RECEIVE'D FILES FROM LAST RUN 
