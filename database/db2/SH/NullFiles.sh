@@ -33,13 +33,13 @@ while IFS= read -r line; do
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   echo "Endidx: $endidx";
 
-  if [ $endidx -gt 0 ]; then
+  if [[ $endidx -gt 0 ]]; then
     suffix=${line:$endidx4:5};
     echo "Suffix: $suffix";
     file="${line:$staidx}";
     if [ $suffix -eq ".DATA" ]; then
       file="${line:$staidx}";
-      echo "DATA File: $file";
+#      echo "DATA File: $file";
       exit 1;
     fi
     echo "Good line encountered";
