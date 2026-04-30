@@ -30,14 +30,15 @@ fi
 while IFS= read -r line; do
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  echo "Staidx: $staidx Endidx: $endidx Line: $line";
+  echo "Staidx: $staidx Endidx: $endidx";
 
   if [ $staidx -ge 0 ] && [ $endidx -gt $staidx ]; then
-    if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
-      file="${line:$staidx}";
-      echo "DATA File: $file";
-      exit 1;
-    fi
+#    if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
+#      file="${line:$staidx}";
+#      echo "DATA File: $file";
+#      exit 1;
+#    fi
+    echo "Good line encountered";
   else
     echo "$(date) ${BASH_SOURCE##*/} error encountered in record: $line";
     exit 2;
