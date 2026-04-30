@@ -16,6 +16,7 @@ fi
 
 FROM_DIR="$1";
 FROM_FILE="$2";
+endidx=0;
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE"
 pwd ;
@@ -30,7 +31,7 @@ fi
 while IFS= read -r line; do
   # staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  echo "Staidx: $staidx";
+  echo "Endidx: $endidx";
 
   if [ $endidx -gt 0 ]; then
     suffix=${line:$endidx4:5};
