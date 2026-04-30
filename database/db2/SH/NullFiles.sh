@@ -28,7 +28,6 @@ fi
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo "Line: $line";
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   echo "Staidx: $staidx Endidx: $endidx Line: $line";
@@ -37,6 +36,7 @@ while IFS= read -r line; do
     if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
       echo "file name found";
       file="${line:$staidx}";
+      echo "File: $file";
     fi
   else
     echo "$(date) ${BASH_SOURCE##*/} error encountered in record: $line";
