@@ -29,7 +29,7 @@ fi
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo $line > ../"$FROM_DIR"/"$FROM_FILE";
+  echo "Line: $line";
   staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   echo "Staidx: $staidx Endidx: $endidx Line: $line";
