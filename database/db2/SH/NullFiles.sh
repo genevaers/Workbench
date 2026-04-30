@@ -31,7 +31,7 @@ fi
 while IFS= read -r line; do
   # staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  echo "Endidx: $endidx";
+  echo "Endidx: $endidx END";
 
   if [ $endidx -gt 0 ]; then
     suffix=${line:$endidx4:5};
