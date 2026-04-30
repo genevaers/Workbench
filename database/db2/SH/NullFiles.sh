@@ -10,7 +10,7 @@ main() {
 # Check if a directory and pattern are provided
 if [ -z "$1" ] || [ -z "$2" ] ; then
   echo "Usage: $0 <directory> <file>";
-  echo "Example: $0 /u/usr1/git/Workbench/tmpinfo/datafiles.attr";
+  echo "Example: $0 /u/usr1/git/Workbench/database/db2/tmpinfo/datafiles.attr";
   exit 1;
 fi
 
@@ -19,7 +19,9 @@ FROM_FILE="$2";
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE"
 
-FILE=../"$FROM_DIR/prep/list.tmp"; # File to parse to get directory contents
+cd ..
+
+FILE="$FROM_DIR/$FROM_FILE"; # File to parse to get directory contents
 if [ ! -f "$FILE" ]; then
   echo "$(date) ${BASH_SOURCE##*/} Error: Temporary file '$FILE' not found.";
   exit 1;
