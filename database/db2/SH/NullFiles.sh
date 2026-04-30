@@ -37,7 +37,8 @@ while IFS= read -r line; do
   echo "Suffix: $suffix";
 
   if [ $endidx -gt 0 ]; then
-    suffix=${line:$endidx:5};
+    suffix={print substr($line,'$endidx',5)};
+#    suffix=${line:$endidx:5};
 #    echo "Suffix: $suffix";
     file="${line:$staidx}";
     if [ $suffix -eq ".DATA" ]; then
