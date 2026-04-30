@@ -28,12 +28,15 @@ fi
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
+  # staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  echo "Staidx: $staidx Endidx: $endidx";
+  echo "Staidx: $staidx";
 
-  if [ $endidx -gt $staidx ]; then
-    if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
+  if [ $endidx -gt 0 ]; then
+    suffix=${line:$endidx4:5};
+    echo "Suffix: $suffix";
+    file="${line:$staidx}";
+    if [ $suffix -eq ".DATA" ]; then
       file="${line:$staidx}";
       echo "DATA File: $file";
       exit 1;
