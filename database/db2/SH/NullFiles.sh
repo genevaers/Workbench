@@ -31,13 +31,13 @@ fi
 while IFS= read -r line; do
   # staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  suffix=${line:$endidx4:5};
+  suffix=${line:$endidx:5};
   echo "Endidx: $endidx END";
   echo "Line: $line";
   echo "Suffix: $suffix";
 
   if [ $endidx -gt 0 ]; then
-    suffix=${line:$endidx4:5};
+    suffix=${line:$endidx:5};
 #    echo "Suffix: $suffix";
     file="${line:$staidx}";
     if [ $suffix -eq ".DATA" ]; then
