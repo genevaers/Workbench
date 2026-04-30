@@ -34,12 +34,14 @@ while IFS= read -r line; do
 
   if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
     if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
-      echo "file name found";
+      echo "File name found";
       file="${line:$staidx}";
       echo "File: $file";
+      exit 1;
     fi
   else
     echo "$(date) ${BASH_SOURCE##*/} error encountered in record: $line";
+    exit 2;
   fi
 done < "$FILE"
 
