@@ -18,8 +18,7 @@ FROM_DIR="$1";
 FROM_FILE="$2";
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE"
-
-cd ..
+pwd ;
 
 FILE="$FROM_DIR/$FROM_FILE"; # File to parse to get directory contents
 if [ ! -f "$FILE" ]; then
