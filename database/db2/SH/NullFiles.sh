@@ -43,6 +43,7 @@ while IFS= read -r line; do
     echo "$(date) ${BASH_SOURCE##*/} error encountered in record: $line";
     exit 2;
   fi
+  echo "Next record";
 done < "$FILE"
 
 }
