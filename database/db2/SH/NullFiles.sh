@@ -32,11 +32,10 @@ while IFS= read -r line; do
   endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
   echo "Staidx: $staidx Endidx: $endidx Line: $line";
 
-  if [ $staidx -gt 0 ] && [ $endidx -gt $staidx ]; then
+  if [ $staidx -ge 0 ] && [ $endidx -gt $staidx ]; then
     if [ ${line:$endidx-4:5} -eq ".DATA" ]; then
-      echo "File name found";
       file="${line:$staidx}";
-      echo "File: $file";
+      echo "DATA File: $file";
       exit 1;
     fi
   else
