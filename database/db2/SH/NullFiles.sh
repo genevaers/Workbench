@@ -18,7 +18,7 @@ fi
 FROM_DIR="$1";
 FROM_FILE="$2";
 endidx=0;
-sequence=0;
+lastseq=0;
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE";
 pwd ;
@@ -39,19 +39,19 @@ while IFS= read -r line; do
   if [[ "$lastseq" == 0 ]]; then
     # this should be next after file name
     if [[ "$line" == *"--RECFM-LRECL-BLKSIZE-DSORG"* ]]; then
-      sequence=$(sequence+1);
+      lastseq=$(lastseq+1);
     else
       echo "$(date) ${BASH_SOURCE##*/} *** Expected --RECFM-LRECL-BLKSIZE-DSORG not found: terminating";
       exit 2; 
     fi
   else
-    if [[ "sequence" == 1 ]]; then
-      # this should be next after --RECFM-LRECL-BLKSIZE-DSORG
+    if [[ "$lastseq" == 1 ]]; then
+      # this could be next after --RECFM-LRECL-BLKSIZE-DSORG if file was empty
       if [[ "$line" == *"  **    **    **      PS"* ]]; then
         echo "Empty file found: $file";
         # other stuff related to finding an empty file
       fi
-      sequence=$(sequence+1);
+      lastseq=$(lastseq + 1);
     else
       # all other cases
       if [[ "$line" == *"$dotdata" ]]; then
@@ -60,7 +60,7 @@ while IFS= read -r line; do
         file="${line:0}";
         echo "DATA File: $file";
       fi
-      sequence=$(sequence+1);
+      lastseq=$(lastseq+1);
     fi
   fi
   echo "Next record";
