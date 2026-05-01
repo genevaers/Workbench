@@ -50,6 +50,7 @@ while IFS= read -r line; do
       if [[ "$line" == *"  **    **    **      PS"* ]]; then
         echo "Empty file found: $file";
         # other stuff related to finding an empty file
+        # such as erasing the file and reallocating it as empty file with correct attributes
       fi
       lastseq=$((lastseq + 1));
     else
