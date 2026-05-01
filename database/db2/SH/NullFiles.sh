@@ -33,13 +33,12 @@ dotdata=".DATA";
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo "LINE: $line;
-  if [[ "$line" == *"$suffix" ]]; then
+  echo "LINE: $line";
+  if [[ "$line" == *"$dotdata" ]]; then
     flag=1;
     echo "The string ends with $dotdata.";
     file="${line:0}";
     echo "DATA File: $file";
-#   other processing as required    
   fi
   echo "Next record";
 done < "$FILE"
