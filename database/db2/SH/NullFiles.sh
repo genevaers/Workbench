@@ -35,7 +35,7 @@ index=1;
 # Process each file that matches the pattern
 while IFS= read -r line; do
   value=${my_array[$index]};
-  echo "Index": $index Value: $value Line: $line";
+  echo "Index: $index Value: $value Line: $line";
 
   if [ $value -gt 0 ]; then
     suffix=${line:$((value - 1)):5};
