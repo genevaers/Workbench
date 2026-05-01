@@ -33,6 +33,7 @@ dotdata=".DATA";
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
+  echo "LINE: $line;
   if [[ "$line" == *"$suffix" ]]; then
     flag=1;
     echo "The string ends with '$dotdata'.";
@@ -43,9 +44,10 @@ while IFS= read -r line; do
   echo "Next record";
 done < "$FILE"
 
-if [[ $(flag) -ne "1")]]; then
+if [[ $(flag) -ne 1 ]]; then
   echo "$(date) ${BASH_SOURCE##*/} *** No $suffix files found in dataset attribute list stored in $FILE. See error log $err_log";
   cat $FILE > $err_log;
+fi
 }
 
 exitIfError() {
