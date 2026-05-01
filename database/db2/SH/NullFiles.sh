@@ -39,7 +39,7 @@ while IFS= read -r line; do
   if [[ "$lastseq" == 0 ]]; then
     # this should be next after file name
     if [[ "$line" == *"--RECFM-LRECL-BLKSIZE-DSORG"* ]]; then
-      lastseq=$(lastseq+1);
+      lastseq=$((lastseq + 1));
     else
       echo "$(date) ${BASH_SOURCE##*/} *** Expected --RECFM-LRECL-BLKSIZE-DSORG not found: terminating";
       exit 2; 
@@ -51,7 +51,7 @@ while IFS= read -r line; do
         echo "Empty file found: $file";
         # other stuff related to finding an empty file
       fi
-      lastseq=$(lastseq + 1);
+      lastseq=$((lastseq + 1));
     else
       # all other cases
       if [[ "$line" == *"$dotdata" ]]; then
@@ -60,7 +60,7 @@ while IFS= read -r line; do
         file="${line:0}";
         echo "DATA File: $file";
       fi
-      lastseq=$(lastseq+1);
+      lastseq=$((lastseq+1));
     fi
   fi
   echo "Next record";
