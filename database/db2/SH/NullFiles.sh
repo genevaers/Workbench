@@ -32,11 +32,11 @@ declare -a my_array=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR
 echo "${my_array[@]}";
 echo "______________________________________________________";
 
-index=1;
+index=0;
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  value=${my_array[$index]};
+  value=${my_array[0]};
   echo "Index: $index Value: $value Line: $line";
   if [ "$value" -gt 0 ]; then
     suffix=${line:$((value - 1)):5};
