@@ -19,7 +19,7 @@ FROM_DIR="$1";
 FROM_FILE="$2";
 endidx=0;
 
-echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE"
+echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE";
 pwd ;
 
 FILE=../"$FROM_DIR"/"$FROM_FILE"; # File to parse to get directory contents
@@ -36,7 +36,7 @@ while IFS= read -r line; do
   echo "LINE: $line;
   if [[ "$line" == *"$suffix" ]]; then
     flag=1;
-    echo "The string ends with '$dotdata'.";
+    echo "The string ends with $dotdata.";
     file="${line:0}";
     echo "DATA File: $file";
 #   other processing as required    
@@ -52,8 +52,7 @@ fi
 
 exitIfError() {
 
-if [ $? != 0 ]
-then
+if [ $? != 0 ]; then
     echo "$(date) ${BASH_SOURCE##*/} *** Process terminated: see error log $err_log";
     exit 1;
 fi
