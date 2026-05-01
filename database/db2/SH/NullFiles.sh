@@ -18,6 +18,7 @@ fi
 FROM_DIR="$1";
 FROM_FILE="$2";
 endidx=0;
+sequence=0;
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE";
 pwd ;
@@ -30,15 +31,37 @@ fi
 
 flag=0;
 dotdata=".DATA";
+lastseq=999;
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo "LINE: $line";
-  if [[ "$line" == *"$dotdata" ]]; then
-    flag=1;
-    echo "The string ends with $dotdata.";
-    file="${line:0}";
-    echo "DATA File: $file";
+  echo "LINE: $line Lastseq: $lastseq";
+  if [[ "$lastseq" == 0 ]]; then
+    # this should be next after file name
+    if [[ "$line" == *"--RECFM-LRECL-BLKSIZE-DSORG"* ]]; then
+      sequence=$(sequence+1);
+    else
+      echo "$(date) ${BASH_SOURCE##*/} *** Expected --RECFM-LRECL-BLKSIZE-DSORG not found: terminating";
+      exit 2; 
+    fi
+  else
+    if [[ "sequence" == 1 ]]; then
+      # this should be next after --RECFM-LRECL-BLKSIZE-DSORG
+      if [[ "$line" == *"  **    **    **      PS"* ]]; then
+        echo "Empty file found: $file";
+        # other stuff related to finding an empty file
+      fi
+      sequence=$(sequence+1);
+    else
+      # all other cases
+      if [[ "$line" == *"$dotdata" ]]; then
+        flag=1;
+        echo "The string ends with $dotdata. means start of sequence";
+        file="${line:0}";
+        echo "DATA File: $file";
+      fi
+      sequence=$(sequence+1);
+    fi
   fi
   echo "Next record";
 done < "$FILE"
