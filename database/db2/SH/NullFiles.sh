@@ -27,30 +27,33 @@ if [ ! -f "$FILE" ]; then
   exit 1;
 fi
 
+declare -a my_array=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
+echo "${my_array[@]}";
+
+index=1;
+
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  # staidx=$(awk -F"/" '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  endidx=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-  suffix=${line:$endidx:5};
-#  echo "Endidx: $endidx END";
-  echo "Line: $line";
-  echo "Suffix: $suffix";
+  value=${my_array[$index]};
+  echo "Index": $index Value: $value Line: $line";
 
-  if [ $endidx -gt 0 ]; then
-    suffix=${line:$endidx:5};
-#    echo "Suffix: $suffix";
-    file="${line:$staidx}";
+  if [ $value -gt 0 ]; then
+    suffix=${line:$((value - 1)):5};
+    echo "Suffix: $suffix";
     if [ $suffix -eq ".DATA" ]; then
-      file="${line:$staidx}";
-#      echo "DATA File: $file";
-      exit 1;
+      file="${line:0}";
+      echo "DATA File: $file";
+#     other processing as required    
+    else
+      echo "$(date) ${BASH_SOURCE##*/} apparent dataset name but lacks .DATA suffix: $line";
+      exit 2;
     fi
-    echo "Good line encountered";
   else
-    echo "$(date) ${BASH_SOURCE##*/} error encountered in record: $line";
+    echo "$(date) ${BASH_SOURCE##*/} Line contains no dataset name: $line";
     exit 2;
   fi
   echo "Next record";
+  index=$((index + 1));
 done < "$FILE"
 
 }
