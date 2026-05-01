@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Script to copy directory contents to MVS pds(e)
 # Invoked like: ./Copy2pds.sh DDL DDL "//'GEBT.RTC23321.DDL'" 1
 # Invoked like: ./Copy2pds.sh JCL JCL "//'GEBT.RTC23321.JCL'" 2
@@ -29,6 +30,7 @@ fi
 
 declare -a my_array=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
 echo "${my_array[@]}";
+echo "______________________________________________________";
 
 index=1;
 
@@ -36,8 +38,7 @@ index=1;
 while IFS= read -r line; do
   value=${my_array[$index]};
   echo "Index: $index Value: $value Line: $line";
-
-  if [ $value -gt 0 ]; then
+  if [ "$value" -gt 0 ]; then
     suffix=${line:$((value - 1)):5};
     echo "Suffix: $suffix";
     if [ $suffix -eq ".DATA" ]; then
