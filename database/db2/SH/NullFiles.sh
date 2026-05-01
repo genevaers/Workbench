@@ -69,7 +69,7 @@ while IFS= read -r line; do
 done < "$FILE"
 
 if [[ $(flag) -ne 1 ]]; then
-  echo "$(date) ${BASH_SOURCE##*/} *** No $suffix files found in dataset attribute list stored in $FILE. See error log $err_log";
+  echo "$date" ${BASH_SOURCE##*/} *** No $suffix files found in dataset attribute list stored in $FILE. See error log $err_log";
   cat $FILE > $err_log;
 fi
 }
