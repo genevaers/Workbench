@@ -28,35 +28,24 @@ if [ ! -f "$FILE" ]; then
   exit 1;
 fi
 
-declare -a my_array=$(awk -F"." '{print length($0) - length($NF)}' ../"$FROM_DIR"/"$FROM_FILE" );
-echo "${my_array[@]}";
-echo "______________________________________________________";
-
-index=0;
+flag=0;
+dotdata=".DATA";
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  value=${my_array[0]};
-  echo "Index: $index Value: $value Line: $line";
-  if [ "$value" -gt 0 ]; then
-    suffix=${line:$((value - 1)):5};
-    echo "Suffix: $suffix";
-    if [ $suffix -eq ".DATA" ]; then
-      file="${line:0}";
-      echo "DATA File: $file";
-#     other processing as required    
-    else
-      echo "$(date) ${BASH_SOURCE##*/} apparent dataset name but lacks .DATA suffix: $line";
-      exit 2;
-    fi
-  else
-    echo "$(date) ${BASH_SOURCE##*/} Line contains no dataset name: $line";
-    exit 2;
+  if [[ "$line" == *"$suffix" ]]; then
+    flag=1;
+    echo "The string ends with '$dotdata'.";
+    file="${line:0}";
+    echo "DATA File: $file";
+#   other processing as required    
   fi
   echo "Next record";
-  index=$((index + 1));
 done < "$FILE"
 
+if [[ $(flag) -ne "1")]]; then
+  echo "$(date) ${BASH_SOURCE##*/} *** No $suffix files found in dataset attribute list stored in $FILE. See error log $err_log";
+  cat $FILE > $err_log;
 }
 
 exitIfError() {
