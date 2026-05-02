@@ -57,7 +57,7 @@ while IFS= read -r line; do
         exitIfError;
         rm -rf "//'$file'";
         exitIfError;
-        mv -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file.X'" "//'$file'";
+        cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file.X'" "//'$file'";
         exitIfError;
         export _UNIX03=$SAVE_UNIX03
       fi
