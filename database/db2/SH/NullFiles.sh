@@ -52,7 +52,7 @@ while IFS= read -r line; do
         echo "Correcting DCB for empty input database unload dataset: $file";
         # copy file to change its DCB information
         # cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'GEBT.GENERS.D251222U.GLOBAFLD.DATA'" "//'GEBT.GENERS.D251222U.GLOBAFLD.DATAX'";
-        cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'\"$file\"'" "//'\"$file\".X'";
+        cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file'" "//'$file.X'";
         # other stuff related to finding an empty file
         # such as erasing the file and reallocating it as empty file with correct attributes
       fi
