@@ -35,7 +35,7 @@ lastseq=999;
 
 # Process each file that matches the pattern
 while IFS= read -r line; do
-  echo "LINE: $line Lastseq: $lastseq";
+  # echo "LINE: $line Lastseq: $lastseq";
   if [[ "$lastseq" == 0 ]]; then
     # this should be next after file name
     if [[ "$line" == *"--RECFM-LRECL-BLKSIZE-DSORG"* ]]; then
@@ -48,7 +48,8 @@ while IFS= read -r line; do
     if [[ "$lastseq" == 1 ]]; then
       # this could be next after --RECFM-LRECL-BLKSIZE-DSORG if file was empty
       if [[ "$line" == *"  **    **    **      PS"* ]]; then
-        echo "Empty file found: $file";
+        echo "Located empty file from TSO RECEIVE with DCB=(RECFM=**,LRECL=**,BLKSIZE=**,DSORG=PS).";
+        echo "Correcting DCB for empty input database unload dataset: $file"
         # other stuff related to finding an empty file
         # such as erasing the file and reallocating it as empty file with correct attributes
       fi
