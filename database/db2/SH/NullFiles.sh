@@ -59,15 +59,15 @@ while IFS= read -r line; do
       if [[ "$line" == *"$dotdata" ]]; then
         flag=1;
         lastseq=0;
-        echo "The string ends with $dotdata. means start of sequence";
+        # echo "The string ends with $dotdata. means start of sequence";
         file="${line:0}";
-        echo "DATA File: $file";
+        # echo "DATA File: $file";
       else
         lastseq=$((lastseq+1));
       fi
     fi
   fi
-  echo "Next record";
+  # echo "Next record";
 done < "$FILE"
 
 if [[ "$flag" -ne 1 ]]; then
