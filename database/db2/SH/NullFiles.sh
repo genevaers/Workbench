@@ -50,7 +50,7 @@ while IFS= read -r line; do
       if [[ "$line" == *"  **    **    **      PS"* ]]; then
         echo "Located empty file from TSO RECEIVE with DCB=(RECFM=**,LRECL=**,BLKSIZE=**,DSORG=PS).";
         echo "Correcting DCB for empty input database unload dataset: $file";
-        # copy file to change its DCB information
+        # copy file to change its DCB information, delete original then copy it back to have originzal name
         # cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'GEBT.GENERS.D251222U.GLOBAFLD.DATA'" "//'GEBT.GENERS.D251222U.GLOBAFLD.DATAX'";
         SAVE_UNIX03=$_UNIX03
         cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file'" "//'$file.X'";
@@ -60,8 +60,6 @@ while IFS= read -r line; do
         mv -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file.X'" "//'$file'";
         exitIfError;
         export _UNIX03=$SAVE_UNIX03
-        # other stuff related to finding an empty file
-        # such as erasing the file and reallocating it as empty file with correct attributes
       fi
       lastseq=$((lastseq + 1));
     else
