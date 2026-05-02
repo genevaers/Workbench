@@ -54,11 +54,11 @@ while IFS= read -r line; do
         # cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'GEBT.GENERS.D251222U.GLOBAFLD.DATA'" "//'GEBT.GENERS.D251222U.GLOBAFLD.DATAX'";
         SAVE_UNIX03=$_UNIX03
         cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file'" "//'$file.X'";
-        xitIfError;
+        exitIfError;
         rm -rf "//'$file'";
-        xitIfError;
-        mv "//'$file.X'" "//'$file'";
-        xitIfError;
+        exitIfError;
+        mv -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file.X'" "//'$file'";
+        exitIfError;
         export _UNIX03=$SAVE_UNIX03
         # other stuff related to finding an empty file
         # such as erasing the file and reallocating it as empty file with correct attributes
