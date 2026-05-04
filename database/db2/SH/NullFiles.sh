@@ -56,7 +56,6 @@ while IFS= read -r line; do
         cp -P RECFM=VB,BLKSIZE=27998,LRECL=27994 "//'$file'" "//'$file.X'";
         exitIfError;
         tsocmd "DELETE '$file';";
-        exitIfError;
         tsocmd "RENAME '$file.X' '$file';";
         exitIfError;
         export _UNIX03=$SAVE_UNIX03
