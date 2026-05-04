@@ -161,15 +161,17 @@ INSTSP   - install stored procedures
 
 This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data. Go to the newly generated JCL data set, check and submit the following jobs.
 <pre>
-UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
-DSNMOD   - change LOB file location                                   - Todo
-EXMPNC2  - change schema                                              - Todo
+UNLOAD   - unload GenevaERS data from existing DB2 schema using site specific IBM or 3rd party utility
+........
+E2PAXMIT - Unpack .TRS file into PDSE and expand individual library members into PDSE and SEQ files
+NULLDATA - scan RECEIVE'd DATA files for invalid DCB information indicating empty file(s)
+DSNMOD   - change file names representing relationship between sequential DATA files and LOB PDSE files
 DROPALL  - drop existing database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
 BLDDB02  - create Logic Table/LOB column
 BLDDB03  - create C_*, E_* and X_* indexes
-LOAD01   - load database without E_LOGIC table                         - Todo
-LOAD02   - load E_LOGIC table                                          - Todo
+LOAD01   - load database without E_LOGIC table
+LOAD02   - load E_LOGIC table
 BLDDB04  - create foreign keys
 BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status

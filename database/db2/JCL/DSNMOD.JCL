@@ -17,9 +17,9 @@
 //JOBLIB   DD DISP=SHR,DSN=AJV.V21R0M0.SIEALNKE
 //*
 //*********************************************************************
-//* This job searches through the files that reference the PDS LOB
-//* files of the unloaded GenevaERS Schema and updates the files
-//* referenced to the new file names.
+//* This job searches through DATA files that reference the PDS LOB
+//* files from the unloaded GenevaERS Schema and updates the files
+//* referenced to the new file names (local file names).
 //* See parameters for specification of "old" and "new" file names.
 //*********************************************************************
 //*   DELETE DATA SETS
@@ -166,8 +166,9 @@ Cp1047
 //            LIKE=&LOADHLQ..&LOADMLQ..VWCOLSRC.DATA
 //*
 //*******************************************************************
-//
-//
+//* Change names of modified files back to original name
+//*******************************************************************
+//*
 //REPLACE1 EXEC PGM=IEBGENER
 //SYSPRINT DD SYSOUT=*
 //SYSUT1 DD DSN=&LOADHLQ..&LOADMLQ..LOGIC.DATA2,
