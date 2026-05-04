@@ -1,4 +1,4 @@
-//LISTDATA JOB (ACCT),
+//NULLDATA JOB (ACCT),
 //          'Identify empties',
 //          NOTIFY=NBEESLE,
 //          CLASS=A,REGION=0M,

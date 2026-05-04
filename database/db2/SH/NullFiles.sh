@@ -8,16 +8,18 @@
 
 main() {
 
-# Check if a directory and pattern are provided
+# If directory and file not provided take defaults
 if [ -z "$1" ] || [ -z "$2" ] ; then
-  echo "Usage: $0 <directory> <file>";
-  echo "Example: $0 /u/usr1/git/Workbench/database/db2/tmpinfo/datafiles.attr";
-  exit 1;
+  FROM_DIR="tmpinfo";
+  FROM_FILE="datafiles.attr";
+else
+  FROM_DIR="$1";
+  FROM_FILE="$2";
 fi
 
-FROM_DIR="$1";
-FROM_FILE="$2";
-endidx=0;
+FROM_DIR="tmpinfo";
+FROM_FILE="datafiles.attr";
+
 lastseq=0;
 
 echo "$(date) ${BASH_SOURCE##*/} Examining for null .DATA files from TSO RECEIVE using: $FROM_DIR/$FROM_FILE";
