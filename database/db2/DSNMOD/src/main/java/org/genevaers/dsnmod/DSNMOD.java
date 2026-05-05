@@ -181,7 +181,7 @@ public class DSNMOD {
         cs.addFieldName("DEVTYP");  // Device Type
         cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
         cs.addFieldName("DSNAME");
-        
+
         // Define search criteria (dataset name, volume, etc.)
         try {
           cs.search();
@@ -198,6 +198,7 @@ public class DSNMOD {
             }
           }
         } catch (Exception e) {
+          System.out.println("RC: " + cs.getRc() + " " + cs.getReason());
           e.printStackTrace();
         }
         return 0;
