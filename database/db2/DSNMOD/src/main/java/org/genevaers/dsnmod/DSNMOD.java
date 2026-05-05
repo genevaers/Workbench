@@ -52,7 +52,7 @@ public class DSNMOD {
         String ddparm = "DDPARM";
         Boolean lData = true;
         Boolean lPunch = true;
-        Integer i;
+        Integer i, n;
 
         ddname[0] = "INPUT01";
         ddname[1] = "INPUT02";
@@ -66,6 +66,8 @@ public class DSNMOD {
         ddout[4] = "OUTPUT5";
 
         // command line argument[s]
+        Integer nArgs =args.length;
+        
         for (n = 0; n < nArgs; n++) {
             if (args[n].substring(0,1).equals("-")) {
                 switch( args[n].substring(1,2))
