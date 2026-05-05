@@ -175,12 +175,13 @@ public class DSNMOD {
     }
 
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
-      CatalogSearch cs = new CatalogSearch(maskNew);
+      CatalogSearch cs = new CatalogSearch("GEBT.GENERS.D251222U.**");
         cs.addFieldName("ENTNAME"); // Entry Name (Dataset Name)
         cs.addFieldName("VOLSER");  // Volume Serial
         cs.addFieldName("DEVTYP");  // Device Type
         cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
-
+        cs.addFieldName("DSNAME");
+        
         // Define search criteria (dataset name, volume, etc.)
         try {
           cs.search();
