@@ -50,9 +50,9 @@ public class DSNMOD {
         Integer parmrec = 0;
         RecordReader parmreader = null;
         String ddparm = "DDPARM";
-        String maskNew;
-        String schemaNameOld;
-        String schemaNameNew;
+        String maskNew = "";
+        String schemaNameOld = "";
+        String schemaNameNew = "";
         Boolean lData = true;
         Boolean lPunch = true;
         Integer i, n;
