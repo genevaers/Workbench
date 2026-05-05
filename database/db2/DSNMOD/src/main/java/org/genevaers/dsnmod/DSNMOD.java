@@ -67,7 +67,7 @@ public class DSNMOD {
 
         // command line argument[s]
         Integer nArgs =args.length;
-        
+
         for (n = 0; n < nArgs; n++) {
             if (args[n].substring(0,1).equals("-")) {
                 switch( args[n].substring(1,2))
@@ -81,7 +81,7 @@ public class DSNMOD {
                         lPunch = false;
                         break;
                     case "h":
-                        logger.info("-D (process DATA files only)\n-P (process PNCH files only)");
+                        System.out.println("-D (process DATA files only)\n-P (process PNCH files only)");
                         return;
                     default:
                         break;
