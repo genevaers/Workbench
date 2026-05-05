@@ -50,6 +50,9 @@ public class DSNMOD {
         Integer parmrec = 0;
         RecordReader parmreader = null;
         String ddparm = "DDPARM";
+        String maskNew;
+        String schemaNameOld;
+        String schemaNameNew;
         Boolean lData = true;
         Boolean lPunch = true;
         Integer i, n;
@@ -115,15 +118,15 @@ public class DSNMOD {
                     dsn2[parmrec - 5] = newfilenm;
                   } else {
                     if (parmrec == 10) {
-                      String maskNew = scanner.next();
+                      maskNew = scanner.next();
                       System.out.println("New PNCH file mask: " + maskNew);
                     } else {
                       if (parmrec == 11) {
-                        String schemaNameOld = scanner.next();
+                        schemaNameOld = scanner.next();
                         System.out.println("Old schema name: " + schemaNameOld);
                       } else {
                         if (parmrec == 12) {
-                          String schemaNameNew = scanner.next();
+                          schemaNameNew = scanner.next();
                           System.out.println("New schema name: " + schemaNameNew);
                         } else {
                           if (parmrec == 13) {
