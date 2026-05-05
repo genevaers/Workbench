@@ -175,6 +175,15 @@ public class DSNMOD {
     }
 
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
+      CatalogSearch cs = new CatalogSearch("YOUR.HLQ.*");
+      // Define search criteria (dataset name, volume, etc.)
+      cs.setSearchAttribute(CatalogSearch.ATTR_VOLUME);
+      while (cs.findNext())
+      {
+        System.out.println("Dataset: " + cs.getDatasetName());
+        System.out.println("Volume: " + cs.getVolume());
+      }
+      cs.close();
       return 0;
     }
 
