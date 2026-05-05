@@ -177,13 +177,13 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
       CatalogSearch cs = new CatalogSearch(maskNew);
       // Define search criteria (dataset name, volume, etc.)
-      cs.setSearchAttribute(CatalogSearch.ATTR_VOLUME);
-      while (cs.findNext())
+      //cs.setSearchAttribute(CatalogSearch.CATALOG_TYPE);
+      while (cs.hasNext())
       {
-        System.out.println("Dataset: " + cs.getDatasetName());
-        System.out.println("Volume: " + cs.getVolume());
+        System.out.println("Dataset: " + cs.next());
+        //System.out.println("Volume: " + cs.());
       }
-      cs.close();
+      //cs.();
       return 0;
     }
 
