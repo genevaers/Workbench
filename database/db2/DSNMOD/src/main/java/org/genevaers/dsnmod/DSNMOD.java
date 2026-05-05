@@ -29,6 +29,7 @@ import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZFileConstants;
 import com.ibm.jzos.ZFileException;
 import com.ibm.jzos.fields.PackedDecimalAsIntField; // Packed number processing
+import com.ibm.jzos.CatalogSearch;
 
 import java.util.Scanner;
 
@@ -49,6 +50,8 @@ public class DSNMOD {
         Integer parmrec = 0;
         RecordReader parmreader = null;
         String ddparm = "DDPARM";
+        Boolean lData = true;
+        Boolean lPunch = true;
         Integer i;
 
         ddname[0] = "INPUT01";
@@ -61,6 +64,28 @@ public class DSNMOD {
         ddout[2] = "OUTPUT3";
         ddout[3] = "OUTPUT4";
         ddout[4] = "OUTPUT5";
+
+        // command line argument[s]
+        for (n = 0; n < nArgs; n++) {
+            if (args[n].substring(0,1).equals("-")) {
+                switch( args[n].substring(1,2))
+                 {
+                    // generate hash map -- does NOT validate the schema
+                    case "P":
+                        lData = false;
+                        break;
+                    // generate DDL statement -- available in all cases
+                    case "D":
+                        lPunch = false;
+                        break;
+                    case "h":
+                        logger.info("-D (process DATA files only)\n-P (process PNCH files only)");
+                        return;
+                    default:
+                        break;
+                }
+            }
+        }
 
         //GvbDsnmodConfig dc = new GvbDsnmodConfig(dsn1, dsn2, offset, codepage, ddname, ddout, dbg);
 
@@ -82,17 +107,32 @@ public class DSNMOD {
                     dsn1[parmrec] = oldfilenm;
                     offset[parmrec] = oldfileoff;
                 } else {
-                    if ( parmrec < 10) {
-                        String newfilenm = scanner.next();
-                        System.out.println("New file name: " + newfilenm);
-                        dsn2[parmrec - 5] = newfilenm;
+                  if ( parmrec < 10) {
+                    String newfilenm = scanner.next();
+                    System.out.println("New file name: " + newfilenm);
+                    dsn2[parmrec - 5] = newfilenm;
+                  } else {
+                    if (parmrec == 10) {
+                      String maskNew = scanner.next();
+                      System.out.println("New PNCH file mask: " + maskNew);
                     } else {
-                        if (parmrec == 10) {
+                      if (parmrec == 11) {
+                        String schemaNameOld = scanner.next();
+                        System.out.println("Old schema name: " + schemaNameOld);
+                      } else {
+                        if (parmrec == 12) {
+                          String schemaNameNew = scanner.next();
+                          System.out.println("New schema name: " + schemaNameNew);
+                        } else {
+                          if (parmrec == 13) {
                             String codepg = scanner.next();
                             System.out.println("Code page: " + codepg);
                             codepage = codepg;
+                          }
                         }
+                      }
                     }
+                  }
                 }
                 scanner.close();
                 parmrec++;
@@ -114,15 +154,26 @@ public class DSNMOD {
             }
         }
 
-        for ( i = 0; i < 5; i++) {
-            rc = processfile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
+        if ( lData ) {
+          for ( i = 0; i < 5; i++) {
+              rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
+          }
+          System.out.println("Return code from processDataFile: " + rc);
         }
-        System.out.println("Rc: " + rc);
+
+        if ( lPunch ) {
+          rc = processPnchFiles( maskNew, schemaNameOld, schemaNameNew );
+          System.out.println("Return code from processPnchFiles: " + rc);
+        }
 
         return;
     }
 
-    public static Integer processfile(String dsn1, String dsn2, Integer offset, String codepage, String ddname, String ddout, Integer dbg) {
+    public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
+      return 0;
+    }
+
+    public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, String ddname, String ddout, Integer dbg) {
     
         RecordReader reader = null;
         RecordWriter writer = null;
