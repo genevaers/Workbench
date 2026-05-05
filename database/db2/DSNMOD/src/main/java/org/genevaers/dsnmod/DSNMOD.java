@@ -177,7 +177,7 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
       CatalogSearch cs = new CatalogSearch(maskNew);
       // Define search criteria (dataset name, volume, etc.)
-      cs.addFieldName("DSNAME");
+      //cs.addFieldName("DSNAME");
       cs.search();
       while (cs.hasNext())
       {
