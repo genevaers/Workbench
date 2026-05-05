@@ -176,16 +176,30 @@ public class DSNMOD {
 
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
       CatalogSearch cs = new CatalogSearch(maskNew);
-      // Define search criteria (dataset name, volume, etc.)
-      //cs.addFieldName("DSNAME");
-      cs.search();
-      while (cs.hasNext())
-      {
-        System.out.println("Dataset: " + cs.next());
-        //System.out.println("Volume: " + cs.());
-      }
-      cs.discardCurrentWorkArea();
-      return 0;
+        cs.addFieldName("ENTNAME"); // Entry Name (Dataset Name)
+        cs.addFieldName("VOLSER");  // Volume Serial
+        cs.addFieldName("DEVTYP");  // Device Type
+        cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
+
+        // Define search criteria (dataset name, volume, etc.)
+        try {
+          cs.search();
+          while (cs.hasNext()) {
+            CatalogSearch.Entry entry = (CatalogSearch.Entry)cs.next();
+            if (entry.isDatasetEntry()) {
+              String dsName = entry.getName();
+              String volser = entry.getField("VOLSER").toString();
+              String devType = entry.getField("DEVTYP").toString();
+                    
+              System.out.println("Dataset: " + dsName);
+              System.out.println("  VOLSER: " + volser);
+              System.out.println("  DEVTYP: " + devType);
+            }
+          }
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        return 0;
     }
 
     public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, String ddname, String ddout, Integer dbg) {
