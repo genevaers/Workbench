@@ -133,7 +133,7 @@ public class DSNMOD {
                         maskNew = loadHlqMlq + ".**";
                         maskData = loadHlqMlq + ".**.DATA";
                         maskPnch = loadHlqMlq + ".**.PNCH";
-                        System.out.println("DATA Mask: " + maskData + "PNCH Mask: " + maskPnch);
+                        System.out.println("DATA Mask: " + maskData + " PNCH Mask: " + maskPnch);
                       } else {
                         if (parmrec >= 4 && parmrec <= 8) {
                           String dataLlq = scanner.next();
@@ -185,6 +185,8 @@ public class DSNMOD {
     }
 
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew ) {
+      
+      System.out.println("PNCH Mask: " + maskPnch);
       CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
 
       // Define search criteria (dataset name, volume, etc.)
