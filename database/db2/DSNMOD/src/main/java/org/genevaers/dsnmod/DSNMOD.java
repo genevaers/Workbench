@@ -193,8 +193,8 @@ public class DSNMOD {
         try {
           cs.addFieldName("ENTNAME"); // Entry Name (Dataset Name)
           cs.addFieldName("VOLSER");  // Volume Serial
-          cs.addFieldName("DEVTYP");  // Device Type
-          cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
+          //cs.addFieldName("DEVTYP");  // Device Type
+          //cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
           cs.search();
           while (cs.hasNext()) {
             CatalogSearch.Entry entry = (CatalogSearch.Entry)cs.next();
@@ -203,11 +203,11 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              field = entry.getField("DEVTYP");
-              String devtyp = field.getFString().trim();
-              field = entry.getField("ENTTYPE");
-              String enttyp = field.getFString().trim();
-              System.out.println("Dataset: " + dsName + " Volser: " + volser + " Devtyp: " + devtyp + " Enttyp: " + enttyp);
+              //field = entry.getField("DEVTYP");
+              //String devtyp = field.getFString().trim();
+              //field = entry.getField("ENTTYPE");
+              //String enttyp = field.getFString().trim();
+              System.out.println("Dataset: " + dsName + " Volser: " + volser); // + " Devtyp: " + devtyp + " Enttyp: " + enttyp);
             }
           }
         } catch (Exception e) {
