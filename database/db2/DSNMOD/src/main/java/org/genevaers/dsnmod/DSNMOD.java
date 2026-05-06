@@ -59,6 +59,8 @@ public class DSNMOD {
         String maskNew = "";
         String maskData = "";
         String maskPnch = "";
+        String unldHlqMlq = "";
+        String loadHlqMlq = "";
         String schemaNameOld = "";
         String schemaNameNew = "";
         Boolean lData = true;
@@ -123,11 +125,11 @@ public class DSNMOD {
                     System.out.println("New schema name: " + schemaNameNew);
                   } else {
                     if (parmrec == 2) {
-                      String unldHlqMlq = scanner.next();
+                      unldHlqMlq = scanner.next();
                       maskOld = unldHlqMlq + ".**";
                     } else {
                       if (parmrec == 3) {
-                        String loadHlqMlq = scanner.next();
+                        loadHlqMlq = scanner.next();
                         maskNew = loadHlqMlq + ".**";
                         maskData = loadHlqMlq + ".**.DATA";
                         maskPnch = loadHlqMlq + ".**.PNCH";
@@ -138,7 +140,7 @@ public class DSNMOD {
                           Integer dataOff = scanner.nextInt();
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
                           dsn2[iRec] = loadHlqMlq + "." + dataLlq + ".LOB";
-                          offset[iRec] = oldfileoff;
+                          offset[iRec] = dataOff;
                           System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
                           System.out.println("New file name: " + dsn2[iRec]);
                           iRec++;
