@@ -127,13 +127,13 @@ public class DSNMOD {
                       maskOld = unldHlqMlq + ".**";
                     } else {
                       if (parmrec == 3) {
-                        loadHlqMlq = scanner.next();
+                        String loadHlqMlq = scanner.next();
                         maskNew = loadHlqMlq + ".**";
                         maskData = loadHlqMlq + ".**.DATA";
                         maskPnch = loadHlqMlq + ".**.PNCH";
                         System.out.println("DATA Mask: " + maskData + "PNCH Mask: " + maskPnch);
                       } else {
-                        if (parmrec >= 4) { //} && parmrec =< 8) {
+                        if (parmrec >= 4 && parmrec =< 8) {
                           String dataLlq = scanner.next();
                           Integer dataOff = scanner.nextInt();
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
