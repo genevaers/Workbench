@@ -180,7 +180,7 @@ public class DSNMOD {
     }
 
     public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
-      CatalogSearch cs = new CatalogSearch("GEBT.GENERS.D251222U.**", 64000);
+      CatalogSearch cs = new CatalogSearch(maskNew, 64000);
         //cs.addFieldName("VOLSER");  // Volume Serial
         //cs.addFieldName("DEVTYP");  // Device Type
         //cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
