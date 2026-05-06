@@ -1788,12 +1788,15 @@ public class DB2LogicalFileDAO implements LogicalFileDAO {
             rs.close();         
 			
 			// retrieving Views where this LF is used in output.
-			selectDependentLFs = "Select DISTINCT B.VIEWID, B.NAME From "
+			selectDependentLFs = "Select DISTINCT C.VIEWID, C.NAME From "
 					+ params.getSchema()
-					+ ".VIEW B INNER JOIN "
+					+ ".VIEWLOGICDEPEND A INNER JOIN "
 					+ params.getSchema()
-					+ ".LFPFASSOC C ON B.LFPFASSOCID=C.LFPFASSOCID AND B.ENVIRONID=C.ENVIRONID "
-					+ "WHERE C.ENVIRONID=? AND C.LOGFILEID=?";
+					+ ".LFPFASSOC B ON A.LFPFASSOCID=B.LFPFASSOCID AND A.ENVIRONID=B.ENVIRONID "
+					+ "INNER JOIN "
+					+ params.getSchema()
+					+ ".VIEW C ON A.VIEWID=C.VIEWID AND B.ENVIRONID=C.ENVIRONID "
+					+ "WHERE B.ENVIRONID=? AND B.LOGFILEID=?";
 			while (true) {
 				try {
 
