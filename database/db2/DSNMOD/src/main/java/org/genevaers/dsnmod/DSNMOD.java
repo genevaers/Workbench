@@ -117,33 +117,31 @@ public class DSNMOD {
                 if (parmrec == 0) {
                   schemaNameOld = scanner.next();
                   System.out.println("Old schema name: " + schemaNameOld);
+                } else {
+                  if (parmrec == 1) {
+                    schemaNameNew = scanner.next();
+                    System.out.println("New schema name: " + schemaNameNew);
                   } else {
-                    if (parmrec == 1) {
-                      schemaNameNew = scanner.next();
-                      System.out.println("New schema name: " + schemaNameNew);
+                    if (parmrec == 2) {
+                      String unldHlqMlq = scanner.next();
+                      maskOld = unldHlqMlq + ".**";
                     } else {
-                        if (parmrec == 2) {
-                          String unldHlqMlq = scanner.next();
-                          maskOld = unldHlqMlq + ".**";
-                        } else {
-                          if (parmrec == 3) {
-                            loadHlqMlq = scanner.next();
-                            maskNew = loadHlqMlq + ".**";
-                            maskData = loadHlqMlq + ".**.DATA";
-                            maskPnch = loadHlqMlq + ".**.PNCH";
-                            System.out.println("Data Mask: " + maskData + "PNCH Mask: " + maskPnch);
-                          } else {
-                            if (parmrec >= 4 && mparmrec =< 8) {
-                              String dataLlq = scanner.next();
-                              Integer dataOff = scanner.nextInt();
-                              dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
-                              dsn2[iRec] = loadHlqMlq + "." + dataLlq + ".LOB";
-                              offset[iRec] = oldfileoff;
-                              System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
-                              System.out.println("New file name: " + dsn2[iRec]);
-                              iRec++;
-                            }
-                          }
+                      if (parmrec == 3) {
+                        loadHlqMlq = scanner.next();
+                        maskNew = loadHlqMlq + ".**";
+                        maskData = loadHlqMlq + ".**.DATA";
+                        maskPnch = loadHlqMlq + ".**.PNCH";
+                        System.out.println("Data Mask: " + maskData + "PNCH Mask: " + maskPnch);
+                      } else {
+                        if (parmrec >= 4 && mparmrec =< 8) {
+                          String dataLlq = scanner.next();
+                          Integer dataOff = scanner.nextInt();
+                          dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
+                          dsn2[iRec] = loadHlqMlq + "." + dataLlq + ".LOB";
+                          offset[iRec] = oldfileoff;
+                          System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
+                          System.out.println("New file name: " + dsn2[iRec]);
+                          iRec++;
                         }
                       }
                     }
