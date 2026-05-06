@@ -207,7 +207,7 @@ public class DSNMOD {
               //String devtyp = field.getFString().trim();
               //field = entry.getField("ENTTYPE");
               //String enttyp = field.getFString().trim();
-              System.out.println("Dataset: " + dsName + " Volser: " + volser); // + " Devtyp: " + devtyp + " Enttyp: " + enttyp);
+              System.out.println("Dataset: %0.44s" + dsName + " Volser: " + volser); // + " Devtyp: " + devtyp + " Enttyp: " + enttyp);
             }
           }
         } catch (Exception e) {
