@@ -133,7 +133,7 @@ public class DSNMOD {
                         maskPnch = loadHlqMlq + ".**.PNCH";
                         System.out.println("Data Mask: " + maskData + "PNCH Mask: " + maskPnch);
                       } else {
-                        if (parmrec >= 4 && mparmrec =< 8) {
+                        if (parmrec >= 4 && parmrec =< 8) {
                           String dataLlq = scanner.next();
                           Integer dataOff = scanner.nextInt();
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
