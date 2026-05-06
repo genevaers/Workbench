@@ -81,18 +81,23 @@ public class DSNMOD {
 
         // command line argument[s]
         Integer nArgs =args.length;
+        GVBA2I b = new GVBA2I();
 
         for (n = 0; n < nArgs; n++) {
             if (args[n].substring(0,1).equals("-")) {
                 switch( args[n].substring(1,2))
                  {
-                    // generate hash map -- does NOT validate the schema
+                    // Process PNCH files only
                     case "P":
                         lData = false;
                         break;
-                    // generate DDL statement -- available in all cases
+                    // Process DATA files only
                     case "D":
                         lPunch = false;
+                        break;
+                    // Debug information
+                    case "d":
+                        dbg = b.doAtois(args[n], 2);
                         break;
                     case "h":
                         System.out.println("-D (process DATA files only)\n-P (process PNCH files only)");
@@ -199,7 +204,7 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              System.out.println("Dataset: " + dsName + " Volser: " + volser);
+              System.out.printf("Dataset: %44s Volser: %6s", dsName, volser);
             }
           }
         } catch (Exception e) {
@@ -218,9 +223,11 @@ public class DSNMOD {
         Integer n = 0;
         Integer m = 0;
 
+        System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage + " DDNAME: " + ddname + "DDOUT: " + ddout);
+
         // validation
         if ( offset < 1 ) {
-            System.out.println("Offset of start of dataset name must be greater than one");
+            System.out.println("Offset of start of dataset name must be greater than or equal to one (1)");
             return 8;
         }
         try {
