@@ -55,11 +55,15 @@ public class DSNMOD {
         Integer parmrec = 0;
         RecordReader parmreader = null;
         String ddparm = "DDPARM";
+        String maskOld = "";
         String maskNew = "";
+        String maskData = "";
+        String maskPnch = "";
         String schemaNameOld = "";
         String schemaNameNew = "";
         Boolean lData = true;
         Boolean lPunch = true;
+        Integer iRec = 0;
         Integer i, n;
 
         ddname[0] = "INPUT01";
@@ -110,34 +114,35 @@ public class DSNMOD {
                 String card = new String(recordBuf, 0, 80, codepage);
                 //System.out.println("Card: " + card + bytesRead);
                 Scanner scanner = new Scanner(card);
-                if (parmrec < 5) {
-                    String oldfilenm = scanner.next();
-                    Integer oldfileoff = scanner.nextInt();
-                    System.out.println("Old file name: " + oldfilenm + " offset: " + oldfileoff);
-                    dsn1[parmrec] = oldfilenm;
-                    offset[parmrec] = oldfileoff;
-                } else {
-                  if ( parmrec < 10) {
-                    String newfilenm = scanner.next();
-                    System.out.println("New file name: " + newfilenm);
-                    dsn2[parmrec - 5] = newfilenm;
+                if (parmrec == 0) {
+                  schemaNameOld = scanner.next();
+                  System.out.println("Old schema name: " + schemaNameOld);
                   } else {
-                    if (parmrec == 10) {
-                      maskNew = scanner.next();
-                      System.out.println("New PNCH file mask: " + maskNew);
+                    if (parmrec == 1) {
+                      schemaNameNew = scanner.next();
+                      System.out.println("New schema name: " + schemaNameNew);
                     } else {
-                      if (parmrec == 11) {
-                        schemaNameOld = scanner.next();
-                        System.out.println("Old schema name: " + schemaNameOld);
-                      } else {
-                        if (parmrec == 12) {
-                          schemaNameNew = scanner.next();
-                          System.out.println("New schema name: " + schemaNameNew);
+                        if (parmrec == 2) {
+                          String unldHlqMlq = scanner.next();
+                          maskOld = unldHlqMlq + ".**";
                         } else {
-                          if (parmrec == 13) {
-                            String codepg = scanner.next();
-                            System.out.println("Code page: " + codepg);
-                            codepage = codepg;
+                          if (parmrec == 3) {
+                            loadHlqMlq = scanner.next();
+                            maskNew = loadHlqMlq + ".**";
+                            maskData = loadHlqMlq + ".**.DATA";
+                            maskPnch = loadHlqMlq + ".**.PNCH";
+                            System.out.println("Data Mask: " + maskData + "PNCH Mask: " + maskPnch);
+                          } else {
+                            if (parmrec >= 4 && mparmrec =< 8) {
+                              String dataLlq = scanner.next();
+                              Integer dataOff = scanner.nextInt();
+                              dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
+                              dsn2[iRec] = loadHlqMlq + "." + dataLlq + ".LOB";
+                              offset[iRec] = oldfileoff;
+                              System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
+                              System.out.println("New file name: " + dsn2[iRec]);
+                              iRec++;
+                            }
                           }
                         }
                       }
@@ -172,35 +177,35 @@ public class DSNMOD {
         }
 
         if ( lPunch ) {
-          rc = processPnchFiles( maskNew, schemaNameOld, schemaNameNew );
+          rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew );
           System.out.println("Return code from processPnchFiles: " + rc);
         }
 
         return;
     }
 
-    public static Integer processPnchFiles(String maskNew, String schemaNameOld, String schemaNameNew ) {
-      CatalogSearch cs = new CatalogSearch(maskNew, 64000);
-        //cs.addFieldName("VOLSER");  // Volume Serial
-        //cs.addFieldName("DEVTYP");  // Device Type
-        //cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
-        //cs.addFieldName("DSNAME");
+    public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew ) {
+      CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
 
-        // Define search criteria (dataset name, volume, etc.)
+      // Define search criteria (dataset name, volume, etc.)
         try {
           cs.addFieldName("ENTNAME"); // Entry Name (Dataset Name)
+          cs.addFieldName("VOLSER");  // Volume Serial
+          cs.addFieldName("DEVTYP");  // Device Type
+          cs.addFieldName("ENTTYPE"); // Entry Type (GDS, PDS, etc.)
           cs.search();
           while (cs.hasNext()) {
             CatalogSearch.Entry entry = (CatalogSearch.Entry)cs.next();
             if (entry.isDatasetEntry()) {
               CatalogSearchField field = entry.getField("ENTNAME");
               String dsName = field.getFString().trim();
-              //String volser = entry.getField("VOLSER").toString();
-              //String devType = entry.getField("DEVTYP").toString();
-                    
-              System.out.println("Dataset: " + dsName);
-              //System.out.println("  VOLSER: " + volser);
-              //System.out.println("  DEVTYP: " + devType);
+              field = entry.getField("VOLSER");
+              String volser = field.getFString().trim();
+              field = entry.getField("DEVTYP");
+              String devtyp = field.getFString().trim();
+              field = entry.getField("ENTTYPE");
+              String enttyp = field.getFString().trim();
+              System.out.println("Dataset: " + dsName + " Volser: " + volser + " Devtyp: " + devtyp + " Enttyp: " + enttyp);
             }
           }
         } catch (Exception e) {
