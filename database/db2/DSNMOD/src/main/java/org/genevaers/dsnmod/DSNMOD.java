@@ -384,7 +384,12 @@ public class DSNMOD {
             return 12;
         } finally {
             if (reader != null) {
-                reader.close();
+                try {
+                  reader.close();
+                } catch (ZFileException e) {
+                    System.out.println("IO error closing output: " + fmtName);
+                    return 12;
+                }
             } 
         }
 
