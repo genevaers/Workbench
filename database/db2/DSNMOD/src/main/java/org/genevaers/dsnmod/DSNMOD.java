@@ -224,14 +224,14 @@ public class DSNMOD {
               }
 
               try {
-                ZFILE zfile = new ZFILE(fmtName, "rb,type=record");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(zFile.getInputStream()));
+                ZFile zfile = new ZFile(fmtName, "rb,type=record");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
                   System.out.println(line);
                 }
                 reader.close();
-                zFile.close();
+                zfile.close();
               } catch (Exception e) {
                 e.printStackTrace();
               }
