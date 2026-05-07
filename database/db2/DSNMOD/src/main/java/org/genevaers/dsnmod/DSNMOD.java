@@ -35,7 +35,6 @@ import com.ibm.jzos.CatalogSearch;
 import com.ibm.jzos.CatalogSearchField;
 import com.ibm.jzos.Format1DSCB;
 import com.ibm.jzos.RcException;
-import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZUtil;
 
 import java.util.Scanner;
