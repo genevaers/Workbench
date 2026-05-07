@@ -241,8 +241,9 @@ public class DSNMOD {
                   //}
                   //System.out.println("\n");
                   String decodedString = new String(byteLine, Charset.forName(codepage));
-                  byte[] asciiBytes = decodedString.getBytes(StandardCharsets.US_ASCII);
-                  System.out.println("Decoded String: " + asciiBytes);
+                  System.out.println("Decoded String: " + decodedString);
+                  //byte[] asciiBytes = decodedString.getBytes(StandardCharsets.US_ASCII);
+                  //System.out.println("Decoded String: " + asciiBytes);
                   //System.out.println(line);
                 }
                 reader.close();
