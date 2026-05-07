@@ -115,7 +115,7 @@ public class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
-            System.out.println("Parameters-----------------------------------------------------");
+            System.out.println("Parameters----------------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -138,7 +138,8 @@ public class DSNMOD {
                         maskNew = loadHlqMlq + ".**";
                         maskData = loadHlqMlq + ".**.DATA";
                         maskPnch = loadHlqMlq + ".**.PNCH";
-                        System.out.println("DATA Mask: " + maskData + " PNCH Mask: " + maskPnch);
+                        System.out.println("DATA Mask: " + maskData);
+                        System.out.println("PNCH Mask: " + maskPnch);
                       } else {
                         if (parmrec >= 4 && parmrec <= 8) {
                           String dataLlq = scanner.next();
@@ -196,6 +197,7 @@ public class DSNMOD {
 
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, Integer dbg) {
       
+        System.out.println("\nPunch files---------------------------------------------------------");
         if (0 < dbg) {
           System.out.println("PNCH Mask: " + maskPnch);
         }
@@ -231,6 +233,8 @@ public class DSNMOD {
         byte hexbyte;
         Integer n = 0;
         Integer m = 0;
+
+        System.out.println("\nData files----------------------------------------------------------");
 
         if (0 < dbg) {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2);
