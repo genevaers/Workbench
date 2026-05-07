@@ -176,8 +176,8 @@ public class DSNMOD {
         }
 
         if ( lData ) {
+          Integer rcHigh = 0;
           for ( i = 0; i < 5; i++) {
-              Integer rcHigh = 0;
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
