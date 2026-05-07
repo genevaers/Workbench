@@ -202,6 +202,7 @@ public class DSNMOD {
     }
 
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
+        Integer rc = 0;
       
         System.out.println("\nPunch files---------------------------------------------------------");
         if (0 < dbg) {
@@ -222,54 +223,19 @@ public class DSNMOD {
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
               System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
-              //String fmtName = "\"//\'" + dsName + "\'\"";
-              // ---String fmtName = dsName;
-              //String fmtName = "//'GEBT.SAFRNEI2.D251222U.CODETABL.PNCH'";
-              String fmtName = "//'" + dsName + "'";
+              
               if (0 < dbg) {
                 System.out.println("Formatted Dataset: " + fmtName );
               }
 
-              try {
-                ZFile zfile = new ZFile(fmtName, "rb,type=record");
-                //BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
-                try {
-                  BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("input.ebcdic"), Charset.forName("Cp037")));
-                  String line;
-                  while ((line = reader.readLine()) != null) {
-                    System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
-                  }
-                } catch (Exception e) {
-                  e.printStackTrace();
-                }
-
-                //String line;
-                //while ((line = reader.readLine()) != null) {
-                  //System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
-                  //byte[] byteLine = line.getBytes(codepage);
-                  //Integer i;
-                  //for ( i = 0; i < byteLine.length; i++ ) {
-                  //  System.out.println(byteLine[i]);
-                  //}
-                  //System.out.println("\n");
-                  //String decodedString = new String(byteLine, Charset.forName(StandardCharsets.US_ASCII));
-                  //System.out.println("Decoded String: " + decodedString);
-                  //byte[] asciiBytes = decodedString.getBytes(StandardCharsets.US_ASCII);
-                  //System.out.println("Decoded String: " + asciiBytes);
-                  //System.out.println(line);
-                //}
-                reader.close();
-                zfile.close();
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
+              rc = processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg);
             }
           }
         } catch (Exception e) {
           System.out.println("RC: " + cs.getRc() + " " + cs.getReason());
           e.printStackTrace();
         }
-        return 0;
+        return rc;
     }
 
     public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, String ddname, String ddout, Integer dbg) {
@@ -299,7 +265,7 @@ public class DSNMOD {
                 return 8;
             }
         } catch (UnsupportedEncodingException ex) {
-            System.out.println("Unsupported encoding");
+            System.out.println("Unsupported encoding: " + codepage);
             return 12;
         }
         if ( dsn1.length() < 1 ) {
@@ -396,6 +362,10 @@ public class DSNMOD {
         System.out.println("Number of dataset names modified is " + n );
         System.out.println("All records including modifications written to " + ddout);
         return 0;
+    }
+
+    public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
+        System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
     }
 
     public static boolean memcmp(byte[] b1, int b1Index, byte[] b2, int b2Index, int length) {
