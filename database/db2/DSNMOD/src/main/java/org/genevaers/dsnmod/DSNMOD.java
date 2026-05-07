@@ -362,6 +362,7 @@ public class DSNMOD {
 
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
+        RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
@@ -370,24 +371,23 @@ public class DSNMOD {
         //      System.out.println("Formatted Dataset: " + fmtName );
         //    }
 
-        RecordReader reader = null;
         try {
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
             byte[] recordBuf = new byte[reader.getLrecl()];
             
             while ((bytesRead = reader.read(recordBuf)) >= 0) {
                 iCount = iCount + 1;
-            } catch (ZFileException e) {
-                System.out.println("IO error closing output " + ddout);
-                return 12;
-            } finally {
-                if (reader != null) {
-                    reader.close();
-                } 
             }
+        } catch (ZFileException e) {
+            System.out.println("IO error closing output " + ddout);
+            return 12;
+        } finally {
+            if (reader != null) {
+                reader.close();
+            } 
         }
 
-        System.out.println("Number of records read for DSN: " + dsName + "is: " + iCount)
+        System.out.println("Number of records read for DSN: " + dsName + "is: " + iCount);
         return 0;
 
     }
