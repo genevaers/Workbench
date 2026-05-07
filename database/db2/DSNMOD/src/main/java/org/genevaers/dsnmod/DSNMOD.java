@@ -223,10 +223,6 @@ public class DSNMOD {
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
               System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
-              
-              if (0 < dbg) {
-                System.out.println("Formatted Dataset: " + fmtName );
-              }
 
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
             }
@@ -366,6 +362,11 @@ public class DSNMOD {
 
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
+                      
+        //    if (0 < dbg) {
+        //      System.out.println("Formatted Dataset: " + fmtName );
+        //    }
+
     }
 
     public static boolean memcmp(byte[] b1, int b1Index, byte[] b2, int b2Index, int length) {
