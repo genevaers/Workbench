@@ -198,10 +198,10 @@ public class DSNMOD {
       
         if (0 < dbg) {
           System.out.println("PNCH Mask: " + maskPnch);
-          CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
         }
 
-      // Define search criteria (dataset name, volume, etc.)
+        CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
+        // Define search criteria (dataset name, volume, etc.)
         try {
           cs.addFieldName("ENTNAME"); // Entry Name (Dataset Name)
           cs.addFieldName("VOLSER");  // Volume Serial
