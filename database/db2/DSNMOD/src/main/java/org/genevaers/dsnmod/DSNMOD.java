@@ -238,9 +238,9 @@ public class DSNMOD {
                   String line;
                   while ((line = reader.readLine()) != null) {
                     System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
-                  } catch (Exception e) {
-                    e.printStackTrace();
                   }
+                } catch (Exception e) {
+                  e.printStackTrace();
                 }
 
                 //String line;
