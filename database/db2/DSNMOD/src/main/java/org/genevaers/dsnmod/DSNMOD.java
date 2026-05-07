@@ -363,6 +363,7 @@ public class DSNMOD {
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
         Integer bytesRead = 0;
+
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
 
@@ -373,14 +374,29 @@ public class DSNMOD {
         //    }
 
         try {
+            byte[] OldSchemaBytes = schemaNameOld.getBytes(codepage);
+            byte[] NewSchemaBytes = schemaNameNew.getBytes(codepage);
+
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
+            byte[] recordBuf = new byte[reader.getLrecl()];
+            
+            if (reader.getLrecl() != 80) {
+                System.out.println("Input file must be fixed record length 80, actual record length is: " + reader.getLrecl());
+            }
+            
             byte[] recordBuf = new byte[reader.getLrecl()];
             
             while ((bytesRead = reader.read(recordBuf)) >= 0) {
                 iCount = iCount + 1;
+                if (memcmp(OldSchemaBytes, 0, recordBuf, 2, schemaNameOld.length())) {
+                    System.out.println("PNCH Schema match located on line: " + iCount);
+                }
             }
         } catch (ZFileException e) {
             System.out.println("IO error closing output: " + fmtName);
+            return 12;
+        } catch (UnsupportedEncodingException e) {
+            System.out.println("Code page exception using " + codepage);
             return 12;
         } finally {
             if (reader != null) {
@@ -393,7 +409,7 @@ public class DSNMOD {
             } 
         }
 
-        System.out.println("Number of records read for DSN: " + dsName + "is: " + iCount);
+        System.out.println("Number of records read for DSN: " + dsName + " is: " + iCount);
         return 0;
 
     }
