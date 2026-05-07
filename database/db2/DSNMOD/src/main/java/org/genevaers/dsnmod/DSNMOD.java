@@ -235,6 +235,7 @@ public class DSNMOD {
                 String line;
                 while ((line = reader.readLine()) != null) {
                   byte[] byteLine = line.getBytes(codepage);
+                  Integer i;
                   for ( i = 0; i < byteLine.length; i++ ) {
                     System.out.println(byteLine[i]);
                   }
