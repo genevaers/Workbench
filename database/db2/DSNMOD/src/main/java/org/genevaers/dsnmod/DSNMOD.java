@@ -141,8 +141,8 @@ public class DSNMOD {
                         if (parmrec >= 4 && parmrec <= 8) {
                           String dataLlq = scanner.next();
                           Integer dataOff = scanner.nextInt();
-                          dsn1[iRec] = unldHlqMlq + "." + dataLlq + ".LOB";
-                          dsn2[iRec] = loadHlqMlq + "." + dataLlq + ".LOB";
+                          dsn1[iRec] = unldHlqMlq + "." + dataLlq;
+                          dsn2[iRec] = loadHlqMlq + "." + dataLlq;
                           offset[iRec] = dataOff;
                           System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
                           System.out.println("New file name: " + dsn2[iRec]);
@@ -204,7 +204,7 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              System.out.printf("Dataset: %44s Volser: %6s", dsName, volser);
+              System.out.printf("Dataset: %44s Volser: %6s\n", dsName, volser);
             }
           }
         } catch (Exception e) {
@@ -223,7 +223,7 @@ public class DSNMOD {
         Integer n = 0;
         Integer m = 0;
 
-        System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage + " DDNAME: " + ddname + "DDOUT: " + ddout);
+        System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " DDNAME: " + ddname + " DDOUT: " + ddout + " Offset: " + offset + " Codepage: " + codepage);
 
         // validation
         if ( offset < 1 ) {
