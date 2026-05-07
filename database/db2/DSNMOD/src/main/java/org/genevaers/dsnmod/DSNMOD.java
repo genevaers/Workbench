@@ -218,7 +218,8 @@ public class DSNMOD {
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
               System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
-              String fmtName = "\"//\'" + dsName + "\'\"";
+              //String fmtName = "\"//\'" + dsName + "\'\"";
+              String fmtName = dsName;
               if (0 < dbg) {
                 System.out.println("Formatted Dataset: " + fmtName );
               }
