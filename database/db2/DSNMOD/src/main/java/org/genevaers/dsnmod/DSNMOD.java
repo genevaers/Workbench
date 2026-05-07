@@ -178,6 +178,7 @@ public class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
+          System.out.println("\nData files----------------------------------------------------------");
           for ( i = 0; i < 5; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
               if ( rcHigh < rc ) {
@@ -233,8 +234,6 @@ public class DSNMOD {
         byte hexbyte;
         Integer n = 0;
         Integer m = 0;
-
-        System.out.println("\nData files----------------------------------------------------------");
 
         if (0 < dbg) {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2);
