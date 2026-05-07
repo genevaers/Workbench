@@ -380,7 +380,7 @@ public class DSNMOD {
                 iCount = iCount + 1;
             }
         } catch (ZFileException e) {
-            System.out.println("IO error closing output " + ddout);
+            System.out.println("IO error closing output: " + fmtName);
             return 12;
         } finally {
             if (reader != null) {
