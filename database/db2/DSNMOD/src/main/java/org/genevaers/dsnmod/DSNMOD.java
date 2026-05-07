@@ -228,7 +228,7 @@ public class DSNMOD {
                 System.out.println("Formatted Dataset: " + fmtName );
               }
 
-              rc = processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg);
+              rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
             }
           }
         } catch (Exception e) {
