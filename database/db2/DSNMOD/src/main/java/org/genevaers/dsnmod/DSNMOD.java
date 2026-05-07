@@ -233,12 +233,16 @@ public class DSNMOD {
               try {
                 ZFile zfile = new ZFile(fmtName, "rb,type=record");
                 //BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
-                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("input.ebcdic"), Charset.forName("Cp037"))) {
+                try {
+                  BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("input.ebcdic"), Charset.forName("Cp037")));
                   String line;
                   while ((line = reader.readLine()) != null) {
                     System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
+                  } catch (Exception e) {
+                    e.printStackTrace();
                   }
                 }
+
                 //String line;
                 //while ((line = reader.readLine()) != null) {
                   //System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
