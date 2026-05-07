@@ -206,7 +206,7 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              System.out.printf("Dataset: %0.44s Volser: %0.6s\n", dsName, volser);
+              System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
             }
           }
         } catch (Exception e) {
