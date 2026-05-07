@@ -115,6 +115,7 @@ public class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
+            System.out.println("Parameters-----------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -176,23 +177,29 @@ public class DSNMOD {
 
         if ( lData ) {
           for ( i = 0; i < 5; i++) {
+              Integer rcHigh = 0;
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
-              System.out.println("Return code from processDataFile: " + rc);
+              if ( rcHigh < rc ) {
+                rcHigh = rc;
+              }
           }
+          System.out.println("Highest return code from processDataFile: " + rcHigh);
         }
 
         if ( lPunch ) {
-          rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew );
+          rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew, dbg );
           System.out.println("Return code from processPnchFiles: " + rc);
         }
 
         return;
     }
 
-    public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew ) {
+    public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, Integer dbg) {
       
-      System.out.println("PNCH Mask: " + maskPnch);
-      CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
+        if (0 < dbg) {
+          System.out.println("PNCH Mask: " + maskPnch);
+          CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
+        }
 
       // Define search criteria (dataset name, volume, etc.)
         try {
@@ -225,7 +232,10 @@ public class DSNMOD {
         Integer n = 0;
         Integer m = 0;
 
-        System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " DDNAME: " + ddname + " DDOUT: " + ddout + " Offset: " + offset + " Codepage: " + codepage);
+        if (0 < dbg) {
+          System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2);
+          System.out.println("DDNAME: " + ddname + " DDOUT: " + ddout + " Offset: " + offset + " Codepage: " + codepage);
+        }
 
         // validation
         if ( offset < 1 ) {
@@ -251,9 +261,6 @@ public class DSNMOD {
             System.out.println("Value to replace dataset name is insufficient: " + dsn2 );
             return 8;
         }
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Now append the ".LOB part"
 
         try {
             // Get an instance of RecordReader for the specified DD name
@@ -338,7 +345,7 @@ public class DSNMOD {
         }
         System.out.println("Number of records processed for ddname " + ddname + " is " + m);
         System.out.println("Number of dataset names modified is " + n );
-        System.out.println("Output written to " + ddout + "\n");
+        System.out.println("All records including modifications written to " + ddout);
         return 0;
     }
 
