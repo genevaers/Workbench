@@ -366,6 +366,7 @@ public class DSNMOD {
         //    if (0 < dbg) {
         //      System.out.println("Formatted Dataset: " + fmtName );
         //    }
+        return 0;
 
     }
 
