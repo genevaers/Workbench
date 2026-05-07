@@ -114,6 +114,7 @@ public class DSNMOD {
             int lrecl = parmreader.getLrecl(); 
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
+
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -155,6 +156,7 @@ public class DSNMOD {
                 scanner.close();
                 parmrec++;
             }
+
         } catch (ZFileException e) {
             System.out.println("IO error reading from " + ddparm);
             return;
@@ -175,8 +177,8 @@ public class DSNMOD {
         if ( lData ) {
           for ( i = 0; i < 5; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
+              System.out.println("Return code from processDataFile: " + rc);
           }
-          System.out.println("Return code from processDataFile: " + rc);
         }
 
         if ( lPunch ) {
@@ -204,7 +206,7 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              System.out.printf("Dataset: %44s Volser: %6s\n", dsName, volser);
+              System.out.printf("Dataset: %0.44s Volser: %60.s\n", dsName, volser);
             }
           }
         } catch (Exception e) {
