@@ -362,6 +362,7 @@ public class DSNMOD {
 
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
+        Integer bytesRead = 0;
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
 
