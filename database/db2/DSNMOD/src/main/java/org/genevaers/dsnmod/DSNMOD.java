@@ -384,8 +384,6 @@ public class DSNMOD {
                 System.out.println("Input file must be fixed record length 80, actual record length is: " + reader.getLrecl());
             }
             
-            byte[] recordBuf = new byte[reader.getLrecl()];
-            
             while ((bytesRead = reader.read(recordBuf)) >= 0) {
                 iCount = iCount + 1;
                 if (memcmp(OldSchemaBytes, 0, recordBuf, 2, schemaNameOld.length())) {
