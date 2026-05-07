@@ -217,6 +217,23 @@ public class DSNMOD {
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
               System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
+              String fmtName = "\"//\'" + dsName + "\'\"";
+              if (0 < dbg) {
+                System.out.println("Formatted Dataset: " + fmtName );
+              }
+
+              try {
+                ZFILE zfile = new ZFILE(fmtName, "rb,type=record");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(zFile.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                  System.out.println(line);
+                }
+                reader.close();
+                zFile.close();
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
         } catch (Exception e) {
