@@ -24,6 +24,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 import com.ibm.jzos.RcException;
 import com.ibm.jzos.RecordReader; // BSAM access
 import com.ibm.jzos.RecordWriter;
@@ -190,14 +193,14 @@ public class DSNMOD {
         }
 
         if ( lPunch ) {
-          rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew, dbg );
+          rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew, codepage, dbg );
           System.out.println("Return code from processPnchFiles: " + rc);
         }
 
         return;
     }
 
-    public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, Integer dbg) {
+    public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
       
         System.out.println("\nPunch files---------------------------------------------------------");
         if (0 < dbg) {
@@ -231,7 +234,14 @@ public class DSNMOD {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                  System.out.println(line);
+                  byte[] byteLine = line.getBytes(codepage);
+                  for ( i = 0; i < byteLine.length; i++ ) {
+                    System.out.println(byteLine[i]);
+                  }
+                  System.out.println("\n");
+                  //String decodedString = new String(ebcdicBytes, Charset.forName(codepage));
+                  //System.out.println("Decoded String: " + decodedString);
+                  //System.out.println(line);
                 }
                 reader.close();
                 zfile.close();
