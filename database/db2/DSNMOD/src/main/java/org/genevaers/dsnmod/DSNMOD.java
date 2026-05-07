@@ -26,6 +26,7 @@ import java.nio.ByteOrder;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.io.*;
 
 import com.ibm.jzos.RcException;
 import com.ibm.jzos.RecordReader; // BSAM access
@@ -231,21 +232,28 @@ public class DSNMOD {
 
               try {
                 ZFile zfile = new ZFile(fmtName, "rb,type=record");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                  byte[] byteLine = line.getBytes(codepage);
+                //BufferedReader reader = new BufferedReader(new InputStreamReader(zfile.getInputStream()));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("input.ebcdic"), Charset.forName("Cp037"))) {
+                  String line;
+                  while ((line = reader.readLine()) != null) {
+                    System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
+                  }
+                }
+                //String line;
+                //while ((line = reader.readLine()) != null) {
+                  //System.out.println(line); // Automatically converted to Unicode/ASCII compatible text
+                  //byte[] byteLine = line.getBytes(codepage);
                   //Integer i;
                   //for ( i = 0; i < byteLine.length; i++ ) {
                   //  System.out.println(byteLine[i]);
                   //}
                   //System.out.println("\n");
-                  String decodedString = new String(byteLine, Charset.forName(StandardCharsets.US_ASCII));
-                  System.out.println("Decoded String: " + decodedString);
+                  //String decodedString = new String(byteLine, Charset.forName(StandardCharsets.US_ASCII));
+                  //System.out.println("Decoded String: " + decodedString);
                   //byte[] asciiBytes = decodedString.getBytes(StandardCharsets.US_ASCII);
                   //System.out.println("Decoded String: " + asciiBytes);
                   //System.out.println(line);
-                }
+                //}
                 reader.close();
                 zfile.close();
               } catch (Exception e) {
