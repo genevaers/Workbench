@@ -236,12 +236,13 @@ public class DSNMOD {
                 while ((line = reader.readLine()) != null) {
                   byte[] byteLine = line.getBytes(codepage);
                   Integer i;
-                  for ( i = 0; i < byteLine.length; i++ ) {
-                    System.out.println(byteLine[i]);
-                  }
-                  System.out.println("\n");
-                  //String decodedString = new String(ebcdicBytes, Charset.forName(codepage));
-                  //System.out.println("Decoded String: " + decodedString);
+                  //for ( i = 0; i < byteLine.length; i++ ) {
+                  //  System.out.println(byteLine[i]);
+                  //}
+                  //System.out.println("\n");
+                  String decodedString = new String(byteLine, Charset.forName(codepage));
+                  byte[] asciiBytes = decodedString.getBytes(StandardCharsets.US_ASCII);
+                  System.out.println("Decoded String: " + asciiBytes);
                   //System.out.println(line);
                 }
                 reader.close();
