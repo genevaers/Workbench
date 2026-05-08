@@ -375,8 +375,8 @@ public class DSNMOD {
             System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + lengthReplaced);
         }
 
-        schemaNameOld = String.format("%-8s", schemaNameOld);
-        schemaNameNew = String.format("%-8s", schemaNameNew);
+        String NameOldPad = String.format("%-8s", schemaNameOld);
+        String NameNewPad = String.format("%-8s", schemaNameNew);
 
         try {
             byte[] OldSchemaBytes = schemaNameOld.getBytes(codepage);
