@@ -370,7 +370,7 @@ public class DSNMOD {
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
-        Integer lengthReplaced = Math.max(schemaNameOld.length, schemaNameNew.length);
+        Integer lengthReplaced = Math.max(schemaNameOld.length(), schemaNameNew.length());
         if (lengthReplaced > 8 ) {
             System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + lengthReplaced);
         }
