@@ -363,31 +363,37 @@ public class DSNMOD {
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
         Integer bytesRead = 0;
+        Integer offset = 2; // schema offset in record 4
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
-        //    if (0 < dbg) {
-        //      System.out.println("Formatted Dataset: " + fmtName );
-        //    }
+        Integer lengthReplaced = Math.max(schemaNameOld, schemaNameNew);
+        if (lengthReplaced > 8 ) {
+            System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + lengthReplaced);
+        }
+
+        schemaNameOld = String.format("%-8s", schemaNameOld);
+        schemaNameNew = String.format("%-8s", schemaNameNew);
 
         try {
             byte[] OldSchemaBytes = schemaNameOld.getBytes(codepage);
             byte[] NewSchemaBytes = schemaNameNew.getBytes(codepage);
 
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
-            byte[] recordBuf = new byte[reader.getLrecl()];
-            
-            if (reader.getLrecl() != 80) {
-                System.out.println("Input file must be fixed record length 80, actual record length is: " + reader.getLrecl());
+            Integer recLength = reader.getLrecl();
+
+            if (recLength != 80) {
+                System.out.println("Input file must be fixed record length 80, actual record length is: " + recLength);
             }
             
+            byte[] recordBuf = new byte[recLength];
             while ((bytesRead = reader.read(recordBuf)) >= 0) {
                 iCount = iCount + 1;
-                if (memcmp(OldSchemaBytes, 0, recordBuf, 2, schemaNameOld.length())) {
-                    System.out.println("PNCH Schema match located on line: " + iCount);
+                if (memcmp(OldSchemaBytes, 0, recordBuf, offset, schemaNameOld.length())) {
+                    System.out.println("PNCH: Old Schema name match located on line: " + iCount);
                 }
             }
         } catch (ZFileException e) {
