@@ -369,6 +369,7 @@ public class DSNMOD {
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
+        String fmtOut  = "//'" + dsName + ".Y'";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
@@ -388,6 +389,7 @@ public class DSNMOD {
             byte[] NewSchemaBytes = NameNewPad.getBytes(codepage);
 
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
+            writer = RecordWriter.newWriter(fmtOut, ZFileConstants.FLAG_DISP_NEW);
             Integer recLength = reader.getLrecl();
 
             if (recLength != 80) {
@@ -401,6 +403,7 @@ public class DSNMOD {
                     System.out.println("PNCH: Old Schema name match located on line: " + iCount);
                     System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                 }
+                writer.write(recordBuf, 0, recLength); // write record back anyway
             }
         } catch (ZFileException e) {
             System.out.println("IO error closing output: " + fmtName);
