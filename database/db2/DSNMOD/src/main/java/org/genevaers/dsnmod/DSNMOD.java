@@ -377,10 +377,10 @@ public class DSNMOD {
             System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
         }
 
-        // take into account "'s
-        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\".");
+        // take into account "'s and . meaning actual length will be 11 
+        String NameOldPad = String.format("%-11s", "\"" + schemaNameOld + "\".");
         System.out.println("NameOldPad: [" + NameOldPad + "]");
-        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\".");
+        String NameNewPad = String.format("%-11s", "\"" + schemaNameNew + "\".");
         System.out.println("NameNewPad: [" + NameNewPad + "]");
 
         try {
