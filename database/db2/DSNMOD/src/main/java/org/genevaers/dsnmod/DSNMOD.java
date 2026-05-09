@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.Arrays;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -363,24 +364,28 @@ public class DSNMOD {
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
         Integer bytesRead = 0;
-        Integer offset = 2; // schema offset in record 4
+        Integer offset = 1; // offset of first double quote preceding schema in record 4
+        Integer lengthReplaced = 10; // always replace padded length in quotes
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
-        Integer lengthReplaced = Math.max(schemaNameOld.length(), schemaNameNew.length());
-        if (lengthReplaced > 8 ) {
-            System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + lengthReplaced);
+        Integer schemaLength = Math.max(schemaNameOld.length(), schemaNameNew.length());
+        if (schemaLength > 8 ) {
+            System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
         }
 
-        String NameOldPad = String.format("%-8s", schemaNameOld);
-        String NameNewPad = String.format("%-8s", schemaNameNew);
+        // take into account "'s
+        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld "\"");
+        System.out.println("NameOldPad: " + NameOldPad);
+        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew "\"");
+        System.out.println("NameNewPad: " + NameOldPad);
 
         try {
-            byte[] OldSchemaBytes = schemaNameOld.getBytes(codepage);
-            byte[] NewSchemaBytes = schemaNameNew.getBytes(codepage);
+            byte[] OldSchemaBytes = NameOldPad.getBytes(codepage);
+            byte[] NewSchemaBytes = NameNewPad.getBytes(codepage);
 
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
             Integer recLength = reader.getLrecl();
@@ -394,6 +399,7 @@ public class DSNMOD {
                 iCount = iCount + 1;
                 if (memcmp(OldSchemaBytes, 0, recordBuf, offset, schemaNameOld.length())) {
                     System.out.println("PNCH: Old Schema name match located on line: " + iCount);
+                    //System.arraycopy(NewSchemaBytes, offset, recordBuf, offset, lengthReplaced);
                 }
             }
         } catch (ZFileException e) {
