@@ -378,9 +378,9 @@ public class DSNMOD {
         }
 
         // take into account "'s
-        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld "\"");
+        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\"");
         System.out.println("NameOldPad: " + NameOldPad);
-        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew "\"");
+        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\"");
         System.out.println("NameNewPad: " + NameOldPad);
 
         try {
