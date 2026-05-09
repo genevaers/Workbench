@@ -365,7 +365,7 @@ public class DSNMOD {
         Integer iCount = 0;
         Integer bytesRead = 0;
         Integer offset = 1; // offset of first double quote preceding schema in record 4
-        Integer lengthReplaced = 10; // always replace padded length in quotes
+        Integer lengthReplaced = 11; // always replace padded length in quotes followed by period
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
@@ -378,9 +378,9 @@ public class DSNMOD {
         }
 
         // take into account "'s
-        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\"");
+        String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\".");
         System.out.println("NameOldPad: " + NameOldPad);
-        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\"");
+        String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\".");
         System.out.println("NameNewPad: " + NameNewPad);
 
         try {
@@ -397,9 +397,9 @@ public class DSNMOD {
             byte[] recordBuf = new byte[recLength];
             while ((bytesRead = reader.read(recordBuf)) >= 0) {
                 iCount = iCount + 1;
-                if (memcmp(OldSchemaBytes, 0, recordBuf, offset, schemaNameOld.length())) {
+                if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                     System.out.println("PNCH: Old Schema name match located on line: " + iCount);
-                    //System.arraycopy(NewSchemaBytes, offset, recordBuf, offset, lengthReplaced);
+                    //System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                 }
             }
         } catch (ZFileException e) {
