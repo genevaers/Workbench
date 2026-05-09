@@ -381,7 +381,7 @@ public class DSNMOD {
         String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\"");
         System.out.println("NameOldPad: " + NameOldPad);
         String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\"");
-        System.out.println("NameNewPad: " + NameNewdPad);
+        System.out.println("NameNewPad: " + NameNewPad);
 
         try {
             byte[] OldSchemaBytes = NameOldPad.getBytes(codepage);
