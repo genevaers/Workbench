@@ -379,9 +379,9 @@ public class DSNMOD {
 
         // take into account "'s
         String NameOldPad = String.format("%-10s", "\"" + schemaNameOld + "\".");
-        System.out.println("NameOldPad: " + NameOldPad);
+        System.out.println("NameOldPad: [" + NameOldPad + "]");
         String NameNewPad = String.format("%-10s", "\"" + schemaNameNew + "\".");
-        System.out.println("NameNewPad: " + NameNewPad);
+        System.out.println("NameNewPad: [" + NameNewPad + "]");
 
         try {
             byte[] OldSchemaBytes = NameOldPad.getBytes(codepage);
@@ -427,6 +427,7 @@ public class DSNMOD {
     public static boolean memcmp(byte[] b1, int b1Index, byte[] b2, int b2Index, int length) {
     
         for (int i = 0; i < length; i++) {
+            System.out.println(i, b1Index);
             // Compare bytes as unsigned values for C-style behavior
             int uByte1 = b1[b1Index + i] & 0xFF;
             int uByte2 = b2[b2Index + i] & 0xFF;
