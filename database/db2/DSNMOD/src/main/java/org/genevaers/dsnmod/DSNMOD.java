@@ -412,6 +412,14 @@ public class DSNMOD {
             System.out.println("Code page exception using " + codepage);
             return 12;
         } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (ZFileException e) {
+                    System.out.println("IO error closing output " + fmtOut);
+                    return 12;
+                }
+            }
             if (reader != null) {
                 try {
                   reader.close();
