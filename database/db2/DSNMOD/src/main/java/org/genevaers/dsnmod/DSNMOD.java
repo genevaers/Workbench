@@ -399,7 +399,7 @@ public class DSNMOD {
                 iCount = iCount + 1;
                 if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                     System.out.println("PNCH: Old Schema name match located on line: " + iCount);
-                    //System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
+                    System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                 }
             }
         } catch (ZFileException e) {
