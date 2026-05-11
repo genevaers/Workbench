@@ -363,13 +363,16 @@ public class DSNMOD {
 
     public static Integer processSinglePnchFile(String dsName, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer iCount = 0;
-        Integer bytesRead = 0;
+        Integer jCount = 0;
         Integer offset = 1; // offset of first double quote preceding schema in record 4
         Integer lengthReplaced = 11; // always replace padded length in quotes followed by period
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
         String fmtOut  = "//'" + dsName + ".Y'";
+        String dummyDD = ZFile.allocDummyDDName();
+
+        String cmd = "alloc fi("+dummyDD+") da(" + fmtOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
@@ -388,49 +391,60 @@ public class DSNMOD {
             byte[] OldSchemaBytes = NameOldPad.getBytes(codepage);
             byte[] NewSchemaBytes = NameNewPad.getBytes(codepage);
 
+            ZFile.bpxwdyn(cmd);  // might throw RcException
+            RecordWriter writer = null;
+
             reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
-            writer = RecordWriter.newWriter(fmtOut, ZFileConstants.FLAG_DISP_NEW);
             Integer recLength = reader.getLrecl();
 
-            if (recLength != 80) {
-                System.out.println("Input file must be fixed record length 80, actual record length is: " + recLength);
-            }
-            
-            byte[] recordBuf = new byte[recLength];
-            while ((bytesRead = reader.read(recordBuf)) >= 0) {
-                iCount = iCount + 1;
-                if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
-                    System.out.println("PNCH: Old Schema name match located on line: " + iCount);
-                    System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
+            try {
+                writer = RecordWriter.newWriterForDD(dummyDD);
+
+                if (recLength != 80) {
+                    System.out.println("Input file must be fixed record length 80, actual record length is: " + recLength);
                 }
-                writer.write(recordBuf, 0, recLength); // write record back anyway
+            
+                byte[] recordBuf = new byte[recLength];
+                while ((reader.read(recordBuf)) >= 0) {
+                    iCount = iCount + 1;
+                    if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
+                        jCount = jCount + 1;
+                        System.out.println("PNCH: Old Schema name match located on line: " + iCount);
+                        System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
+                    }
+                    writer.write(recordBuf, 0, recLength); // write record back anyway
+                }
+            } catch (ZFileException e) {
+                System.out.println("IO error for output DSN: " + fmtName);
+                return 12;
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (ZFileException e) {
+                        System.out.println("IO error closing output DSN:" + fmtOut);
+                        return 12;
+                    }
+                }
             }
         } catch (ZFileException e) {
-            System.out.println("IO error closing output: " + fmtName);
+            System.out.println("IO error for input DSN: " + fmtName);
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
             return 12;
         } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (ZFileException e) {
-                    System.out.println("IO error closing output " + fmtOut);
-                    return 12;
-                }
-            }
             if (reader != null) {
                 try {
                   reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing output: " + fmtName);
+                    System.out.println("IO error closing input DSN: " + fmtName);
                     return 12;
                 }
             } 
         }
 
-        System.out.println("Number of records read for DSN: " + dsName + " is: " + iCount);
+        System.out.println("Number of records copied for DSN: " + dsName + " is: " + iCount + " modified is: " + jCount);
         return 0;
 
     }
