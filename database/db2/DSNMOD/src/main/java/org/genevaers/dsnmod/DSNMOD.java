@@ -369,10 +369,10 @@ public class DSNMOD {
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
-//        String fmtOut  = "//'" + dsName + ".Y'";
+        String dsOut  = dsName + ".Y'";
         String dummyDD = ZFile.allocDummyDDName();
 
-        String cmd = "alloc fi("+dummyDD+") da(" + dsName + ".Y) reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
@@ -415,14 +415,14 @@ public class DSNMOD {
                     writer.write(recordBuf, 0, recLength); // write record back anyway
                 }
             } catch (ZFileException e) {
-                System.out.println("IO error for output DSN: " + fmtName);
+                System.out.println("IO error for output DSN: " + dsOut);
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException e) {
-                        System.out.println("IO error closing output DSN:" + fmtOut);
+                        System.out.println("IO error closing output DSN:" + dsOut);
                         return 12;
                     }
                 }
