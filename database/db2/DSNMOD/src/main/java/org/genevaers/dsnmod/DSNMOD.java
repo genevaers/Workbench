@@ -369,13 +369,14 @@ public class DSNMOD {
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
-        String dsOut  = dsName + ".Y";
+        String dsOut  = dsName + "2";
         String dummyDD = ZFile.allocDummyDDName();
 
         String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
-        System.out.println("cmd: " + cmd);
-
-        System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
+        if (0 < dbg) {
+            System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
+            System.out.println("cmd: " + cmd);
+        }
 
         Integer schemaLength = Math.max(schemaNameOld.length(), schemaNameNew.length());
         if (schemaLength > 8 ) {
@@ -384,9 +385,7 @@ public class DSNMOD {
 
         // take into account "'s and . meaning actual length will be 11 
         String NameOldPad = String.format("%-11s", "\"" + schemaNameOld + "\".");
-        System.out.println("NameOldPad: [" + NameOldPad + "]");
         String NameNewPad = String.format("%-11s", "\"" + schemaNameNew + "\".");
-        System.out.println("NameNewPad: [" + NameNewPad + "]");
 
         try {
             byte[] OldSchemaBytes = NameOldPad.getBytes(codepage);
@@ -410,7 +409,9 @@ public class DSNMOD {
                     iCount = iCount + 1;
                     if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                         jCount = jCount + 1;
-                        System.out.println("PNCH: Old Schema name match located on line: " + iCount);
+                        if (4 != iCount) {
+                            System.out.println("Warning: Old Schema name located on line: " + iCount + " of " + dsName);
+                        }
                         System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                     }
                     writer.write(recordBuf, 0, recLength); // write record back anyway
@@ -429,7 +430,7 @@ public class DSNMOD {
                 }
             }
         } catch (ZFileException e) {
-            System.out.println("IO error for input DSN: " + fmtName);
+            System.out.println("IO error for input DSN: " + dsName);
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
@@ -439,13 +440,13 @@ public class DSNMOD {
                 try {
                   reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing input DSN: " + fmtName);
+                    System.out.println("IO error closing input DSN: " + dsName);
                     return 12;
                 }
             } 
         }
 
-        System.out.println("Number of records copied for DSN: " + dsName + " is: " + iCount + " modified is: " + jCount);
+        System.out.println("Number of records copied from DSN: " + dsName + " is: " + iCount + " modified is: " + jCount);
         return 0;
 
     }
