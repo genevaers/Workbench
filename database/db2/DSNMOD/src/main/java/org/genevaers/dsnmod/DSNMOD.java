@@ -373,6 +373,7 @@ public class DSNMOD {
         String dummyDD = ZFile.allocDummyDDName();
 
         String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
+        System.out.println("cmd: " + cmd);
 
         System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
 
