@@ -369,7 +369,7 @@ public class DSNMOD {
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
-        String dsOut  = dsName + ".Y'";
+        String dsOut  = dsName + ".Y";
         String dummyDD = ZFile.allocDummyDDName();
 
         String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
