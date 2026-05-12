@@ -244,9 +244,11 @@ public class DSNMOD {
         Integer n = 0;
         Integer m = 0;
 
+        String fmtName = "//'" + dsn2 + "'";
+
         if (0 < dbg) {
-          System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2);
-          System.out.println("DDNAME: " + ddname + " DDOUT: " + ddout + " Offset: " + offset + " Codepage: " + codepage);
+          System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
+          System.out.println("Formatted Dsn2: " + dsn2);
         }
 
         // validation
@@ -276,13 +278,14 @@ public class DSNMOD {
 
         try {
             // Get an instance of RecordReader for the specified DD name
-            reader = RecordReader.newReaderForDD(ddname);
+            // reader = RecordReader.newReaderForDD(ddname);
+            reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
             writer = RecordWriter.newWriterForDD(ddout);
             
             // Determine the maximum record length (LRECL) for buffer sizing
             int lrecl = reader.getLrecl();
             if (( offset + max_length ) > lrecl ) {
-                System.out.println("The maximum LRECL of " + ddname + " of " + lrecl + " is insufficient for the specified offset " + offset);
+                System.out.println("The maximum LRECL of " + dsn2 + " of " + lrecl + " is insufficient for the specified offset " + offset);
                 return 12;
             }
             byte[] recordBuf = new byte[lrecl];
@@ -331,7 +334,7 @@ public class DSNMOD {
                 writer.write(recordBuf,0,bytesRead); // write record back anyway
             }
         } catch (ZFileException e) {
-            System.out.println("IO error reading from " + ddname + " and writing to " + ddout);
+            System.out.println("IO error reading from " + dsn2 + " and writing to " + ddout);
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
@@ -350,12 +353,12 @@ public class DSNMOD {
                 try {
                     reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing input " + ddname);
+                    System.out.println("IO error closing input " + dsn2);
                     return 12;
                 }
             }
         }
-        System.out.println("Number of records processed for ddname " + ddname + " is " + m);
+        System.out.println("Number of records processed for dsn2 " + ddname + " is " + m);
         System.out.println("Number of dataset names modified is " + n );
         System.out.println("All records including modifications written to " + ddout);
         return 0;
@@ -383,7 +386,7 @@ public class DSNMOD {
             System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
         }
 
-        // take into account "'s and . meaning actual length will be 11 
+        // Schema: take into account "'s and . meaning actual length will be 11 
         String NameOldPad = String.format("%-11s", "\"" + schemaNameOld + "\".");
         String NameNewPad = String.format("%-11s", "\"" + schemaNameNew + "\".");
 
