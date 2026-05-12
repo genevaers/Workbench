@@ -249,7 +249,6 @@ public class DSNMOD {
 
         if (0 < dbg) {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
-          System.out.println("Formatted Dsn2Data: " + dsn2Data);
         }
 
         Integer lastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
@@ -259,6 +258,10 @@ public class DSNMOD {
         } else {
             System.out.println("Error detected in LOB file specification: " + dsn2);
             return 8;
+        }
+
+        if (0 < dbg) {
+            System.out.println("Formatted Dsn2Data: " + dsn2Data);
         }
 
         // validation
