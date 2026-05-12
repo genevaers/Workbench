@@ -240,15 +240,25 @@ public class DSNMOD {
         RecordReader reader = null;
         RecordWriter writer = null;
         Integer i, hexlen;
-        byte hexbyte;
         Integer n = 0;
         Integer m = 0;
 
-        String fmtName = "//'" + dsn2 + "'";
+        byte hexbyte;
+        String dsn2Data = ""; // name of associated data file
+        String fmtDsn2Data = ""; // formatted version
 
         if (0 < dbg) {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
-          System.out.println("Formatted Dsn2: " + dsn2);
+          System.out.println("Formatted Dsn2Data: " + dsn2Data);
+        }
+
+        Integer lastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
+        if (lastIndex >= 1) {
+            dsn2Data = dsn2.substring(0, lastIndex - 1);
+            fmtDsn2Data = "//'" + dsn2Data + "'";
+        } else {
+            System.out.println("Error detected in LOB file specification: " + dsn2);
+            return 8;
         }
 
         // validation
@@ -279,13 +289,13 @@ public class DSNMOD {
         try {
             // Get an instance of RecordReader for the specified DD name
             // reader = RecordReader.newReaderForDD(ddname);
-            reader = RecordReader.newReader(fmtName, ZFileConstants.FLAG_DISP_SHR);
+            reader = RecordReader.newReader(fmtDsn2Data, ZFileConstants.FLAG_DISP_SHR);
             writer = RecordWriter.newWriterForDD(ddout);
             
             // Determine the maximum record length (LRECL) for buffer sizing
             int lrecl = reader.getLrecl();
             if (( offset + max_length ) > lrecl ) {
-                System.out.println("The maximum LRECL of " + dsn2 + " of " + lrecl + " is insufficient for the specified offset " + offset);
+                System.out.println("The maximum LRECL of " + dsn2Data + " of " + lrecl + " is insufficient for the specified offset " + offset);
                 return 12;
             }
             byte[] recordBuf = new byte[lrecl];
@@ -300,7 +310,6 @@ public class DSNMOD {
                     String dsn = new String(recordBuf, offset, max_length, codepage);
                     if (memcmp(dsn1bytes, 0, recordBuf, offset, dsn1.length())) {
                         n ++;
-                        //j = 100 - dsn2.length() - 10;
                         hexbyte = recordBuf[offset -1]; 
                         hexlen = Byte.toUnsignedInt(hexbyte);
                         // save bytes we will need in a minute                    
@@ -334,7 +343,7 @@ public class DSNMOD {
                 writer.write(recordBuf,0,bytesRead); // write record back anyway
             }
         } catch (ZFileException e) {
-            System.out.println("IO error reading from " + dsn2 + " and writing to " + ddout);
+            System.out.println("IO error reading from " + dsn2Data + " and writing to " + ddout);
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
@@ -353,12 +362,12 @@ public class DSNMOD {
                 try {
                     reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing input " + dsn2);
+                    System.out.println("IO error closing input " + dsn2Data);
                     return 12;
                 }
             }
         }
-        System.out.println("Number of records processed for dsn2 " + ddname + " is " + m);
+        System.out.println("Number of records processed for dsn2Data " + dsn2Data + " is " + m);
         System.out.println("Number of dataset names modified is " + n );
         System.out.println("All records including modifications written to " + ddout);
         return 0;
