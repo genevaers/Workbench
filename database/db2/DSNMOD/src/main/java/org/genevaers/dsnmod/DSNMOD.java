@@ -261,7 +261,7 @@ public class DSNMOD {
         }
 
         if (0 < dbg) {
-            System.out.println("Formatted Dsn2Data: " + dsn2Data);
+            System.out.println("Dsn2Data: " + dsn2Data + "Formatted Dsn2Data: " + fmtDsn2Data);
         }
 
         // validation
