@@ -242,6 +242,8 @@ public class DSNMOD {
         Integer i, hexlen;
         Integer n = 0;
         Integer m = 0;
+        Integer iLastIndex = 0;
+        Integer jLastIndex = 0;
 
         byte hexbyte;
         String dsn2Data = ""; // name of associated data file
@@ -251,17 +253,23 @@ public class DSNMOD {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
         }
 
-        Integer lastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
-        if (lastIndex >= 1) {
-            dsn2Data = dsn2.substring(0, lastIndex) + ".DATA";
-            fmtDsn2Data = "//'" + dsn2Data + "'";
+        iLastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
+        if (iLastIndex >= 1) {
+            jLastIndex = dsn2.lastIndexOf(".VIEWSRCF.LOB"); // this one has a slightly different name just to be consistent
+            if (jLastIndex >= 1) {
+                dsn2Data = dsn2.substring(0, jLastIndex) + ".VIEWSRC.DATA";
+                fmtDsn2Data = "//'" + dsn2Data + "'";
+            } else {                                        // these have consistent names for .DATA file
+                dsn2Data = dsn2.substring(0, iLastIndex) + ".DATA";
+                fmtDsn2Data = "//'" + dsn2Data + "'";
+            }
         } else {
             System.out.println("Error detected in LOB file specification: " + dsn2);
             return 8;
         }
 
         if (0 < dbg) {
-            System.out.println("Dsn2Data: " + dsn2Data + "Formatted Dsn2Data: " + fmtDsn2Data);
+            System.out.println("Dsn2Data: " + dsn2Data + " Formatted Dsn2Data: " + fmtDsn2Data);
         }
 
         // validation
