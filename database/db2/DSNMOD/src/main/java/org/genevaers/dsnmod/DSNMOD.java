@@ -253,7 +253,7 @@ public class DSNMOD {
 
         Integer lastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
         if (lastIndex >= 1) {
-            dsn2Data = dsn2.substring(0, lastIndex - 1);
+            dsn2Data = dsn2.substring(0, lastIndex) + ".DATA";
             fmtDsn2Data = "//'" + dsn2Data + "'";
         } else {
             System.out.println("Error detected in LOB file specification: " + dsn2);
