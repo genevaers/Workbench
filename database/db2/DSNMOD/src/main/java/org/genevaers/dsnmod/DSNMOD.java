@@ -94,7 +94,7 @@ public class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
-            System.out.println("Parameters----------------------------------------------------------------------------------------");
+            System.out.println("Parameter processing -----------------------------------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -157,7 +157,7 @@ public class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          System.out.println("\nData files----------------------------------------------------------------------------------------");
+          System.out.println("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
           for ( i = 0; i < 5; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -178,7 +178,7 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer rc = 0;
       
-        System.out.println("\nPunch files---------------------------------------------------------------------------------------");
+        System.out.println("\nProcess .PNCH files to update Schema names -------------------------------------------------------");
         if (0 < dbg) {
           System.out.println("PNCH Mask: " + maskPnch);
         }
@@ -218,9 +218,9 @@ public class DSNMOD {
         Integer jLastIndex = 0;
 
         byte hexbyte;
-        String dsn2Data = ""; // name of associated data file
-        String fmtDsn2Data = ""; // formatted version
-
+        String dsn2Data = ""; // name of .DATA file associated with .PNCH file
+        String fmtDsn2Data = ""; // USS version
+        
         if (0 < dbg) {
           System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
         }
@@ -241,6 +241,7 @@ public class DSNMOD {
         }
 
         String dsn2DataOut  = dsn2Data + "2";
+        String fmtDsn2DataOut = "//'" + dsn2DataOut + "'"; // USS version
         String dummyDD = ZFile.allocDummyDDName();
         String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,25) RELEASE cyl lrecl(27994) blksize(27998)";
 
@@ -366,9 +367,27 @@ public class DSNMOD {
                 }
             }
         }
-        System.out.println("Number of records copied from dsn2Data " + dsn2Data + " is " + m);
-        System.out.println("Number of dataset names modified is " + n );
-        System.out.println("All records including modifications written to " + dsn2DataOut);
+        
+        System.out.println("Number of records processed from input file: " + dsn2Data + " is: " + m);
+        System.out.println("Number of .LOB related embedded dataset names modified is: " + n );
+        System.out.println("All records including modifications written to output file: " + dsn2DataOut);
+
+        try {
+            System.out.println("Attempting to delete: " + fmtDsn2Data);
+            ZFile.remove(fmtDsn2Data);
+            System.out.println("Successfully deleted " + fmtDsn2Data);
+            try {
+                RenameFile.rename(oldName, newName);
+                System.out.println("Successfully renamed " + fmtDsn2DataOut + " to " + fmtDsn2Data);
+            } catch (Exception e) {
+                System.err.println("Failed to rename file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (ZFileException e) {
+            System.err.println("Failed to delete file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         return 0;
     }
 
