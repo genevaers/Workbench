@@ -373,12 +373,12 @@ public class DSNMOD {
         System.out.println("All records including modifications written to output file: " + dsn2DataOut);
 
         try {
-            System.out.println("Attempting to delete: " + fmtDsn2Data);
+            System.out.println("Attempting to delete: " + dsn2Data);
             ZFile.remove(fmtDsn2Data);
-            System.out.println("Successfully deleted " + fmtDsn2Data);
+            System.out.println("Successfully deleted: " + dsn2Data);
             try {
                 ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
-                System.out.println("Successfully renamed " + fmtDsn2DataOut + " to " + fmtDsn2Data);
+                System.out.println("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
             } catch (Exception e) {
                 System.err.println("Failed to rename file: " + e.getMessage());
                 e.printStackTrace();
@@ -399,10 +399,11 @@ public class DSNMOD {
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
-        String dsOut  = dsName + "2";
+        String dsNameOut  = dsName + "2";
+        String fmtNameOut = "//'" + dsNameOut + "'";
         String dummyDD = ZFile.allocDummyDDName();
 
-        String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) RELEASE cyl lrecl(80)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsNameOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) RELEASE cyl lrecl(80)";
         if (0 < dbg) {
             System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
             System.out.println("PNCH cmd: " + cmd);
@@ -449,14 +450,14 @@ public class DSNMOD {
                     writer.write(recordBuf, 0, recLength); // write record back anyway
                 }
             } catch (ZFileException e) {
-                System.out.println("IO error for output DSN: " + dsOut);
+                System.out.println("IO error for output DSN: " + dsNameOut);
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output DSN:" + dsOut);
+                        System.out.println("IO error closing output DSN:" + dsNameOut);
                         return 12;
                     }
                     try {
@@ -487,6 +488,23 @@ public class DSNMOD {
         }
 
         System.out.println("Number of records copied from DSN: " + dsName + " is: " + iCount + " modified is: " + jCount);
+
+        try {
+            System.out.println("Attempting to delete: " + dsName);
+            ZFile.remove(fmtName);
+            System.out.println("Successfully deleted: " + dsName);
+            try {
+                ZFile.rename(fmtNameOut, fmtName);
+                System.out.println("Successfully renamed: " + dsNameOut + " to: " + dsName);
+            } catch (Exception e) {
+                System.err.println("Failed to rename file: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } catch (ZFileException e) {
+            System.err.println("Failed to delete file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         return 0;
 
     }
