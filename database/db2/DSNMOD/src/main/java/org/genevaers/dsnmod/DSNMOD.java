@@ -377,7 +377,7 @@ public class DSNMOD {
             ZFile.remove(fmtDsn2Data);
             System.out.println("Successfully deleted " + fmtDsn2Data);
             try {
-                RenameFile.rename(oldName, newName);
+                RenameFile.rename(fmtDsn2DataOut, fmtDsn2Data);
                 System.out.println("Successfully renamed " + fmtDsn2DataOut + " to " + fmtDsn2Data);
             } catch (Exception e) {
                 System.err.println("Failed to rename file: " + e.getMessage());
