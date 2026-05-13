@@ -14,28 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.io.*;
 
 import com.ibm.jzos.RcException;
-import com.ibm.jzos.RecordReader; // BSAM access
+import com.ibm.jzos.RecordReader;
 import com.ibm.jzos.RecordWriter;
 import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZFileConstants;
 import com.ibm.jzos.ZFileException;
-import com.ibm.jzos.fields.PackedDecimalAsIntField; // Packed number processing
 import com.ibm.jzos.CatalogSearch;
 import com.ibm.jzos.CatalogSearchField;
 import com.ibm.jzos.Format1DSCB;
@@ -108,7 +94,7 @@ public class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
-            System.out.println("Parameters----------------------------------------------------------");
+            System.out.println("Parameters----------------------------------------------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -171,7 +157,7 @@ public class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          System.out.println("\nData files----------------------------------------------------------");
+          System.out.println("\nData files----------------------------------------------------------------------------------------");
           for ( i = 0; i < 5; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -192,7 +178,7 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer rc = 0;
       
-        System.out.println("\nPunch files---------------------------------------------------------");
+        System.out.println("\nPunch files---------------------------------------------------------------------------------------");
         if (0 < dbg) {
           System.out.println("PNCH Mask: " + maskPnch);
         }
