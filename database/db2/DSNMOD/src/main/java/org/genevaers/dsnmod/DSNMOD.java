@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import com.ibm.jzos.RcException;
 import com.ibm.jzos.RecordReader;
 import com.ibm.jzos.RecordWriter;
-import com.ibm.jzos.sample.nonvsam.file.RenameFile;
+import com.ibm.jzos.RenameFile;
 import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZFileConstants;
 import com.ibm.jzos.ZFileException;
