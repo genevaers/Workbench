@@ -256,7 +256,7 @@ public class DSNMOD {
 
         String dsn2DataOut  = dsn2Data + "2";
         String dummyDD = ZFile.allocDummyDDName();
-        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space((25,7),,RLSE) cyl lrecl(27994) blksize(27998)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,10,,RLSE) cyl lrecl(27994) blksize(27998)";
 
 
         if (0 < dbg) {
@@ -270,7 +270,11 @@ public class DSNMOD {
             return 8;
         }
 
-        ZFile.bpxwdyn(cmd);  // might throw RcException
+        try {
+            ZFile.bpxwdyn(cmd);  // might throw RcException
+        } catch (RcException rce) {
+            rce.printStackTrace();  // but continue
+         }
 
         if ( dsn1.length() < 1 ) {
             System.out.println("Value of scanned for dataset name is insufficient: " + dsn1 );
@@ -346,9 +350,14 @@ public class DSNMOD {
                 if (writer != null) {
                     try {
                         writer.close();
-                    } catch (ZFileException e) {
+                    } catch (ZFileException zfe) {
                         System.out.println("IO error closing output DSN:" + fmtDsn2Data);
                         return 12;
+                    }
+                    try {
+                        ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
+                    } catch (RcException rce) {
+                        rce.printStackTrace();  // but continue
                     }
                 }
             }
