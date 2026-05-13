@@ -294,7 +294,7 @@ public class DSNMOD {
             int lrecl = reader.getLrecl();
             if (( offset + max_length ) > lrecl ) {
                 System.out.println("The maximum LRECL of " + dsn2Data + " of " + lrecl + " is insufficient for the specified offset " + offset);
-                return 12;
+                return 8;
             }
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
@@ -339,25 +339,26 @@ public class DSNMOD {
                         }
                     }
                     else {
-                        System.out.println("Record is too small to process and cannot contain search dataset name");
+                        System.out.println("Record is too small to process and cannot contain search dataset name: ");
                     }
                     // if match with dataset modify dataset name
                     writer.write(recordBuf,0,bytesRead); // write record back anyway
                 }
             } catch (ZFileException e) {
-                System.out.println("IO error for output DSN: " + fmtDsn2Data);
+                System.out.println("IO error for output DSN: " + dsn2DataOut);
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output DSN:" + fmtDsn2Data);
+                        System.out.println("IO error closing output DSN:" + dsn2DataOut);
                         return 12;
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
+                        System.out.println("Err deallocating output dataset: " + dsn2DataOut);
                         rce.printStackTrace();  // but continue
                     }
                 }
@@ -381,7 +382,7 @@ public class DSNMOD {
         }
         System.out.println("Number of records copied from dsn2Data " + dsn2Data + " is " + m);
         System.out.println("Number of dataset names modified is " + n );
-        System.out.println("All records including modifications written to " + fmtDsn2Data);
+        System.out.println("All records including modifications written to " + dsn2DataOut);
         return 0;
     }
 
