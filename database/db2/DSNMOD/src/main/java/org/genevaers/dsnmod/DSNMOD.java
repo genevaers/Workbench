@@ -52,8 +52,6 @@ public class DSNMOD {
 
         Integer dbg = 0;
         String codepage = "Cp1047";
-        String[] ddname = new String[5];
-        String[] ddout  = new String[5];
         String[] dsn1 = new String[5];
         String[] dsn2 = new String[5];
         Integer[] offset = new Integer[5];
@@ -73,17 +71,6 @@ public class DSNMOD {
         Boolean lPunch = true;
         Integer iRec = 0;
         Integer i, n;
-
-        ddname[0] = "INPUT01";
-        ddname[1] = "INPUT02";
-        ddname[2] = "INPUT03";
-        ddname[3] = "INPUT04";
-        ddname[4] = "INPUT05";
-        ddout[0] = "OUTPUT1";
-        ddout[1] = "OUTPUT2";
-        ddout[2] = "OUTPUT3";
-        ddout[3] = "OUTPUT4";
-        ddout[4] = "OUTPUT5";
 
         // command line argument[s]
         Integer nArgs =args.length;
@@ -186,7 +173,7 @@ public class DSNMOD {
           Integer rcHigh = 0;
           System.out.println("\nData files----------------------------------------------------------");
           for ( i = 0; i < 5; i++) {
-              rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, ddname[i], ddout[i], dbg);
+              rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
               }
@@ -235,8 +222,7 @@ public class DSNMOD {
         return rc;
     }
 
-    public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, String ddname, String ddout, Integer dbg) {
-    
+    public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, Integer dbg) {
         RecordReader reader = null;
         RecordWriter writer = null;
         Integer i, hexlen;
@@ -264,26 +250,30 @@ public class DSNMOD {
                 fmtDsn2Data = "//'" + dsn2Data + "'";
             }
         } else {
-            System.out.println("Error detected in LOB file specification: " + dsn2);
+            System.out.println("Error detected in LOB file specification: " + dsn2  + ". Check LOB file definitions in parameter file.");
             return 8;
         }
 
+        String dsn2DataOut  = dsn2Data + "2";
+        String dummyDD = ZFile.allocDummyDDName();
+        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(10,5,,RLSE) cyl lrecl(27994) blksize(27998)";
+
+
         if (0 < dbg) {
             System.out.println("Dsn2Data: " + dsn2Data + " Formatted Dsn2Data: " + fmtDsn2Data);
+            System.out.println("DATA2 cmd: " + cmd);
         }
 
-        // validation
+        // validation of search/replacement of dataset name(s)
         if ( offset < 1 ) {
             System.out.println("Offset of start of dataset name must be greater than or equal to one (1)");
             return 8;
         }
         try {
-            byte[] ddnamebytes = ddname.getBytes(codepage);
-            byte[] ddoutbytes = ddout.getBytes(codepage);
-            if ( ddname == null || ddout == null || !isWithinRange(ddnamebytes.length, 1, 8) || !isWithinRange(ddoutbytes.length, 1, 8)) {
-                System.out.println("DDNAME for input or output is null. DDNAME: " + ddname + " DDOUT: " + ddout + ":" + ddnamebytes.length + ":" + ddoutbytes.length);
-                return 8;
-            }
+            ZFile.bpxwdyn(cmd);  // might throw RcException
+        } catch (ZFileException e) {
+            System.out.println("IO error creating " + dsn2DataOut);
+            return 12;
         } catch (UnsupportedEncodingException ex) {
             System.out.println("Unsupported encoding: " + codepage);
             return 12;
@@ -299,9 +289,7 @@ public class DSNMOD {
 
         try {
             // Get an instance of RecordReader for the specified DD name
-            // reader = RecordReader.newReaderForDD(ddname);
             reader = RecordReader.newReader(fmtDsn2Data, ZFileConstants.FLAG_DISP_SHR);
-            writer = RecordWriter.newWriterForDD(ddout);
             
             // Determine the maximum record length (LRECL) for buffer sizing
             int lrecl = reader.getLrecl();
@@ -314,61 +302,70 @@ public class DSNMOD {
             byte[] dsn1bytes = dsn1.getBytes(codepage);
             byte[] dsn2bytes = dsn2.getBytes(codepage);
 
-            // Read records one by one until the end of the file
-            while ((bytesRead = reader.read(recordBuf)) >= 0) {
-                m ++;
-                if ( bytesRead >= (offset + max_length)) {
-                    String dsn = new String(recordBuf, offset, max_length, codepage);
-                    if (memcmp(dsn1bytes, 0, recordBuf, offset, dsn1.length())) {
-                        n ++;
-                        hexbyte = recordBuf[offset -1]; 
-                        hexlen = Byte.toUnsignedInt(hexbyte);
-                        // save bytes we will need in a minute                    
-                        byte[] savebytes = new byte[10];
-                        //System.out.println("Updating: " + dsn );
-                        for ( i = 0; i < 10; i++ ) {
-                            savebytes[i] = recordBuf[dsn1.length() + offset + i];
+            // open output file
+            try {
+                writer = RecordWriter.newWriterForDD(dummyDD);
+
+                // Read records one by one until the end of the file
+                while ((bytesRead = reader.read(recordBuf)) >= 0) {
+                    m ++;
+                    if ( bytesRead >= (offset + max_length)) {
+                        String dsn = new String(recordBuf, offset, max_length, codepage);
+                        if (memcmp(dsn1bytes, 0, recordBuf, offset, dsn1.length())) {
+                            n ++;
+                            hexbyte = recordBuf[offset -1]; 
+                            hexlen = Byte.toUnsignedInt(hexbyte);
+                            // save bytes we will need in a minute                    
+                            byte[] savebytes = new byte[10];
+                            //System.out.println("Updating: " + dsn );
+                            for ( i = 0; i < 10; i++ ) {
+                                savebytes[i] = recordBuf[dsn1.length() + offset + i];
+                            }
+                            // substitute other bytes in file name
+                            for ( i = 0; i < dsn2.length(); i++) {
+                                recordBuf[offset + i] = dsn2bytes[i];
+                            }
+                            // restore save bytes
+                            for ( i = 0; i < 10; i++ ) {
+                                recordBuf[dsn2.length() + offset + i] = savebytes[i];
+                            }
+                            // blank over remainder
+                            for ( i = 0; i < 32; i++ ) {
+                                recordBuf[10 + dsn2.length() + offset + i] = 0x40;
+                            }
+                            // new value for hex length
+                            hexlen = dsn2.length() + 10;
+                            hexbyte = hexlen.byteValue();
+                            recordBuf[offset -1] = hexbyte;
                         }
-                        // substitute other bytes in file name
-                        for ( i = 0; i < dsn2.length(); i++) {
-                            recordBuf[offset + i] = dsn2bytes[i];
-                        }
-                        // restore save bytes
-                        for ( i = 0; i < 10; i++ ) {
-                            recordBuf[dsn2.length() + offset + i] = savebytes[i];
-                        }
-                        // blank over remainder
-                        for ( i = 0; i < 32; i++ ) {
-                            recordBuf[10 + dsn2.length() + offset + i] = 0x40;
-                        }
-                        // new value for hex length
-                        hexlen = dsn2.length() + 10;
-                        hexbyte = hexlen.byteValue();
-                        recordBuf[offset -1] = hexbyte;
+                    }
+                    else {
+                        System.out.println("Record is too small to process and cannot contain search dataset name");
+                    }
+                    // if match with dataset modify dataset name
+                    writer.write(recordBuf,0,bytesRead); // write record back anyway
+                }
+            } catch (ZFileException e) {
+                System.out.println("IO error for output DSN: " + fmtDsn2Data);
+                return 12;
+            } finally {
+                if (writer != null) {
+                    try {
+                        writer.close();
+                    } catch (ZFileException e) {
+                        System.out.println("IO error closing output DSN:" + fmtDsn2Data);
+                        return 12;
                     }
                 }
-                else {
-                    System.out.println("Record is too small to process and cannot contain search dataset name");
-                }
-                // if match with dataset modify dataset name
-                writer.write(recordBuf,0,bytesRead); // write record back anyway
             }
         } catch (ZFileException e) {
-            System.out.println("IO error reading from " + dsn2Data + " and writing to " + ddout);
+            System.out.println("IO error reading from " + dsn2Data);
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
             return 12;
         } finally {
-            // Ensure the reader is closed in a finally block to release resources
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (ZFileException e) {
-                    System.out.println("IO error closing output " + ddout);
-                    return 12;
-                }
-            }
+            // Ensure the reader is closed in final block to release resources
             if (reader != null) {
                 try {
                     reader.close();
@@ -378,9 +375,9 @@ public class DSNMOD {
                 }
             }
         }
-        System.out.println("Number of records processed for dsn2Data " + dsn2Data + " is " + m);
+        System.out.println("Number of records copied from dsn2Data " + dsn2Data + " is " + m);
         System.out.println("Number of dataset names modified is " + n );
-        System.out.println("All records including modifications written to " + ddout);
+        System.out.println("All records including modifications written to " + fmtDsn2Data);
         return 0;
     }
 
@@ -398,12 +395,13 @@ public class DSNMOD {
         String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
         if (0 < dbg) {
             System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
-            System.out.println("cmd: " + cmd);
+            System.out.println("PNCH cmd: " + cmd);
         }
 
         Integer schemaLength = Math.max(schemaNameOld.length(), schemaNameNew.length());
         if (schemaLength > 8 ) {
             System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
+            return 8;
         }
 
         // Schema: take into account "'s and . meaning actual length will be 11 
@@ -425,6 +423,7 @@ public class DSNMOD {
 
                 if (recLength != 80) {
                     System.out.println("Input file must be fixed record length 80, actual record length is: " + recLength);
+                    return 8;
                 }
             
                 byte[] recordBuf = new byte[recLength];
