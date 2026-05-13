@@ -273,7 +273,8 @@ public class DSNMOD {
         try {
             ZFile.bpxwdyn(cmd);  // might throw RcException
         } catch (RcException rce) {
-            rce.printStackTrace();  // but continue
+            rce.printStackTrace();
+            return 12;
          }
 
         if ( dsn1.length() < 1 ) {
@@ -395,7 +396,7 @@ public class DSNMOD {
         String dsOut  = dsName + "2";
         String dummyDD = ZFile.allocDummyDDName();
 
-        String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) cyl lrecl(80)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) RELEASE cyl lrecl(80)";
         if (0 < dbg) {
             System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
             System.out.println("PNCH cmd: " + cmd);
@@ -448,14 +449,22 @@ public class DSNMOD {
                 if (writer != null) {
                     try {
                         writer.close();
-                    } catch (ZFileException e) {
-                        System.out.println("IO error closing output DSN:" + dsOut);
+                    } catch (ZFileException zfe) {
+                        System.out.println("IO error closing output DSN:" + fmtDsn2Data);
                         return 12;
+                    }
+                    try {
+                        ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
+                    } catch (RcException rce) {
+                        rce.printStackTrace();  // but continue
                     }
                 }
             }
         } catch (ZFileException e) {
             System.out.println("IO error for input DSN: " + dsName);
+            return 12;
+        } catch (RcException rce) {
+            rce.printStackTrace();
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using " + codepage);
