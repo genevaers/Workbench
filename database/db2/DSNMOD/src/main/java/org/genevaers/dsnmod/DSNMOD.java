@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import com.ibm.jzos.RcException;
 import com.ibm.jzos.RecordReader;
 import com.ibm.jzos.RecordWriter;
-import com.ibm.jzos.RenameFile;
 import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZFileConstants;
 import com.ibm.jzos.ZFileException;
@@ -378,7 +377,7 @@ public class DSNMOD {
             ZFile.remove(fmtDsn2Data);
             System.out.println("Successfully deleted " + fmtDsn2Data);
             try {
-                RenameFile.rename(fmtDsn2DataOut, fmtDsn2Data);
+                ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
                 System.out.println("Successfully renamed " + fmtDsn2DataOut + " to " + fmtDsn2Data);
             } catch (Exception e) {
                 System.err.println("Failed to rename file: " + e.getMessage());
