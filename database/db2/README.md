@@ -164,8 +164,8 @@ This process is distinct to the one above for creating an empty DB2 schema. It r
 UNLOAD   - unload GenevaERS data from existing DB2 schema using site specific IBM or 3rd party utility
 ........
 E2PAXMIT - Unpack .TRS file into PDSE and expand individual library members into PDSE and SEQ files
-NULLDATA - scan RECEIVE'd DATA files for invalid DCB information indicating empty file(s)
-DSNMOD   - change file names representing relationship between sequential DATA files and LOB PDSE files
+NULLDATA - scan and update RECEIVE'd DATA files for invalid DCB information indicating empty file(s)
+DSNMOD   - change file names representing relationship between DATA and LOB files. Update Schema name.
 DROPALL  - drop existing database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
 BLDDB02  - create Logic Table/LOB column

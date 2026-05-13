@@ -69,14 +69,17 @@ public class DSNMOD {
                     // Process PNCH files only
                     case "P":
                         lData = false;
+                        System.out.println("Processing .PNCH files only is selected");
                         break;
                     // Process DATA files only
                     case "D":
                         lPunch = false;
+                        System.out.println("Processing .DATA files only is selected");
                         break;
                     // Debug information
                     case "d":
                         dbg = b.doAtois(args[n], 2);
+                        System.out.println("Debug set, level: " + dbg);
                         break;
                     case "h":
                         System.out.println("-D (process DATA files only)\n-P (process PNCH files only)");
