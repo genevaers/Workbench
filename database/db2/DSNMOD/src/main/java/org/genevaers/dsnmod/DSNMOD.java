@@ -256,7 +256,7 @@ public class DSNMOD {
 
         String dsn2DataOut  = dsn2Data + "2";
         String dummyDD = ZFile.allocDummyDDName();
-        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,10) RELEASE cyl lrecl(27994) blksize(27998)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,25) RELEASE cyl lrecl(27994) blksize(27998)";
 
 
         if (0 < dbg) {
