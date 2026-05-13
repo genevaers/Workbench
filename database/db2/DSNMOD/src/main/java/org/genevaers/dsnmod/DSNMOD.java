@@ -450,7 +450,7 @@ public class DSNMOD {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output DSN:" + fmtDsn2Data);
+                        System.out.println("IO error closing output DSN:" + dsOut);
                         return 12;
                     }
                     try {
