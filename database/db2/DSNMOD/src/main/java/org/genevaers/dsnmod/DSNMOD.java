@@ -269,15 +269,9 @@ public class DSNMOD {
             System.out.println("Offset of start of dataset name must be greater than or equal to one (1)");
             return 8;
         }
-        try {
-            ZFile.bpxwdyn(cmd);  // might throw RcException
-        } catch (ZFileException e) {
-            System.out.println("IO error creating " + dsn2DataOut);
-            return 12;
-        } catch (UnsupportedEncodingException ex) {
-            System.out.println("Unsupported encoding: " + codepage);
-            return 12;
-        }
+
+        ZFile.bpxwdyn(cmd);  // might throw RcException
+
         if ( dsn1.length() < 1 ) {
             System.out.println("Value of scanned for dataset name is insufficient: " + dsn1 );
             return 8;
