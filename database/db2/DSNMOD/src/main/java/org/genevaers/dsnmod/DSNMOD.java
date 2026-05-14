@@ -234,9 +234,15 @@ public class DSNMOD {
             if (jLastIndex >= 1) {
                 dsn2Data = dsn2.substring(0, jLastIndex) + ".VIEWSRC.DATA";
                 fmtDsn2Data = "//'" + dsn2Data + "'";
-            } else {                                        // these have consistent names for .DATA file
-                dsn2Data = dsn2.substring(0, iLastIndex) + ".DATA";
-                fmtDsn2Data = "//'" + dsn2Data + "'";
+            } else {
+                jLastIndex = dsn2.lastIndexOf(".VIEWSRCO.LOB"); // this one has a slightly different name just to be consistent
+                if (jLastIndex >= 1) {
+                    dsn2Data = dsn2.substring(0, jLastIndex) + ".VIEWSRC.DATA";
+                    fmtDsn2Data = "//'" + dsn2Data + "'";
+                } else {                                        // these have consistent names for .DATA file
+                    dsn2Data = dsn2.substring(0, iLastIndex) + ".DATA";
+                    fmtDsn2Data = "//'" + dsn2Data + "'";
+                }
             }
         } else {
             System.out.println("Error detected in LOB file specification: " + dsn2  + ". Check LOB file definitions in parameter file.");
