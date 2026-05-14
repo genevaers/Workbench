@@ -38,9 +38,9 @@ public class DSNMOD {
 
         Integer dbg = 0;
         String codepage = "Cp1047";
-        String[] dsn1 = new String[5];
-        String[] dsn2 = new String[5];
-        Integer[] offset = new Integer[5];
+        String[] dsn1 = new String[6]; //////////////////////////////////////////////////////////////////
+        String[] dsn2 = new String[6]; //////////////////////////////////////////////////////////////////
+        Integer[] offset = new Integer[6]; //////////////////////////////////////////////////////////////////
         Integer rc = 0;
         Integer parmrec = 0;
         RecordReader parmreader = null;
@@ -123,7 +123,7 @@ public class DSNMOD {
                         System.out.println("DATA Mask: " + maskData);
                         System.out.println("PNCH Mask: " + maskPnch);
                       } else {
-                        if (parmrec >= 4 && parmrec <= 8) {
+                        if (parmrec >= 4 && parmrec <= 9) { //////////////////////////////////////////////////////////////////
                           String dataLlq = scanner.next();
                           Integer dataOff = scanner.nextInt();
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq;
