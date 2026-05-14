@@ -161,7 +161,7 @@ public class DSNMOD {
         if ( lData ) {
           Integer rcHigh = 0;
           System.out.println("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
-          for ( i = 0; i < 5; i++) {
+          for ( i = 0; i < 6; i++) { //////////////////////////////////////////////////////////////////
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
