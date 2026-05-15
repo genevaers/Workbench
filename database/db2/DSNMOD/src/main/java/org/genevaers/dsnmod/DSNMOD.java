@@ -258,7 +258,6 @@ public class DSNMOD {
         String dsn2DataOut  = dsn2Data + "2";
         String fmtDsn2DataOut = "//'" + dsn2DataOut + "'"; // USS version
         String dummyDD = ZFile.allocDummyDDName();
-      //String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,25) RELEASE cyl lrecl(27994) blksize(27998)";
         String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") like(" + dsn2Data + ") reuse new catalog msg(wtp)";
 
         if (0 < dbg) {
@@ -419,7 +418,7 @@ public class DSNMOD {
         String fmtNameOut = "//'" + dsNameOut + "'";
         String dummyDD = ZFile.allocDummyDDName();
 
-        String cmd = "alloc fi("+dummyDD+") da(" + dsNameOut + ") reuse new catalog msg(2) recfm(f,b) space(1,3) RELEASE cyl lrecl(80)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsNameOut + ") like(" + dsName + ") reuse new catalog msg(wtp)";
         if (0 < dbg) {
             System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
             System.out.println("PNCH cmd: " + cmd);
@@ -459,7 +458,7 @@ public class DSNMOD {
                     if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                         jCount = jCount + 1;
                         if (4 != iCount) {
-                            System.out.println("Warning: Old Schema name located on line: " + iCount + " of " + dsName);
+                            System.out.println("Warning: Old Schema name is located on line: " + iCount + " of input dataset: " + dsName);
                         }
                         System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                     }
