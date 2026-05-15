@@ -371,10 +371,8 @@ public class DSNMOD {
                     }
                 }
             }
-        } catch (ZFileException e) {
-            System.out.println("IO error opening or reading from input dataset: " + dsn2Data);
-            return 12;
         } catch (ZFileException zfe) {
+            System.out.println("IO error opening or reading from input dataset: " + dsn2Data);
             System.out.println("IO error for input dataset:" + dsn2Data);
             System.err.println("Native I/O Error occurred!");
             System.err.println("Errno: " + zfe.getErrno());
