@@ -148,10 +148,10 @@ public class DSNMOD {
             }
 
         } catch (ZFileException e) {
-            System.out.println("IO error reading from " + ddparm);
+            System.out.println("IO error reading from: " + ddparm);
             return;
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using " + codepage);
+            System.out.println("Code page exception using: " + codepage);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -159,7 +159,7 @@ public class DSNMOD {
                 try {
                     parmreader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing " + ddparm);
+                    System.out.println("IO error closing: " + ddparm);
                 }
             }
         }
@@ -374,6 +374,13 @@ public class DSNMOD {
         } catch (ZFileException e) {
             System.out.println("IO error opening or reading from input dataset: " + dsn2Data);
             return 12;
+        } catch (ZFileException zfe) {
+            System.out.println("IO error closing output dataset:" + dsNameOut);
+            System.err.println("Native I/O Error occurred!");
+            System.err.println("Errno: " + zfe.getErrno());
+            System.err.println("Message: " + zfe.getErrnoMsg());
+            zfe.printStackTrace();
+            return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
             return 12;
@@ -470,11 +477,6 @@ public class DSNMOD {
             try {
                 writer = RecordWriter.newWriterForDD(dummyDD);
 
-                if (recLength != 80) {
-                    System.out.println("Input file must be fixed record length 80, actual record length is: " + recLength);
-                    return 8;
-                }
-            
                 byte[] recordBuf = new byte[recLength];
                 while ((reader.read(recordBuf)) >= 0) {
                     iCount = iCount + 1;
