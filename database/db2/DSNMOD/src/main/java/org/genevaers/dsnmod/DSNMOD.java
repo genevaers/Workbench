@@ -78,7 +78,7 @@ public class DSNMOD {
                         break;
                     // Codepage override
                     case "C":
-                        codepage = args[i].substring(2);
+                        codepage = args[n].substring(2);
                         System.out.println("Codepage requested:" + codepage);
                     // Debug information
                     case "d":
