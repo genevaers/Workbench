@@ -49,6 +49,9 @@ public class Attrtest {
 
         // input is expected to be a non-VSAM MVS dataset name
         String fileName = args[0];
+        String fmtName = "//'" + fileName + "'";
+
+        System.out.println("Formatted file");
 
         // call the create method with the input file
         getAttributes(fileName);
