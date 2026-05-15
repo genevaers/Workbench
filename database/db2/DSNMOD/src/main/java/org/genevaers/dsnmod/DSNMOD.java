@@ -143,10 +143,6 @@ public class DSNMOD {
                     }
                   }
                 }
-                if ( iRec < 6 ) {
-                    System.out.println("Error: less parameter lines read than expected.");
-                    return;
-                }
                 scanner.close();
                 parmrec++;
             }
@@ -167,6 +163,12 @@ public class DSNMOD {
                 }
             }
         }
+
+        if ( iRec != 6 ) {
+            System.out.println("Error: less parameter lines read than expected.");
+            return;
+        }
+
 
         if ( lData ) {
           Integer rcHigh = 0;
