@@ -426,7 +426,7 @@ public class DSNMOD {
 
         // validate .PNCH file DSORG
         try {
-            ZFile dsnFileAttr = new ZFile(dsName, "rb,type=record,noseek");
+            ZFile dsnFileAttr = new ZFile(fmtName, "rb,type=record,noseek");
     
             System.out.println("\tName: " + dsnFileAttr.getFilename());
             System.out.println("\tRecord Format: " + dsnFileAttr.getRecfm());
