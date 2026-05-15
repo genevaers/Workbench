@@ -439,6 +439,7 @@ public class DSNMOD {
                 System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
                 return 12;
             }
+            zFile.close();
         }
         catch (Exception e) {
             System.out.println("Unable to get attributes for dataset: " + dsName);
