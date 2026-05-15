@@ -145,7 +145,7 @@ public class DSNMOD {
                 }
                 if ( iRec < 6 ) {
                     System.out.println("Error: less parameter lines read than expected.");
-                    return 8;
+                    return;
                 }
                 scanner.close();
                 parmrec++;
@@ -431,7 +431,7 @@ public class DSNMOD {
             System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
             System.out.println("\tBlock Size: " + dsnFileAttr.getBlksize());
 
-            if (dsnFileAttr.getRecfm().equals("FB") || dsnFileAttr.getLrecl != 80) {
+            if (dsnFileAttr.getRecfm().equals("FB") || dsnFileAttr.getLrecl() != 80) {
                 System.out.println("PNCH file must be LRECL=80 and RECFM=FB for dataset: " + dsName);
                 System.out.println("\tRecord Format: " + dsnFileAttr.getRecfm());
                 System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
@@ -439,7 +439,7 @@ public class DSNMOD {
             }
         }
         catch (Exception e) {
-            System.out.println("Unable to get attributes for dataset: " + fileName);
+            System.out.println("Unable to get attributes for dataset: " + dsName);
             e.printStackTrace();
             return 12;
         }
