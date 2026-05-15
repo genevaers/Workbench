@@ -127,7 +127,7 @@ public class DSNMOD {
                         System.out.println("DATA Mask: " + maskData);
                         System.out.println("PNCH Mask: " + maskPnch);
                       } else {
-                        if (parmrec >= 4 && parmrec <= 9) { //////////////////////////////////////////////////////////////////
+                        if (parmrec >= 4 && parmrec <= 9) {
                           String dataLlq = scanner.next();
                           Integer dataOff = scanner.nextInt();
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq;
@@ -142,6 +142,10 @@ public class DSNMOD {
                       }
                     }
                   }
+                }
+                if ( iRec < 6 ) {
+                    System.out.println("Error: less parameter lines read than expected.");
+                    return 8;
                 }
                 scanner.close();
                 parmrec++;
@@ -167,7 +171,7 @@ public class DSNMOD {
         if ( lData ) {
           Integer rcHigh = 0;
           System.out.println("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
-          for ( i = 0; i < 6; i++) {
+          for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
@@ -418,6 +422,28 @@ public class DSNMOD {
         String fmtNameOut = "//'" + dsNameOut + "'";
         String dummyDD = ZFile.allocDummyDDName();
 
+        // validate .PNCH file DSORG
+        try {
+            ZFile dsnFileAttr = new ZFile(dsName, "rb,type=record,noseek");
+    
+            System.out.println("\tName: " + dsnFileAttr.getFilename());
+            System.out.println("\tRecord Format: " + dsnFileAttr.getRecfm());
+            System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
+            System.out.println("\tBlock Size: " + dsnFileAttr.getBlksize());
+
+            if (dsnFileAttr.getRecfm().equals("FB") || dsnFileAttr.getLrecl != 80) {
+                System.out.println("PNCH file must be LRECL=80 and RECFM=FB for dataset: " + dsName);
+                System.out.println("\tRecord Format: " + dsnFileAttr.getRecfm());
+                System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
+                return 12;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("Unable to get attributes for dataset: " + fileName);
+            e.printStackTrace();
+            return 12;
+        }
+        
         String cmd = "alloc fi("+dummyDD+") da(" + dsNameOut + ") like(" + dsName + ") reuse new catalog msg(wtp)";
         if (0 < dbg) {
             System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
