@@ -48,7 +48,8 @@ public class Attrtest {
         }
 
         // input is expected to be a non-VSAM MVS dataset name
-        String fileName = args[0];
+        //String fileName = args[0];
+        String fileName = "GEBT.SAFRNEI2.D251222U.CODETABL.PNCH";
         String fmtName = "//'" + fileName + "'";
 
         System.out.println("File name: " + fileName);
