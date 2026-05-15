@@ -37,10 +37,10 @@ public class DSNMOD {
     public static void main(String[] args) {
 
         Integer dbg = 0;
-        String codepage = "Cp1047";
-        String[] dsn1 = new String[6]; //////////////////////////////////////////////////////////////////
-        String[] dsn2 = new String[6]; //////////////////////////////////////////////////////////////////
-        Integer[] offset = new Integer[6]; //////////////////////////////////////////////////////////////////
+        String codepage = "Cp1047"; // default
+        String[] dsn1 = new String[6];
+        String[] dsn2 = new String[6];
+        Integer[] offset = new Integer[6];
         Integer rc = 0;
         Integer parmrec = 0;
         RecordReader parmreader = null;
@@ -76,10 +76,14 @@ public class DSNMOD {
                         lPunch = false;
                         System.out.println("Processing .DATA files only is selected");
                         break;
+                    // Codepage override
+                    case "C":
+                        codepage = args[i].substring(2);
+                        System.out.println("Codepage requested:" + codepage);
                     // Debug information
                     case "d":
                         dbg = b.doAtois(args[n], 2);
-                        System.out.println("Debug set, level: " + dbg);
+                        System.out.println("Debug is set at level: " + dbg);
                         break;
                     case "h":
                         System.out.println("-D (process DATA files only)\n-P (process PNCH files only)");
@@ -132,6 +136,8 @@ public class DSNMOD {
                           System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
                           System.out.println("New file name: " + dsn2[iRec]);
                           iRec++;
+                        } else {
+                            System.out.println("Warning: more parameter lines read than expected: " + card);
                         }
                       }
                     }
@@ -161,7 +167,7 @@ public class DSNMOD {
         if ( lData ) {
           Integer rcHigh = 0;
           System.out.println("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
-          for ( i = 0; i < 6; i++) { //////////////////////////////////////////////////////////////////
+          for ( i = 0; i < 6; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
@@ -205,7 +211,7 @@ public class DSNMOD {
             }
           }
         } catch (Exception e) {
-          System.out.println("RC: " + cs.getRc() + " " + cs.getReason());
+          System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
           e.printStackTrace();
         }
         return rc;
@@ -252,23 +258,24 @@ public class DSNMOD {
         String dsn2DataOut  = dsn2Data + "2";
         String fmtDsn2DataOut = "//'" + dsn2DataOut + "'"; // USS version
         String dummyDD = ZFile.allocDummyDDName();
-        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,25) RELEASE cyl lrecl(27994) blksize(27998)";
-
+      //String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") reuse new catalog msg(2) recfm(v,b) space(25,25) RELEASE cyl lrecl(27994) blksize(27998)";
+        String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") like(" + dsn2Data + ") reuse new catalog msg(wtp)";
 
         if (0 < dbg) {
             System.out.println("Dsn2Data: " + dsn2Data + " Formatted Dsn2Data: " + fmtDsn2Data);
-            System.out.println("DATA2 cmd: " + cmd);
+            System.out.println("Dsn2 cmd: " + cmd);
         }
 
         // validation of search/replacement of dataset name(s)
         if ( offset < 1 ) {
-            System.out.println("Offset of start of dataset name must be greater than or equal to one (1)");
+            System.out.println("Offset of start of dataset name to match must be greater than or equal to one (1)");
             return 8;
         }
 
         try {
             ZFile.bpxwdyn(cmd);  // might throw RcException
         } catch (RcException rce) {
+            System.out.println("Error allocating output dataset: " + dsn2DataOut);
             rce.printStackTrace();
             return 12;
          }
@@ -341,29 +348,29 @@ public class DSNMOD {
                     writer.write(recordBuf,0,bytesRead); // write record back anyway
                 }
             } catch (ZFileException e) {
-                System.out.println("IO error for output DSN: " + dsn2DataOut);
+                System.out.println("IO error opening output dataset: " + dsn2DataOut);
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output DSN:" + dsn2DataOut);
+                        System.out.println("IO error closing output dataset: " + dsn2DataOut);
                         return 12;
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
-                        System.out.println("Err deallocating output dataset: " + dsn2DataOut);
+                        System.out.println("Error deallocating output dataset: " + dsn2DataOut);
                         rce.printStackTrace();  // but continue
                     }
                 }
             }
         } catch (ZFileException e) {
-            System.out.println("IO error reading from " + dsn2Data);
+            System.out.println("IO error opening or reading from input dataset: " + dsn2Data);
             return 12;
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using " + codepage);
+            System.out.println("Code page exception using: " + codepage);
             return 12;
         } finally {
             // Ensure the reader is closed in final block to release resources
@@ -371,15 +378,15 @@ public class DSNMOD {
                 try {
                     reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing input " + dsn2Data);
+                    System.out.println("IO error closing input dataset: " + dsn2Data);
                     return 12;
                 }
             }
         }
         
-        System.out.println("Number of records processed from input file: " + dsn2Data + " is: " + m);
+        System.out.println("Number of records processed from input dataset: " + dsn2Data + " is: " + m);
         System.out.println("Number of .LOB related embedded dataset names modified is: " + n );
-        System.out.println("All records including modifications written to output file: " + dsn2DataOut);
+        System.out.println("All records including modifications written to output dataset: " + dsn2DataOut);
 
         try {
             System.out.println("Attempting to delete: " + dsn2Data);
@@ -389,11 +396,11 @@ public class DSNMOD {
                 ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
                 System.out.println("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
             } catch (Exception e) {
-                System.err.println("Failed to rename file: " + e.getMessage());
+                System.err.println("Failed to rename datset: " + e.getMessage());
                 e.printStackTrace();
             }
         } catch (ZFileException e) {
-            System.err.println("Failed to delete file: " + e.getMessage());
+            System.err.println("Failed to delete dataset: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -459,44 +466,45 @@ public class DSNMOD {
                     writer.write(recordBuf, 0, recLength); // write record back anyway
                 }
             } catch (ZFileException e) {
-                System.out.println("IO error for output DSN: " + dsNameOut);
+                System.out.println("IO error for output dataset: " + dsNameOut);
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output DSN:" + dsNameOut);
+                        System.out.println("IO error closing output dataset:" + dsNameOut);
                         return 12;
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
+                        System.out.println("Error deallocating output dataset:" + dsNameOut);
                         rce.printStackTrace();  // but continue
                     }
                 }
             }
         } catch (ZFileException e) {
-            System.out.println("IO error for input DSN: " + dsName);
+            System.out.println("IO error opening or reading input dataset: " + dsName);
             return 12;
         } catch (RcException rce) {
             rce.printStackTrace();
             return 12;
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using " + codepage);
+            System.out.println("Code page exception using: " + codepage);
             return 12;
         } finally {
             if (reader != null) {
                 try {
                   reader.close();
                 } catch (ZFileException e) {
-                    System.out.println("IO error closing input DSN: " + dsName);
+                    System.out.println("IO error closing input dataset: " + dsName);
                     return 12;
                 }
             } 
         }
 
-        System.out.println("Number of records copied from DSN: " + dsName + " is: " + iCount + " modified is: " + jCount);
+        System.out.println("Number of records copied from dataset: " + dsName + " is: " + iCount + " modified record count is: " + jCount);
 
         try {
             System.out.println("Attempting to delete: " + dsName);
@@ -506,11 +514,11 @@ public class DSNMOD {
                 ZFile.rename(fmtNameOut, fmtName);
                 System.out.println("Successfully renamed: " + dsNameOut + " to: " + dsName);
             } catch (Exception e) {
-                System.err.println("Failed to rename file: " + e.getMessage());
+                System.err.println("Failed to rename dataset: " + e.getMessage());
                 e.printStackTrace();
             }
         } catch (ZFileException e) {
-            System.err.println("Failed to delete file: " + e.getMessage());
+            System.err.println("Failed to delete dataset: " + e.getMessage());
             e.printStackTrace();
         }
 
