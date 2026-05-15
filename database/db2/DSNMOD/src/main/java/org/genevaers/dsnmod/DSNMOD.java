@@ -379,6 +379,11 @@ public class DSNMOD {
             System.err.println("Message: " + zfe.getErrnoMsg());
             zfe.printStackTrace();
             return 12;
+        } catch (RcException rce) {
+            System.err.println("JZOS Native Error! Return Code: " + rce.getRc());
+            System.err.println("Message: " + rce.getMessage());
+            rce.printStackTrace();  // but continue
+            return 12;    
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
             return 12;
