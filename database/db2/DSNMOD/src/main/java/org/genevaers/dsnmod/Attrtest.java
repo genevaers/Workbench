@@ -51,6 +51,7 @@ public class Attrtest {
         String fileName = args[0];
         String fmtName = "//'" + fileName + "'";
 
+        System.out.println("File name: " + fileName);
         System.out.println("Formatted file name: " + fmtName);
 
         // call the create method with the input file
