@@ -147,8 +147,12 @@ public class DSNMOD {
                 parmrec++;
             }
 
-        } catch (ZFileException e) {
-            System.out.println("IO error reading from: " + ddparm);
+        } catch (ZFileException zfe) {
+            System.err.println("ZFileException occurred reading from: " + ddparm);
+            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("C Library errno: " + zfe.getErrno());
+            System.err.println("C Library errno2: " + zfe.getErrno2());
+            System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
@@ -158,8 +162,12 @@ public class DSNMOD {
             if (parmreader != null) {
                 try {
                     parmreader.close();
-                } catch (ZFileException e) {
-                    System.out.println("IO error closing: " + ddparm);
+                } catch (ZFileException zfe) {
+                    System.err.println("ZFileException occurred closing: " + ddparm);
+                    System.err.println("Error Message: " + zfe.getMessage());
+                    System.err.println("C Library errno: " + zfe.getErrno());
+                    System.err.println("C Library errno2: " + zfe.getErrno2());
+                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
                 }
             }
         }
@@ -352,15 +360,23 @@ public class DSNMOD {
                     // if match with dataset modify dataset name
                     writer.write(recordBuf,0,bytesRead); // write record back anyway
                 }
-            } catch (ZFileException e) {
-                System.out.println("IO error opening output dataset: " + dsn2DataOut);
+            } catch (ZFileException zfe) {
+                System.err.println("ZFileException occurred for output dataset: " + dsn2DataOut);
+                System.err.println("Error Message: " + zfe.getMessage());
+                System.err.println("C Library errno: " + zfe.getErrno());
+                System.err.println("C Library errno2: " + zfe.getErrno2());
+                System.err.println("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output dataset: " + dsn2DataOut);
+                        System.err.println("ZFileException occurred closing output dataset: " + dsn2DataOut);
+                        System.err.println("Error Message: " + zfe.getMessage());
+                        System.err.println("C Library errno: " + zfe.getErrno());
+                        System.err.println("C Library errno2: " + zfe.getErrno2());
+                        System.err.println("Native errno description: " + zfe.getErrnoMsg());
                         return 12;
                     }
                     try {
@@ -392,8 +408,12 @@ public class DSNMOD {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (ZFileException e) {
-                    System.out.println("IO error closing input dataset: " + dsn2Data);
+                } catch (ZFileException zfe) {
+                    System.err.println("ZFileException occurred closing input dataset: " + dsn2Data);
+                    System.err.println("Error Message: " + zfe.getMessage());
+                    System.err.println("C Library errno: " + zfe.getErrno());
+                    System.err.println("C Library errno2: " + zfe.getErrno2());
+                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
                     return 12;
                 }
             }
@@ -410,12 +430,20 @@ public class DSNMOD {
             try {
                 ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
                 System.out.println("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
-            } catch (Exception e) {
-                System.err.println("Failed to rename datset: " + e.getMessage());
+            } catch (ZFileException zfe) {
+                System.err.println("ZFileException failed to rename dataset: " + dsn2DataOut);
+                System.err.println("Error Message: " + zfe.getMessage());
+                System.err.println("C Library errno: " + zfe.getErrno());
+                System.err.println("C Library errno2: " + zfe.getErrno2());
+                System.err.println("Native errno description: " + zfe.getErrnoMsg());
                 e.printStackTrace();
             }
-        } catch (ZFileException e) {
-            System.err.println("Failed to delete dataset: " + e.getMessage());
+        } catch (ZFileException zfe) {
+            System.err.println("ZFileException failed to delete dataset: " + dsn2Data);
+            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("C Library errno: " + zfe.getErrno());
+            System.err.println("C Library errno2: " + zfe.getErrno2());
+            System.err.println("Native errno description: " + zfe.getErrnoMsg());
             e.printStackTrace();
         }
 
@@ -492,15 +520,23 @@ public class DSNMOD {
                     }
                     writer.write(recordBuf, 0, recLength); // write record back anyway
                 }
-            } catch (ZFileException e) {
-                System.out.println("IO error for output dataset: " + dsNameOut);
+            } catch (ZFileException zfe) { //.//
+                System.err.println("ZFileException for output dataset: " + dsNameOut);
+                System.err.println("Error Message: " + zfe.getMessage());
+                System.err.println("C Library errno: " + zfe.getErrno());
+                System.err.println("C Library errno2: " + zfe.getErrno2());
+                System.err.println("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.out.println("IO error closing output dataset:" + dsNameOut);
+                        System.err.println("ZFileException closing output dataset:" + dsNameOut);
+                        System.err.println("Error Message: " + zfe.getMessage());
+                        System.err.println("C Library errno: " + zfe.getErrno());
+                        System.err.println("C Library errno2: " + zfe.getErrno2());
+                        System.err.println("Native errno description: " + zfe.getErrnoMsg());
                         return 12;
                     }
                     try {
@@ -511,8 +547,12 @@ public class DSNMOD {
                     }
                 }
             }
-        } catch (ZFileException e) { /// /// ///
-            System.out.println("IO error opening or reading input dataset: " + dsName);
+        } catch (ZFileException zfe) { /// /// ///
+            System.err.println("ZFileException opening or reading input dataset: " + dsName);
+            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("C Library errno: " + zfe.getErrno());
+            System.err.println("C Library errno2: " + zfe.getErrno2());
+            System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
             System.err.println("JZOS Native Error!! Return Code: " + rce.getRc());
@@ -526,8 +566,12 @@ public class DSNMOD {
             if (reader != null) {
                 try {
                   reader.close();
-                } catch (ZFileException e) {
-                    System.out.println("IO error closing input dataset: " + dsName);
+                } catch (ZFileException zfe) {
+                    System.err.println("ZFileException closing input dataset: " + dsName);
+                    System.err.println("Error Message: " + zfe.getMessage());
+                    System.err.println("C Library errno: " + zfe.getErrno());
+                    System.err.println("C Library errno2: " + zfe.getErrno2());
+                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
                     return 12;
                 }
             } 
@@ -542,13 +586,22 @@ public class DSNMOD {
             try {
                 ZFile.rename(fmtNameOut, fmtName);
                 System.out.println("Successfully renamed: " + dsNameOut + " to: " + dsName);
+            } catch (ZFileException zfe) {
+                System.err.println("ZFileException renaming dataset: " + dsName);
+                System.err.println("Error Message: " + zfe.getMessage());
+                System.err.println("C Library errno: " + zfe.getErrno());
+                System.err.println("C Library errno2: " + zfe.getErrno2());
+                System.err.println("Native errno description: " + zfe.getErrnoMsg());
             } catch (Exception e) {
                 System.err.println("Failed to rename dataset: " + e.getMessage());
                 e.printStackTrace();
             }
-        } catch (ZFileException e) {
-            System.err.println("Failed to delete dataset: " + e.getMessage());
-            e.printStackTrace();
+        } catch (ZFileException zfe) {
+            System.err.println("ZFileException deleting dataset: " + dsName);
+            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("C Library errno: " + zfe.getErrno());
+            System.err.println("C Library errno2: " + zfe.getErrno2());
+            System.err.println("Native errno description: " + zfe.getErrnoMsg());
         }
 
         return 0;
