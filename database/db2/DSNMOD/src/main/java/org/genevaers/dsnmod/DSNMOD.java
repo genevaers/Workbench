@@ -475,7 +475,7 @@ public class DSNMOD {
             dsnFileAttr.close();
         } catch (ZFileException zfe) {
             System.err.println("ZFileException getting attributes for dataset: " + dsName);
-            System.err.println("Error Message: " + zfe.getMessage() + "END");
+            System.err.println("Error Message: " + zfe.getLocalizedMessage() + "END");
             System.err.println("C Library errno: " + zfe.getErrno());
             System.err.println("C Library errno2: " + zfe.getErrno2());
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
