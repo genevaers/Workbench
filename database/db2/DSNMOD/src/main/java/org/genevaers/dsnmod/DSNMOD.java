@@ -436,7 +436,6 @@ public class DSNMOD {
                 System.err.println("C Library errno: " + zfe.getErrno());
                 System.err.println("C Library errno2: " + zfe.getErrno2());
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
-                e.printStackTrace();
             }
         } catch (ZFileException zfe) {
             System.err.println("ZFileException failed to delete dataset: " + dsn2Data);
@@ -444,7 +443,6 @@ public class DSNMOD {
             System.err.println("C Library errno: " + zfe.getErrno());
             System.err.println("C Library errno2: " + zfe.getErrno2());
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
-            e.printStackTrace();
         }
 
         return 0;
@@ -472,10 +470,15 @@ public class DSNMOD {
                 return 12;
             }
             dsnFileAttr.close();
+        } catch (ZFileException zfe) {
+            System.err.println("ZFileException getting attributes for dataset: " + dsName);
+            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("C Library errno: " + zfe.getErrno());
+            System.err.println("C Library errno2: " + zfe.getErrno2());
+            System.err.println("Native errno description: " + zfe.getErrnoMsg());
         }
         catch (Exception e) {
-            System.out.println("Unable to get attributes for dataset: " + dsName);
-            e.printStackTrace();
+            System.out.println("Unexpected error getting attributes for dataset: " + dsName);
             return 12;
         }
         
@@ -543,7 +546,6 @@ public class DSNMOD {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
                         System.out.println("Error deallocating output dataset:" + dsNameOut);
-                        rce.printStackTrace();  // but continue
                     }
                 }
             }
@@ -555,9 +557,9 @@ public class DSNMOD {
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("JZOS Native Error!! Return Code: " + rce.getRc());
+            System.err.println("Unexpected error for input dataset: " + dsName);
             System.err.println("Message: " + rce.getMessage());
-            rce.printStackTrace();
+            System.err.println("Return Code: " + rce.getRc());
             return 12;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
@@ -593,8 +595,8 @@ public class DSNMOD {
                 System.err.println("C Library errno2: " + zfe.getErrno2());
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
             } catch (Exception e) {
-                System.err.println("Failed to rename dataset: " + e.getMessage());
-                e.printStackTrace();
+                System.err.println("Unexpected error renaming dataset: " + dsNameOut);
+                System.err.println("Error message: " + e.getMessage());
             }
         } catch (ZFileException zfe) {
             System.err.println("ZFileException deleting dataset: " + dsName);
