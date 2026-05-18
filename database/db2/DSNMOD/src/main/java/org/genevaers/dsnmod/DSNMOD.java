@@ -220,7 +220,6 @@ public class DSNMOD {
           }
         } catch (Exception e) {
           System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
-          e.printStackTrace();
           return 12;
         }
         return rc;
@@ -284,7 +283,6 @@ public class DSNMOD {
             ZFile.bpxwdyn(cmd);  // might throw RcException
         } catch (RcException rce) {
             System.out.println("Error allocating output dataset: " + dsn2DataOut);
-            rce.printStackTrace();
             return 12;
          }
 
@@ -370,21 +368,19 @@ public class DSNMOD {
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
-                    } catch (RcException rce) {
+                    } catch (RcException rce) { // continue
                         System.out.println("Error deallocating output dataset: " + dsn2DataOut);
-                        rce.printStackTrace();  // but continue
                     }
                 }
             }
         } catch (ZFileException zfe) {
             System.out.println("ZFileException for input dataset:" + dsn2Data);
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
-            zfe.printStackTrace();
             return 12;
         } catch (RcException rce) { /// /// ///
-            System.err.println("JZOS Native Error! Return Code: " + rce.getRc());
+            System.err.println("JZOS Native error forf input dataset: " + dsn2Data);
+            System.err.println("Return Code: " + rce.getRc());
             System.err.println("Message: " + rce.getMessage());
-            rce.printStackTrace();  // but continue
             return 12;    
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
