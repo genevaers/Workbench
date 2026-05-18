@@ -162,7 +162,7 @@ public class DSNMOD {
             if (parmreader != null) {
                 try {
                     parmreader.close();
-                } catch (ZFileException zfe) {
+                } catch (ZFileException zfe) { // continue
                     System.err.println("ZFileException occurred closing: " + ddparm);
                     System.err.println("Error Message: " + zfe.getMessage());
                     System.err.println("C Library errno: " + zfe.getErrno());
@@ -227,6 +227,7 @@ public class DSNMOD {
         } catch (Exception e) {
           System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
           e.printStackTrace();
+          return 12;
         }
         return rc;
     }
@@ -436,6 +437,7 @@ public class DSNMOD {
                 System.err.println("C Library errno: " + zfe.getErrno());
                 System.err.println("C Library errno2: " + zfe.getErrno2());
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                return 12;
             }
         } catch (ZFileException zfe) {
             System.err.println("ZFileException failed to delete dataset: " + dsn2Data);
@@ -443,6 +445,7 @@ public class DSNMOD {
             System.err.println("C Library errno: " + zfe.getErrno());
             System.err.println("C Library errno2: " + zfe.getErrno2());
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            return 12;
         }
 
         return 0;
@@ -472,10 +475,16 @@ public class DSNMOD {
             dsnFileAttr.close();
         } catch (ZFileException zfe) {
             System.err.println("ZFileException getting attributes for dataset: " + dsName);
-            System.err.println("Error Message: " + zfe.getMessage());
+            System.err.println("Error Message: " + zfe.getMessage() + "END");
             System.err.println("C Library errno: " + zfe.getErrno());
             System.err.println("C Library errno2: " + zfe.getErrno2());
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            return 12;
+        } catch (RcException rce) {
+            System.err.println("Unexpected error getting attributes for dataset: " + dsName);
+            System.err.println("Message: " + rce.getMessage());
+            System.err.println("Return Code: " + rce.getRc());
+            return 12;
         }
         catch (Exception e) {
             System.out.println("Unexpected error getting attributes for dataset: " + dsName);
@@ -545,7 +554,7 @@ public class DSNMOD {
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
-                        System.out.println("Error deallocating output dataset:" + dsNameOut);
+                        System.out.println("Error deallocating output dataset:" + dsNameOut); // continue
                     }
                 }
             }
@@ -594,9 +603,11 @@ public class DSNMOD {
                 System.err.println("C Library errno: " + zfe.getErrno());
                 System.err.println("C Library errno2: " + zfe.getErrno2());
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                return 12;
             } catch (Exception e) {
                 System.err.println("Unexpected error renaming dataset: " + dsNameOut);
                 System.err.println("Error message: " + e.getMessage());
+                return 12;
             }
         } catch (ZFileException zfe) {
             System.err.println("ZFileException deleting dataset: " + dsName);
@@ -604,6 +615,7 @@ public class DSNMOD {
             System.err.println("C Library errno: " + zfe.getErrno());
             System.err.println("C Library errno2: " + zfe.getErrno2());
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            return 12;
         }
 
         return 0;
