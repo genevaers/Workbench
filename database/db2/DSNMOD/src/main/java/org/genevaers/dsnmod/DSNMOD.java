@@ -379,7 +379,7 @@ public class DSNMOD {
             System.err.println("Message: " + zfe.getErrnoMsg());
             zfe.printStackTrace();
             return 12;
-        } catch (RcException rce) {
+        } catch (RcException rce) { /// /// ///
             System.err.println("JZOS Native Error! Return Code: " + rce.getRc());
             System.err.println("Message: " + rce.getMessage());
             rce.printStackTrace();  // but continue
@@ -511,10 +511,12 @@ public class DSNMOD {
                     }
                 }
             }
-        } catch (ZFileException e) {
+        } catch (ZFileException e) { /// /// ///
             System.out.println("IO error opening or reading input dataset: " + dsName);
             return 12;
         } catch (RcException rce) {
+            System.err.println("JZOS Native Error!! Return Code: " + rce.getRc());
+            System.err.println("Message: " + rce.getMessage());
             rce.printStackTrace();
             return 12;
         } catch (UnsupportedEncodingException e) {
