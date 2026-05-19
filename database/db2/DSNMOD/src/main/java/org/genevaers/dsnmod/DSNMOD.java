@@ -31,7 +31,7 @@ import java.util.Scanner;
 
 public class DSNMOD {
 
-    private static final Logger logger = Logger.getLogger(GvbSchemaValidateMain.class.getName());
+    private static final Logger logger = Logger.getLogger(DSNMOD.class.getName());
 
     static Integer max_length = 54; // 44 plus a pds member
 
