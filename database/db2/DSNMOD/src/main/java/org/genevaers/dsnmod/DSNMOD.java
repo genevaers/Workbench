@@ -15,17 +15,16 @@
  * under the License.
  */
 import java.io.UnsupportedEncodingException;
-
+import com.ibm.jzos.ZFileException;
 import com.ibm.jzos.RcException;
+
 import com.ibm.jzos.RecordReader;
 import com.ibm.jzos.RecordWriter;
 import com.ibm.jzos.ZFile;
 import com.ibm.jzos.ZFileConstants;
-import com.ibm.jzos.ZFileException;
 import com.ibm.jzos.CatalogSearch;
 import com.ibm.jzos.CatalogSearchField;
 import com.ibm.jzos.Format1DSCB;
-import com.ibm.jzos.RcException;
 import com.ibm.jzos.ZUtil;
 
 import java.util.Scanner;
@@ -151,8 +150,16 @@ public class DSNMOD {
             System.err.println("ZFileException occurred reading from: " + ddparm);
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return;
+        } catch (RcException rce) {
+            System.err.println("Native ZOS error reading dataset: " + ddparm);
+            System.err.println("Message: " + rce.getMessage());
+            System.err.println("Return Code: " + rce.getRc());
+            return;
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
+            return;
+        } catch (Exception e) {
+            System.out.println("Unexpected error reading dataset: " + ddparm);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -218,9 +225,14 @@ public class DSNMOD {
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
             }
           }
+        } catch (RcException rce) {
+            System.err.println("Native ZOS error reading MVS catalog with mask: " + maskPnch);
+            System.err.println("Message: " + rce.getMessage());
+            System.err.println("Return Code: " + rce.getRc());
+            return 12;
         } catch (Exception e) {
-          System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
-          return 12;
+            System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
+            return 12;
         }
         return rc;
     }
@@ -282,7 +294,9 @@ public class DSNMOD {
         try {
             ZFile.bpxwdyn(cmd);  // might throw RcException
         } catch (RcException rce) {
-            System.out.println("Error allocating output dataset: " + dsn2DataOut);
+            System.err.println("Native ZOS error allocating output dataset: " + dsn2DataOut);
+            System.err.println("Message: " + rce.getMessage());
+            System.err.println("Return Code: " + rce.getRc());
             return 12;
          }
 
@@ -350,12 +364,17 @@ public class DSNMOD {
                     else {
                         System.out.println("Record is too small to process and cannot contain search dataset name: ");
                     }
-                    // if match with dataset modify dataset name
+                    // if match with dataset modify the dataset name where it occurs at offset in records
                     writer.write(recordBuf,0,bytesRead); // write record back anyway
                 }
             } catch (ZFileException zfe) {
                 System.err.println("ZFileException occurred for output dataset: " + dsn2DataOut);
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                return 12;
+            } catch (RcException rce) {
+                System.err.println("Native ZOS error for output dataset: " + dsn2DataOut);
+                System.err.println("Message: " + rce.getMessage());
+                System.err.println("Return Code: " + rce.getRc());
                 return 12;
             } finally {
                 if (writer != null) {
@@ -369,16 +388,18 @@ public class DSNMOD {
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) { // continue
-                        System.out.println("Error deallocating output dataset: " + dsn2DataOut);
+                        System.err.println("Native ZOS error deallocating output dataset: " + dsn2DataOut);
+                        System.err.println("Message: " + rce.getMessage());
+                        System.err.println("Return Code: " + rce.getRc());
                     }
                 }
             }
         } catch (ZFileException zfe) {
-            System.out.println("ZFileException for input dataset:" + dsn2Data);
+            System.err.println("ZFileException for input dataset: " + dsn2Data);
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return 12;
-        } catch (RcException rce) { /// /// ///
-            System.err.println("JZOS Native error forf input dataset: " + dsn2Data);
+        } catch (RcException rce) {
+            System.err.println("Native ZOS error for input dataset: " + dsn2Data);
             System.err.println("Return Code: " + rce.getRc());
             System.err.println("Message: " + rce.getMessage());
             return 12;    
@@ -450,7 +471,7 @@ public class DSNMOD {
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("Unexpected error getting attributes for dataset: " + dsName);
+            System.err.println("Native ZOS error getting attributes for dataset: " + dsName);
             System.err.println("Message: " + rce.getMessage());
             System.err.println("Return Code: " + rce.getRc());
             return 12;
@@ -505,6 +526,11 @@ public class DSNMOD {
                 System.err.println("ZFileException for output dataset: " + dsNameOut);
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
+            } catch (RcException rce) {
+                System.err.println("Native ZOS error for output dataset: " + dsNameOut);
+                System.err.println("Message: " + rce.getMessage());
+                System.err.println("Return Code: " + rce.getRc());
+                return 12;
             } finally {
                 if (writer != null) {
                     try {
@@ -521,15 +547,15 @@ public class DSNMOD {
                     }
                 }
             }
-        } catch (ZFileException zfe) { /// /// ///
+        } catch (ZFileException zfe) {
             System.err.println("ZFileException opening or reading input dataset: " + dsName);
             System.err.println("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("Unexpected error for input dataset: " + dsName);
-            System.err.println("Message: " + rce.getMessage());
+            System.err.println("Native ZOS error for input dataset: " + dsName);
             System.err.println("Return Code: " + rce.getRc());
-            return 12;
+            System.err.println("Message: " + rce.getMessage());
+            return 12;    
         } catch (UnsupportedEncodingException e) {
             System.out.println("Code page exception using: " + codepage);
             return 12;
@@ -555,12 +581,8 @@ public class DSNMOD {
                 ZFile.rename(fmtNameOut, fmtName);
                 System.out.println("Successfully renamed: " + dsNameOut + " to: " + dsName);
             } catch (ZFileException zfe) {
-                System.err.println("ZFileException renaming dataset: " + dsName);
+                System.err.println("ZFileException renaming dataset: " + dsNameOut);
                 System.err.println("Native errno description: " + zfe.getErrnoMsg());
-                return 12;
-            } catch (Exception e) {
-                System.err.println("Unexpected error renaming dataset: " + dsNameOut);
-                System.err.println("Error message: " + e.getMessage());
                 return 12;
             }
         } catch (ZFileException zfe) {
