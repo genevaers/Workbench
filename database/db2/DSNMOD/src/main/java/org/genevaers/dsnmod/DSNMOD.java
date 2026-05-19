@@ -26,10 +26,12 @@ import com.ibm.jzos.CatalogSearch;
 import com.ibm.jzos.CatalogSearchField;
 import com.ibm.jzos.Format1DSCB;
 import com.ibm.jzos.ZUtil;
-
+import java.util.logging.Logger;
 import java.util.Scanner;
 
 public class DSNMOD {
+
+    private static final Logger logger = Logger.getLogger(GvbSchemaValidateMain.class.getName());
 
     static Integer max_length = 54; // 44 plus a pds member
 
@@ -68,24 +70,29 @@ public class DSNMOD {
                     // Process PNCH files only
                     case "P":
                         lData = false;
-                        System.out.println("Processing .PNCH files only is selected");
+                        logger.info("Processing .PNCH files only is selected");
+                        //System.out.println("Processing .PNCH files only is selected");
                         break;
                     // Process DATA files only
                     case "D":
                         lPunch = false;
-                        System.out.println("Processing .DATA files only is selected");
+                        logger.info("Processing .DATA files only is selected");
+                        //System.out.println("Processing .DATA files only is selected");
                         break;
                     // Codepage override
                     case "C":
                         codepage = args[n].substring(2);
-                        System.out.println("Codepage requested:" + codepage);
+                        logger.info("Codepage requested:" + codepage);
+                        // System.out.println("Codepage requested:" + codepage);
                     // Debug information
                     case "d":
                         dbg = b.doAtois(args[n], 2);
-                        System.out.println("Debug is set at level: " + dbg);
+                        logger.info("Debug is set at level: " + dbg);
+                        //System.out.println("Debug is set at level: " + dbg);
                         break;
                     case "h":
-                        System.out.println("-D (process DATA files only)\n-P (process PNCH files only)");
+                        logger.info("-D (process DATA files only)\n-P (process PNCH files only)\n-C (codepage)\n-d (debug level)");
+                        //System.out.println("-D (process DATA files only)\n-P (process PNCH files only)\n-C (codepage)\n-d (debug level)");
                         return;
                     default:
                         break;
