@@ -71,28 +71,23 @@ public class DSNMOD {
                     case "P":
                         lData = false;
                         logger.info("Processing .PNCH files only is selected");
-                        //System.out.println("Processing .PNCH files only is selected");
                         break;
                     // Process DATA files only
                     case "D":
                         lPunch = false;
                         logger.info("Processing .DATA files only is selected");
-                        //System.out.println("Processing .DATA files only is selected");
                         break;
                     // Codepage override
                     case "C":
                         codepage = args[n].substring(2);
                         logger.info("Codepage requested:" + codepage);
-                        // System.out.println("Codepage requested:" + codepage);
                     // Debug information
                     case "d":
                         dbg = b.doAtois(args[n], 2);
                         logger.info("Debug is set at level: " + dbg);
-                        //System.out.println("Debug is set at level: " + dbg);
                         break;
                     case "h":
                         logger.info("-D (process DATA files only)\n-P (process PNCH files only)\n-C (codepage)\n-d (debug level)");
-                        //System.out.println("-D (process DATA files only)\n-P (process PNCH files only)\n-C (codepage)\n-d (debug level)");
                         return;
                     default:
                         break;
@@ -107,19 +102,18 @@ public class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
-            System.out.println("Parameter processing -----------------------------------------------------------------------------");
+            logger.info("Parameter processing -----------------------------------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
-                //System.out.println("Card: " + card + bytesRead);
                 Scanner scanner = new Scanner(card);
                 if (parmrec == 0) {
                   schemaNameOld = scanner.next();
-                  System.out.println("Old schema name: " + schemaNameOld);
+                  logger.info("Old schema name: " + schemaNameOld);
                 } else {
                   if (parmrec == 1) {
                     schemaNameNew = scanner.next();
-                    System.out.println("New schema name: " + schemaNameNew);
+                    logger.info("New schema name: " + schemaNameNew);
                   } else {
                     if (parmrec == 2) {
                       unldHlqMlq = scanner.next();
@@ -130,8 +124,8 @@ public class DSNMOD {
                         maskNew = loadHlqMlq + ".**";
                         maskData = loadHlqMlq + ".**.DATA";
                         maskPnch = loadHlqMlq + ".**.PNCH";
-                        System.out.println("DATA Mask: " + maskData);
-                        System.out.println("PNCH Mask: " + maskPnch);
+                        logger.info("DATA Mask: " + maskData);
+                        logger.info("PNCH Mask: " + maskPnch);
                       } else {
                         if (parmrec >= 4 && parmrec <= 9) {
                           String dataLlq = scanner.next();
@@ -139,11 +133,11 @@ public class DSNMOD {
                           dsn1[iRec] = unldHlqMlq + "." + dataLlq;
                           dsn2[iRec] = loadHlqMlq + "." + dataLlq;
                           offset[iRec] = dataOff;
-                          System.out.println("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
-                          System.out.println("New file name: " + dsn2[iRec]);
+                          logger.info("Old file name: " + dsn1[iRec] + " Offset: " + offset[iRec]);
+                          logger.info("New file name: " + dsn2[iRec]);
                           iRec++;
                         } else {
-                            System.out.println("Warning: more parameter lines read than expected: " + card);
+                            logger.info("Warning: more parameter lines read than expected: " + card);
                         }
                       }
                     }
@@ -154,19 +148,19 @@ public class DSNMOD {
             }
 
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException occurred reading from: " + ddparm);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.info("ZFileException occurred reading from: " + ddparm);
+            logger.info("Native errno description: " + zfe.getErrnoMsg());
             return;
         } catch (RcException rce) {
-            System.err.println("Native ZOS error reading dataset: " + ddparm);
-            System.err.println("Message: " + rce.getMessage());
-            System.err.println("Return Code: " + rce.getRc());
+            logger.info("Native ZOS error reading dataset: " + ddparm);
+            logger.info("Message: " + rce.getMessage());
+            logger.info("Return Code: " + rce.getRc());
             return;
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using: " + codepage);
+            logger.info("Code page exception using: " + codepage);
             return;
         } catch (Exception e) {
-            System.out.println("Unexpected error reading dataset: " + ddparm);
+            logger.info("Unexpected error reading dataset: " + ddparm);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -174,33 +168,33 @@ public class DSNMOD {
                 try {
                     parmreader.close();
                 } catch (ZFileException zfe) { // continue
-                    System.err.println("ZFileException occurred closing: " + ddparm);
-                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                    logger.info("ZFileException occurred closing: " + ddparm);
+                    logger.info("Native errno description: " + zfe.getErrnoMsg());
                 }
             }
         }
 
         if ( iRec != 6 ) {
-            System.out.println("Error: less parameter lines read than expected.");
+            logger.info("Error: less parameter lines read than expected.");
             return;
         }
 
 
         if ( lData ) {
           Integer rcHigh = 0;
-          System.out.println("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
+          logger.info("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
               }
           }
-          System.out.println("Highest return code from processDataFile: " + rcHigh);
+          logger.info("Highest return code from processDataFile: " + rcHigh);
         }
 
         if ( lPunch ) {
           rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew, codepage, dbg );
-          System.out.println("Return code from processPnchFiles: " + rc);
+          logger.info("Return code from processPnchFiles: " + rc);
         }
 
         return;
