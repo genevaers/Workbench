@@ -160,7 +160,7 @@ public class DSNMOD {
             logger.severe("Code page exception using: " + codepage);
             return;
         } catch (Exception e) {
-            logger.severe("Unexpected error reading dataset: " + ddparm);
+            logger.severe("Unexpected error reading dataset: " + ddparm + " error: " + e.getMessage());
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -475,7 +475,7 @@ public class DSNMOD {
             return 12;
         }
         catch (Exception e) {
-            logger.severe("Unexpected error getting attributes for dataset: " + dsName);
+            logger.severe("Unexpected error getting attributes for dataset: " + dsName + " error: " + e.getMessage());
             return 12;
         }
         
