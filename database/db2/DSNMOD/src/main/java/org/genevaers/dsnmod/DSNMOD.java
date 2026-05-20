@@ -423,7 +423,6 @@ public class DSNMOD {
         logger.info("All records including modifications written to output dataset: " + dsn2DataOut);
 
         try {
-            logger.info("Attempting to delete: " + dsn2Data);
             ZFile.remove(fmtDsn2Data);
             logger.info("Successfully deleted: " + dsn2Data);
             try {
@@ -573,7 +572,6 @@ public class DSNMOD {
         logger.info("Number of records copied from dataset: " + dsName + " is: " + iCount + " modified record count is: " + jCount);
 
         try {
-            logger.info("Attempting to delete: " + dsName);
             ZFile.remove(fmtName);
             logger.info("Successfully deleted: " + dsName);
             try {
