@@ -400,7 +400,7 @@ public class DSNMOD {
         } catch (RcException rce) {
             logger.severe("Native ZOS error for input dataset: " + dsn2Data);
             logger.severe("Return Code: " + rce.getRc());
-            loggSystem.err.println("Message: " + rce.getMessage());
+            logger.severe("Message: " + rce.getMessage());
             return 12;    
         } catch (UnsupportedEncodingException e) {
             logger.severe("Code page exception using: " + codepage);
