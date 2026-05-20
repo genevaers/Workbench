@@ -160,7 +160,7 @@ public class DSNMOD {
             logger.severe("Code page exception using: " + codepage);
             return;
         } catch (Exception e) {
-            logger.severe("Unexpected error reading dataset: " + ddparm + " error: " + e.getMessage);
+            logger.severe("Unexpected error reading dataset: " + ddparm);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
