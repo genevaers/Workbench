@@ -181,7 +181,7 @@ public class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          logger.info("\nProcess .DATA files for .LOB dependencies --------------------------------------------------------");
+          logger.info("Process .DATA files for .LOB dependencies --------------------------------------------------------");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -202,7 +202,7 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer rc = 0;
       
-        logger.info("\nProcess .PNCH files to update Schema names -------------------------------------------------------");
+        logger.info("Process .PNCH files to update Schema names -------------------------------------------------------");
         if (0 < dbg) {
           logger.info("PNCH Mask: " + maskPnch);
         }
@@ -250,7 +250,7 @@ public class DSNMOD {
         String fmtDsn2Data = ""; // USS version
         
         if (0 < dbg) {
-          System.out.println("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
+          logger.info("Dsn1: " + dsn1 + " Dsn2: " + dsn2 + " Offset: " + offset + " Codepage: " + codepage);
         }
 
         iLastIndex = dsn2.lastIndexOf(".LOB"); // determine name of .DATA file associated with .PNCH file
@@ -270,7 +270,7 @@ public class DSNMOD {
                 }
             }
         } else {
-            System.out.println("Error detected in LOB file specification: " + dsn2  + ". Check LOB file definitions in parameter file.");
+            logger.severe("Error detected in LOB file specification: " + dsn2  + ". Check LOB file definitions in parameter file.");
             return 8;
         }
 
@@ -280,31 +280,31 @@ public class DSNMOD {
         String cmd = "alloc fi("+dummyDD+") da(" + dsn2DataOut + ") like(" + dsn2Data + ") reuse new catalog msg(wtp)";
 
         if (0 < dbg) {
-            System.out.println("Dsn2Data: " + dsn2Data + " Formatted Dsn2Data: " + fmtDsn2Data);
-            System.out.println("Dsn2 cmd: " + cmd);
+            logger.info("Dsn2Data: " + dsn2Data + " Formatted Dsn2Data: " + fmtDsn2Data);
+            logger.info("Dsn2 cmd: " + cmd);
         }
 
         // validation of search/replacement of dataset name(s)
         if ( offset < 1 ) {
-            System.out.println("Offset of start of dataset name to match must be greater than or equal to one (1)");
+            logger.severe("Offset of start of dataset name to match must be greater than or equal to one (1)");
             return 8;
         }
 
         try {
             ZFile.bpxwdyn(cmd);  // might throw RcException
         } catch (RcException rce) {
-            System.err.println("Native ZOS error allocating output dataset: " + dsn2DataOut);
-            System.err.println("Message: " + rce.getMessage());
-            System.err.println("Return Code: " + rce.getRc());
+            logger.severe("Native ZOS error allocating output dataset: " + dsn2DataOut);
+            logger.severe("Message: " + rce.getMessage());
+            logger.severe("Return Code: " + rce.getRc());
             return 12;
          }
 
         if ( dsn1.length() < 1 ) {
-            System.out.println("Value of scanned for dataset name is insufficient: " + dsn1 );
+            logger.severe("Value of scanned for dataset name is insufficient: " + dsn1 );
             return 8;
         }
         if ( dsn2.length() < 1 ) {
-            System.out.println("Value to replace dataset name is insufficient: " + dsn2 );
+            logger.severe("Value to replace dataset name is insufficient: " + dsn2 );
             return 8;
         }
 
@@ -315,7 +315,7 @@ public class DSNMOD {
             // Determine the maximum record length (LRECL) for buffer sizing
             int lrecl = reader.getLrecl();
             if (( offset + max_length ) > lrecl ) {
-                System.out.println("The maximum LRECL of " + dsn2Data + " of " + lrecl + " is insufficient for the specified offset " + offset);
+                logger.severe("The maximum LRECL of " + dsn2Data + " of " + lrecl + " is insufficient for the specified offset " + offset);
                 return 8;
             }
             byte[] recordBuf = new byte[lrecl];
@@ -338,7 +338,6 @@ public class DSNMOD {
                             hexlen = Byte.toUnsignedInt(hexbyte);
                             // save bytes we will need in a minute                    
                             byte[] savebytes = new byte[10];
-                            //System.out.println("Updating: " + dsn );
                             for ( i = 0; i < 10; i++ ) {
                                 savebytes[i] = recordBuf[dsn1.length() + offset + i];
                             }
@@ -361,49 +360,50 @@ public class DSNMOD {
                         }
                     }
                     else {
-                        System.out.println("Record is too small to process and cannot contain search dataset name: ");
+                        logger.severe("Record too small to process and cannot contain search dataset name within dataset: " + dsn2Data);
+                        return 12;
                     }
                     // if match with dataset modify the dataset name where it occurs at offset in records
                     writer.write(recordBuf,0,bytesRead); // write record back anyway
                 }
             } catch (ZFileException zfe) {
-                System.err.println("ZFileException occurred for output dataset: " + dsn2DataOut);
-                System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                logger.severe("ZFileException occurred for output dataset: " + dsn2DataOut);
+                logger.severe("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             } catch (RcException rce) {
-                System.err.println("Native ZOS error for output dataset: " + dsn2DataOut);
-                System.err.println("Message: " + rce.getMessage());
-                System.err.println("Return Code: " + rce.getRc());
+                logger.severe("Native ZOS error for output dataset: " + dsn2DataOut);
+                logger.severe("Message: " + rce.getMessage());
+                logger.severe("Return Code: " + rce.getRc());
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.err.println("ZFileException occurred closing output dataset: " + dsn2DataOut);
-                        System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                        logger.severe("ZFileException occurred closing output dataset: " + dsn2DataOut);
+                        logger.severe("Native errno description: " + zfe.getErrnoMsg());
                         return 12;
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) { // continue
-                        System.err.println("Native ZOS error deallocating output dataset: " + dsn2DataOut);
-                        System.err.println("Message: " + rce.getMessage());
-                        System.err.println("Return Code: " + rce.getRc());
+                        logger.warning("Native ZOS error deallocating output dataset: " + dsn2DataOut);
+                        logger.warning("Message: " + rce.getMessage());
+                        logger.warning("Return Code: " + rce.getRc());
                     }
                 }
             }
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException for input dataset: " + dsn2Data);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException for input dataset: " + dsn2Data);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("Native ZOS error for input dataset: " + dsn2Data);
-            System.err.println("Return Code: " + rce.getRc());
-            System.err.println("Message: " + rce.getMessage());
+            logger.severe("Native ZOS error for input dataset: " + dsn2Data);
+            logger.severe("Return Code: " + rce.getRc());
+            loggSystem.err.println("Message: " + rce.getMessage());
             return 12;    
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using: " + codepage);
+            logger.severe("Code page exception using: " + codepage);
             return 12;
         } finally {
             // Ensure the reader is closed in final block to release resources
@@ -411,32 +411,32 @@ public class DSNMOD {
                 try {
                     reader.close();
                 } catch (ZFileException zfe) {
-                    System.err.println("ZFileException occurred closing input dataset: " + dsn2Data);
-                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                    logger.severe("ZFileException occurred closing input dataset: " + dsn2Data);
+                    logger.severe("Native errno description: " + zfe.getErrnoMsg());
                     return 12;
                 }
             }
         }
         
-        System.out.println("Number of records processed from input dataset: " + dsn2Data + " is: " + m);
-        System.out.println("Number of .LOB related embedded dataset names modified is: " + n );
-        System.out.println("All records including modifications written to output dataset: " + dsn2DataOut);
+        logger.info("Number of records processed from input dataset: " + dsn2Data + " is: " + m);
+        logger.info("Number of .LOB related embedded dataset names modified is: " + n );
+        logger.info("All records including modifications written to output dataset: " + dsn2DataOut);
 
         try {
-            System.out.println("Attempting to delete: " + dsn2Data);
+            logger.info("Attempting to delete: " + dsn2Data);
             ZFile.remove(fmtDsn2Data);
-            System.out.println("Successfully deleted: " + dsn2Data);
+            logger.info("Successfully deleted: " + dsn2Data);
             try {
                 ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
-                System.out.println("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
+                logger.info("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
             } catch (ZFileException zfe) {
-                System.err.println("ZFileException failed to rename dataset: " + dsn2DataOut);
-                System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                logger.severe("ZFileException failed to rename dataset: " + dsn2DataOut);
+                logger.severe("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             }
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException failed to delete dataset: " + dsn2Data);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException failed to delete dataset: " + dsn2Data);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         }
 
