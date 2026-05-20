@@ -196,7 +196,7 @@ public class DSNMOD {
 
         if ( lPunch ) {
           rc = processPnchFiles( maskPnch, schemaNameOld, schemaNameNew, codepage, dbg );
-          logger.info("Return code from processPnchFiles: " + rc);
+          logger.info("Highest return code from processPnchFiles: " + rc);
         }
 
         return;
