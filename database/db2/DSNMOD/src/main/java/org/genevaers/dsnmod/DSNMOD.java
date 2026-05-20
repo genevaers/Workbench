@@ -459,36 +459,36 @@ public class DSNMOD {
         try {
             ZFile dsnFileAttr = new ZFile(fmtName, "rb,type=record,noseek");
             if (!dsnFileAttr.getRecfm().equals("FB") || dsnFileAttr.getLrecl() != 80) {
-                System.out.println("PNCH file must be LRECL=80 and RECFM=FB for dataset: " + dsName);
-                System.out.println("\tRecord Format: " + dsnFileAttr.getRecfm());
-                System.out.println("\tRecord Length: " + dsnFileAttr.getLrecl());
+                logger.severe("PNCH file must be LRECL=80 and RECFM=FB for dataset: " + dsName);
+                logger.severe("\tRecord Format: " + dsnFileAttr.getRecfm());
+                logger.severe("\tRecord Length: " + dsnFileAttr.getLrecl());
                 return 12;
             }
             dsnFileAttr.close();
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException getting attributes for dataset: " + dsName);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException getting attributes for dataset: " + dsName);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("Native ZOS error getting attributes for dataset: " + dsName);
-            System.err.println("Message: " + rce.getMessage());
-            System.err.println("Return Code: " + rce.getRc());
+            logger.severe("Native ZOS error getting attributes for dataset: " + dsName);
+            logger.severe("Message: " + rce.getMessage());
+            logger.severe("Return Code: " + rce.getRc());
             return 12;
         }
         catch (Exception e) {
-            System.out.println("Unexpected error getting attributes for dataset: " + dsName);
+            logger.severe("Unexpected error getting attributes for dataset: " + dsName);
             return 12;
         }
         
         String cmd = "alloc fi("+dummyDD+") da(" + dsNameOut + ") like(" + dsName + ") reuse new catalog msg(wtp)";
         if (0 < dbg) {
-            System.out.println("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
-            System.out.println("PNCH cmd: " + cmd);
+            logger.info("DSN: " + dsName + " Old Schema: " + schemaNameOld + " New Schema: " + schemaNameNew);
+            logger.info("PNCH cmd: " + cmd);
         }
 
         Integer schemaLength = Math.max(schemaNameOld.length(), schemaNameNew.length());
         if (schemaLength > 8 ) {
-            System.out.println("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
+            logger.severe("DB2 Schema name must not exceed length of 8: supplied length is: " + schemaLength);
             return 8;
         }
 
@@ -515,78 +515,78 @@ public class DSNMOD {
                     if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                         jCount = jCount + 1;
                         if (4 != iCount) {
-                            System.out.println("Warning: Old Schema name is located on line: " + iCount + " of input dataset: " + dsName);
+                            logger.info("Warning: Old Schema name is located on line: " + iCount + " of input dataset: " + dsName);
                         }
                         System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                     }
                     writer.write(recordBuf, 0, recLength); // write record back anyway
                 }
             } catch (ZFileException zfe) { //.//
-                System.err.println("ZFileException for output dataset: " + dsNameOut);
-                System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                logger.severe("ZFileException for output dataset: " + dsNameOut);
+                logger.severe("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             } catch (RcException rce) {
-                System.err.println("Native ZOS error for output dataset: " + dsNameOut);
-                System.err.println("Message: " + rce.getMessage());
-                System.err.println("Return Code: " + rce.getRc());
+                logger.severe("Native ZOS error for output dataset: " + dsNameOut);
+                logger.severe("Message: " + rce.getMessage());
+                logger.severe("Return Code: " + rce.getRc());
                 return 12;
             } finally {
                 if (writer != null) {
                     try {
                         writer.close();
                     } catch (ZFileException zfe) {
-                        System.err.println("ZFileException closing output dataset:" + dsNameOut);
-                        System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                        logger.severe("ZFileException closing output dataset:" + dsNameOut);
+                        logger.severe("Native errno description: " + zfe.getErrnoMsg());
                         return 12;
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
-                        System.out.println("Error deallocating output dataset:" + dsNameOut); // continue
+                        logger.warning("Error deallocating output dataset:" + dsNameOut);
                     }
                 }
             }
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException opening or reading input dataset: " + dsName);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException opening or reading input dataset: " + dsName);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         } catch (RcException rce) {
-            System.err.println("Native ZOS error for input dataset: " + dsName);
-            System.err.println("Return Code: " + rce.getRc());
-            System.err.println("Message: " + rce.getMessage());
+            logger.severe("Native ZOS error for input dataset: " + dsName);
+            logger.severe("Return Code: " + rce.getRc());
+            logger.severe("Message: " + rce.getMessage());
             return 12;    
         } catch (UnsupportedEncodingException e) {
-            System.out.println("Code page exception using: " + codepage);
+            logger.severe("Code page exception using: " + codepage);
             return 12;
         } finally {
             if (reader != null) {
                 try {
                   reader.close();
-                } catch (ZFileException zfe) {
-                    System.err.println("ZFileException closing input dataset: " + dsName);
-                    System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                } catch (ZFileException zfe) { // continue
+                    logger.severe("ZFileException closing input dataset: " + dsName);
+                    logger.severe("Native errno description: " + zfe.getErrnoMsg());
                     return 12;
                 }
             } 
         }
 
-        System.out.println("Number of records copied from dataset: " + dsName + " is: " + iCount + " modified record count is: " + jCount);
+        logger.info("Number of records copied from dataset: " + dsName + " is: " + iCount + " modified record count is: " + jCount);
 
         try {
-            System.out.println("Attempting to delete: " + dsName);
+            logger.info("Attempting to delete: " + dsName);
             ZFile.remove(fmtName);
-            System.out.println("Successfully deleted: " + dsName);
+            logger.info("Successfully deleted: " + dsName);
             try {
                 ZFile.rename(fmtNameOut, fmtName);
-                System.out.println("Successfully renamed: " + dsNameOut + " to: " + dsName);
+                logger.info("Successfully renamed: " + dsNameOut + " to: " + dsName);
             } catch (ZFileException zfe) {
-                System.err.println("ZFileException renaming dataset: " + dsNameOut);
-                System.err.println("Native errno description: " + zfe.getErrnoMsg());
+                logger.severe("ZFileException renaming dataset: " + dsNameOut);
+                logger.severe("Native errno description: " + zfe.getErrnoMsg());
                 return 12;
             }
         } catch (ZFileException zfe) {
-            System.err.println("ZFileException deleting dataset: " + dsName);
-            System.err.println("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException deleting dataset: " + dsName);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         }
 
