@@ -186,6 +186,9 @@ public class DSNMOD {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
+                if (4 < rcHigh) {
+                    return;
+                }
               }
           }
           logger.info("Highest return code from processDataFile: " + rcHigh);
@@ -201,6 +204,7 @@ public class DSNMOD {
 
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer rc = 0;
+        Integer rcHigh = 0;
       
         logger.info("Process .PNCH files to update Schema names -------------------------------------------------------");
         if (0 < dbg) {
@@ -222,6 +226,12 @@ public class DSNMOD {
               String volser = field.getFString().trim();
               logger.info(String.format("Dataset: %-44s Volser: %-6s\n", dsName, volser));
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
+              if ( rcHigh < rc ) {
+                rcHigh = rc;
+                if (4 < rcHigh) {
+                    return rcHigh;
+                }
+              }
             }
           }
         } catch (RcException rce) {
@@ -233,7 +243,7 @@ public class DSNMOD {
             logger.severe("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
             return 12;
         }
-        return rc;
+        return rcHigh;
     }
 
     public static Integer processDataFile(String dsn1, String dsn2, Integer offset, String codepage, Integer dbg) {
@@ -386,10 +396,11 @@ public class DSNMOD {
                     }
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
-                    } catch (RcException rce) { // continue
-                        logger.warning("Native ZOS error deallocating output dataset: " + dsn2DataOut);
-                        logger.warning("Message: " + rce.getMessage());
-                        logger.warning("Return Code: " + rce.getRc());
+                    } catch (RcException rce) {
+                        logger.severe("Native ZOS error deallocating output dataset: " + dsn2DataOut);
+                        logger.severe("Message: " + rce.getMessage());
+                        logger.severe("Return Code: " + rce.getRc());
+                        return 12;
                     }
                 }
             }
@@ -438,7 +449,6 @@ public class DSNMOD {
             logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         }
-
         return 0;
     }
 
@@ -447,6 +457,7 @@ public class DSNMOD {
         Integer jCount = 0;
         Integer offset = 1; // offset of first double quote preceding schema in record 4
         Integer lengthReplaced = 11; // always replace padded length in quotes followed by period
+        Integer rc = 0;
 
         RecordReader reader = null;
         String fmtName = "//'" + dsName + "'";
@@ -513,8 +524,9 @@ public class DSNMOD {
                     iCount = iCount + 1;
                     if (memcmp(OldSchemaBytes, 0, recordBuf, offset, lengthReplaced)) {
                         jCount = jCount + 1;
-                        if (4 != iCount) {
+                        if (4 != iCount) { // continue
                             logger.info("Warning: Old Schema name is located on line: " + iCount + " of input dataset: " + dsName);
+                            rc = 4;
                         }
                         System.arraycopy(NewSchemaBytes, 0, recordBuf, offset, lengthReplaced);
                     }
@@ -541,7 +553,10 @@ public class DSNMOD {
                     try {
                         ZFile.bpxwdyn("free fi(" + dummyDD + ") msg(2)");
                     } catch (RcException rce) {
-                        logger.warning("Error deallocating output dataset:" + dsNameOut);
+                        logger.severe("Native ZOS error deallocating output dataset: " + dsNameOut);
+                        logger.severe("Message: " + rce.getMessage());
+                        logger.severe("Return Code: " + rce.getRc());
+                        return 12;
                     }
                 }
             }
@@ -561,7 +576,7 @@ public class DSNMOD {
             if (reader != null) {
                 try {
                   reader.close();
-                } catch (ZFileException zfe) { // continue
+                } catch (ZFileException zfe) {
                     logger.severe("ZFileException closing input dataset: " + dsName);
                     logger.severe("Native errno description: " + zfe.getErrnoMsg());
                     return 12;
@@ -587,9 +602,7 @@ public class DSNMOD {
             logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return 12;
         }
-
-        return 0;
-
+        return rc;
     }
 
     public static boolean memcmp(byte[] b1, int b1Index, byte[] b2, int b2Index, int length) {
