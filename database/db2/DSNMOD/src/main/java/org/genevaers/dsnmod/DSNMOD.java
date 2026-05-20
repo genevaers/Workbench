@@ -160,7 +160,7 @@ public class DSNMOD {
             logger.severe("Code page exception using: " + codepage);
             return;
         } catch (Exception e) {
-            logger.severe("Unexpected error reading dataset: " + ddparm + " error: " + e.getErrnoMsg);
+            logger.severe("Unexpected error reading dataset: " + ddparm + " error: " + e.getMessage);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -178,7 +178,6 @@ public class DSNMOD {
             logger.severe("Error: less parameter lines read than expected.");
             return;
         }
-
 
         if ( lData ) {
           Integer rcHigh = 0;
@@ -221,7 +220,7 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              logger.info.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
+              logger.info(String.format("Dataset: %-44s Volser: %-6s\n", dsName, volser));
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
             }
           }
