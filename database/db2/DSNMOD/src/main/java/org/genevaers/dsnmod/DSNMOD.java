@@ -148,19 +148,19 @@ public class DSNMOD {
             }
 
         } catch (ZFileException zfe) {
-            logger.info("ZFileException occurred reading from: " + ddparm);
-            logger.info("Native errno description: " + zfe.getErrnoMsg());
+            logger.severe("ZFileException occurred reading from: " + ddparm);
+            logger.severe("Native errno description: " + zfe.getErrnoMsg());
             return;
         } catch (RcException rce) {
-            logger.info("Native ZOS error reading dataset: " + ddparm);
-            logger.info("Message: " + rce.getMessage());
-            logger.info("Return Code: " + rce.getRc());
+            logger.severe("Native ZOS error reading dataset: " + ddparm);
+            logger.severe("Message: " + rce.getMessage());
+            logger.severe("Return Code: " + rce.getRc());
             return;
         } catch (UnsupportedEncodingException e) {
-            logger.info("Code page exception using: " + codepage);
+            logger.severe("Code page exception using: " + codepage);
             return;
         } catch (Exception e) {
-            logger.info("Unexpected error reading dataset: " + ddparm);
+            logger.severe("Unexpected error reading dataset: " + ddparm + " error: " + e.getErrnoMsg);
             return;
         } finally {
             // Ensure the reader is closed in a finally block to release resources
@@ -168,14 +168,14 @@ public class DSNMOD {
                 try {
                     parmreader.close();
                 } catch (ZFileException zfe) { // continue
-                    logger.info("ZFileException occurred closing: " + ddparm);
-                    logger.info("Native errno description: " + zfe.getErrnoMsg());
+                    logger.warning("ZFileException occurred closing: " + ddparm);
+                    logger.warning("Native errno description: " + zfe.getErrnoMsg());
                 }
             }
         }
 
         if ( iRec != 6 ) {
-            logger.info("Error: less parameter lines read than expected.");
+            logger.severe("Error: less parameter lines read than expected.");
             return;
         }
 
@@ -203,9 +203,9 @@ public class DSNMOD {
     public static Integer processPnchFiles(String maskPnch, String schemaNameOld, String schemaNameNew, String codepage, Integer dbg) {
         Integer rc = 0;
       
-        System.out.println("\nProcess .PNCH files to update Schema names -------------------------------------------------------");
+        logger.info("\nProcess .PNCH files to update Schema names -------------------------------------------------------");
         if (0 < dbg) {
-          System.out.println("PNCH Mask: " + maskPnch);
+          logger.info("PNCH Mask: " + maskPnch);
         }
 
         CatalogSearch cs = new CatalogSearch(maskPnch, 64000);
@@ -221,18 +221,17 @@ public class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              System.out.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
-
+              logger.info.printf("Dataset: %-44s Volser: %-6s\n", dsName, volser);
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
             }
           }
         } catch (RcException rce) {
-            System.err.println("Native ZOS error reading MVS catalog with mask: " + maskPnch);
-            System.err.println("Message: " + rce.getMessage());
-            System.err.println("Return Code: " + rce.getRc());
+            logger.severe("Native ZOS error reading MVS catalog with mask: " + maskPnch);
+            logger.severe("Message: " + rce.getMessage());
+            logger.severe("Return Code: " + rce.getRc());
             return 12;
         } catch (Exception e) {
-            System.out.println("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
+            logger.severe("Catalog search RC: " + cs.getRc() + " " + cs.getReason());
             return 12;
         }
         return rc;
