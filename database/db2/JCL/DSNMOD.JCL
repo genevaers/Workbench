@@ -1,4 +1,4 @@
-//DSNMOD01 JOB (ACCT),'JAVA DSNMOD',
+//DSNMOD   JOB (ACCT),'JAVA DSNMOD',
 //          NOTIFY=&SYSUID.,
 //          REGION=0M,
 //          CLASS=&$JBCLASS.,
