@@ -17,6 +17,7 @@ main() {
 # &$DB2PLAN.  DB2 PLAN    -- GERS_DB2_PLAN=DSNTEP13;
 # &$PDSHLQ.   HLQ         -- HLQ MVS dataset to receive DDL, JCL and SQL
 # &$PDSMLQ.   MLQ         -- MLQ MVS dataset to receive DDL, JCL and SQL
+# &$UNLD_DB2SCH.          -- Name of unloaded DB2 Schema
 
 # Check if member name is provided
 if [ -z "$1" ]; then
@@ -54,7 +55,7 @@ mycmdstr19='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
 mycmdstr20='s/&$LOADHLQ.'/${GERS_LOAD_HLQ}/'g'
 mycmdstr21='s/&$LOADMLQ.'/${GERS_LOAD_MLQ}/'g'
 mycmdstr22='s/&$FROMDBSG.'/${GERS_UNUSED}/'g';
-mycmdstr23='s/&$FROMDBSCH.'/${GERS_UNUSED}/'g';
+mycmdstr23='s/&$FROMDBSCH.'/${GERS_UNLD_DB2SCH}/'g';
 mycmdstr24='s/&$FROMDBSUB.'/${GERS_UNUSED}/'g';
 
 #to run optional smoke test with DB2

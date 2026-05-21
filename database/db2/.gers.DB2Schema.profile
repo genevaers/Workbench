@@ -40,7 +40,7 @@ export GERS_TO_PDS_MLQ=GVBDEMO;
 # export GERS_UNLD_MLQ=GENERS.D251222U;
 # export GERS_LOAD_HLQ=E124051;
 # export GERS_LOAD_MLQ=GENERS.D251222U;
-# export GERS_UNUSED=RESERVED;
+# export GERS_UNLD_DB2SCH=GENERS;
 
 ## Optional variables for running GVBDEMO smoke test against DB2
 

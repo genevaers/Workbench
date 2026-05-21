@@ -71,6 +71,7 @@ export GERS_UNLD_HLQ=your-unload-dataset-hlq
 export GERS_UNLD_MLQ=your-unload-dadaset-mlq
 export GERS_LOAD_HLQ=your-load-dataset-hlq
 export GERS_LOAD_MLQ=your-load-dadaset-mlq
+export GERS_UNLD_DB2SCH=your-unload-db2-schema-name
 </pre>
 The following variables are for running an optional smoke test of RCA and Performance engine using DB2 as the repository for Workbench. This consists of running GVMDEMO and will require you to run the GVBDEMO data generator to create the input data.
 <pre>
