@@ -205,7 +205,6 @@ class DSNMOD {
           Integer rcHigh = 0;
           logger.info("");
           logger.info("Process .DATA files for .LOB dependencies ---------------------------------------------------");
-          logger.info("");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -232,7 +231,6 @@ class DSNMOD {
       
         logger.info("");
         logger.info("Process .PNCH files to update Schema names --------------------------------------");
-        logger.info("");
         if (0 < dbg) {
           logger.info("PNCH Mask: " + maskPnch);
         }
