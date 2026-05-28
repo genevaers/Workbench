@@ -37,7 +37,7 @@ class GVBFormatter extends Formatter {
     @Override
     public String format(LogRecord record) {
         // Customize the log format: [LEVEL] Date - Methgod - Message
-        return String.format("[%1$-7s] %2$tF %2$tT - %3$s - %4$s %n",
+        return String.format("(%1$-7s) %2$tF %2$tT - %3$s - %4$s %n",
                 record.getLevel().getName(),
                 new Date(record.getMillis()),
                 record.getSourceMethodName(),
