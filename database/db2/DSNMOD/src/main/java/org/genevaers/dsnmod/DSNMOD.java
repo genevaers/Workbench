@@ -45,7 +45,7 @@ class GVBFormatter extends Formatter {
     }
 }
 
-public class DSNMOD {
+class DSNMOD {
 
     private static final Logger logger = Logger.getLogger(DSNMOD.class.getName());
 
