@@ -15,6 +15,7 @@
  * under the License.
  */
 import java.io.UnsupportedEncodingException;
+
 import com.ibm.jzos.ZFileException;
 import com.ibm.jzos.RcException;
 
@@ -26,7 +27,9 @@ import com.ibm.jzos.CatalogSearch;
 import com.ibm.jzos.CatalogSearchField;
 import com.ibm.jzos.Format1DSCB;
 import com.ibm.jzos.ZUtil;
-import java.util.logging.Logger;
+
+import java.util.logging.*;
+import java.util.Date;
 import java.util.Scanner;
 
 // custom handle
