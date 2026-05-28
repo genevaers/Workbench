@@ -453,7 +453,7 @@ class DSNMOD {
         
         logger.info("Input dataset: " + dsn2Data + " Records processed: " + m);
         logger.info("Number of .LOB related embedded dataset names modified is: " + n );
-        logger.info("All records including modifications written to: " + dsn2DataOut);
+        logger.info("Output including changes written to: " + dsn2DataOut);
 
         try {
             ZFile.remove(fmtDsn2Data);
@@ -606,14 +606,14 @@ class DSNMOD {
             } 
         }
 
-        logger.info("Number of records copied from dataset: " + dsName + " is: " + iCount + " modified record count is: " + jCount);
+        logger.info("Number of records copied: " + iCount + " Records modified: " + jCount);
 
         try {
             ZFile.remove(fmtName);
             logger.info("Successfully deleted: " + dsName);
             try {
                 ZFile.rename(fmtNameOut, fmtName);
-                logger.info("Successfully renamed: " + dsNameOut + " to: " + dsName);
+                logger.info("Successfully renamed: " + dsNameOut);
             } catch (ZFileException zfe) {
                 logger.severe("ZFileException renaming dataset: " + dsNameOut);
                 logger.severe("Native errno description: " + zfe.getErrnoMsg());
