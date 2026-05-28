@@ -451,9 +451,9 @@ class DSNMOD {
             }
         }
         
-        logger.info("Input dataset: " + dsn2Data + "/nNumber of records processed: " + m);
+        logger.info("Input dataset: " + dsn2Data + " Records processed: " + m);
         logger.info("Number of .LOB related embedded dataset names modified is: " + n );
-        logger.info("All records including modifications written to output dataset: " + dsn2DataOut);
+        logger.info("All records including modifications written to: " + dsn2DataOut);
 
         try {
             ZFile.remove(fmtDsn2Data);
