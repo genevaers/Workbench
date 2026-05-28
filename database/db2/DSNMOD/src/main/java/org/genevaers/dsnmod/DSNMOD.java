@@ -203,7 +203,7 @@ class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------------------\n");
+          logger.info("\nProcess .DATA files for .LOB dependencies ---------------------------------------------------\n");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -228,7 +228,7 @@ class DSNMOD {
         Integer rc = 0;
         Integer rcHigh = 0;
       
-        logger.info("Process .PNCH files to update Schema names --------------------------------------");
+        logger.info("\nProcess .PNCH files to update Schema names --------------------------------------\n");
         if (0 < dbg) {
           logger.info("PNCH Mask: " + maskPnch);
         }
@@ -246,7 +246,7 @@ class DSNMOD {
               String dsName = field.getFString().trim();
               field = entry.getField("VOLSER");
               String volser = field.getFString().trim();
-              logger.info(String.format("Dataset: %-44s Volser: %-6s\n", dsName, volser));
+              logger.info(String.format("Dataset: %-44s Volser: %-6s", dsName, volser));
               rc = processSinglePnchFile(dsName, schemaNameOld, schemaNameNew, codepage, dbg);
               if ( rcHigh < rc ) {
                 rcHigh = rc;
