@@ -203,7 +203,7 @@ class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------");
+          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------------------");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -451,7 +451,7 @@ class DSNMOD {
             }
         }
         
-        logger.info("Number of records processed from input dataset: " + dsn2Data + " is: " + m);
+        logger.info("Input dataset: " + dsn2Data + "/nNumber of records processed: " + m);
         logger.info("Number of .LOB related embedded dataset names modified is: " + n );
         logger.info("All records including modifications written to output dataset: " + dsn2DataOut);
 
