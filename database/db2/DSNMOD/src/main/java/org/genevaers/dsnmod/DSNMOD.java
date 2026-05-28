@@ -81,6 +81,9 @@ class DSNMOD {
         logger.addHandler(handler); //Add the handler to your logger and set the level
         logger.setLevel(Level.ALL); //Apply to all levels
 
+        String lparName = System.getenv("SYSNAME");
+        logger.info("DSNMOD executing on system: " + lparName + " to process datasets from unloaded DB2 schema: " + schemaNameOld);
+
         // command line argument[s]
         Integer nArgs =args.length;
         GVBA2I b = new GVBA2I();
