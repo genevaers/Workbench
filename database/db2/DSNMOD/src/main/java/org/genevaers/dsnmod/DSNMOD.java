@@ -29,6 +29,19 @@ import com.ibm.jzos.ZUtil;
 import java.util.logging.Logger;
 import java.util.Scanner;
 
+// custom handle
+class GVBFormatter extends Formatter {
+    @Override
+    public String format(LogRecord record) {
+        // Customize the log format: [LEVEL] Date - Methgod - Message
+        return String.format("[%1$-7s] %2$tF %2$tT - %3$s - %4$s %n",
+                record.getLevel().getName(),
+                new Date(record.getMillis()),
+                record.getSourceMethodName(),
+                record.getMessage());
+    }
+}
+
 public class DSNMOD {
 
     private static final Logger logger = Logger.getLogger(DSNMOD.class.getName());
@@ -58,6 +71,12 @@ public class DSNMOD {
         Boolean lPunch = true;
         Integer iRec = 0;
         Integer i, n;
+
+        ConsoleHandler handler = new ConsoleHandler(); //Create a handler (where the logs go)
+        handler.setFormatter(new GVBFormatter()); //Attach your custom formatter
+        logger.setUseParentHandlers(false); //Disable default parent handlers to avoid duplicate logs
+        logger.addHandler(handler); //Add the handler to your logger and set the level
+        logger.setLevel(Level.ALL); //Apply to all levels
 
         // command line argument[s]
         Integer nArgs =args.length;
