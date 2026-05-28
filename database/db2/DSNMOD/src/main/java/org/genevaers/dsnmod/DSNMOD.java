@@ -124,7 +124,7 @@ class DSNMOD {
             byte[] recordBuf = new byte[lrecl];
             int bytesRead;
 
-            logger.info("Parameter processing -----------------------------------------------------------------------------");
+            logger.info("Parameter processing ------------------------------------------------------------------------");
             // Read records one by one until the end of the file
             while ((bytesRead = parmreader.read(recordBuf)) >= 0) {
                 String card = new String(recordBuf, 0, 80, codepage);
@@ -203,7 +203,7 @@ class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          logger.info("Process .DATA files for .LOB dependencies --------------------------------------------------------");
+          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -228,7 +228,7 @@ class DSNMOD {
         Integer rc = 0;
         Integer rcHigh = 0;
       
-        logger.info("Process .PNCH files to update Schema names -------------------------------------------------------");
+        logger.info("Process .PNCH files to update Schema names --------------------------------------");
         if (0 < dbg) {
           logger.info("PNCH Mask: " + maskPnch);
         }
