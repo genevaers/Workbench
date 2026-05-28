@@ -203,7 +203,7 @@ class DSNMOD {
 
         if ( lData ) {
           Integer rcHigh = 0;
-          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------------------");
+          logger.info("Process .DATA files for .LOB dependencies ---------------------------------------------------\n");
           for ( i = 0; i < dsn1.length; i++) {
               rc = processDataFile( dsn1[i], dsn2[i], offset[i], codepage, dbg);
               if ( rcHigh < rc ) {
@@ -460,7 +460,7 @@ class DSNMOD {
             logger.info("Successfully deleted: " + dsn2Data);
             try {
                 ZFile.rename(fmtDsn2DataOut, fmtDsn2Data);
-                logger.info("Successfully renamed: " + dsn2DataOut + " to: " + dsn2Data);
+                logger.info("Successfully renamed: " + dsn2DataOut);
             } catch (ZFileException zfe) {
                 logger.severe("ZFileException failed to rename dataset: " + dsn2DataOut);
                 logger.severe("Native errno description: " + zfe.getErrnoMsg());
