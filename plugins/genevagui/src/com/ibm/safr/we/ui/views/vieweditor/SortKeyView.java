@@ -866,8 +866,8 @@ public class SortKeyView extends ViewPart implements IPartListener2,
 					dataTypeCombo = editorCombo;
 					break;
 				case DATETIMEFORMAT:
-					UIUtilities.populateComboBox(editorCombo,
-							CodeCategories.FLDCONTENT, 0, true);
+					boolean isNumeric = !sortKey.getDataTypeCode().getGeneralId().equals(Codes.ALPHANUMERIC)?true:false;
+					UIUtilities.populateDateTimeComboBox(editorCombo, isNumeric, true);
 					break;
 				case DISPLAYMODE:
 					UIUtilities.populateComboBox(editorCombo,
