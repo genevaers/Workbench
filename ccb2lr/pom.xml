@@ -40,8 +40,8 @@ under the License.
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
   </properties>
 
   <build>
@@ -55,7 +55,7 @@ under the License.
       <plugin>
         <groupId>org.antlr</groupId>
         <artifactId>antlr4-maven-plugin</artifactId>
-        <version>4.11.1</version>
+        <version>4.13.2</version>
         <configuration>
           <libDirectory>src/main/antlr4/org/genevaers/ccb2lr/grammar</libDirectory>
         </configuration>

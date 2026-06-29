@@ -32,8 +32,8 @@ under the License.
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
 		<timestamp>${maven.build.timestamp}</timestamp>
 		<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 	</properties>
@@ -64,7 +64,7 @@ under the License.
 								<artifactItem>
 									<groupId>org.postgresql</groupId>
 									<artifactId>postgresql</artifactId>
-									<version>42.7.7</version>
+									<version>42.7.11</version>
 									<overWrite>true</overWrite>
 									<outputDirectory>${user.dir}/plugins/genevagui/lib</outputDirectory>
 								</artifactItem>
