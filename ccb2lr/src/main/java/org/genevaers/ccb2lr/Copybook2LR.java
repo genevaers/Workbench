@@ -40,10 +40,11 @@ import org.genevaers.ccb2lr.grammar.CobolCopybookLexer;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser;
 import org.genevaers.ccb2lr.grammar.CobolCopybookParser.GoalContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import tools.jackson.core.exc.JacksonIOException;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
+import tools.jackson.dataformat.yaml.YAMLFactory;
 
 public class Copybook2LR {
    	static transient Logger logger = Logger.getLogger("org.genevaers.ccb2lr.Copybook2LR");
@@ -141,7 +142,7 @@ public class Copybook2LR {
     private void writeYaml(String filename) {
         try {
             yamlMapper.writeValue(new File(filename), copyRecord);
-        } catch (IOException e) {
+        } catch (JacksonIOException e) {
             // TODO Auto-generated catch block
             logger.severe("Cannot write yaml file\n" + e.getMessage());
         }
