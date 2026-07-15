@@ -17,6 +17,7 @@ main() {
 # &$DB2PLAN.  DB2 PLAN    -- GERS_DB2_PLAN=DSNTEP13;
 # &$PDSHLQ.   HLQ         -- HLQ MVS dataset to receive DDL, JCL and SQL
 # &$PDSMLQ.   MLQ         -- MLQ MVS dataset to receive DDL, JCL and SQL
+# &$UNLD_DB2SCH.          -- Name of unloaded DB2 Schema
 
 # Check if member name is provided
 if [ -z "$1" ]; then
@@ -32,7 +33,7 @@ FROM_DIR="$2";
 mycmdstr1='s/&$DBUSER.'/${GERS_DB2_DBUSER}/'g';
 mycmdstr2='s/&$DBNAME.'/${GERS_DB2_DBNAME}/'g'
 mycmdstr3='s/&$DBSG.'/${GERS_DB2_STGGRP}/'g'
-mycmdstr4='s/&$DBSCH.'/${GERS_DB2_DBSCH}/'g'
+mycmdstr4='s/&$DB2SCH.'/${GERS_DB2_DBSCH}/'g'
 mycmdstr5='s/&$DBSUB.'/${GERS_DB2_SUBSYSTEM}/'g'
 mycmdstr6='s/&$DB2PLAN.'/${GERS_DB2_PLAN}/'g'
 mycmdstr7='s/&$DB2PLIB.'/${GERS_DB2_PROCLIB}/'g'
@@ -49,13 +50,13 @@ mycmdstr16='s/&$PDSHLQ.'/${GERS_TO_PDS_HLQ}/'g'
 mycmdstr17='s/&$PDSMLQ.'/${GERS_TO_PDS_MLQ}/'g'
 
 #optional ones for replication
-mycmdstr18='s/&$FROMPDSHLQ.'/${GERS_FROM_PDS_HLQ}/'g'
-mycmdstr19='s/&$FROMPDSMLQ.'/${GERS_FROM_PDS_MLQ}/'g'
-mycmdstr20='s/&$FROMDBUSER.'/${GERS_FROM_DB2_DBUSER}/'g';
-mycmdstr21='s/&$FROMDBNAME.'/${GERS_FROM_DB2_DBNAME}/'g';
-mycmdstr22='s/&$FROMDBSG.'/${GERS_FROM_DB2_DBSG}/'g';
-mycmdstr23='s/&$FROMDBSCH.'/${GERS_FROM_DB2_DBSCH}/'g';
-mycmdstr24='s/&$FROMDBSUB.'/${GERS_FROM_DB2_DBSUB}/'g';
+mycmdstr18='s/&$UNLDHLQ.'/${GERS_UNLD_HLQ}/'g'
+mycmdstr19='s/&$UNLDMLQ.'/${GERS_UNLD_MLQ}/'g'
+mycmdstr20='s/&$LOADHLQ.'/${GERS_LOAD_HLQ}/'g'
+mycmdstr21='s/&$LOADMLQ.'/${GERS_LOAD_MLQ}/'g'
+mycmdstr22='s/&$FROMDBSG.'/${GERS_UNUSED}/'g';
+mycmdstr23='s/&$FROMDBSCH.'/${GERS_UNLD_DB2SCH}/'g';
+mycmdstr24='s/&$FROMDBSUB.'/${GERS_UNUSED}/'g';
 
 #to run optional smoke test with DB2
 mycmdstr25='s/&$ENVHLQ.'/${GERS_ENV_HLQ}/'g';
