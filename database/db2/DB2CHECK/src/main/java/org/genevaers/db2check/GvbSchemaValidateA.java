@@ -7,13 +7,15 @@ package org.genevaers.db2check;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import com.ibm.db2.jcc.a.f;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
+// import java.lang.StackWalker.StackFrame;
 
 import java.sql.*;
 
@@ -43,6 +45,12 @@ public class GvbSchemaValidateA {
         String ttext;
         Statement stmt;
         ResultSet rs;
+
+        ConsoleHandler handler = new ConsoleHandler(); //Create a handler (where the logs go)
+        handler.setFormatter(new GVBFormatter()); //Attach your custom formatter
+        logger.setUseParentHandlers(false); //Disable default parent handlers to avoid duplicate logs
+        logger.addHandler(handler); //Add the handler to your logger and set the level
+        logger.setLevel(Level.ALL); //Apply to all levels
 
         logger.info("GvbSchemaValidateA: checking stored procedures for schema: " + schema_mask);
 

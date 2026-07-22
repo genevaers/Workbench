@@ -8,9 +8,23 @@ import java.io.IOException;
 //import java.lang.System.Logger;
 import java.util.HashMap;
 import java.io.File;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import java.sql.*;
+
+// custom handle
+class GVBFormatter extends Formatter {
+    @Override
+    public String format(LogRecord record) {
+        // Customize the log format: [LEVEL] Date - Methgod - Message
+//        return String.format("(%1$-7s) %2$tF %2$tT - %3$s - %4$s %n",
+        return String.format("(%1$-7s) %2$tF %2$tT - %3$s %n",
+                record.getLevel().getName(),
+                new Date(record.getMillis()),
+                record.getMessage());
+    }
+}
+//                 record.getSourceMethodName(),
 
 public class GvbSchemaValidateMain {
     @SuppressWarnings("resource")
@@ -45,6 +59,12 @@ public class GvbSchemaValidateMain {
         Connection con;
 
         String userhome = System.getProperty("user.home");
+
+        ConsoleHandler handler = new ConsoleHandler(); //Create a handler (where the logs go)
+        handler.setFormatter(new GVBFormatter()); //Attach your custom formatter
+        logger.setUseParentHandlers(false); //Disable default parent handlers to avoid duplicate logs
+        logger.addHandler(handler); //Add the handler to your logger and set the level
+        logger.setLevel(Level.ALL); //Apply to all levels
     
         logger.info("Running GvbSchemaValidateMain: checking DB2 Schema.");
 
