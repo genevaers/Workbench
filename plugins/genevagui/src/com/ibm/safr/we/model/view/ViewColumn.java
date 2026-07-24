@@ -112,11 +112,12 @@ public class ViewColumn extends SAFRField {
 			this.spacesBeforeColumn = 0;
 		}
 		this.visible = true;
-		Code code = SAFRApplication.getSAFRFactory().getCodeSet(
+				Code code = SAFRApplication.getSAFRFactory().getCodeSet(
 				CodeCategories.DATATYPE).getCode(Codes.ALPHANUMERIC);
 		this.setDataTypeCode(code);
 		this.recordAggrCode = null;
 		this.groupAggrCode = null;
+		this.startPosition = 1;
 	}
 
 	/**
