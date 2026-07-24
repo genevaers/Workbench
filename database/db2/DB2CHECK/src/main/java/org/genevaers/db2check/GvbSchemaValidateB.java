@@ -50,7 +50,7 @@ public class GvbSchemaValidateB {
         logger.addHandler(handler); //Add the handler to your logger and set the level
         logger.setLevel(Level.ALL); //Apply to all levels
 
-        logger.info("GvbSchemaValidateB: checking tables and columns for schema: " + schema_mask);
+        logger.info("GvbSchemaValidateB: processing tables and columns for schema: " + schema_mask);
 
         String SQLstmt = "SELECT TBCREATOR, TBNAME, NAME, COLTYPE, LENGTH FROM SYSIBM.SYSCOLUMNS WHERE TBCREATOR LIKE '" + schema_mask + "' ORDER BY TBNAME, NAME";
 
@@ -72,8 +72,10 @@ public class GvbSchemaValidateB {
 
             fwriter.write("\nTable and Column Validation Report for schema: " + schema_mask + "\n\n");
 
+            boolean hasData = false;
             MessageDigest md = MessageDigest.getInstance(digestType);
             while (rs.next()) {
+                hasData = true;
                 schema = rs.getString(1);
                 tname = rs.getString(2);
                 cname = rs.getString(3);
@@ -84,7 +86,9 @@ public class GvbSchemaValidateB {
                     if ( makeDef ) {
                         dwriter[1].write(schema + " " + tname + " " + cname + " " + typename + " " + length + "\n");
                     }
-                    sb.append(schema + " " + tname + " " + cname + " " + typename + " " + length);
+                    //sb.append(schema + " " + tname + " " + cname + " " + typename + " " + length);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + cname + " " + typename + " " + length);
                 }
                 else{
                     if (sb.length() > 0 ) {
@@ -104,7 +108,8 @@ public class GvbSchemaValidateB {
                                 logger.warning("HASH value mismatch for table: " + tname + " - no stored hash value");
                                 fwriter.write("HASH value mismatch for table: " + tname + " - no stored hash value\n");
                                 fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-                                match = false;                            }
+                                match = false;
+                            }
                             else
                             {
                                 if ( hashvalue.equals(encodedHash))
@@ -131,11 +136,21 @@ public class GvbSchemaValidateB {
                     }
                     
                     sb.delete(0, sb.length());
-                    sb.append(schema + " " + tname + " " + cname + " " + typename + " " + length);
+                    // sb.append(schema + " " + tname + " " + cname + " " + typename + " " + length);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + cname + " " + typename + " " + length);
                 }
                 lastTab = tname;
             }
-            logger.fine("Fetched all rows from JDBC ResultSet");
+
+            if (hasData) {
+                logger.fine("Fetched all rows from JDBC ResultSet");
+            } else {
+                logger.severe("HASH value cannot be formulated - no tables found for schema: " + schema_mask);
+                fwriter.write("HASH value cannot be formulated - no tables found for schema: " + schema_mask);
+                fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                match = false;
+            }
 
             // Close the ResultSet
             rs.close();
@@ -160,8 +175,12 @@ public class GvbSchemaValidateB {
         }
         
         if ( makeHash ) {
-            logger.info("Table digest hashmap created");
-            rc = 2;
+            if (match) {
+                logger.info("Table digest hashmap created");
+                rc = 2;
+            } else {
+                rc = 3;
+            }
             return;
         }
         else

@@ -49,7 +49,7 @@ public class GvbSchemaValidateC {
         logger.addHandler(handler); //Add the handler to your logger and set the level
         logger.setLevel(Level.ALL); //Apply to all levels
 
-        logger.info("GvbSchemaValidateC: checking indexes for schema: " + schema_mask);
+        logger.info("GvbSchemaValidateC: processing indexes for schema: " + schema_mask);
 
         String SQLstmt = "SELECT CREATOR, TBNAME, NAME, UNIQUERULE FROM SYSIBM.SYSINDEXES WHERE CREATOR LIKE '" + schema_mask + "' ORDER BY TBNAME, NAME;";
 
@@ -71,8 +71,10 @@ public class GvbSchemaValidateC {
 
             fwriter.write("\nIndex Validation Report by table for schema: " + schema_mask + "\n\n");
 
+            boolean hasData = false;
             MessageDigest md = MessageDigest.getInstance(digestType);
             while (rs.next()) {
+                hasData = true;
                 schema = rs.getString(1);
                 tname = rs.getString(2);
                 iname = rs.getString(3);
@@ -82,7 +84,9 @@ public class GvbSchemaValidateC {
                     if ( makeDef ) {
                         dwriter[2].write(schema + " " + tname + " " + iname + " " + uniqueR + "\n");
                     }
-                    sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
+                    // sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + iname + " " + uniqueR);
                 }
                 else{
                     if (sb.length() > 0 ) {
@@ -127,11 +131,21 @@ public class GvbSchemaValidateC {
                     }
                     
                     sb.delete(0, sb.length());
-                    sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
+                    // sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + iname + " " + uniqueR);
                 }
                 lastTab = tname;
             }
-            logger.fine("Fetched all rows from JDBC ResultSet");
+
+            if (hasData) {
+                logger.fine("Fetched all rows from JDBC ResultSet");
+            } else {
+                logger.severe("HASH value cannot be formulated - no indexes found for schema: " + schema_mask);
+                fwriter.write("HASH value cannot be formulated - no indexes found for schema: " + schema_mask);
+                fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                match = false;
+            }
 
             // Close the ResultSet
             rs.close();
@@ -156,8 +170,12 @@ public class GvbSchemaValidateC {
         }
         
         if ( makeHash ) {
-            logger.info("Index digest hashmap created");
-            rc = 2;
+            if (match) {
+                logger.info("Index digest hashmap created");
+                rc = 2;
+            } else {
+                rc = 3;
+            }
             return;
         }
         else {

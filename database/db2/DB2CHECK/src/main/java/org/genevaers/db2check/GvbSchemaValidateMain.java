@@ -273,24 +273,35 @@ public class GvbSchemaValidateMain {
             switch ( maxRc ) {
                 case 0:
                     logger.info("All parts of schema validated successfully\n");
+                    fwriter.write("\nAll parts of schema validated successfully\n");
                     break;
                 case 1:
                     logger.warning("One or more parts of schema failed validation\n");
+                    fwriter.write("\nOne or more parts of schema failed validation\n");
                     break;
                 case 2:
-                    logger.info("Schema digest map created\n");
+                    logger.info("Entire schema digest map created\n");
+                    fwriter.write("\nEntire schema digest map created\n");
+                    break;
+                case 3:
+                    logger.info("Some or all DB2 catalog data not found\n");
+                    fwriter.write("\nSome or all DB2 catalog data not found\n");
                     break;
                 case 4:
                     logger.severe("DB2 SQL error\n");
+                    fwriter.write("\nDB2 SQL error\n");
                     break;
                 case 8:
                     logger.severe("IO error\n");
+                    fwriter.write("\nIO error\n");
                     break;
                 case 12:
                     logger.severe("IO and DB2 SQL error\n");
+                    fwriter.write("\nIO and DB2 SQL error\n");
                     break;
                 default:
                     logger.severe("Incorrect max return code: " + maxRc + "\n");
+                    fwriter.write("\nIncorrect max return code: " + maxRc + "\n");
                     break;
             }
 

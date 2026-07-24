@@ -43,7 +43,7 @@ public class GvbSchemaValidateD {
         Statement stmt;
         ResultSet rs;
 
-        logger.info("GvbSchemaValidateD: checking foreign keys for schema: " + schema_mask);
+        logger.info("GvbSchemaValidateD: processing foreign keys for schema: " + schema_mask);
 
         String SQLstmt = "SELECT CREATOR, TBNAME, RELNAME, COLNAME FROM SYSIBM.SYSFOREIGNKEYS WHERE CREATOR LIKE '" + schema_mask + "' ORDER BY TBNAME, RELNAME, COLNAME;";
 
@@ -65,8 +65,10 @@ public class GvbSchemaValidateD {
 
             fwriter.write("\nForeign key Validation Report by table for schema: " + schema_mask + "\n\n");
 
+            boolean hasData = false;
             MessageDigest md = MessageDigest.getInstance(digestType);
             while (rs.next()) {
+                hasData = true;
                 schema = rs.getString(1);
                 tname = rs.getString(2);
                 rname = rs.getString(3);
@@ -76,7 +78,9 @@ public class GvbSchemaValidateD {
                     if ( makeDef ) {
                         dwriter[3].write(schema + " " + tname + " " + rname + " " + cname + "\n");
                     }
-                    sb.append(schema + " " + tname + " " + rname + " " + cname);
+                    // sb.append(schema + " " + tname + " " + rname + " " + cname);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + rname + " " + cname);
                 }
                 else{
                     if (sb.length() > 0 ) {
@@ -121,11 +125,21 @@ public class GvbSchemaValidateD {
                     }
                     
                     sb.delete(0, sb.length());
-                    sb.append(schema + " " + tname + " " + rname + " " + cname);
+                    // sb.append(schema + " " + tname + " " + rname + " " + cname);
+                    // don't include schema name in hash value as this will prevent choice of different schema name
+                    sb.append(" " + tname + " " + rname + " " + cname);
                 }
                 lastTab = tname;
             }
-            logger.fine("Fetched all rows from JDBC ResultSet");
+
+            if (hasData) {
+                logger.fine("Fetched all rows from JDBC ResultSet");
+            } else {
+                logger.severe("HASH value cannot be formulated - no foreign keys found for schema: " + schema_mask);
+                fwriter.write("HASH value cannot be formulated - no foreign keys found for schema: " + schema_mask);
+                fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                match = false;
+            }
             
             // Close the ResultSet
             rs.close();
@@ -150,8 +164,12 @@ public class GvbSchemaValidateD {
         }
         
         if ( makeHash ) {
-            logger.info("Foreign key digest hashmap created");
-            rc = 2;
+            if (match) {
+                logger.info("Foreign key digest hashmap created");
+                rc = 2;
+            } else {
+                rc = 3;
+            }
             return;
         }
         else {

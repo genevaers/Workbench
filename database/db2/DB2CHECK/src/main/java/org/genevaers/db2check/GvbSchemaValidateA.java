@@ -52,7 +52,7 @@ public class GvbSchemaValidateA {
         logger.addHandler(handler); //Add the handler to your logger and set the level
         logger.setLevel(Level.ALL); //Apply to all levels
 
-        logger.info("GvbSchemaValidateA: checking stored procedures for schema: " + schema_mask);
+        logger.info("GvbSchemaValidateA: processing stored procedures for schema: " + schema_mask);
 
         String SQLstmt = "SELECT SCHEMA, NAME, VERSION, TEXT FROM SYSIBM.SYSROUTINES WHERE SCHEMA LIKE '"+schema_mask+"' ORDER BY SCHEMA, NAME";
 
@@ -73,8 +73,10 @@ public class GvbSchemaValidateA {
 
             fwriter.write("\nStored Procedures Validation Report for schema: " + schema_mask + "\n\n");
 
+            boolean hasData = false;
             MessageDigest md = MessageDigest.getInstance(digestType);
             while (rs.next()) {
+                hasData = true;
                 schema = rs.getString(1);
                 nname = rs.getString(2);
                 vversion = rs.getString(3);
@@ -129,7 +131,15 @@ public class GvbSchemaValidateA {
                     }
                 }
             }
-            logger.fine("Fetched all rows from JDBC ResultSet");
+
+            if (hasData) {
+                logger.fine("Fetched all rows from JDBC ResultSet");
+            } else {
+                logger.severe("HASH value cannot be formulated - no stored procedures found for schema: " + schema_mask);
+                fwriter.write("HASH value cannot be formulated - no stored procedures found for schema: " + schema_mask);
+                fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                match = false;
+            }
 
             // Close the ResultSet
             rs.close();
@@ -155,8 +165,12 @@ public class GvbSchemaValidateA {
         }
 
         if (makeHash) {
-            logger.info("Stored procedure digest hashmap created");
-            rc = 2;
+            if (match) {
+                logger.info("Stored procedure digest hashmap created");
+                rc = 2;
+            } else {
+                rc = 3;
+            }
             return;
         } else {
             if ( match )
