@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-//import java.lang.System.Logger;
 import java.util.HashMap;
 import java.io.File;
 import java.util.logging.*;
@@ -65,6 +64,7 @@ public class GvbSchemaValidateMain {
         logger.setUseParentHandlers(false); //Disable default parent handlers to avoid duplicate logs
         logger.addHandler(handler); //Add the handler to your logger and set the level
         logger.setLevel(Level.ALL); //Apply to all levels
+        System.out.println(logger.getLevel());
     
         logger.info("Running GvbSchemaValidateMain: checking DB2 Schema.");
 
