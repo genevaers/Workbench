@@ -48,6 +48,7 @@ public class GvbSchemaValidateMain {
         Boolean makeHash = false;
         Boolean makeDef = false;
         Boolean makeF = true;
+        Boolean finest = false;
         BufferedWriter fwriter = null; // general output
         BufferedWriter hwriter = null; // digest output
         BufferedWriter[] dwriter = new BufferedWriter[4]; // Definition files: stored procedures, table/columns, indexes and foreign keys
@@ -59,17 +60,40 @@ public class GvbSchemaValidateMain {
 
         String userhome = System.getProperty("user.home");
 
+        Integer nArgs =args.length;
+        Integer n;
+
+        // pre-read command line argument[s]
+        for (n = 0; n < nArgs; n++) {
+            if (args[n].substring(0,1).equals("-")) {
+                switch( args[n].substring(1,2))
+                 {
+                    // diagnostics: FINE logging
+                    case "f":
+                        finest = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
         ConsoleHandler handler = new ConsoleHandler(); //Create a handler (where the logs go)
         handler.setFormatter(new GVBFormatter()); //Attach your custom formatter
         logger.setUseParentHandlers(false); //Disable default parent handlers to avoid duplicate logs
+        if ( finest ) {
+            handler.setLevel(Level.FINE);    
+        } else {
+            handler.setLevel(Level.INFO);
+        }
         logger.addHandler(handler); //Add the handler to your logger and set the level
-        logger.setLevel(Level.ALL); //Apply to all levels
-        System.out.println(logger.getLevel());
-    
-        logger.info("Running GvbSchemaValidateMain: checking DB2 Schema.");
+        if ( finest ) {
+            logger.setLevel(Level.FINE); //Apply to all levels
+        } else {
+            logger.setLevel(Level.INFO);
+        }
 
-        Integer nArgs =args.length;
-        Integer n;
+        logger.info("Running GvbSchemaValidateMain: checking DB2 Schema.");
 
         // parse
         // command line argument[s]
@@ -80,25 +104,20 @@ public class GvbSchemaValidateMain {
                     // generate hash map -- does NOT validate the schema
                     case "A":
                         makeHash = true;
+                        logger.info("Option set to generate Schema digest from DB2 catalog");
                         break;
                     // generate DDL statement -- available in all cases
                     case "D":
                         makeDef = true;
+                        logger.info("Option set to generate Schema definitions from DB2 catalog");
                         break;
                     case "h":
-                        logger.info("-D (-D (write schema definitions)\n-A (create schema digest map)");
+                        logger.info("-D (write schema definitions) -A (create schema digest map/does not validate) -f (FINE log level)");
                         return;
                     default:
                         break;
                 }
             }
-        }
-
-        if (makeHash) {
-            logger.info("Option set to generate Schema digest from DB2 catalog");
-        }
-        if (makeDef) {
-            logger.info("Option set to generate Schema definitions from DB2 catalog");
         }
 
         // read configurtion information from home directory
@@ -235,7 +254,7 @@ public class GvbSchemaValidateMain {
         try {
             con = DriverManager.getConnection (url, user, password);
             con.setAutoCommit(false);
-            logger.fine("Created a JDBC connection to the data source\n");
+            logger.fine("Created a JDBC connection to the data source");
 
             if ( makeF ) {
                 fwriter = new BufferedWriter(new FileWriter(userhome + "/GenevaERS/Schema_report.txt"));
@@ -272,35 +291,35 @@ public class GvbSchemaValidateMain {
 
             switch ( maxRc ) {
                 case 0:
-                    logger.info("All parts of schema validated successfully\n");
+                    logger.info("All parts of schema validated successfully");
                     fwriter.write("\nAll parts of schema validated successfully\n");
                     break;
                 case 1:
-                    logger.warning("One or more parts of schema failed validation\n");
+                    logger.warning("One or more parts of schema failed validation");
                     fwriter.write("\nOne or more parts of schema failed validation\n");
                     break;
                 case 2:
-                    logger.info("Entire schema digest map created\n");
+                    logger.info("Entire schema digest map created");
                     fwriter.write("\nEntire schema digest map created\n");
                     break;
                 case 3:
-                    logger.info("Some or all DB2 catalog data not found\n");
+                    logger.info("Some or all DB2 catalog data not found");
                     fwriter.write("\nSome or all DB2 catalog data not found\n");
                     break;
                 case 4:
-                    logger.severe("DB2 SQL error\n");
+                    logger.severe("DB2 SQL error");
                     fwriter.write("\nDB2 SQL error\n");
                     break;
                 case 8:
-                    logger.severe("IO error\n");
+                    logger.severe("IO error");
                     fwriter.write("\nIO error\n");
                     break;
                 case 12:
-                    logger.severe("IO and DB2 SQL error\n");
+                    logger.severe("IO and DB2 SQL error");
                     fwriter.write("\nIO and DB2 SQL error\n");
                     break;
                 default:
-                    logger.severe("Incorrect max return code: " + maxRc + "\n");
+                    logger.severe("Incorrect max return code: " + maxRc);
                     fwriter.write("\nIncorrect max return code: " + maxRc + "\n");
                     break;
             }
