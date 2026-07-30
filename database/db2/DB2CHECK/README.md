@@ -24,7 +24,7 @@ SCHEMANM
 
 In order to verify the correctness of the GenevaERS schema stored in the DB2 catalog a digest file is referenced containing hash values pertaining to each item belonging to the schema. In order to run the verification first perform the following:
 <pre>
-cp Workbench/DB2CHECK/SchemaDigest.txt to ~/GenevaERS/SchemaDigest.txt
+cp Workbench/database/db2/DB2CHECK/SchemaDigest.txt ~/GenevaERS/SchemaDigest.txt
 </pre>
 
 ## Schema Report
@@ -40,21 +40,21 @@ mvn install
 
 ## Executing the program
 
-From directory DB2CHECK/target/ run the following script. This verifies the definitions stored within the DB2 catalog are correct.
+From directory DB2CHECK/ run the following script. This verifies the definitions stored within the DB2 catalog are correct.
 <pre>
 ./runDB2check.sh
 </pre>
 
 ## Command line option -D
 
-From directory DB2CHECK/target/ run the following script. This generates four output files containing your schema definitions as well as verifying the definitions stored within the DB2 catalog are correct. The files are output to directory GenevaERS in your home diretory.
+From directory DB2CHECK/ run the following script. This generates four output files containing your schema definitions as well as verifying the definitions stored within the DB2 catalog are correct. The files are output to directory GenevaERS in your home diretory.
 <pre>
 ./runDB2check.sh -D
 </pre>
 
 ## Command line option -f
 
-From directory DB2CHECK/target/ run the following script. This option provides FINE (detailed) logging level in addition to logging levels above this.
+From directory DB2CHECK/ run the following script. This option provides FINE (detailed) logging level in addition to logging levels above this.
 <pre>
 ./runDB2check.sh -D -f
 </pre>
