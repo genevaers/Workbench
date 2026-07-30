@@ -345,15 +345,15 @@ public class GvbSchemaValidateMain {
       
             // Close the connection
             con.close();
-            logger.fine(userhome + "Disconnected from data source");
+            logger.fine(userhome + " Disconnected from data source");
             logger.fine("JDBC completed - no DB2 errors");
 
         } catch (SQLException e) {
-                logger.severe("SQLSTATE: " + e.getSQLState() + " creating database connection for: " + url + e.getMessage());
+                logger.severe("SQLSTATE: " + e.getSQLState() + " creating database connection for: " + url + " : " + e.getMessage());
                 return;
 
         } catch (IOException e) {
-                logger.severe("IO exception encountered in GvbSchemaValidateMain" + e.getMessage());
+                logger.severe("IO exception encountered in GvbSchemaValidateMain: " + e.getMessage());
                 return;
         }
         return;
