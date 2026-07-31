@@ -385,25 +385,28 @@ public class ViewColumnEditor {
         }
 
         protected String getStartPositionLabel(ViewColumn column) {
+            Integer start = column.getStartPosition();
+            Integer length = column.getLength();
             if (view.getOutputFormat().equals(OutputFormat.Format_Fixed_Width_Fields)) {
-                if (column.isVisible() ) {
-                    Integer end = column.getStartPosition() + column.getLength()-1;
-                    String pos = column.getStartPosition().toString() + "-" + end.toString();
-                    return pos;
-                }
-                else {
+                if (column.isVisible()) {
+                    if (start == null || length == null) {
+                        return "";
+                    }
+                    Integer end = start + length - 1;
+                    return start.toString() + "-" + end.toString();
+                } else {
                     return "0";
                 }
-            } else if (view.getOutputFormat().equals(OutputFormat.Extract_Fixed_Width_Fields)){
+            } else if (view.getOutputFormat().equals(OutputFormat.Extract_Fixed_Width_Fields)) {
                 if (column.isSortKey()) {
                     return "0";
+                } else {
+                    if (start == null || length == null) {
+                        return "";
+                    }
+                    Integer end = start + length - 1;
+                    return start.toString() + "-" + end.toString();
                 }
-                else {
-                    Integer end = column.getStartPosition() + column.getLength()-1;
-                    String pos = column.getStartPosition().toString() + "-" + end.toString();
-                    return pos;
-                }
-                
             } else {
                 return "";
             }

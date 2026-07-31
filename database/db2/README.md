@@ -66,23 +66,24 @@ export GERS_SCBCDLL=your-CBC.SCLBDLL
 export GERS_TO_PDS_HLQ=your-pds-hlq
 export GERS_TO_PDS_MLQ=your-pds-mlq
 </pre>
-The following optional environment variables are needed in addition if you are replicating an existing GenevaERS environment to a new DB2 schema.
+Java PROC and load LIBRARIES needed for the following 2 optional steps
 <pre>
-export GERS_FROM_PDS_HLQ=your-unload-dataset-hlq
-export GERS_FROM_PDS_MLQ=your-unload-dadaset-mlq
-export GERS_FROM_DB2_DBUSER=your-from-database-user
-export GERS_FROM_DB2_DBNAME=your-from-database-name
-export GERS_FROM_DB2_DBSG=your-from-database-storage-group
-export GERS_FROM_DB2_DBSCH=your-from-database-schema
-export GERS_FROM_DB2_DBSUB=your-from-database-subsystem
+export GERS_JVM_PROC_LIB='AJV.V21R0M0.PROCLIB';
+export GERS_JZOS_LOAD_LIB='AJV.V21R0M0.SIEALNKE';
+</pre>
+The following environment variables are needed in addition if you are **replicating** an existing GenevaERS environment to a new DB2 schema.
+<pre>
+export GERS_UNLD_HLQ=your-unload-dataset-hlq
+export GERS_UNLD_MLQ=your-unload-dadaset-mlq
+export GERS_LOAD_HLQ=your-load-dataset-hlq
+export GERS_LOAD_MLQ=your-load-dadaset-mlq
+export GERS_UNLD_DB2SCH=your-unload-db2-schema-name
 </pre>
 The following optional environment variables are for running a smoke test of RCA and Performance engine using DB2 as the repository for Workbench. This consists of running GVMDEMO and will require you to run the GVBDEMO data generator to create the input data.
 <pre>
 export GERS_ENV_HLQ=same-as-GERS_ENV_HLQ-in-.gers.profile
 export GERS_DEMO_HLQ=your-GVBDEMO-hlq
 export GERS_DEMO_MLQ=your GVBDEMO-mlq
-export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
-export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
 export GERS_DB2_HOST=host-name-DB2-database
 export GERS_DB2_PORT=port-number-DB2-database
 export GERS_DB2_SAFR_ENV='1';
@@ -166,15 +167,17 @@ INSTSP   - install stored procedures
 
 This process is distinct to the one above for creating an empty DB2 schema. It replicates a GenevaERS environment, populating it with data from an existing environment. It comprises creating a DB2 schema and loading the data. Go to the newly generated JCL data set, check and submit the following jobs.
 <pre>
-UNLOAD   - unload GenevaERS data from existing DB2 schema             - Todo
-EXDSNMOD - change LOB file location                                   - Todo
-EXMPNC2  - change schema                                              - Todo
+UNLOAD   - unload GenevaERS data from existing DB2 schema using site specific IBM or 3rd party utility
+........
+E2PAXMIT - Unpack .TRS file into PDSE and expand individual library members into PDSE and SEQ files
+NULLDATA - scan and update RECEIVE'd DATA files for invalid DCB information indicating empty file(s)
+DSNMOD   - change file names representing relationship between DATA and LOB files. Update Schema name.
 DROPALL  - drop existing database schema if it exists
 BLDDB01  - create database, C_*, E_* and X_* tables
 BLDDB02  - create Logic Table/LOB column
 BLDDB03  - create C_*, E_* and X_* indexes
-LOAD01   - load database without E_LOGIC table                         - Todo
-LOAD02   - load E_LOGIC table                                          - Todo
+LOAD01   - load database without E_LOGIC table
+LOAD02   - load E_LOGIC table
 BLDDB04  - create foreign keys
 BLDDB06  - create DB2 views
 REPAIR   - remove tablespaces check pending status

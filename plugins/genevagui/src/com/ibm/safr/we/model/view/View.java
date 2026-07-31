@@ -1844,7 +1844,7 @@ public class View extends SAFRActivatedComponent {
 
                 }// if column is not visible
                 else {
-                    currentViewColumn.setStartPosition(0);
+                    currentViewColumn.setStartPosition(1);
                 }    
             }
         } else if (outputFormat == OutputFormat.Extract_Fixed_Width_Fields) {
@@ -1860,7 +1860,7 @@ public class View extends SAFRActivatedComponent {
                     prevLength = currentViewColumn.getLength().intValue();
                 }// if column is sort key
                 else {
-                    currentViewColumn.setStartPosition(0);
+                    currentViewColumn.setStartPosition(1);
                 }
             }
         } else {

@@ -28,26 +28,27 @@ export GERS_LE_RUN_LIB2=CEE.SCEERUN2;
 export GERS_SCBCDLL=CBC.SCLBDLL;
 export GERS_TO_PDS_HLQ=GENEVA;
 export GERS_TO_PDS_MLQ=GVBDEMO;
-
+#
+## Java PROC and load LIBRARIES needed for the following 2 optional steps
+#
+# export GERS_JVM_PROC_LIB='AJV.V12R0M0.PROCLIB';
+# export GERS_JZOS_LOAD_LIB='AJV.V21R0M0.SIEALNKE';
+#
 ## Optional variables when replicating GenevaERS metadata from another DB2 schema
 
-# export GERS_FROM_PDS_HLQ=GENEVA;
-# export GERS_FROM_PDS_MLQ=GVBDEMO.FROM;
-# export GERS_FROM_DB2_DBUSER=SAFRBLD;
-# export GERS_FROM_DB2_DBNAME=SADBBLD2;
-# export GERS_FROM_DB2_DBSG=SASGBLD2;
-# export GERS_FROM_DB2_DBSCH=SAFRBLD2;
-# export GERS_FROM_DB2_DBSUB=DM13;
+# export GERS_UNLD_HLQ=U402451;
+# export GERS_UNLD_MLQ=GENERS.D251222U;
+# export GERS_LOAD_HLQ=E124051;
+# export GERS_LOAD_MLQ=GENERS.D251222U;
+# export GERS_UNLD_DB2SCH=GENERS;
 
 ## Optional variables for running GVBDEMO smoke test against DB2
 
-# export GERS_ENV_HLQ='GENEVA.BLD';
+# export GERS_ENV_HLQ='GENEVA.ENV';
 # export GERS_DEMO_HLQ=GEBT;
 # export GERS_DEMO_MLQ=GVBDEMO;
-# export GERS_JVM_PROC_LIB='AJV.V11R0M0.PROCLIB';
-# export GERS_JZOS_LOAD_LIB='AJV.V11R0M0.SIEALNKE';
-# export GERS_DB2_HOST='test.las.cmplabs.company.com';
+# export GERS_DB2_HOST='test.tech.smartlabs.com';
 # export GERS_DB2_PORT='5036';
 # export GERS_DB2_SAFR_ENV='1';
-# export GERS_JAVA_HOME="/Java/J17.0_64"
-# export GERS_RCA_JAR_DIR="/u/nbeesle/git/public/RCA_jar"
+# export GERS_JAVA_HOME="/Java/J21.0_64"
+# export GERS_RCA_JAR_DIR="/u/<your-IDS>/git/RCA_jar"
