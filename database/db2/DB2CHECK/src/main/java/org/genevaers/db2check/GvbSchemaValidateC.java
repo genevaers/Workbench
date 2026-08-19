@@ -39,9 +39,16 @@ public class GvbSchemaValidateC {
         String iname;
         String uniqueR;
         String lastTab = "";
+        String lastIname = "";
+
+        String colname = "";
+        Integer colno = 0;
+        Integer colseq = 0;
 
         Statement stmt;
+        Statement stmt2;
         ResultSet rs;
+        ResultSet rs2;
 
         ConsoleHandler handler = new ConsoleHandler(); //Create a handler (where the logs go)
         handler.setFormatter(new GVBFormatter()); //Attach your custom formatter
@@ -74,69 +81,97 @@ public class GvbSchemaValidateC {
             boolean hasData = false;
             MessageDigest md = MessageDigest.getInstance(digestType);
             while (rs.next()) {
-                hasData = true;
                 schema = rs.getString(1);
                 tname = rs.getString(2);
                 iname = rs.getString(3);
                 uniqueR = rs.getString(4);
 
-                if ( lastTab.equals(tname)) {
-                    if ( makeDef ) {
-                        dwriter[2].write(schema + " " + tname + " " + iname + " " + uniqueR + "\n");
-                    }
-                    // sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
-                    // don't include schema name in hash value as this will prevent choice of different schema name
-                    sb.append(" " + tname + " " + iname + " " + uniqueR);
-                }
-                else{
-                    if (sb.length() > 0 ) {
-                        byte[] hashedBytes = md.digest((sb.toString()).getBytes());
-                        String encodedHash = Base64.getEncoder().encodeToString(hashedBytes);
+                String SQLstmt2= "SELECT COLNAME, COLNO, COLSEQ FROM SYSIBM.SYSKEYS WHERE IXCREATOR = '" + schema + "' AND IXNAME = '" + iname + "' ORDER BY IXNAME, COLSEQ;";
 
-                        if ( makeHash) {
-                            hwriter.write(tname+ "," + encodedHash); //populate hash map
-                            hwriter.write("\n");
+                try {
+                    stmt2 = con.createStatement();
+                    rs2 = stmt2.executeQuery(SQLstmt2);
+
+                    while (rs2.next()) {
+                        hasData = true;
+                        colname = rs2.getString(1);
+                        colno = rs2.getInt(2);
+                        colseq = rs2.getInt(3);
+
+                        if (lastIname.equals(iname)) {
+                        } else { // iname break
+                            if ( makeDef ) {
+                                dwriter[2].write("\n========================================================================================\n");
+                                dwriter[2].write(schema + " TABLE: " + tname + " INDEX: " + iname + "\n");
+                            }
+                        }
+
+                        if ( makeDef ) {
+                            dwriter[2].write(schema + " " + tname + " " + iname + " " + uniqueR + " " + colname + " " + colno + " " + colseq + "\n");
+                        }
+                        // append without schema because schema is user defined
+                        sb.append(tname + " " + iname + " " + uniqueR + " " + colname + " " + colno + " " + colseq);
+
+                        lastIname = iname;
+
+                    } // inner loop ------
+
+                    rs2.close();
+                    stmt2.close();
+
+                } catch (SQLException e) {
+                    logger.severe("SQLSTATE: " + e.getSQLState() + " executing: " + SQLstmt2 + e.getMessage());
+                    rc = 4;
+                    return;
+                } catch (IOException e) {
+                    logger.severe("IO exception encountered in GvbSchemaValidateC inner loop");
+                    rc = 8;
+                    return;
+                }
+
+                if (sb.length() > 0 ) {
+                    byte[] hashedBytes = md.digest((sb.toString()).getBytes());
+                    String encodedHash = Base64.getEncoder().encodeToString(hashedBytes);
+
+                    if ( makeHash) {
+                        hwriter.write(tname + iname + "," + encodedHash + "\n"); //populate hash map: one per TableIndex
+                    }
+                    else {
+                        // report on schema correctness
+                        fwriter.write("Table: " + tname + " index: " + iname + " Digest: " + digestType + ": " + encodedHash + "\n");
+                        String hashvalue = ixmap.get(tname + iname);
+
+                        if (hashvalue == null) {
+                            logger.warning("HASH value mismatch for table: " + tname + " index: " + iname + " - no stored hash value");
+                            fwriter.write("HASH value mismatch for table: " + tname + " index: " + iname + " - no stored hash value\n");
+                            fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
+                            match = false;
                         }
                         else {
-                            // report on schema correctness
-                            fwriter.write("Indexes for Table: " + tname + " Digest: " + digestType + ": " + encodedHash + "\n");
-                            String hashvalue = ixmap.get(tname);
-
-                            if (hashvalue == null) {
-                                logger.warning("HASH value mismatch for indexes of table: " + tname + " - no stored hash value");
-                                fwriter.write("HASH value mismatch for indexes of table: " + tname + " - no stored hash value\n");
+                            if ( hashvalue.equals(encodedHash) ) {
+                                fwriter.write("HASH value matches for table: " + tname + " index: " + iname + "\n");
+                            }
+                            else
+                            {
+                                logger.warning("HASH value mismatch for table: " + tname + " index: " + iname);
+                                fwriter.write("HASH value mismatch for table: " + tname + " index: " + iname + "\n");
+                                fwriter.write("Computed hash value: " + encodedHash + "\n");
+                                fwriter.write("Stored hash value  : " + hashvalue + "\n");
                                 fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                                 match = false;
                             }
-                            else {
-                                if ( hashvalue.equals(encodedHash) ) {
-                                    fwriter.write("HASH value matches for indexes of table: " + tname + "\n");
-                                }
-                                else
-                                {
-                                    logger.warning("HASH value mismatch for indexes of table: " + tname);
-                                    fwriter.write("HASH value mismatch for indexes of table: " + tname + "\n");
-                                    fwriter.write("Computed hash value: " + encodedHash + "\n");
-                                    fwriter.write("Stored hash value  : " + hashvalue + "\n");
-                                    fwriter.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-                                    match = false;
-                                }
-                            }
                         }
                     }
-
-                    if ( makeDef ) {
-                        dwriter[2].write("\n" + schema + " TABLE: " + tname+" ============================================\n");
-                        dwriter[2].write(schema + " " + tname + " " + iname + " " + uniqueR + "\n");
-                    }
-                    
-                    sb.delete(0, sb.length());
-                    // sb.append(schema + " " + tname + " " + iname + " " + uniqueR);
-                    // don't include schema name in hash value as this will prevent choice of different schema name
-                    sb.append(" " + tname + " " + iname + " " + uniqueR);
+                } else {
+                    logger.warning("HASH value mismatch for table: " + tname + " index: " + iname + " - no keys retrieved for index");
+                    match = false;
                 }
+
+                sb.delete(0, sb.length());
+                sb.append("");
+
                 lastTab = tname;
-            }
+            } // outer loop ------
 
             if (hasData) {
                 logger.fine("Fetched all rows from JDBC ResultSet");
