@@ -38,14 +38,21 @@ public class GvbSchemaValidateD {
         String tname;
         String rname;
         String cname;
+        Integer colno = 0;
+        Integer colseq = 0;
         String lastTab = "";
 
+        String reftname = "";
+        String ixname = "";
+    
         Statement stmt;
         ResultSet rs;
+        Statement stmt2;
+        ResultSet rs2;
 
         logger.info("GvbSchemaValidateD: processing foreign keys for schema: " + schema_mask);
 
-        String SQLstmt = "SELECT CREATOR, TBNAME, RELNAME, COLNAME FROM SYSIBM.SYSFOREIGNKEYS WHERE CREATOR LIKE '" + schema_mask + "' ORDER BY TBNAME, RELNAME, COLNAME;";
+        String SQLstmt = "SELECT CREATOR, TBNAME, RELNAME, COLNAME, COLNO, COLSEQ FROM SYSIBM.SYSFOREIGNKEYS WHERE CREATOR LIKE '" + schema_mask + "' ORDER BY TBNAME, RELNAME, COLSEQ;";
 
         try {
             StringBuilder sb = new StringBuilder("");
@@ -73,14 +80,34 @@ public class GvbSchemaValidateD {
                 tname = rs.getString(2);
                 rname = rs.getString(3);
                 cname = rs.getString(4);
+                colno = rs.getInt(5);
+                colseq = rs.getInt(6);
+
+                // There should be only one of these rows: by definition
+                String SQLstmt2 = "SELECT REFTBNAME, IXNAME, CREATOR, RELNAME FROM SYSIBM.SYSRELS WHERE CREATOR LIKE '" + schema_mask + "' AND TBNAME = '" + tname + "' AND RELNAME = '" + rname + "' FETCH FIRST 1 ROW ONLY;";
+                try {
+                    stmt2 = con.createStatement();
+                    rs2 = stmt2.executeQuery(SQLstmt2);
+                    while (rs2.next()) {
+                        reftname = rs2.getString(1);
+                        ixname = rs2.getString(2);
+                        if (ixname.equals("")) {
+                            ixname = "Primary Key";
+                        }
+                    }
+                    rs2.close();
+                    stmt2.close();
+                } catch (SQLException e) {
+                    logger.severe("SQLSTATE: " + e.getSQLState() + " executing: " + SQLstmt2 + e.getMessage());
+                    rc = 4;
+                    return;
+                }
 
                 if ( lastTab.equals(tname)) {
                     if ( makeDef ) {
-                        dwriter[3].write(schema + " " + tname + " " + rname + " " + cname + "\n");
+                        dwriter[3].write(schema + " " + tname + " " + rname + " " + cname + " " + colno + " " + colseq + " " + reftname + " " + ixname + "\n");
                     }
-                    // sb.append(schema + " " + tname + " " + rname + " " + cname);
-                    // don't include schema name in hash value as this will prevent choice of different schema name
-                    sb.append(" " + tname + " " + rname + " " + cname);
+                    sb.append(" " + tname + " " + rname + " " + cname + " " + colno + " " + colseq + " " + reftname + " " + ixname);
                 }
                 else{
                     if (sb.length() > 0 ) {
@@ -121,13 +148,11 @@ public class GvbSchemaValidateD {
 
                     if (makeDef) {
                         dwriter[3].write("\n" + schema + " TABLE: " + tname+" ============================================\n");
-                        dwriter[3].write(schema + " " + tname + " " + rname + " " + cname + "\n");
+                        dwriter[3].write(schema + " " + tname + " " + rname + " " + cname + " " + colno + " " + colseq + " " + reftname + " " + ixname + "\n");
                     }
                     
                     sb.delete(0, sb.length());
-                    // sb.append(schema + " " + tname + " " + rname + " " + cname);
-                    // don't include schema name in hash value as this will prevent choice of different schema name
-                    sb.append(" " + tname + " " + rname + " " + cname);
+                    sb.append(" " + tname + " " + rname + " " + cname + " " + colno + " " + colseq + " " + reftname + " " + ixname);
                 }
                 lastTab = tname;
             }

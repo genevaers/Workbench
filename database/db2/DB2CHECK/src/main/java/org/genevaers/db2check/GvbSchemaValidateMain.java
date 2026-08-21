@@ -32,6 +32,7 @@ public class GvbSchemaValidateMain {
 
     public static void main(String[] args)
     {
+        // Do not include schema name in hash value formulations -- schema name is variable and user defined
         HashMap<String, String> spmap = new HashMap<>(30); // stored procedures digest
         HashMap<String, String> tbmap = new HashMap<>(100); // table/column digest
         HashMap<String, String> ixmap = new HashMap<>(100); // index digest
