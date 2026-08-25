@@ -1,6 +1,6 @@
--- ******************************************************************
+******************************************************************
 --
--- (C) COPYRIGHT IBM CORPORATION 2023.
+-- (C) COPYRIGHT IBM CORPORATION 2011. 2023.
 --     Copyright Contributors to the GenevaERS Project.
 -- SPDX-License-Identifier: Apache-2.0
 --
@@ -22,35 +22,25 @@
 -- ****************************************************************
 --
 --
---
--- Create the database and tablespaces for the
--- the GENEVAERS metadata
+-- Remove the entire schema
 --
 -- Replace tags in this file with system specific values.
 -- Full stop is part of the tag name.
 --
--- e.g. using ISPF editor 'CHANGE ALL &$DBSCH GENETEST'
+-- e.g. using ISPF editor 'CHANGE ALL &$DBNAME. SAFRDB'
 --
--- 1) Replace occurrences of Db2 subsystem &$DBSUB.
--- 2) Replace user id with DBA access user id &$DBUSER.
--- 3) Replace occurrences of storage group &$DBSG.
--- 4) Replace occurrences of database &$DBNAME.
--- 5) Replace occurrences of schema &$DBSCH.
+-- 1) Replace user id with DBA access user id &$DBUSER.
+-- 2) Replace occurrences of storage group &$DBSG.
+-- 3) Replace occurrences of database &$DBNAME.
+-- 4) Replace occurrences of schema &$DBSCH.
 --
-SET CURRENT SQLID='&$DBUSER';
+SET CURRENT SQLID='&$DBUSER.';
 
-CREATE STOGROUP &$DBSG
-  VOLUMES("*")
-  VCAT &$DBSUB. ;
-COMMIT;
+  DROP DATABASE &$DBNAME.;
+  COMMIT;
+  DROP STOGROUP &$DBSG.;
+  COMMIT;
+  DROP SEQUENCE &$DBSCH..LRFIELD;
+  COMMIT;
 
-  CREATE DATABASE &$DBNAME
-    BUFFERPOOL BP0
-    INDEXBP    BP0
-    CCSID      EBCDIC
-    STOGROUP   &$DBSG;
-
-    GRANT BINDADD TO &$DBSCH;
-    GRANT CREATE IN COLLECTION &$DBSCH TO &$DBSCH;
-
-    COMMIT;
+  

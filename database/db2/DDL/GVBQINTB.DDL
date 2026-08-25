@@ -1,6 +1,8 @@
-******************************************************************
 --
--- (C) COPYRIGHT IBM CORPORATION 2011, 2023.
+--
+-- ******************************************************************
+--
+-- (C) COPYRIGHT IBM CORPORATION 2023.
 --     Copyright Contributors to the GenevaERS Project.
 -- SPDX-License-Identifier: Apache-2.0
 --
@@ -22,7 +24,7 @@
 -- ****************************************************************
 --
 --
---  Insert rows into tables for the SAFR metadata
+--  Insert rows into CODE for the GENEVAERS metadata
 --
 -- Replace tags in this file with system specific values.
 -- Full stop is part of the tag name.
@@ -32,105 +34,53 @@
 -- 1) Replace user id with DBA access user id &$DBUSER.
 -- 2) Replace occurrences of schema &$DBSCH.
 --
-SET CURRENT SQLID='&$DBUSER.';
+SET CURRENT SQLID='&$DBUSER';
 
-INSERT INTO &$DBSCH..C_ENVIRONTBL (environ,
-                          sequencenum,editableind,
-                          effdate,termdate,
-                          comments,
-                          createdtimestamp,createduserid,
-                          lastmodtimestamp,lastmoduserid)
-VALUES ('Development',1,1,
-        CURRENT TIMESTAMP,NULL,
-        'Created automatically during install',
+INSERT INTO &$DBSCH.ENVIRON (NAME,
+                          COMMENTS,
+                          CREATEDTIMESTAMP,CREATEDUSERID,
+                          LASTMODTIMESTAMP,LASTMODUSERID)
+VALUES ('DEVELOPMENT',
+        'CREATED AUTOMATICALLY DURING INSTALL',
         CURRENT TIMESTAMP,'INSTALL',
         CURRENT TIMESTAMP,'INSTALL');
+INSERT INTO &$DBSCH.VIEWFOLDER (ENVIRONID,
+        VIEWFOLDERID,NAME,COMMENTS,CREATEDTIMESTAMP,
+        CREATEDUSERID,LASTMODTIMESTAMP,LASTMODUSERID)
+VALUES (1,0,'ALL_VIEWS', 'FOLDER CONTAINING ALL VIEWS',
+        CURRENT TIMESTAMP, 'ADMIN', CURRENT TIMESTAMP, 'ADMIN');
 
-INSERT INTO &$DBSCH..C_USERTBL (
-         USERID,PASSWORD,DBUSERID,DBPASSWORD,
-         DBIDIND,DBSCHEMAIND,DBSCHEMA,DBCONNSTR,
+INSERT INTO &$DBSCH.USER (
+         USERID,PASSWORD,
          FIRSTNAME,MIDDLEINIT,LASTNAME,
          EMAIL,DEFENVIRONID,DEFFOLDERID,DEFGROUPID,
-         EFFDATE,TERMDATE,ADMININD,ADMINSECIND,
-         SECFLAGS,EXTRACTMAXRECCNT,LOGIN1STTIMESTAMP,
-         LOGINLASTTIMESTAMP,
+         SYSADMIN,MAXCOMPILEERRORS,
          COMMENTS,
-         ARCHIVEPATH,LOGFILEPATH,PWDCHNGFLG,EXPIRYDATE,
          CREATEDTIMESTAMP,CREATEDUSERID,
          LASTMODTIMESTAMP,LASTMODUSERID)
-VALUES ('ADMIN',NULL,NULL,NULL,
-         NULL,NULL,NULL,NULL,
-         'The',NULL,'SAFR Administrator',
+VALUES ('ADMIN',NULL,
+         'THE',NULL,'SAFR ADMINISTRATOR',
          NULL,NULL,1,NULL,
-         CURRENT TIMESTAMP,NULL,1,1,
-         1,NULL,NULL,
-         NULL,
-         'Created automatically during install',
-         NULL,NULL,NULL,NULL,
+         1,NULL,
+         'CREATED AUTOMATICALLY DURING INSTALL',
          CURRENT TIMESTAMP,'INSTALL',
          CURRENT TIMESTAMP,'INSTALL');
-
-INSERT INTO &$DBSCH..c_controlrec (environid,clientname,
-                          effdate,termdate,
-                          fiscalmonth,fiscalyear,
-                          currentsysdatetime,
-                          firstmonth,
-                          lowvalue,highvalue,
-                          maxpartseqnbr,
-                          comments,
-                          createdtimestamp,createduserid,
-                          lastmodtimestamp,lastmoduserid)
-VALUES (1,'SAFR Installation',
-        CURRENT TIMESTAMP,NULL,
-        NULL,NULL,
-        NULL,
-        1,
-        1,12,
-        4,
-        'Created automatically during install',
+INSERT INTO &$DBSCH.CONTROLREC (ENVIRONID,NAME,
+                          FIRSTMONTH,LOWVALUE,HIGHVALUE,
+                          COMMENTS,
+                          CREATEDTIMESTAMP,CREATEDUSERID,
+                          LASTMODTIMESTAMP,LASTMODUSERID)
+VALUES (1,'SAFR INSTALLATION',
+        1,1,12,
+        'CREATED AUTOMATICALLY DURING INSTALL',
         CURRENT TIMESTAMP,'INSTALL',
         CURRENT TIMESTAMP,'INSTALL');
-
-INSERT INTO &$DBSCH..c_secgroups (
-                         groupdesc,
-                         comments,
-                         createdtimestamp,createduserid,
-                         lastmodtimestamp,lastmoduserid)
-VALUES ('Default User Group',
-        'Created automatically during install',
+INSERT INTO &$DBSCH.GROUP (
+                         NAME,
+                         COMMENTS,
+                         CREATEDTIMESTAMP,CREATEDUSERID,
+                         LASTMODTIMESTAMP,LASTMODUSERID)
+VALUES ('DEFAULT USER GROUP',
+        'CREATED AUTOMATICALLY DURING INSTALL',
         CURRENT TIMESTAMP,'INSTALL',
         CURRENT TIMESTAMP,'INSTALL');
-
-INSERT INTO &$DBSCH..E_PARTITIONTBL (environid,partitionid,
-               partitionname,
-               filetypecd,serverid,effdate,termdate,comments,
-               createdtimestamp,createduserid,
-               lastmodtimestamp,lastmoduserid
-)
-VALUES
-( 1,0,'NON_EXISTENT_PHYSICAL_FILE',
-'DISK',NULL,CURRENT TIMESTAMP,CURRENT TIMESTAMP,
- 'This physical file is never used',
-CURRENT TIMESTAMP,'ADMIN',CURRENT TIMESTAMP,'ADMIN' ) ;
-
-INSERT INTO &$DBSCH..E_FILETBL (environid,fileid,filename,effdate,
-        termdate,comments,createdtimestamp,createduserid,
-        lastmodtimestamp,lastmoduserid)
-VALUES (1,0,'NON_EXISTENT_LOGICAL_FILE',CURRENT TIMESTAMP,
-        CURRENT TIMESTAMP, 'This logical file is never used',
-        CURRENT TIMESTAMP,'ADMIN',CURRENT TIMESTAMP,'ADMIN') ;
-
-INSERT INTO &$DBSCH..X_FILEPARTITIONTBL (ENVIRONID,XFILEPARTITIONID,
-        CHILDPARTITIONID,PARTSEQNBR,PARENTFILEID,
-        CHILDFILEID,CHILDTYPE,CREATEDTIMESTAMP,CREATEDUSERID,
-        LASTMODTIMESTAMP,LASTMODUSERID)
-VALUES (1,0,0,0,0,0,0,CURRENT TIMESTAMP, 'ADMIN',
-        CURRENT TIMESTAMP, 'ADMIN') ;
-        
-INSERT INTO &$DBSCH..C_VIEWFOLDERS (ENVIRONID,
-        VIEWFOLDERID,DESCRIPTION,CSFILEPATH1,CSFILEPATH2,
-        CSFILEPATH3,CSFILEPATH4,COMMENTS,CREATEDTIMESTAMP,
-        CREATEDUSERID,LASTMODTIMESTAMP,LASTMODUSERID)
-VALUES (1,0,'ALL_VIEWS',NULL,NULL,NULL,NULL,
-        'Folder containing all views',
-        CURRENT TIMESTAMP, 'ADMIN', CURRENT TIMESTAMP, 'ADMIN')
