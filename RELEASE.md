@@ -23,7 +23,7 @@ The process formally starts with the initial release, but some preparations may 
   Following their best judgement, the shepherd should try to expedite bug fixes that are still in progress but should make it into the release.
   On the other hand, the shepherd may hold back merging last-minute invasive and risky changes that are better suited for the next minor release.
 * On the date listed in the table above, the release shepherd cuts the first release (using the suffix `-rc.0`) and creates a new branch 
-  called  `release-<major>.<minor>` starting at the commit tagged for the release. In general, a release is considered a release candidate
+  called  `RC<version>` starting at the commit tagged for the release. In general, a release is considered a release candidate
   (that's what `rc` stands for) and should therefore not contain any known bugs that are planned to be fixed in the final release.
 * With the release, the release shepherd is responsible for running and monitoring a benchmark run of the release for about  3 days, after which, 
   if successful, the release is promoted to a stable release.
@@ -41,7 +41,7 @@ We aspire to unify the release procedures as much as possible.
 
 We use [Semantic Versioning](https://semver.org/).
 
-We maintain a separate branch for each minor release, named `release-<major>.<minor>`, e.g. `release-1.1`, `release-2.0`.
+We maintain a separate branch for each minor release, named `RC<VERSION>`, e.g. `RC18`, `RC19`.
 
 The usual flow is to merge new features and changes into the master branch and to merge bug fixes into the latest release branch.
 Bug fixes are then merged into master from the latest release branch. The master branch should always contain all commits from the 
@@ -73,9 +73,10 @@ Entries in the `CHANGELOG.md` are meant to be in this order:
 * `[ENHANCEMENT]`
 * `[BUGFIX]`
 
-### Draft the new release
+### Draft the new release Tag
 
-Tag the new release with a tag named `v<major>.<minor>.<patch>`, e.g. `v2.1.3`. Note the `v` prefix.
+Pull the main branch which is ready to release 
+Tag the new release with a tag named with prefix WB `<major>.<minor>.<patch>_RC<VERSION>`, e.g. `WB_4.21.1_RC19`. 
 
 You can do the tagging on the commandline:
 
