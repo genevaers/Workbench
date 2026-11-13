@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GenevaERS Plug-in
 Bundle-SymbolicName: GenevaERS;singleton:=true
 Bundle-Version: 4.21.1
-Bundle-ClassPath: lib/postgresql-42.7.11.jar,
+Bundle-ClassPath: lib/postgresql-42.7.12.jar,
  .,
  lib/ccb2lr.jar,
  lib/db2jcc4.jar,
@@ -11,7 +11,7 @@ Bundle-ClassPath: lib/postgresql-42.7.11.jar,
  lib/db2jcc_license_ccu.jar,
  lib/commons-csv-1.10.0.jar,
  lib/rcapps-4.1.0_RC25-jar-with-dependencies.jar,
- lib/bcprov-jdk18on-1.78.1.jar
+ lib/bcprov-jdk18on-1.84.jar
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.nebula.widgets.grid;bundle-version="1.0.0",
  org.eclipse.nebula.widgets.tablecombo;bundle-version="1.0.0",
@@ -441,9 +441,9 @@ Export-Package: COM.ibm.db2.app,
  org.antlr.v4.runtime.tree.gui,
  org.antlr.v4.runtime.tree.pattern,
  org.antlr.v4.runtime.tree.xpath,
- org.bouncycastle.crypto;version="1.78.1",
- org.bouncycastle.crypto.params;version="1.78.1",
- org.bouncycastle.util;version="1.78.1",
+ org.bouncycastle.crypto;version="1.84",
+ org.bouncycastle.crypto.params;version="1.84",
+ org.bouncycastle.util;version="1.84",
  org.genevaers.ccb2lr,
  org.genevaers.ccb2lr.grammar,
  org.postgresql,
